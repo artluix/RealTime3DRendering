@@ -1,0 +1,196 @@
+cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
+
+project(directxtk)
+
+set(DIRECTXTK_FILES
+    # Inc
+    Inc/CommonStates.h
+    Inc/DDSTextureLoader.h
+    Inc/DirectXHelpers.h
+    Inc/Effects.h
+    Inc/GamePad.h
+    Inc/GeometricPrimitive.h
+    Inc/GraphicsMemory.h
+    Inc/Keyboard.h
+    Inc/Model.h
+    Inc/Mouse.h
+    Inc/PostProcess.h
+    Inc/PrimitiveBatch.h
+    Inc/ScreenGrab.h
+    Inc/SimpleMath.h
+    Inc/SimpleMath.inl
+    Inc/SpriteBatch.h
+    Inc/SpriteFont.h
+    Inc/VertexTypes.h
+    Inc/WICTextureLoader.h
+
+    # Src
+    Src/AlignedNew.h
+    Src/AlphaTestEffect.cpp
+    Src/BasicEffect.cpp
+    Src/BasicPostProcess.cpp
+    Src/Bezier.h
+    Src/BinaryReader.h
+    Src/BinaryReader.cpp
+    Src/CommonStates.cpp
+    Src/ConstantBuffer.h
+    Src/dds.h
+    Src/DDSTextureLoader.cpp
+    Src/DebugEffect.cpp
+    Src/DemandCreate.h
+    Src/DGSLEffect.cpp
+    Src/DGSLEffectFactory.cpp
+    Src/DualPostProcess.cpp
+    Src/DualTextureEffect.cpp
+    Src/BinaryReader.cpp
+    Src/EffectCommon.h
+    Src/EffectCommon.cpp
+    Src/EffectFactory.cpp
+    Src/EnvironmentMapEffect.cpp
+    Src/GamePad.cpp
+    Src/GeometricPrimitive.cpp
+    Src/Geometry.h
+    Src/Geometry.cpp
+    Src/GraphicsMemory.cpp
+    Src/Keyboard.cpp
+    Src/LoaderHelpers.h
+    Src/Model.cpp
+    Src/ModelLoadCMO.cpp
+    Src/ModelLoadSDKMESH.cpp
+    Src/ModelLoadVBO.cpp
+    Src/Mouse.cpp
+    Src/NormalMapEffect.cpp
+    Src/PBREffect.cpp
+    Src/pch.h
+    Src/pch.cpp
+    Src/PlatformHelpers.h
+    Src/PrimitiveBatch.cpp
+    Src/ScreenGrab.cpp
+    Src/SDKMesh.h
+    Src/SharedResourcePool.h
+    Src/SimpleMath.cpp
+    Src/SkinnedEffect.cpp
+    Src/SpriteBatch.cpp
+    Src/SpriteFont.cpp
+    Src/TeapotData.inc
+    Src/ToneMapPostProcess.cpp
+    Src/vbo.h
+    Src/VertexTypes.cpp
+    Src/WICTextureLoader.cpp
+)
+
+# PTODO: Add headers here because IDE can't recognize them
+add_library(directxtk OBJECT
+    ${DIRECTXTK_FILES}
+)
+
+target_include_directories(directxtk
+    PUBLIC 
+        $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Inc>
+    PRIVATE
+        Inc
+        Src
+)
+
+target_compile_options(directxtk
+    PRIVATE
+        /Wall
+        /fp:fast
+        /Oi
+        # /RTC1
+        /arch:SSE2
+        /EHsc
+        /Yupch.h
+        /GS
+        /Zc:inline
+        /Zc:wchar_t
+        /Zc:forScope
+        # /permissive-
+        # debug
+        $<$<CONFIG:DEBUG>:/Od /MDd /ZI /Gm>
+        # release
+        $<$<CONFIG:RELEASE>:/O2 /MD /Gy /Zi /Gm->
+)
+
+target_compile_definitions(directxtk
+    PUBLIC
+        -DUNICODE
+        -D_UNICODE
+        -D_WIN32_WINNT=0x0600
+        -D_WIN7_PLATFORM_UPDATE
+        -DWIN32
+)
+
+set_source_files_properties(Src/pch.cpp PROPERTIES COMPILE_FLAGS /Ycpch.h)
+
+# ide filters
+source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${DIRECTXTK_FILES})
+
+if(XTK_TOOLS)
+    add_executable(xwbtool XWBtool/xwbtool.cpp)
+    install(TARGETS xwbtool DESTINATION tools)
+endif()
+
+# set (XTK_AUDIO 1)
+if (XTK_AUDIO)
+    project(directxtkaudio)
+
+    set(DIRECTXTKAUDIO_FILES
+        Inc/Audio.h
+        Audio/AudioEngine.cpp
+        Audio/DynamicSoundEffectInstance.cpp
+        Audio/SoundCommon.h
+        Audio/SoundCommon.cpp
+        Audio/SoundEffect.cpp
+        Audio/SoundEffectInstance.cpp
+        Audio/WaveBank.cpp
+        Audio/WaveBankReader.h
+        Audio/WaveBankReader.cpp
+        Audio/WAVFileReader.h
+        Audio/WAVFileReader.cpp
+    )
+
+    add_library(directxtkaudio OBJECT
+        ${DIRECTXTKAUDIO_FILES}
+    )
+
+    target_compile_options(directxtkaudio
+        PRIVATE
+            /Wall
+            /fp:fast
+            /Oi
+            # /RTC1
+            /arch:SSE2
+            /EHsc
+            /Yupch.h
+            /GS
+            /Zc:inline
+            # /permissive-
+            # debug
+            $<$<CONFIG:DEBUG>:/Od /MDd /ZI /Gm>
+            # release
+            $<$<CONFIG:RELEASE>:/O2 /MD /Gy /Zi /Gm->
+    )
+
+    target_include_directories(directxtkaudio
+        PUBLIC 
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Audio>
+        PRIVATE
+            Inc
+            Src
+    )
+
+    target_compile_definitions(directxtkaudio
+        PUBLIC
+            -DUNICODE
+            -D_UNICODE
+            -D_WIN32_WINNT=0x0602
+            -D_WIN7_PLATFORM_UPDATE
+            -DWIN32
+    )
+
+    set_source_files_properties(Audio/AudioEngine.cpp PROPERTIES COMPILE_FLAGS /Ycpch.h)
+
+    # ide filters
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${DIRECTXTKAUDIO_FILES})
+endif()
