@@ -1,6 +1,6 @@
 @echo off
 
-set "SOURCE_FOLDER=%~dp0"
+set "SOURCE_FOLDER=%~dp0\src"
 set "BUILD_FOLDER=%~dp0\build"
 set "GENERATOR=Visual Studio 15 2017"
 

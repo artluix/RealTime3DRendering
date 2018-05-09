@@ -44,19 +44,14 @@ target_compile_options(effects11
     PRIVATE
         /W4
         /fp:fast
-        /Oi
-        /RTC1
         /arch:SSE2
         /EHsc
         /openmp-
-        /Gm-
-        /GS
-        /Zc:forScope
         /Yupchfx.h
         # debug
-        $<$<CONFIG:DEBUG>:/Od /MDd /ZI>
+        $<$<CONFIG:DEBUG>:/Od /MDd /ZI /RTC1>
         # release
-        $<$<CONFIG:RELEASE>:/O2 /MD /Gy /Zi>
+        $<$<CONFIG:RELEASE>:/O2 /MD /Gy /Oi>
 )
 
 target_compile_definitions(effects11

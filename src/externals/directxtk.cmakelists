@@ -96,20 +96,12 @@ target_compile_options(directxtk
     PRIVATE
         /Wall
         /fp:fast
-        /Oi
-        # /RTC1
         /arch:SSE2
-        /EHsc
         /Yupch.h
-        /GS
-        /Zc:inline
-        /Zc:wchar_t
-        /Zc:forScope
-        # /permissive-
         # debug
-        $<$<CONFIG:DEBUG>:/Od /MDd /ZI /Gm>
+        $<$<CONFIG:DEBUG>:/Od /Gm>
         # release
-        $<$<CONFIG:RELEASE>:/O2 /MD /Gy /Zi /Gm->
+        $<$<CONFIG:RELEASE>:/O2 /Gy /Oi>
 )
 
 target_compile_definitions(directxtk
@@ -131,7 +123,7 @@ if(XTK_TOOLS)
     install(TARGETS xwbtool DESTINATION tools)
 endif()
 
-# set (XTK_AUDIO 1)
+set (XTK_AUDIO 1)
 if (XTK_AUDIO)
     project(directxtkaudio)
 
@@ -158,18 +150,12 @@ if (XTK_AUDIO)
         PRIVATE
             /Wall
             /fp:fast
-            /Oi
-            # /RTC1
             /arch:SSE2
-            /EHsc
             /Yupch.h
-            /GS
-            /Zc:inline
-            # /permissive-
             # debug
-            $<$<CONFIG:DEBUG>:/Od /MDd /ZI /Gm>
+            $<$<CONFIG:DEBUG>:/Od /Gm>
             # release
-            $<$<CONFIG:RELEASE>:/O2 /MD /Gy /Zi /Gm->
+            $<$<CONFIG:RELEASE>:/O2 /Gy /Oi>
     )
 
     target_include_directories(directxtkaudio
