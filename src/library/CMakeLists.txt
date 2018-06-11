@@ -4,9 +4,16 @@ project(library VERSION 0.1)
 
 set(LIBRARY_FILES
     # include
-    include/library/Library.h
+    include/library/Application.h
+    include/library/Clock.h
+    include/library/Exception.h
+    include/library/NonCopyable.hpp
+    include/library/Time.h
     # src
-    src/Library.cpp
+    src/Application.cpp
+    src/Clock.cpp
+    src/Exception.cpp
+    src/Time.cpp
 )
 
 # PTODO: Add headers here because IDE can't recognize them
@@ -24,6 +31,21 @@ target_include_directories(library
     PRIVATE
         src
 )
+
+target_link_libraries(library d3d11 d3dcompiler dxguid dinput8)
+
+target_compile_definitions(library
+    PUBLIC
+        -DUNICODE
+        -D_UNICODE
+        # debug
+        $<$<CONFIG:DEBUG>: -DDEBUG -D_DEBUG>
+        # release
+        $<$<CONFIG:RELEASE>: -UDEBUG -U_DEBUG>
+)
+
+# add postfix
+set_target_properties(library PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
 
 # ide filters
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${LIBRARY_FILES})

@@ -7,6 +7,8 @@ set(BIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../bin)
 
 set(CMAKE_VS_INCLUDE_INSTALL_TO_DEFAULT_BUILD 1)
 
+set(CMAKE_DEBUG_POSTFIX "_d")
+
 add_subdirectory(externals)
 add_subdirectory(library)
 add_subdirectory(game)

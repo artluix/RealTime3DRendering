@@ -4,8 +4,9 @@ project(game VERSION 0.1)
 
 set(GAME_FILES
     # src
-    src/Dummy.h
-    src/Dummy.cpp
+    src/Program.cpp
+    src/Game.h
+    src/Game.cpp
 )
 
 add_executable(game
@@ -13,6 +14,20 @@ add_executable(game
 )
 
 target_link_libraries(game library)
+
+target_compile_definitions(library
+    PUBLIC
+        -DUNICODE
+        -D_UNICODE
+        # debug
+        $<$<CONFIG:DEBUG>: -DDEBUG -D_DEBUG>
+        # release
+        $<$<CONFIG:RELEASE>: -UDEBUG -U_DEBUG>
+)
+
+# add postfix
+set_target_properties(game PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+set_target_properties(game PROPERTIES WIN32_EXECUTABLE TRUE)
 
 # ide filters
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${GAME_FILES})
