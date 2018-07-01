@@ -1,7 +1,6 @@
 #pragma once
 #include <chrono>
 
-
 namespace library
 {
     // rename std::chrono types

@@ -15,6 +15,11 @@ add_executable(game
 
 target_link_libraries(game library)
 
+target_compile_options(game
+    PUBLIC
+        /GR- # disable rtti
+)
+
 target_compile_definitions(library
     PUBLIC
         -DUNICODE

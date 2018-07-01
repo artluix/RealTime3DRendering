@@ -4,7 +4,6 @@
 
 #include <DirectXColors.h>
 
-
 namespace
 {
     const XMVECTORF32 BackgroundColor = Colors::Cyan;

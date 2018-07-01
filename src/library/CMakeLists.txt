@@ -5,13 +5,20 @@ project(library VERSION 0.1)
 set(LIBRARY_FILES
     # include
     include/library/Application.h
+    include/library/Camera.h
     include/library/Clock.h
+    include/library/Common.h
+    include/library/Component.h
+    include/library/DrawableComponent.h
     include/library/Exception.h
     include/library/NonCopyable.hpp
+    include/library/RTTI.hpp
     include/library/Time.h
     # src
     src/Application.cpp
     src/Clock.cpp
+    src/Component.cpp
+    src/DrawableComponent.cpp
     src/Exception.cpp
     src/Time.cpp
 )
@@ -34,6 +41,11 @@ target_include_directories(library
 
 target_link_libraries(library d3d11 d3dcompiler dxguid dinput8)
 
+target_compile_options(library
+    PUBLIC
+        /GR- # disable rtti
+)
+
 target_compile_definitions(library
     PUBLIC
         -DUNICODE
@@ -45,7 +57,10 @@ target_compile_definitions(library
 )
 
 # add postfix
-set_target_properties(library PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
+set_target_properties(library PROPERTIES
+    DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
+    CXX_STANDARD 17
+)
 
 # ide filters
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${LIBRARY_FILES})

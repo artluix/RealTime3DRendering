@@ -83,7 +83,6 @@ namespace library
 
     void Application::Initialize()
     {
-
     }
 
     void Application::Run()

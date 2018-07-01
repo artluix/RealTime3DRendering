@@ -2,7 +2,6 @@
 #include <library/Common.h>
 #include <library/Application.h>
 
-
 class Game : public library::Application
 {
 public:

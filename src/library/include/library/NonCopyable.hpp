@@ -1,7 +1,5 @@
 #pragma once
-
 // C++ 11 NonCopyable CRTP class
-
 
 namespace library
 {

@@ -10,7 +10,6 @@
     #include <crtdbg.h>
 #endif
 
-
 int WINAPI WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, int showCmd)
 {
 #if defined(DEBUG) | defined(_DEBUG)

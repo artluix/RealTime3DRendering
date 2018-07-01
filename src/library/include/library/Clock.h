@@ -2,7 +2,6 @@
 #include "library/Time.h"
 #include "library/NonCopyable.hpp"
 
-
 namespace library
 {
     class Clock : public NonCopyable<Clock>

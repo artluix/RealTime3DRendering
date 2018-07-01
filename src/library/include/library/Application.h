@@ -3,7 +3,6 @@
 #include "library/NonCopyable.hpp"
 #include "library/Clock.h"
 
-
 namespace library
 {
     class Application : public NonCopyable<Application>
