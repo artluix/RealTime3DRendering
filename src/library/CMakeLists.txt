@@ -59,7 +59,6 @@ target_compile_definitions(library
 # add postfix
 set_target_properties(library PROPERTIES
     DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
-    CXX_STANDARD 17
 )
 
 # ide filters

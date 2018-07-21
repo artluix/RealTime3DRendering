@@ -3,7 +3,7 @@
 namespace library
 {
     DrawableComponent::DrawableComponent(Application& app, Camera& camera)
-        : RTTI(app)
+        : Class(Component(app))
         , m_camera(camera)
     {
     }
@@ -27,5 +27,4 @@ namespace library
     {
         m_camera = camera;
     }
-
 }

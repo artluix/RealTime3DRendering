@@ -5,7 +5,7 @@
 namespace library
 {
     class DrawableComponent
-        : public RTTI<DrawableComponent, Component>
+        : public rtti::Class<DrawableComponent, Component>
     {
     public:
         explicit DrawableComponent(Application& app, Camera& camera);

@@ -3,14 +3,9 @@
 
 namespace library
 {
-
     Component::Component(Application& app)
         : m_app(app)
         , m_enabled(true)
-    {
-    }
-
-    Component::~Component()
     {
     }
 

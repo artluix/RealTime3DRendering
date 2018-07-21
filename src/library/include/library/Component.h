@@ -8,11 +8,10 @@ namespace library
 {
     class Component 
         : public NonCopyable<Component>
-        , public RTTI<Component>
+        , public rtti::Class<Component>
     {
     public:
         explicit Component(Application& app);
-        virtual ~Component();
 
         Application& GetApplication();
         void SetApplication(Application& app);
@@ -28,4 +27,3 @@ namespace library
         bool m_enabled;
     };
 }
-
