@@ -5,6 +5,8 @@
 
 namespace library
 {
+    class Component;
+
     class Application : public NonCopyable<Application>
     {
     public:
@@ -26,6 +28,8 @@ namespace library
         bool IsFullScreen() const;
         const D3D11_TEXTURE2D_DESC& GetBackBufferDesc() const;
         const D3D11_VIEWPORT& GetViewport() const;
+
+        const std::vector<Component*>& GetComponents() const { return m_components; }
 
         virtual void Initialize();
         virtual void Run();
@@ -53,6 +57,9 @@ namespace library
 
         Clock m_clock;
         Time m_time;
+
+        // components
+        std::vector<Component*> m_components;
 
         // DirectX
         D3D_FEATURE_LEVEL m_featureLevel;

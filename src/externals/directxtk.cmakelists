@@ -97,6 +97,7 @@ target_compile_options(directxtk
         /Wall
         /fp:fast
         /arch:SSE2
+        /GR
         /Yupch.h
         # debug
         $<$<CONFIG:DEBUG>:/Od /Gm>
@@ -118,9 +119,85 @@ set_source_files_properties(Src/pch.cpp PROPERTIES COMPILE_FLAGS /Ycpch.h)
 # ide filters
 source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${DIRECTXTK_FILES})
 
+set (XTK_TOOLS 1)
 if(XTK_TOOLS)
-    add_executable(xwbtool XWBtool/xwbtool.cpp)
-    install(TARGETS xwbtool DESTINATION tools)
+    # xwbtool
+    project(xwbtool)
+
+    set (XWBTOOL_FILES
+        Audio/WAVFileReader.h
+        Audio/WAVFileReader.cpp
+        XWBtool/xwbtool.cpp
+    )
+
+    add_executable(xwbtool
+        ${XWBTOOL_FILES}
+    )
+
+    target_include_directories(xwbtool
+        PUBLIC 
+            $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Audio>
+        PRIVATE
+            Inc
+            Src
+    )
+
+    target_compile_definitions(xwbtool
+        PUBLIC
+            -DUNICODE
+            -D_UNICODE
+            -D_WIN32_WINNT=0x0602
+            -DWIN32
+    )
+
+    # ide filters
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${XWBTOOL_FILES})
+
+    # install
+    install(TARGETS xwbtool
+        RUNTIME DESTINATION ${TOOLS_DIR}/bin/xwbtool
+    )
+
+    # MakeSpriteFont
+    project(MakeSpriteFont CSharp)
+
+    set (MAKESPRITEFONT_FILES
+        MakeSpriteFont/BitmapImporter.cs
+        MakeSpriteFont/BitmapUtils.cs
+        MakeSpriteFont/CharacterRegion.cs
+        MakeSpriteFont/CommandLineOptions.cs
+        MakeSpriteFont/CommandLineParser.cs
+        MakeSpriteFont/Glyph.cs
+        MakeSpriteFont/GlyphCropper.cs
+        MakeSpriteFont/GlyphPacker.cs
+        MakeSpriteFont/IFontImporter.cs
+        MakeSpriteFont/SpriteFontWriter.cs
+        MakeSpriteFont/Program.cs
+        MakeSpriteFont/Properties/AssemblyInfo.cs
+        MakeSpriteFont/TrueTypeImporter.cs
+    )
+
+    add_executable(MakeSpriteFont
+        ${MAKESPRITEFONT_FILES}
+    )
+
+    set_target_properties(MakeSpriteFont PROPERTIES VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1")
+    set_target_properties(MakeSpriteFont PROPERTIES VS_DOTNET_REFERENCE_System "System")
+    set_target_properties(MakeSpriteFont PROPERTIES VS_DOTNET_REFERENCE_System.Drawing "System.Drawing")
+    set_target_properties(MakeSpriteFont PROPERTIES VS_DOTNET_REFERENCES_COPY_LOCAL OFF)
+
+    target_compile_options(MakeSpriteFont
+        PRIVATE
+            "/langversion:6"
+    )
+
+    # ide filters
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${MAKESPRITEFONT_FILES})
+
+    # install
+    install(TARGETS MakeSpriteFont
+        RUNTIME DESTINATION ${TOOLS_DIR}/bin/MakeSpriteFont
+    )
 endif()
 
 # set (XTK_AUDIO 1)

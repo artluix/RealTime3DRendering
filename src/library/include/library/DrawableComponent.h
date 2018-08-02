@@ -1,25 +1,21 @@
 #pragma once
 #include "library/Component.h"
-#include "library/Camera.h"
+#include "library/Clock.h"
 
 namespace library
 {
-    class DrawableComponent
-        : public rtti::Class<DrawableComponent, Component>
+    class DrawableComponent : public Component
     {
     public:
-        explicit DrawableComponent(Application& app, Camera& camera);
-
+        using Component::Component;
         ~DrawableComponent() = default;
 
         bool IsVisible() const;
         void SetVisible(const bool visible);
 
-        Camera& GetCamera();
-        void SetCamera(Camera& camera);
+        virtual void Draw(const Time& time);
 
     protected:
-        std::reference_wrapper<Camera> m_camera;
         bool m_visible;
     };
 }

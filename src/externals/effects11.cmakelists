@@ -47,6 +47,7 @@ target_compile_options(effects11
         /arch:SSE2
         /EHsc
         /openmp-
+        /GR-
         /Yupchfx.h
         # debug
         $<$<CONFIG:DEBUG>:/Od /MDd /ZI /RTC1>

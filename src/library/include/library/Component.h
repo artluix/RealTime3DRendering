@@ -12,6 +12,7 @@ namespace library
     {
     public:
         explicit Component(Application& app);
+        virtual ~Component() = default;
 
         Application& GetApplication();
         void SetApplication(Application& app);

@@ -3,7 +3,7 @@
 
 namespace library
 {
-    // rename std::chrono types
+    // use std::chrono types
     using ClockType = std::chrono::high_resolution_clock;
     using TimePointType = ClockType::time_point;
     using DurationType = ClockType::duration;

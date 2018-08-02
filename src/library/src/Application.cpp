@@ -1,6 +1,7 @@
 #include "library/Application.h"
 
 #include "library/Exception.h"
+#include "library/DrawableComponent.h"
 
 namespace
 {
@@ -83,6 +84,10 @@ namespace library
 
     void Application::Initialize()
     {
+        for (auto component : m_components)
+        {
+            component->Initialize();
+        }
     }
 
     void Application::Run()
@@ -123,12 +128,25 @@ namespace library
 
     void Application::Update(const Time& time)
     {
-
+        for (auto component : m_components)
+        {
+            if (component->IsEnabled())
+            {
+                component->Update(time);
+            }
+        }
     }
 
     void Application::Draw(const Time& time)
     {
-
+        for (auto component : m_components)
+        {
+            auto drawableComponent = component->As<DrawableComponent>();
+            if (!!drawableComponent && drawableComponent->IsVisible())
+            {
+                drawableComponent->Draw(time);
+            }
+        }
     }
 
     /////////////////////////////////////////////////////////////////

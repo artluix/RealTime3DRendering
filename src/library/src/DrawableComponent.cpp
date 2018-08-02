@@ -2,12 +2,6 @@
 
 namespace library
 {
-    DrawableComponent::DrawableComponent(Application& app, Camera& camera)
-        : Class(Component(app))
-        , m_camera(camera)
-    {
-    }
-
     bool DrawableComponent::IsVisible() const
     {
         return m_visible;
@@ -18,13 +12,7 @@ namespace library
         m_visible = visible;
     }
 
-    Camera& DrawableComponent::GetCamera()
+    void DrawableComponent::Draw(const Time& time)
     {
-        return m_camera;
-    }
-
-    void DrawableComponent::SetCamera(Camera& camera)
-    {
-        m_camera = camera;
     }
 }

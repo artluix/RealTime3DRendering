@@ -11,16 +11,20 @@ set(LIBRARY_FILES
     include/library/Component.h
     include/library/DrawableComponent.h
     include/library/Exception.h
+    include/library/FpsComponent.h
     include/library/NonCopyable.hpp
     include/library/RTTI.hpp
     include/library/Time.h
+    include/library/ViewedComponent.h
     # src
     src/Application.cpp
     src/Clock.cpp
     src/Component.cpp
     src/DrawableComponent.cpp
     src/Exception.cpp
+    src/FpsComponent.cpp
     src/Time.cpp
+    src/ViewedComponent.cpp
 )
 
 # PTODO: Add headers here because IDE can't recognize them
