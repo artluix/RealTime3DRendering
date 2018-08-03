@@ -1,6 +1,10 @@
 cmake_minimum_required(VERSION 3.6 FATAL_ERROR)
 
-project(RealTime3DRendering VERSION 0.1)
+if(APPLICATION)
+    project(RealTime3DRendering VERSION 0.1)
+elseif(TOOLS)
+    project(RealTime3DRendering_Tools VERSION 0.1)
+endif()
 
 set(DIST_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../dist)
 set(BIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../bin)
@@ -14,4 +18,6 @@ add_subdirectory(externals)
 add_subdirectory(library)
 add_subdirectory(game)
 
+if(APPLICATION)
 set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT game)
+endif()
