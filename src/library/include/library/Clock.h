@@ -9,20 +9,12 @@ namespace library
     public:
         explicit Clock();
 
-        TimeValue GetStartTime() const;
-        TimeValue GetCurrentTime() const;
-        TimeValue GetLastTime() const;
-
         void Reset();
         void UpdateTime(Time& time);
 
     private:
-        void GetTime(TimePointType& time) const;
-
-    private:
-        TimePointType m_startTime;
-        TimePointType m_currentTime;
-        TimePointType m_lastTime;
+        MonotonicClock::time_point m_startTimePoint;
+        MonotonicClock::time_point m_currentTimePoint;
     };
 }
 

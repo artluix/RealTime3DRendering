@@ -14,6 +14,7 @@ if(APPLICATION)
         include/library/Exception.h
         include/library/FpsComponent.h
         include/library/NonCopyable.hpp
+        include/library/Path.h
         include/library/RTTI.hpp
         include/library/Time.h
         include/library/ViewedComponent.h
@@ -24,11 +25,11 @@ if(APPLICATION)
         src/DrawableComponent.cpp
         src/Exception.cpp
         src/FpsComponent.cpp
-        src/Time.cpp
+        src/Path.cpp
         src/ViewedComponent.cpp
+        src/Utils.cpp
     )
 
-    # PTODO: Add headers here because IDE can't recognize them
     add_library(library
         STATIC
             $<TARGET_OBJECTS:directxtk>
@@ -40,6 +41,8 @@ if(APPLICATION)
         PUBLIC
             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
             $<INSTALL_INTERFACE:include>
+            $<TARGET_PROPERTY:directxtk,INTERFACE_INCLUDE_DIRECTORIES>
+            $<TARGET_PROPERTY:effects11,INTERFACE_INCLUDE_DIRECTORIES>
         PRIVATE
             src
     )
@@ -49,21 +52,17 @@ if(APPLICATION)
     target_compile_options(library
         PUBLIC
             /GR- # disable rtti
+            /MP
     )
 
     target_compile_definitions(library
         PUBLIC
             -DUNICODE
             -D_UNICODE
+
             # debug
             $<$<CONFIG:DEBUG>: -DDEBUG -D_DEBUG>
             # release
-            $<$<CONFIG:RELEASE>: -UDEBUG -U_DEBUG>
-    )
-
-    # add postfix
-    set_target_properties(library PROPERTIES
-        DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX}
     )
 
     # ide filters

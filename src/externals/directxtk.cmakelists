@@ -80,7 +80,6 @@ if(APPLICATION)
         Src/WICTextureLoader.cpp
     )
 
-    # PTODO: Add headers here because IDE can't recognize them
     add_library(directxtk OBJECT
         ${DIRECTXTK_FILES}
     )
@@ -100,10 +99,13 @@ if(APPLICATION)
             /arch:SSE2
             /GR
             /Yupch.h
+            /MP
+
             # debug
-            $<$<CONFIG:DEBUG>:/Od /Gm>
+            $<$<CONFIG:DEBUG>: /Od>
+
             # release
-            $<$<CONFIG:RELEASE>:/O2 /Gy /Oi>
+            $<$<CONFIG:RELEASE>: /O2 /Gy /Oi>
     )
 
     target_compile_definitions(directxtk

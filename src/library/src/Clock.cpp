@@ -1,6 +1,5 @@
 #include "library/Clock.h"
 
-
 namespace library
 {
     Clock::Clock()
@@ -8,43 +7,21 @@ namespace library
         Reset();
     }
 
-    TimeValue Clock::GetStartTime() const
-    {
-        return TimeValue(m_startTime);
-    }
-
-    TimeValue Clock::GetCurrentTime() const
-    {
-        return TimeValue(m_currentTime);
-    }
-
-    TimeValue Clock::GetLastTime() const
-    {
-        return TimeValue(m_lastTime);
-    }
-
     void Clock::Reset()
     {
-        GetTime(m_startTime);
-        m_currentTime = m_startTime;
-        m_lastTime = m_startTime;
-    }
-
-    void Clock::GetTime(TimePointType& time) const
-    {
-        time = ClockType::now();
+        m_startTimePoint = m_currentTimePoint = MonotonicClock::now();
     }
 
     void Clock::UpdateTime(Time& time)
     {
-        GetTime(m_currentTime);
+        auto now = MonotonicClock::now();
 
-        auto total = m_currentTime - m_startTime;
-        auto elapsed = m_currentTime - m_startTime;
+        auto elapsed = now - m_currentTimePoint;
+        auto total = now - m_startTimePoint;
 
         time.elapsed = TimeValue(elapsed);
         time.total = TimeValue(total);
 
-        m_lastTime = m_currentTime;
+        m_currentTimePoint = now;
     }
 }

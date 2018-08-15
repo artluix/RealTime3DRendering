@@ -17,5 +17,3 @@ namespace library
         std::reference_wrapper<Camera> m_camera;
     };
 }
-
-

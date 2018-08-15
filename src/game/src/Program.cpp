@@ -1,6 +1,7 @@
 #include "Game.h"
 
 #include <library/Exception.h>
+#include <library/Utils.h>
 
 #include <memory>
 
@@ -24,7 +25,12 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, in
     }
     catch (library::Exception ex)
     {
-        MessageBox(app->GetWindowHandle(), ex.GetWhatWString().c_str(), app->GetWindowTitle().c_str(), MB_ABORTRETRYIGNORE);
+        MessageBox(
+            app->GetWindowHandle(),
+            library::utils::ToWideString(ex.GetWhatString()).c_str(),
+            app->GetWindowTitle().c_str(),
+            MB_ABORTRETRYIGNORE
+        );
     }
 
     return 0;

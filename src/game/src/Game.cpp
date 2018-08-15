@@ -1,16 +1,21 @@
 #include "Game.h"
 
 #include <library/Exception.h>
+#include <library/FpsComponent.h>
 
 #include <DirectXColors.h>
 
 namespace
 {
-    const XMVECTORF32 BackgroundColor = Colors::Cyan;
+    const XMVECTORF32 BackgroundColor = Colors::Blue;
 }
 
-
-Game::Game(const HINSTANCE instanceHandle, const std::wstring& windowClass, const std::wstring& windowTitle, const int showCmd)
+Game::Game(
+    const HINSTANCE instanceHandle,
+    const std::wstring& windowClass,
+    const std::wstring& windowTitle,
+    const int showCmd
+)
     : Application(instanceHandle, windowClass, windowTitle, showCmd)
 {
     m_depthStencilBufferEnabled = true;
@@ -19,6 +24,10 @@ Game::Game(const HINSTANCE instanceHandle, const std::wstring& windowClass, cons
 
 void Game::Initialize()
 {
+    m_fpsComponent = std::make_unique<library::FpsComponent>(*this);
+    m_fpsComponent->SetVisible(true);
+    m_components.push_back(m_fpsComponent.get());
+
     Application::Initialize();
 }
 
@@ -39,4 +48,11 @@ void Game::Draw(const library::Time& time)
     {
         throw library::Exception("IDXGISwapChain::Present() failed.", hr);
     }
+}
+
+void Game::Shutdown()
+{
+    m_fpsComponent = nullptr;
+
+    Application::Shutdown();
 }

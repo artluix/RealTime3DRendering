@@ -25,12 +25,12 @@ namespace library
         void Draw(const Time& time) override;
 
     private:
-        SpriteBatch* m_spriteBatch;
-        SpriteFont* m_spriteFont;
+        std::unique_ptr<SpriteBatch> m_spriteBatch;
+        std::unique_ptr<SpriteFont> m_spriteFont;
 
         XMFLOAT2 m_textPosition;
         unsigned m_frameCount;
         unsigned m_frameRate;
-        double m_lastTotalElapsedTime; // will be changed!
+        unsigned m_totalTimeAccumulator; // reset frame count after 1 second (1000ms)
     };
 }

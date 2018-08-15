@@ -12,7 +12,7 @@ namespace library
         explicit Exception(const char* const& message, const HRESULT hr = S_OK);
 
         HRESULT GetResultHandle() const { return m_hr; }
-        std::wstring GetWhatWString() const;
+        std::string GetWhatString() const;
 
     private:
         HRESULT m_hr;

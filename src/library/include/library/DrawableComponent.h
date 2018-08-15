@@ -16,6 +16,6 @@ namespace library
         virtual void Draw(const Time& time);
 
     protected:
-        bool m_visible;
+        bool m_visible = false;
     };
 }

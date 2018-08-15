@@ -28,7 +28,6 @@ if(APPLICATION)
         pchfx.h
     )
 
-    # PTODO: Add headers here
     add_library(effects11 OBJECT
         ${EFFECTS11_FILES}
     )
@@ -50,10 +49,13 @@ if(APPLICATION)
             /openmp-
             /GR-
             /Yupchfx.h
+            /MP
+
             # debug
-            $<$<CONFIG:DEBUG>:/Od /MDd /ZI /RTC1>
+            $<$<CONFIG:DEBUG>: /Od /RTC1>
+
             # release
-            $<$<CONFIG:RELEASE>:/O2 /MD /Gy /Oi>
+            $<$<CONFIG:RELEASE>: /O2 /Gy /Oi>
     )
 
     target_compile_definitions(effects11

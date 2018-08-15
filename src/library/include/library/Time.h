@@ -3,29 +3,43 @@
 
 namespace library
 {
-    // use std::chrono types
-    using ClockType = std::chrono::high_resolution_clock;
-    using TimePointType = ClockType::time_point;
-    using DurationType = ClockType::duration;
-
-    /////////////////////////////////////////////////////////////////
+    using MonotonicClock = std::chrono::steady_clock;
 
     struct TimeValue
     {
     public:
         explicit TimeValue() = default;
-        explicit TimeValue(const DurationType& duration); // from duration
-        explicit TimeValue(const TimePointType& timePoint); // from time point
+        explicit TimeValue(const MonotonicClock::duration& duration)
+            : m_duration(duration)
+        {
+        }
 
-        long long GetNanoseconds() const;   // 10 ^ -9 seconds
-        long long GetMicroseconds() const;  // 10 ^ -6 seconds
-        long long GetMilliseconds() const;  // 10 ^ -3 seconds
-        long long GetSeconds() const;       // 1 second
-        int GetMinutes() const;             // 60 seconds
-        int GetHours() const;               // 3600 seconds
+        template <typename T>
+        T GetNanoseconds() const { return GetAs<T, std::chrono::nanoseconds::period>(); }
+
+        template <typename T>
+        T GetMicroseconds() const { return GetAs<T, std::chrono::microseconds::period>(); }
+
+        template <typename T>
+        T GetMilliseconds() const { return GetAs<T, std::chrono::milliseconds::period>(); }
+
+        template <typename T>
+        T GetSeconds() const { return GetAs<T, std::chrono::seconds::period>(); }
+
+        template <typename T>
+        T GetMinutes() const { return GetAs<T, std::chrono::minutes::period>(); }
+
+        template <typename T>
+        T GetHours() const { return GetAs<T, std::chrono::hours::period>(); }
 
     private:
-        DurationType m_duration;
+        template <typename T, typename Period>
+        T GetAs() const
+        {
+            return std::chrono::duration_cast<std::chrono::duration<T, Period>>(m_duration).count();
+        }
+
+        MonotonicClock::duration m_duration;
     }; 
 
     /////////////////////////////////////////////////////////////////
@@ -33,10 +47,13 @@ namespace library
     struct Time
     {
         explicit Time() = default;
-        explicit Time(const TimeValue& _elapsed, const TimeValue& _total);
+        explicit Time(const TimeValue& _elapsed, const TimeValue& _total)
+            : elapsed(_elapsed)
+            , total(_total)
+        {
+        }
 
         TimeValue total;
         TimeValue elapsed;
     };
 }
-

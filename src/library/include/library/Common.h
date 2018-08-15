@@ -5,6 +5,7 @@
 #include <cassert>
 #include <string>
 #include <vector>
+#include <array>
 #include <map>
 #include <memory>
 #include <functional>
@@ -17,7 +18,10 @@
 // some types
 namespace library
 {
-    enum class byte : unsigned char;
+    enum class byte : unsigned char; // before c++17
+
+    template <typename T>
+    using Tuple2 = std::array<T, 2>;
 }
 
 using Microsoft::WRL::ComPtr;
