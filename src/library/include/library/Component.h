@@ -6,9 +6,7 @@
 
 namespace library
 {
-    class Component 
-        : public NonCopyable<Component>
-        , public rtti::Class<Component>
+    class Component : public NonCopyable<Component>
     {
     public:
         explicit Component(Application& app);

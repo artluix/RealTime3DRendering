@@ -31,26 +31,16 @@ namespace library
             };
         }
 
-        template <class Cls>
-        class Class
+        template <class To, class From>
+        To* CastTo(From* f)
         {
-        public:
-            template <class T>
-            T* As()
-            {
-                auto self = static_cast<Cls*>(this);
-                return detail::Cast<Cls, T>()(self);
-            }
+            return detail::Cast<From, To>()(f);
+        }
 
-            template <class T>
-            const T* As() const
-            {
-                auto self = const_cast<Cls*>(static_cast<const Cls*>(this));
-                return detail::Cast<Cls, T>()(self);
-            }
-
-        protected:
-            explicit Class() = default;
-        };
+        template <class To, class From>
+        const To* CastTo(const From* f)
+        {
+            return detail::Cast<From, To>()(f);
+        }
     }
 }

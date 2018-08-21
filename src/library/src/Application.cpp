@@ -141,7 +141,7 @@ namespace library
     {
         for (auto component : m_components)
         {
-            auto drawableComponent = component->As<DrawableComponent>();
+            auto drawableComponent = rtti::CastTo<DrawableComponent>(component);
             if (!!drawableComponent && drawableComponent->IsVisible())
             {
                 drawableComponent->Draw(time);
