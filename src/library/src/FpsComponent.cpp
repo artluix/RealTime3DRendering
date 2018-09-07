@@ -16,23 +16,25 @@ namespace library
     {
         const auto FontPath =
             utils::GetExecutableDirectory().Join(filesystem::Path(L"data/fonts/Arial_14_Regular.spritefont"));
+
+        const auto FpsMeasureInterval = std::chrono::seconds(1);
     }
 
-    FpsComponent::FpsComponent(Application& app)
-        : DrawableComponent(app)
+    FpsComponent::FpsComponent(const Application& app)
+        : Class(app)
         , m_textPosition(0.0f, 0.0f)
         , m_frameCount(0)
         , m_frameRate(0)
-        , m_totalTimeAccumulator(0)
+        , m_timeAccumulator(Duration::zero())
     {
     }
 
-    XMFLOAT2 FpsComponent::GetTextPosition() const
+    DirectX::XMFLOAT2 FpsComponent::GetTextPosition() const
     {
         return m_textPosition;
     }
 
-    void FpsComponent::SetTextPosition(const XMFLOAT2& position)
+    void FpsComponent::SetTextPosition(const DirectX::XMFLOAT2& position)
     {
         m_textPosition = position;
     }
@@ -44,20 +46,23 @@ namespace library
 
     void FpsComponent::Initialize()
     {
-        Application& app = m_app;
-
-        m_spriteBatch = std::make_unique<SpriteBatch>(app.GetD3DDeviceContext());
-        m_spriteFont = std::make_unique<SpriteFont>(app.GetD3DDevice(), FontPath.GetAsWideCString());
+        m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(m_app.GetD3DDeviceContext());
+        m_spriteFont = std::make_unique<DirectX::SpriteFont>(m_app.GetD3DDevice(), FontPath.GetAsWideCString());
     }
 
     void FpsComponent::Update(const Time& time)
     {
-        const auto totalSeconds = time.total.GetSeconds<unsigned>();
-        if (totalSeconds - m_totalTimeAccumulator >= 1)
+        const auto elapsed = time.elapsed.GetDuration();
+        if (m_timeAccumulator >= FpsMeasureInterval)
         {
-            m_totalTimeAccumulator = totalSeconds;
             m_frameRate = m_frameCount;
+
+            m_timeAccumulator = Duration::zero();
             m_frameCount = 0;
+        }
+        else
+        {
+            m_timeAccumulator += elapsed;
         }
 
         m_frameCount++;

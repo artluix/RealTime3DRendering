@@ -2,12 +2,13 @@
 
 #include <library/Exception.h>
 #include <library/FpsComponent.h>
+#include <library/KeyboardComponent.h>
 
 #include <DirectXColors.h>
 
 namespace
 {
-    const XMVECTORF32 BackgroundColor = Colors::Blue;
+    const auto BackgroundColor = DirectX::Colors::Blue;
 }
 
 Game::Game(
@@ -24,6 +25,15 @@ Game::Game(
 
 void Game::Initialize()
 {
+    HRESULT hr = DirectInput8Create(m_instanceHandle, DIRECTINPUT_VERSION, IID_IDirectInput8, reinterpret_cast<LPVOID*>(m_directInput.GetAddressOf()), nullptr);
+    if (FAILED(hr))
+    {
+        throw library::Exception("DirectInput8Create() failed", hr);
+    }
+
+    m_keyboardComponent = std::make_unique<library::KeyboardComponent>(*this, m_directInput);
+    m_components.push_back(m_keyboardComponent.get());
+
     m_fpsComponent = std::make_unique<library::FpsComponent>(*this);
     m_fpsComponent->SetVisible(true);
     m_components.push_back(m_fpsComponent.get());
@@ -33,6 +43,11 @@ void Game::Initialize()
 
 void Game::Update(const library::Time& time)
 {
+    if (m_keyboardComponent->WasKeyPressed(library::Key::Escape))
+    {
+        Exit();
+    }
+
     Application::Update(time);
 }
 
@@ -52,7 +67,9 @@ void Game::Draw(const library::Time& time)
 
 void Game::Shutdown()
 {
-    m_fpsComponent = nullptr;
+    m_fpsComponent.reset();
+
+    m_directInput.Reset();
 
     Application::Shutdown();
 }

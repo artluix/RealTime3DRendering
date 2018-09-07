@@ -7,24 +7,28 @@ if(APPLICATION)
         # include
         include/library/Application.h
         include/library/Camera.h
-        include/library/Clock.h
+        include/library/Stopwatch.h
         include/library/Common.h
         include/library/Component.h
         include/library/DrawableComponent.h
         include/library/Exception.h
         include/library/FpsComponent.h
+        include/library/Key.h
+        include/library/KeyboardComponent.h
         include/library/NonCopyable.hpp
         include/library/Path.h
         include/library/RTTI.hpp
         include/library/Time.h
         include/library/ViewedComponent.h
+        include/library/Utils.h
         # src
         src/Application.cpp
-        src/Clock.cpp
+        src/Stopwatch.cpp
         src/Component.cpp
         src/DrawableComponent.cpp
         src/Exception.cpp
         src/FpsComponent.cpp
+        src/KeyboardComponent.cpp
         src/Path.cpp
         src/ViewedComponent.cpp
         src/Utils.cpp

@@ -2,8 +2,8 @@
 
 namespace library
 {
-    ViewedComponent::ViewedComponent(Application& app, Camera& camera)
-        : DrawableComponent(app)
+    ViewedComponent::ViewedComponent(const Application& app, Camera& camera)
+        : Class(app)
         , m_camera(camera)
     {
     }
@@ -18,5 +18,3 @@ namespace library
         m_camera = camera;
     }
 }
-
-

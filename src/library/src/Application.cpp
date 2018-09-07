@@ -5,10 +5,10 @@
 
 namespace
 {
-    const unsigned DefaultScreenWidth = 800;
-    const unsigned DefaultScreenHeight = 600;
-    const unsigned DefaultFrameRate = 60;
-    const unsigned DefaultMultiSamplingCount = 4;
+    constexpr unsigned DefaultScreenWidth = 800;
+    constexpr unsigned DefaultScreenHeight = 600;
+    constexpr unsigned DefaultFrameRate = 60;
+    constexpr unsigned DefaultMultiSamplingCount = 4;
 }
 
 /////////////////////////////////////////////////////////////////
@@ -24,7 +24,7 @@ namespace library
         , m_screenHeight(DefaultScreenHeight)
         , m_windowHandle(nullptr)
         , m_window{}
-        , m_clock()
+        , m_stopwatch()
         , m_time()
         , m_featureLevel(D3D_FEATURE_LEVEL_9_1)
         , m_d3dDevice()
@@ -98,7 +98,7 @@ namespace library
 
         MSG message = {};
 
-        m_clock.Reset();
+        m_stopwatch.Reset();
 
         while (message.message != WM_QUIT)
         {
@@ -109,7 +109,7 @@ namespace library
             }
             else
             {
-                m_clock.UpdateTime(m_time);
+                m_stopwatch.UpdateTime(m_time);
 
                 Update(m_time);
                 Draw(m_time);
@@ -141,7 +141,7 @@ namespace library
     {
         for (auto component : m_components)
         {
-            auto drawableComponent = rtti::CastTo<DrawableComponent>(component);
+            auto drawableComponent = component->As<DrawableComponent>();
             if (!!drawableComponent && drawableComponent->IsVisible())
             {
                 drawableComponent->Draw(time);
@@ -367,18 +367,18 @@ namespace library
 
     void Application::Shutdown()
     {
-        m_renderTargetView = nullptr;
-        m_depthStencilView = nullptr;
-        m_swapChain = nullptr;
-        m_depthStencilBuffer = nullptr;
+        m_renderTargetView.Reset();
+        m_depthStencilView.Reset();
+        m_swapChain.Reset();
+        m_depthStencilBuffer.Reset();
 
         if (!!m_d3dDeviceContext)
         {
             m_d3dDeviceContext->ClearState();
         }
 
-        m_d3dDeviceContext = nullptr;
-        m_d3dDevice = nullptr;
+        m_d3dDeviceContext.Reset();
+        m_d3dDevice.Reset();
 
         UnregisterClass(m_windowClass.c_str(), m_instanceHandle);
     }

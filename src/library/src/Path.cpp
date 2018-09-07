@@ -6,7 +6,7 @@ namespace library
     {
         namespace
         {
-            const wchar_t Sep = L'/';
+            constexpr wchar_t Sep = L'/';
         }
 
         Path::Path(const std::string& s)
@@ -137,7 +137,7 @@ namespace library
 
         void Path::FixSeparator()
         {
-            static const wchar_t badSep = L'\\';
+            static constexpr wchar_t badSep = L'\\';
             std::replace(std::begin(m_path), std::end(m_path), badSep, Sep);
         }
     }

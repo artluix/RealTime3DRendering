@@ -3,21 +3,21 @@
 
 namespace library
 {
-    Component::Component(Application& app)
+    Component::Component(const Application& app)
         : m_app(app)
         , m_enabled(true)
     {
     }
 
-    Application& Component::GetApplication()
+    /*Application& Component::GetApplication()
     {
         return m_app;
-    }
+    }*/
 
-    void Component::SetApplication(Application& app)
+    /*void Component::SetApplication(const Application& app)
     {
         m_app = app;
-    }
+    }*/
 
     bool Component::IsEnabled() const
     {
@@ -26,7 +26,7 @@ namespace library
 
     void Component::SetEnabled(const bool enabled)
     {
-        m_enabled = true;
+        m_enabled = enabled;
     }
 
     void Component::Initialize()

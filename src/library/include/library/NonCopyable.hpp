@@ -9,9 +9,9 @@ namespace library
         explicit NonCopyable() = default;
         virtual ~NonCopyable() = default;
         
-        // enable moving
-        explicit NonCopyable(NonCopyable&&) = default;
-        NonCopyable& operator=(NonCopyable&&) = default;
+        // uncomment to enable moving
+        //explicit NonCopyable(NonCopyable&&) = default;
+        //NonCopyable& operator=(NonCopyable&&) = default;
 
         // disable copying
         explicit NonCopyable(const NonCopyable&) = delete;

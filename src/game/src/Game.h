@@ -1,10 +1,12 @@
 #pragma once
-#include <library/Common.h>
 #include <library/Application.h>
+
+#include <dinput.h>
 
 namespace library
 {
     class FpsComponent;
+    class KeyboardComponent;
 }
 
 class Game : public library::Application
@@ -21,4 +23,7 @@ protected:
 
 private:
     std::unique_ptr<library::FpsComponent> m_fpsComponent;
+    std::unique_ptr<library::KeyboardComponent> m_keyboardComponent;
+
+    ComPtr<IDirectInput8> m_directInput;
 };

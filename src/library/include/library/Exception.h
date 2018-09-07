@@ -3,7 +3,6 @@
 #include <Windows.h>
 #include <string>
 
-
 namespace library
 {
     class Exception : public std::exception

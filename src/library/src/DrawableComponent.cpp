@@ -2,6 +2,11 @@
 
 namespace library
 {
+    DrawableComponent::DrawableComponent(const Application& app)
+        : Class(app)
+    {
+    }
+
     bool DrawableComponent::IsVisible() const
     {
         return m_visible;

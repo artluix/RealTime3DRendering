@@ -1,19 +1,22 @@
 #pragma once
-#include "library/Common.h"
 #include "library/NonCopyable.hpp"
 #include "library/Application.h"
 #include "library/RTTI.hpp"
 
+//#include <functional>
+
 namespace library
 {
-    class Component : public NonCopyable<Component>
+    class Component
+        : public NonCopyable<Component>
+        , public rtti::Class<Component>
     {
     public:
-        explicit Component(Application& app);
+        explicit Component(const Application& app);
         virtual ~Component() = default;
 
-        Application& GetApplication();
-        void SetApplication(Application& app);
+        //Application& GetApplication();
+        //void SetApplication(const Application& app);
 
         bool IsEnabled() const;
         void SetEnabled(const bool enabled);
@@ -22,7 +25,8 @@ namespace library
         virtual void Update(const Time& time);
 
     protected:
-        std::reference_wrapper<Application> m_app;
+        //std::reference_wrapper<const Application> m_app;
+        const Application& m_app;
         bool m_enabled;
     };
 }

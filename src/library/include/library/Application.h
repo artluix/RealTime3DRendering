@@ -1,7 +1,14 @@
 #pragma once
-#include "library/Common.h"
 #include "library/NonCopyable.hpp"
-#include "library/Clock.h"
+#include "library/Stopwatch.h"
+
+#include <Windows.h>
+#include <d3d11_1.h>
+#include <vector>
+#include <string>
+#include <wrl/client.h>
+
+using Microsoft::WRL::ComPtr;
 
 namespace library
 {
@@ -55,7 +62,7 @@ namespace library
         unsigned m_screenWidth;
         unsigned m_screenHeight;
 
-        Clock m_clock;
+        Stopwatch m_stopwatch;
         Time m_time;
 
         // components

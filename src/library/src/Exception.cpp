@@ -10,6 +10,6 @@ namespace library
 
     std::string Exception::GetWhatString() const
     {
-        return std::string(what());
+        return std::string(what()) + " Error: " + std::to_string(m_hr);
     }
 }

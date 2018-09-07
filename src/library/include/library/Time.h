@@ -3,16 +3,22 @@
 
 namespace library
 {
-    using MonotonicClock = std::chrono::steady_clock;
+    using Clock = std::chrono::steady_clock;
+    using TimePoint = Clock::time_point;
+    using Duration = Clock::duration;
+
+    /////////////////////////////////////////////////////////////////
 
     struct TimeValue
     {
     public:
         explicit TimeValue() = default;
-        explicit TimeValue(const MonotonicClock::duration& duration)
+        explicit TimeValue(const Duration& duration)
             : m_duration(duration)
         {
         }
+
+        Duration GetDuration() const { return m_duration; }
 
         template <typename T>
         T GetNanoseconds() const { return GetAs<T, std::chrono::nanoseconds::period>(); }
@@ -39,7 +45,7 @@ namespace library
             return std::chrono::duration_cast<std::chrono::duration<T, Period>>(m_duration).count();
         }
 
-        MonotonicClock::duration m_duration;
+        Duration m_duration;
     }; 
 
     /////////////////////////////////////////////////////////////////

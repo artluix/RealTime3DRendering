@@ -1,13 +1,13 @@
 #pragma once
 #include "library/Component.h"
-#include "library/Clock.h"
+#include "library/Stopwatch.h"
 
 namespace library
 {
-    class DrawableComponent : public Component
+    class DrawableComponent : public rtti::Class<DrawableComponent, Component>
     {
     public:
-        using Component::Component;
+        explicit DrawableComponent(const Application& app);
         ~DrawableComponent() = default;
 
         bool IsVisible() const;

@@ -4,10 +4,10 @@
 
 namespace library
 {
-    class ViewedComponent : public DrawableComponent
+    class ViewedComponent : public rtti::Class<ViewedComponent, DrawableComponent>
     {
     public:
-        explicit ViewedComponent(Application& app, Camera& camera);
+        explicit ViewedComponent(const Application& app, Camera& camera);
         ~ViewedComponent() = default;
 
         Camera& GetCamera();
