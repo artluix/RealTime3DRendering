@@ -19,11 +19,6 @@ namespace library
         m_app = app;
     }*/
 
-    bool Component::IsEnabled() const
-    {
-        return m_enabled;
-    }
-
     void Component::SetEnabled(const bool enabled)
     {
         m_enabled = enabled;

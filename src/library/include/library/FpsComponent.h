@@ -17,10 +17,10 @@ namespace library
         explicit FpsComponent(const Application& app);
         ~FpsComponent() = default;
 
-        DirectX::XMFLOAT2 GetTextPosition() const;
+        DirectX::XMFLOAT2 GetTextPosition() const { return m_textPosition; }
         void SetTextPosition(const DirectX::XMFLOAT2& position);
 
-        unsigned GetFrameRate() const;
+        unsigned GetFrameRate() const { return m_frameRate; }
 
         void Initialize() override;
         void Update(const Time& time) override;

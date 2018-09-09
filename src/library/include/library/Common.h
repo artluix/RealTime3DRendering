@@ -12,22 +12,10 @@ namespace library
     /////////////////////////////////////////////////////////////////
 
     // before c++17
-    enum class byte : unsigned char
+    enum class byte : std::uint8_t
     {
-        zero = 0
+        //zero = 0
     };
-
-    inline byte operator | (const byte lhs, const byte rhs)
-    {
-        return static_cast<byte>(to_integral(lhs) | to_integral(rhs));
-    }
-
-    inline byte operator & (const byte lhs, const byte rhs)
-    {
-        return static_cast<byte>(to_integral(lhs) & to_integral(rhs));
-    }
-
-    /////////////////////////////////////////////////////////////////
 
     template <typename T>
     using Tuple2 = std::array<T, 2>;

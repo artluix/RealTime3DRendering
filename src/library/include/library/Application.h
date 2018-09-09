@@ -17,7 +17,12 @@ namespace library
     class Application : public NonCopyable<Application>
     {
     public:
-        explicit Application(const HINSTANCE instanceHandle, const std::wstring& windowClass, const std::wstring& windowTitle, const int showCmd);
+        explicit Application(
+            const HINSTANCE instanceHandle,
+            const std::wstring& windowClass,
+            const std::wstring& windowTitle,
+            const int showCmd
+        );
         virtual ~Application();
 
         HINSTANCE GetInstanceHandle() const { return m_instanceHandle; }
@@ -30,11 +35,11 @@ namespace library
 
         ID3D11Device1* GetD3DDevice() const;
         ID3D11DeviceContext1* GetD3DDeviceContext() const;
-        bool DepthBufferEnabled() const;
+        bool IsDepthBufferEnabled() const { return m_depthStencilBufferEnabled; }
         float GetAspectRatio() const;
-        bool IsFullScreen() const;
-        const D3D11_TEXTURE2D_DESC& GetBackBufferDesc() const;
-        const D3D11_VIEWPORT& GetViewport() const;
+        bool IsFullScreen() const { return m_isFullScreen; }
+        const D3D11_TEXTURE2D_DESC& GetBackBufferDesc() const { return m_backBufferDesc; }
+        const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
 
         const std::vector<Component*>& GetComponents() const { return m_components; }
 
@@ -59,8 +64,7 @@ namespace library
         HWND m_windowHandle;
         WNDCLASSEX m_window;
 
-        unsigned m_screenWidth;
-        unsigned m_screenHeight;
+        unsigned m_screenWidth, m_screenHeight;
 
         Stopwatch m_stopwatch;
         Time m_time;

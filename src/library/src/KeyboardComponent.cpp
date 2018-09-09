@@ -1,6 +1,7 @@
 #include "library/KeyboardComponent.h"
 
 #include "library/Exception.h"
+#include "library/Common.h"
 
 #include <cassert>
 
@@ -8,17 +9,17 @@ namespace library
 {
     namespace
     {
-        constexpr byte KeyDownMask = static_cast<byte>(0x80);
+        constexpr auto k_keyDownMask = static_cast<BYTE>(0x80);
     }
 
     KeyboardComponent::KeyboardComponent(const Application& app, const ComPtr<IDirectInput8>& directInput)
         : Class(app)
         , m_directInput(directInput)
-        , m_directInputDevice(nullptr)
+        , m_directInputDevice()
     {
         assert(!!directInput);
-        m_keysState.fill(byte::zero);
-        m_previousKeysState.fill(byte::zero);
+        m_keysState.fill(0);
+        m_previousKeysState.fill(0);
     }
 
     KeyboardComponent::~KeyboardComponent()
@@ -76,9 +77,11 @@ namespace library
         }
     }
 
+    /////////////////////////////////////////////////////////////////
+
     bool KeyboardComponent::IsKeyUp(const Key key) const
     {
-        return (m_keysState[to_integral(key)] & KeyDownMask) == byte::zero;
+        return (m_keysState[to_integral(key)] & k_keyDownMask) == 0;
     }
 
     bool KeyboardComponent::IsKeyDown(const Key key) const
@@ -88,7 +91,7 @@ namespace library
 
     bool KeyboardComponent::WasKeyUp(const Key key) const
     {
-        return (m_previousKeysState[to_integral(key)] & KeyDownMask) == byte::zero;
+        return (m_previousKeysState[to_integral(key)] & k_keyDownMask) == 0;
     }
 
     bool KeyboardComponent::WasKeyDown(const Key key) const
@@ -98,12 +101,12 @@ namespace library
 
     bool KeyboardComponent::WasKeyPressed(const Key key) const
     {
-        return !WasKeyUp(key) && IsKeyUp(key);
+        return IsKeyDown(key) && WasKeyUp(key);
     }
 
     bool KeyboardComponent::WasKeyReleased(const Key key) const
     {
-        return WasKeyUp(key) && !IsKeyUp(key);
+        return IsKeyUp(key) && WasKeyDown(key);
     }
 
     bool KeyboardComponent::IsKeyHeldDown(const Key key) const

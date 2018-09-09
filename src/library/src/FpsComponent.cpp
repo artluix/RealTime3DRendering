@@ -14,10 +14,10 @@ namespace library
 {
     namespace
     {
-        const auto FontPath =
-            utils::GetExecutableDirectory().Join(filesystem::Path(L"data/fonts/Arial_14_Regular.spritefont"));
-
-        const auto FpsMeasureInterval = std::chrono::seconds(1);
+        const auto k_fontPath = utils::GetExecutableDirectory().Join(
+            filesystem::Path(L"data/fonts/Arial_14_Regular.spritefont")
+        );
+        const auto k_fpsMeasureInterval = std::chrono::seconds(1);
     }
 
     FpsComponent::FpsComponent(const Application& app)
@@ -29,31 +29,21 @@ namespace library
     {
     }
 
-    DirectX::XMFLOAT2 FpsComponent::GetTextPosition() const
-    {
-        return m_textPosition;
-    }
-
     void FpsComponent::SetTextPosition(const DirectX::XMFLOAT2& position)
     {
         m_textPosition = position;
     }
 
-    unsigned FpsComponent::GetFrameRate() const
-    {
-        return m_frameRate;
-    }
-
     void FpsComponent::Initialize()
     {
         m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(m_app.GetD3DDeviceContext());
-        m_spriteFont = std::make_unique<DirectX::SpriteFont>(m_app.GetD3DDevice(), FontPath.GetAsWideCString());
+        m_spriteFont = std::make_unique<DirectX::SpriteFont>(m_app.GetD3DDevice(), k_fontPath.GetAsWideCString());
     }
 
     void FpsComponent::Update(const Time& time)
     {
         const auto elapsed = time.elapsed.GetDuration();
-        if (m_timeAccumulator >= FpsMeasureInterval)
+        if (m_timeAccumulator >= k_fpsMeasureInterval)
         {
             m_frameRate = m_frameCount;
 
@@ -72,11 +62,11 @@ namespace library
     {
         m_spriteBatch->Begin();
 
-        std::wstringstream wss;
-        wss << std::setprecision(4) <<
+        std::wostringstream woss;
+        woss << std::setprecision(4) <<
             L"Frame Rate: " << m_frameRate << std::endl << L"Total Elapsed Time: " << time.total.GetSeconds<float>();
 
-        m_spriteFont->DrawString(m_spriteBatch.get(), wss.str().c_str(), m_textPosition, DirectX::Colors::White);
+        m_spriteFont->DrawString(m_spriteBatch.get(), woss.str().c_str(), m_textPosition, DirectX::Colors::White);
 
         m_spriteBatch->End();
     }

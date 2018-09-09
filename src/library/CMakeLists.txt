@@ -15,6 +15,7 @@ if(APPLICATION)
         include/library/FpsComponent.h
         include/library/Key.h
         include/library/KeyboardComponent.h
+        include/library/MouseComponent.h
         include/library/NonCopyable.hpp
         include/library/Path.h
         include/library/RTTI.hpp
@@ -29,6 +30,7 @@ if(APPLICATION)
         src/Exception.cpp
         src/FpsComponent.cpp
         src/KeyboardComponent.cpp
+        src/MouseComponent.cpp
         src/Path.cpp
         src/ViewedComponent.cpp
         src/Utils.cpp

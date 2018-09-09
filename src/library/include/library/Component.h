@@ -18,7 +18,7 @@ namespace library
         //Application& GetApplication();
         //void SetApplication(const Application& app);
 
-        bool IsEnabled() const;
+        bool IsEnabled() const { return m_enabled; }
         void SetEnabled(const bool enabled);
 
         virtual void Initialize();

@@ -10,12 +10,12 @@ namespace library
         explicit DrawableComponent(const Application& app);
         ~DrawableComponent() = default;
 
-        bool IsVisible() const;
+        bool IsVisible() const { return m_visible; }
         void SetVisible(const bool visible);
 
         virtual void Draw(const Time& time);
 
     protected:
-        bool m_visible = false;
+        bool m_visible;
     };
 }

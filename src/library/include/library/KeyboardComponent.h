@@ -1,6 +1,5 @@
 #pragma once
 #include "library/Component.h"
-#include "library/Common.h"
 #include "library/Key.h"
 
 #include <dinput.h>
@@ -29,7 +28,7 @@ namespace library
         bool IsKeyHeldDown(const Key key) const;
 
     private:
-        using KeysStateArray = std::array<byte, 256>;
+        using KeysStateArray = std::array<BYTE, 256>;
 
         ComPtr<IDirectInput8> m_directInput;
         ComPtr<IDirectInputDevice8> m_directInputDevice;

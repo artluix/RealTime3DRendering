@@ -4,12 +4,8 @@ namespace library
 {
     DrawableComponent::DrawableComponent(const Application& app)
         : Class(app)
+        , m_visible(false)
     {
-    }
-
-    bool DrawableComponent::IsVisible() const
-    {
-        return m_visible;
     }
 
     void DrawableComponent::SetVisible(const bool visible)

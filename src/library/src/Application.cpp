@@ -5,23 +5,27 @@
 
 namespace
 {
-    constexpr unsigned DefaultScreenWidth = 800;
-    constexpr unsigned DefaultScreenHeight = 600;
-    constexpr unsigned DefaultFrameRate = 60;
-    constexpr unsigned DefaultMultiSamplingCount = 4;
+    constexpr unsigned k_defaultScreenWidth = 800;
+    constexpr unsigned k_defaultScreenHeight = 600;
+    constexpr unsigned k_defaultFrameRate = 60;
+    constexpr unsigned k_defaultMultiSamplingCount = 4;
 }
 
 /////////////////////////////////////////////////////////////////
 
 namespace library
 {
-    Application::Application(const HINSTANCE instanceHandle, const std::wstring& windowClass, const std::wstring& windowTitle, const int showCmd)
+    Application::Application(
+        const HINSTANCE instanceHandle,
+        const std::wstring& windowClass,
+        const std::wstring& windowTitle,
+        const int showCmd
+    )
         : m_instanceHandle(instanceHandle)
         , m_windowClass(windowClass)
         , m_windowTitle(windowTitle)
         , m_showCmd(showCmd)
-        , m_screenWidth(DefaultScreenWidth)
-        , m_screenHeight(DefaultScreenHeight)
+        , m_screenWidth(k_defaultScreenWidth), m_screenHeight(k_defaultScreenHeight)
         , m_windowHandle(nullptr)
         , m_window{}
         , m_stopwatch()
@@ -30,17 +34,18 @@ namespace library
         , m_d3dDevice()
         , m_d3dDeviceContext()
         , m_swapChain()
-        , m_frameRate(DefaultFrameRate)
+        , m_frameRate(k_defaultFrameRate)
         , m_isFullScreen(false)
         , m_depthStencilBufferEnabled(false)
         , m_multiSamplingEnabled(false)
-        , m_multiSamplingCount(DefaultMultiSamplingCount)
+        , m_multiSamplingCount(k_defaultMultiSamplingCount)
         , m_multiSamplingQualityLevels(0)
         , m_depthStencilBuffer()
         , m_renderTargetView()
         , m_depthStencilView()
         , m_viewport()
-    {}
+    {
+    }
 
     Application::~Application()
     {}
@@ -55,29 +60,9 @@ namespace library
         return m_d3dDeviceContext.Get();
     }
 
-    bool Application::DepthBufferEnabled() const
-    {
-        return m_depthStencilBufferEnabled;
-    }
-
     float Application::GetAspectRatio() const
     {
         return static_cast<float>(m_screenWidth) / m_screenHeight;
-    }
-
-    bool Application::IsFullScreen() const
-    {
-        return m_isFullScreen;
-    }
-
-    const D3D11_TEXTURE2D_DESC& Application::GetBackBufferDesc() const
-    {
-        return m_backBufferDesc;
-    }
-
-    const D3D11_VIEWPORT& Application::GetViewport() const
-    {
-        return m_viewport;
     }
 
     /////////////////////////////////////////////////////////////////
@@ -170,13 +155,13 @@ namespace library
 
         RegisterClassEx(&m_window);
 
-        POINT center = CenterWindow(m_screenWidth, m_screenHeight);
+        POINT windowPosition = CenterWindow(m_screenWidth, m_screenHeight);
 
         m_windowHandle = CreateWindow(
             m_windowClass.c_str(),
             m_windowTitle.c_str(),
             WS_OVERLAPPEDWINDOW,
-            center.x, center.y,
+            windowPosition.x, windowPosition.y,
             windowRect.right - windowRect.left, windowRect.bottom - windowRect.top,
             nullptr,
             nullptr,
@@ -239,7 +224,11 @@ namespace library
             }
         }
 
-        m_d3dDevice->CheckMultisampleQualityLevels(DXGI_FORMAT_R8G8B8A8_UNORM, m_multiSamplingCount, &m_multiSamplingQualityLevels);
+        m_d3dDevice->CheckMultisampleQualityLevels(
+            DXGI_FORMAT_R8G8B8A8_UNORM,
+            m_multiSamplingCount,
+            &m_multiSamplingQualityLevels
+        );
         if (!m_multiSamplingQualityLevels)
         {
             throw Exception("Unsupported multi-sampling quality.");
@@ -293,7 +282,14 @@ namespace library
             fullScreenDesc.RefreshRate.Denominator = 1;
             fullScreenDesc.Windowed = !m_isFullScreen;
 
-            hr = dxgiFactory->CreateSwapChainForHwnd(dxgiDevice.Get(), m_windowHandle, &swapChainDesc, &fullScreenDesc, nullptr, m_swapChain.GetAddressOf());
+            hr = dxgiFactory->CreateSwapChainForHwnd(
+                dxgiDevice.Get(),
+                m_windowHandle,
+                &swapChainDesc,
+                &fullScreenDesc,
+                nullptr,
+                m_swapChain.GetAddressOf()
+            );
             if (FAILED(hr))
             {
                 throw Exception("IDXGIDevice::CreateSwapChainForHwnd() failed.", hr);
@@ -345,7 +341,11 @@ namespace library
                     throw Exception("IDXGIDevice::CreateTexture2D() failed.", hr);
                 }
 
-                hr = m_d3dDevice->CreateDepthStencilView(m_depthStencilBuffer.Get(), nullptr, m_depthStencilView.GetAddressOf());
+                hr = m_d3dDevice->CreateDepthStencilView(
+                    m_depthStencilBuffer.Get(),
+                    nullptr,
+                    m_depthStencilView.GetAddressOf()
+                );
                 if (FAILED(hr))
                 {
                     throw Exception("IDXGIDevice::CreateDepthStencilView() failed.", hr);
@@ -401,13 +401,6 @@ namespace library
     {
         switch (message)
         {
-            case WM_KEYDOWN:
-                if (wParam == VK_ESCAPE)
-                {
-                    PostQuitMessage(0);
-                }
-                return 0;
-
             case WM_DESTROY:
                 PostQuitMessage(0);
                 return 0;
