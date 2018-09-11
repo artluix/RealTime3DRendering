@@ -60,9 +60,11 @@ void Game::Initialize()
 
     m_keyboardComponent = std::make_unique<library::KeyboardComponent>(*this, m_directInput);
     m_components.push_back(m_keyboardComponent.get());
+    m_services.AddService(m_keyboardComponent->GetTypeId(), m_keyboardComponent.get());
 
     m_mouseComponent = std::make_unique<library::MouseComponent>(*this, m_directInput);
     m_components.push_back(m_mouseComponent.get());
+    m_services.AddService(m_mouseComponent->GetTypeId(), m_mouseComponent.get());
 
     m_fpsComponent = std::make_unique<library::FpsComponent>(*this);
     m_fpsComponent->SetVisible(true);

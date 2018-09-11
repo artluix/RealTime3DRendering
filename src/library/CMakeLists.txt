@@ -19,9 +19,11 @@ if(APPLICATION)
         include/library/NonCopyable.hpp
         include/library/Path.h
         include/library/RTTI.hpp
+        include/library/ServiceContainer.h
         include/library/Time.h
-        include/library/ViewedComponent.h
         include/library/Utils.h
+        include/library/ViewedComponent.h
+
         # src
         src/Application.cpp
         src/Stopwatch.cpp
@@ -32,8 +34,9 @@ if(APPLICATION)
         src/KeyboardComponent.cpp
         src/MouseComponent.cpp
         src/Path.cpp
-        src/ViewedComponent.cpp
+        src/ServiceContainer.cpp
         src/Utils.cpp
+        src/ViewedComponent.cpp
     )
 
     add_library(library

@@ -1,6 +1,7 @@
 #pragma once
 #include "library/NonCopyable.hpp"
 #include "library/Stopwatch.h"
+#include "library/ServiceContainer.h"
 
 #include <Windows.h>
 #include <d3d11_1.h>
@@ -42,6 +43,7 @@ namespace library
         const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
 
         const std::vector<Component*>& GetComponents() const { return m_components; }
+        const ServiceContainer& GetServices() const { return m_services; }
 
         virtual void Initialize();
         virtual void Run();
@@ -69,8 +71,9 @@ namespace library
         Stopwatch m_stopwatch;
         Time m_time;
 
-        // components
         std::vector<Component*> m_components;
+
+        ServiceContainer m_services;
 
         // DirectX
         D3D_FEATURE_LEVEL m_featureLevel;

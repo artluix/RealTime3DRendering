@@ -30,6 +30,8 @@ namespace library
         , m_window{}
         , m_stopwatch()
         , m_time()
+        , m_components{}
+        , m_services()
         , m_featureLevel(D3D_FEATURE_LEVEL_9_1)
         , m_d3dDevice()
         , m_d3dDeviceContext()
@@ -81,7 +83,7 @@ namespace library
         InitializeDirectX();
         Initialize();
 
-        MSG message = {};
+        MSG message{};
 
         m_stopwatch.Reset();
 

@@ -10,16 +10,6 @@ namespace library
     {
         using TypeId = std::uintptr_t;
 
-        template <class T>
-        TypeId GetTypeId()
-        {
-            static const int generator = 0;
-            const auto typeId = reinterpret_cast<TypeId>(&generator);
-            return typeId;
-        }
-
-        /////////////////////////////////////////////////////////////////
-
         class Base
         {
         public:
@@ -33,6 +23,14 @@ namespace library
 
         namespace detail
         {
+            template <class T>
+            TypeId GetTypeIdImpl()
+            {
+                static const int generator = 0;
+                const auto typeId = reinterpret_cast<TypeId>(&generator);
+                return typeId;
+            }
+
             template <class Cls, class Parent, bool = std::is_base_of<Base, Parent>::value>
             struct ParentIsImpl;
 
@@ -50,7 +48,7 @@ namespace library
             {
                 bool operator()(const Cls*, const TypeId typeId) const
                 {
-                    return GetTypeId<Parent>() == typeId;
+                    return GetTypeIdImpl<Parent>() == typeId;
                 }
             };
         }
@@ -66,13 +64,15 @@ namespace library
         public:
             bool Is(const TypeId typeId) const override
             {
-                return GetTypeId<Cls>() == typeId;
+                return GetTypeId() == typeId;
             }
+
+            TypeId GetTypeId() const { return detail::GetTypeIdImpl<Cls>(); }
 
             template <class T>
             T* As()
             {
-                if (Is(GetTypeId<T>()))
+                if (Is(detail::GetTypeIdImpl<T>()))
                 {
                     auto self = static_cast<Cls*>(this);
                     return static_cast<T*>(self);
@@ -84,7 +84,7 @@ namespace library
             template <class T>
             const T* As() const
             {
-                if (Is(GetTypeId<T>()))
+                if (Is(detail::GetTypeIdImpl<T>()))
                 {
                     auto self = static_cast<const Cls*>(this);
                     return static_cast<const T*>(self);
@@ -106,18 +106,20 @@ namespace library
         public:
             bool Is(const TypeId typeId) const override
             {
-                if (GetTypeId<Cls>() == typeId)
+                if (GetTypeId() == typeId)
                     return true;
 
                 auto self = static_cast<const Cls*>(this);
                 return detail::ParentIsImpl<Cls, Parent>()(self, typeId);
             }
 
-            // yes, duplicate, but we should reduce hierarchy nodes count
+            TypeId GetTypeId() const { return detail::GetTypeIdImpl<Cls>(); }
+
+            // it's duplicated to reduce hierarchy nodes count
             template <class T>
             T* As()
             {
-                if (Is(GetTypeId<T>()))
+                if (Is(detail::GetTypeIdImpl<T>()))
                 {
                     auto self = static_cast<Cls*>(this);
                     return static_cast<T*>(self);
@@ -129,7 +131,7 @@ namespace library
             template <class T>
             const T* As() const
             {
-                if (Is(GetTypeId<T>()))
+                if (Is(detail::GetTypeIdImpl<T>()))
                 {
                     auto self = static_cast<const Cls*>(this);
                     return static_cast<const T*>(self);
