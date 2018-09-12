@@ -6,37 +6,43 @@ if(APPLICATION)
     set(LIBRARY_FILES
         # include
         include/library/Application.h
-        include/library/Camera.h
         include/library/Stopwatch.h
         include/library/Common.h
-        include/library/Component.h
-        include/library/DrawableComponent.h
+
+        include/library/Components/BaseComponent.h
+        include/library/Components/CameraComponent.h
+        include/library/Components/DrawableComponent.h
+        include/library/Components/FpsComponent.h
+        include/library/Components/KeyboardComponent.h
+        include/library/Components/MouseComponent.h
+        include/library/Components/ViewedComponent.h
+
         include/library/Exception.h
-        include/library/FpsComponent.h
         include/library/Key.h
-        include/library/KeyboardComponent.h
-        include/library/MouseComponent.h
+        include/library/Math.hpp
         include/library/NonCopyable.hpp
         include/library/Path.h
         include/library/RTTI.hpp
         include/library/ServiceContainer.h
         include/library/Time.h
         include/library/Utils.h
-        include/library/ViewedComponent.h
 
         # src
         src/Application.cpp
-        src/Stopwatch.cpp
-        src/Component.cpp
-        src/DrawableComponent.cpp
+
+        src/Components/BaseComponent.cpp
+        src/Components/CameraComponent.cpp
+        src/Components/DrawableComponent.cpp
+        src/Components/FpsComponent.cpp
+        src/Components/KeyboardComponent.cpp
+        src/Components/MouseComponent.cpp
+        src/Components/ViewedComponent.cpp
+
         src/Exception.cpp
-        src/FpsComponent.cpp
-        src/KeyboardComponent.cpp
-        src/MouseComponent.cpp
         src/Path.cpp
         src/ServiceContainer.cpp
+        src/Stopwatch.cpp
         src/Utils.cpp
-        src/ViewedComponent.cpp
     )
 
     add_library(library

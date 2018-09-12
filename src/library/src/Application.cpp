@@ -1,20 +1,23 @@
 #include "library/Application.h"
 
 #include "library/Exception.h"
-#include "library/DrawableComponent.h"
-
-namespace
-{
-    constexpr unsigned k_defaultScreenWidth = 800;
-    constexpr unsigned k_defaultScreenHeight = 600;
-    constexpr unsigned k_defaultFrameRate = 60;
-    constexpr unsigned k_defaultMultiSamplingCount = 4;
-}
+#include "library/components/DrawableComponent.h"
 
 /////////////////////////////////////////////////////////////////
 
 namespace library
 {
+    namespace
+    {
+        constexpr unsigned k_defaultScreenWidth = 800;
+        constexpr unsigned k_defaultScreenHeight = 600;
+        constexpr unsigned k_defaultFrameRate = 60;
+        constexpr unsigned k_defaultMultiSamplingCount = 4;
+        constexpr bool k_isFullscreen = false;
+
+        const Application* app;
+    }
+
     Application::Application(
         const HINSTANCE instanceHandle,
         const std::wstring& windowClass,
@@ -37,7 +40,7 @@ namespace library
         , m_d3dDeviceContext()
         , m_swapChain()
         , m_frameRate(k_defaultFrameRate)
-        , m_isFullScreen(false)
+        , m_isFullScreen(k_isFullscreen)
         , m_depthStencilBufferEnabled(false)
         , m_multiSamplingEnabled(false)
         , m_multiSamplingCount(k_defaultMultiSamplingCount)
@@ -47,6 +50,7 @@ namespace library
         , m_depthStencilView()
         , m_viewport()
     {
+        app = this;
     }
 
     Application::~Application()
@@ -128,7 +132,7 @@ namespace library
     {
         for (auto component : m_components)
         {
-            auto drawableComponent = component->As<DrawableComponent>();
+            auto drawableComponent = component->As<components::Drawable>();
             if (!!drawableComponent && drawableComponent->IsVisible())
             {
                 drawableComponent->Draw(time);
@@ -170,6 +174,15 @@ namespace library
             m_instanceHandle,
             nullptr
         );
+
+        ::GetWindowRect(m_windowHandle, &m_windowRect);
+
+        // set cursor position
+        POINT p{0, 0};
+        if (ClientToScreen(m_windowHandle, &p))
+        {
+            SetCursorPos(p.x, p.y);
+        }
 
         ShowWindow(m_windowHandle, m_showCmd);
         UpdateWindow(m_windowHandle);
@@ -406,6 +419,9 @@ namespace library
             case WM_DESTROY:
                 PostQuitMessage(0);
                 return 0;
+
+            case WM_MOUSEMOVE:
+                ClipCursor(&app->GetWindowRect());
 
             default:
                 return DefWindowProc(windowHandle, message, wParam, lParam);

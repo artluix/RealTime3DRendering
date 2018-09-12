@@ -13,7 +13,10 @@ using Microsoft::WRL::ComPtr;
 
 namespace library
 {
-    class Component;
+    namespace components
+    {
+        class Base;
+    }
 
     class Application : public NonCopyable<Application>
     {
@@ -33,6 +36,7 @@ namespace library
         const std::wstring& GetWindowTitle() const { return m_windowTitle; }
         unsigned GetScreenWidth() const { return m_screenWidth; }
         unsigned GetScreenHeight() const { return m_screenHeight; }
+        const RECT& GetWindowRect() const { return m_windowRect; }
 
         ID3D11Device1* GetD3DDevice() const;
         ID3D11DeviceContext1* GetD3DDeviceContext() const;
@@ -42,7 +46,7 @@ namespace library
         const D3D11_TEXTURE2D_DESC& GetBackBufferDesc() const { return m_backBufferDesc; }
         const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
 
-        const std::vector<Component*>& GetComponents() const { return m_components; }
+        const std::vector<components::Base*>& GetComponents() const { return m_components; }
         const ServiceContainer& GetServices() const { return m_services; }
 
         virtual void Initialize();
@@ -67,11 +71,12 @@ namespace library
         WNDCLASSEX m_window;
 
         unsigned m_screenWidth, m_screenHeight;
+        RECT m_windowRect;
 
         Stopwatch m_stopwatch;
         Time m_time;
 
-        std::vector<Component*> m_components;
+        std::vector<components::Base*> m_components;
 
         ServiceContainer m_services;
 

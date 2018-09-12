@@ -7,9 +7,12 @@
 
 namespace library
 {
-    class FpsComponent;
-    class KeyboardComponent;
-    class MouseComponent;
+    namespace components
+    {
+        class Fps;
+        class Keyboard;
+        class Mouse;
+    }
 }
 
 namespace DirectX
@@ -37,9 +40,9 @@ protected:
     void Shutdown() override;
 
 private:
-    std::unique_ptr<library::FpsComponent> m_fpsComponent;
-    std::unique_ptr<library::KeyboardComponent> m_keyboardComponent;
-    std::unique_ptr<library::MouseComponent> m_mouseComponent;
+    std::unique_ptr<library::components::Fps> m_fpsComponent;
+    std::unique_ptr<library::components::Keyboard> m_keyboardComponent;
+    std::unique_ptr<library::components::Mouse> m_mouseComponent;
 
     ComPtr<IDirectInput8> m_directInput;
 
