@@ -2,7 +2,7 @@
 
 #include "library/Exception.h"
 #include "library/Common.h"
-#include "library/Math.hpp"
+#include "library/Math.h"
 
 #include <cassert>
 

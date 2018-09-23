@@ -18,4 +18,3 @@ namespace library
         NonCopyable& operator=(const NonCopyable&) = delete;
     };
 }
-

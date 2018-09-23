@@ -7,15 +7,13 @@
 
 namespace library
 {
-    namespace
+    namespace defaults
     {
-        constexpr unsigned k_defaultScreenWidth = 800;
-        constexpr unsigned k_defaultScreenHeight = 600;
-        constexpr unsigned k_defaultFrameRate = 60;
-        constexpr unsigned k_defaultMultiSamplingCount = 4;
+        constexpr unsigned k_screenWidth = 800;
+        constexpr unsigned k_screenHeight = 600;
+        constexpr unsigned k_frameRate = 60;
+        constexpr unsigned k_multiSamplingCount = 4;
         constexpr bool k_isFullscreen = false;
-
-        const Application* app;
     }
 
     Application::Application(
@@ -28,7 +26,7 @@ namespace library
         , m_windowClass(windowClass)
         , m_windowTitle(windowTitle)
         , m_showCmd(showCmd)
-        , m_screenWidth(k_defaultScreenWidth), m_screenHeight(k_defaultScreenHeight)
+        , m_screenWidth(defaults::k_screenWidth), m_screenHeight(defaults::k_screenHeight)
         , m_windowHandle(nullptr)
         , m_window{}
         , m_stopwatch()
@@ -39,18 +37,17 @@ namespace library
         , m_d3dDevice()
         , m_d3dDeviceContext()
         , m_swapChain()
-        , m_frameRate(k_defaultFrameRate)
-        , m_isFullScreen(k_isFullscreen)
+        , m_frameRate(defaults::k_frameRate)
+        , m_isFullScreen(defaults::k_isFullscreen)
         , m_depthStencilBufferEnabled(false)
         , m_multiSamplingEnabled(false)
-        , m_multiSamplingCount(k_defaultMultiSamplingCount)
+        , m_multiSamplingCount(defaults::k_multiSamplingCount)
         , m_multiSamplingQualityLevels(0)
         , m_depthStencilBuffer()
         , m_renderTargetView()
         , m_depthStencilView()
         , m_viewport()
     {
-        app = this;
     }
 
     Application::~Application()
@@ -419,9 +416,6 @@ namespace library
             case WM_DESTROY:
                 PostQuitMessage(0);
                 return 0;
-
-            case WM_MOUSEMOVE:
-                ClipCursor(&app->GetWindowRect());
 
             default:
                 return DefWindowProc(windowHandle, message, wParam, lParam);

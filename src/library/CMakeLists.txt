@@ -19,8 +19,9 @@ if(APPLICATION)
 
         include/library/Exception.h
         include/library/Key.h
-        include/library/Math.hpp
+        include/library/Math.h
         include/library/NonCopyable.hpp
+        include/library/NonConstructible.hpp
         include/library/Path.h
         include/library/RTTI.hpp
         include/library/ServiceContainer.h
@@ -39,6 +40,7 @@ if(APPLICATION)
         src/Components/ViewedComponent.cpp
 
         src/Exception.cpp
+        src/Math.cpp
         src/Path.cpp
         src/ServiceContainer.cpp
         src/Stopwatch.cpp
