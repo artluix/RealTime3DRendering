@@ -16,4 +16,4 @@ namespace library
         TimePoint m_startTimePoint;
         TimePoint m_currentTimePoint;
     };
-}
+} // namespace library

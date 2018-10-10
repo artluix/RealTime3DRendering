@@ -18,11 +18,11 @@ namespace library
 
     namespace components
     {
-        class Mouse : public rtti::Class<Mouse, Base>
+        class MouseComponent : public rtti::Class<MouseComponent, BaseComponent>
         {
         public:
-            explicit Mouse(const Application& app, ComPtr<IDirectInput8>& directInput);
-            ~Mouse();
+            explicit MouseComponent(const Application& app, ComPtr<IDirectInput8>& directInput);
+            ~MouseComponent();
 
             void Initialize() override;
             void Update(const Time& time) override;
@@ -53,6 +53,5 @@ namespace library
 
             long m_x, m_y, m_wheel;
         };
-    }
-}
-
+    } // namespace components
+} // namespace library

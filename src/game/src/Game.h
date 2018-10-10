@@ -9,18 +9,19 @@ namespace library
 {
     namespace components
     {
-        class Fps;
-        class Keyboard;
-        class Mouse;
-    }
-}
+        class FpsComponent;
+        class KeyboardComponent;
+        class MouseComponent;
+        class GridComponent;
+        class FirstPersonCameraComponent;
+    } // namespace components
+} // namespace library
 
 namespace DirectX
 {
     class SpriteBatch;
     class SpriteFont;
-}
-
+} // namespace DirectX
 
 class Game : public library::Application
 {
@@ -40,9 +41,11 @@ protected:
     void Shutdown() override;
 
 private:
-    std::unique_ptr<library::components::Fps> m_fpsComponent;
-    std::unique_ptr<library::components::Keyboard> m_keyboardComponent;
-    std::unique_ptr<library::components::Mouse> m_mouseComponent;
+    std::unique_ptr<library::components::FpsComponent> m_fpsComponent;
+    std::unique_ptr<library::components::KeyboardComponent> m_keyboardComponent;
+    std::unique_ptr<library::components::MouseComponent> m_mouseComponent;
+    std::unique_ptr<library::components::GridComponent> m_gridComponent;
+    std::unique_ptr<library::components::FirstPersonCameraComponent> m_cameraComponent;
 
     ComPtr<IDirectInput8> m_directInput;
 

@@ -9,11 +9,11 @@ namespace library
 {
     namespace components
     {
-        class Keyboard : public rtti::Class<Keyboard, Base>
+        class KeyboardComponent : public rtti::Class<KeyboardComponent, BaseComponent>
         {
         public:
-            explicit Keyboard(const Application& app, const ComPtr<IDirectInput8>& directInput);
-            ~Keyboard();
+            explicit KeyboardComponent(const Application& app, const ComPtr<IDirectInput8>& directInput);
+            ~KeyboardComponent();
 
             void Initialize() override;
             void Update(const Time& time) override;
@@ -38,5 +38,5 @@ namespace library
             KeysStateArray m_keysState;
             KeysStateArray m_previousKeysState;
         };
-    }
-}
+    } // namespace components
+} // namespace library

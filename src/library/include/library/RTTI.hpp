@@ -160,5 +160,5 @@ namespace library
         {
             return self->As<To>();
         }
-    }
-}
+    } // namespace rtti
+} // namespace library

@@ -1,7 +1,6 @@
 #pragma once
 #include "library/components/DrawableComponent.h"
-
-#include <DirectXMath.h>
+#include "library/Math.h"
 
 namespace DirectX
 {
@@ -13,14 +12,14 @@ namespace library
 {
     namespace components
     {
-        class Fps : public rtti::Class<Fps, Drawable>
+        class FpsComponent : public rtti::Class<FpsComponent, DrawableComponent>
         {
         public:
-            explicit Fps(const Application& app);
-            ~Fps() = default;
+            explicit FpsComponent(const Application& app);
+            ~FpsComponent() = default;
 
-            DirectX::XMFLOAT2 GetTextPosition() const { return m_textPosition; }
-            void SetTextPosition(const DirectX::XMFLOAT2& position);
+            math::Vector2f GetTextPosition() const { return m_textPosition; }
+            void SetTextPosition(const math::Vector2f& position) { m_textPosition = position; }
 
             unsigned GetFrameRate() const { return m_frameRate; }
 
@@ -32,11 +31,11 @@ namespace library
             std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
             std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
 
-            DirectX::XMFLOAT2 m_textPosition;
+            math::Vector2f m_textPosition;
             unsigned m_frameCount;
             unsigned m_frameRate;
 
             Duration m_timeAccumulator;
         };
-    }
-}
+    } // namespace components
+} // namespace library

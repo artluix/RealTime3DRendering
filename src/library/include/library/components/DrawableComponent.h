@@ -6,11 +6,11 @@ namespace library
 {
     namespace components
     {
-        class Drawable : public rtti::Class<Drawable, Base>
+        class DrawableComponent : public rtti::Class<DrawableComponent, BaseComponent>
         {
         public:
-            explicit Drawable(const Application& app);
-            ~Drawable() = default;
+            explicit DrawableComponent(const Application& app);
+            ~DrawableComponent() = default;
 
             bool IsVisible() const { return m_visible; }
             void SetVisible(const bool visible);
@@ -20,5 +20,5 @@ namespace library
         protected:
             bool m_visible;
         };
-    }
-}
+    } // namespace components
+} // namespace library

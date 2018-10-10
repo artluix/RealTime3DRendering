@@ -24,4 +24,4 @@ namespace library
 
         m_currentTimePoint = now;
     }
-}
+} // namespace library

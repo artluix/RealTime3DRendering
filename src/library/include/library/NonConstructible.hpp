@@ -11,4 +11,4 @@ namespace library
         explicit NonConstructible(NonConstructible&&) = delete;
         explicit NonConstructible(const NonConstructible&) = delete;
     };
-}
+} // namespace library

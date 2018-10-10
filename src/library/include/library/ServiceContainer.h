@@ -19,5 +19,4 @@ namespace library
     private:
         std::unordered_map<rtti::TypeId, void* const> m_services;
     };
-}
-
+} // namespace library

@@ -17,4 +17,4 @@ namespace library
         explicit NonCopyable(const NonCopyable&) = delete;
         NonCopyable& operator=(const NonCopyable&) = delete;
     };
-}
+} // namespace library

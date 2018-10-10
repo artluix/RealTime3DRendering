@@ -15,7 +15,7 @@ namespace library
 {
     namespace components
     {
-        class Base;
+        class BaseComponent;
     }
 
     class Application : public NonCopyable<Application>
@@ -46,7 +46,7 @@ namespace library
         const D3D11_TEXTURE2D_DESC& GetBackBufferDesc() const { return m_backBufferDesc; }
         const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
 
-        const std::vector<components::Base*>& GetComponents() const { return m_components; }
+        const std::vector<components::BaseComponent*>& GetComponents() const { return m_components; }
         const ServiceContainer& GetServices() const { return m_services; }
 
         virtual void Initialize();
@@ -76,7 +76,7 @@ namespace library
         Stopwatch m_stopwatch;
         Time m_time;
 
-        std::vector<components::Base*> m_components;
+        std::vector<components::BaseComponent*> m_components;
 
         ServiceContainer m_services;
 
@@ -104,4 +104,4 @@ namespace library
 
         static LRESULT WINAPI WndProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam);
     };
-}
+} // namespace library

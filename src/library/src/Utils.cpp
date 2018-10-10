@@ -16,18 +16,14 @@ namespace library
         filesystem::Path GetCurrentDirectory()
         {
             std::array<wchar_t, MAX_PATH> buffer;
-
             ::GetCurrentDirectory(MAX_PATH, buffer.data());
-
             return filesystem::Path(buffer.data());
         }
 
         filesystem::Path GetExecutableDirectory()
         {
             std::array<wchar_t, MAX_PATH> buffer;
-
             ::GetModuleFileName(nullptr, buffer.data(), MAX_PATH);
-
             return filesystem::Path(buffer.data()).GetDirName();
         }
 
@@ -51,5 +47,5 @@ namespace library
 
             file.close();
         }
-    }
-}
+    } // namespace utils
+} // namespace library

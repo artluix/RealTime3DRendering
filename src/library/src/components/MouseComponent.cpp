@@ -15,7 +15,7 @@ namespace library
 
     namespace components
     {
-        Mouse::Mouse(const Application& app, ComPtr<IDirectInput8>& directInput)
+        MouseComponent::MouseComponent(const Application& app, ComPtr<IDirectInput8>& directInput)
             : Class(app)
             , m_directInput(directInput)
             , m_directInputDevice()
@@ -24,7 +24,7 @@ namespace library
         {
         }
 
-        Mouse::~Mouse()
+        MouseComponent::~MouseComponent()
         {
             if (!!m_directInputDevice)
             {
@@ -33,7 +33,7 @@ namespace library
             }
         }
 
-        void Mouse::Initialize()
+        void MouseComponent::Initialize()
         {
             auto hr = m_directInput->CreateDevice(GUID_SysMouse, m_directInputDevice.GetAddressOf(), nullptr);
             if (FAILED(hr))
@@ -60,7 +60,7 @@ namespace library
             }
         }
 
-        void Mouse::Update(const Time& time)
+        void MouseComponent::Update(const Time& time)
         {
             if (!m_directInputDevice)
                 return;
@@ -87,39 +87,39 @@ namespace library
 
         /////////////////////////////////////////////////////////////////
 
-        bool Mouse::IsButtonUp(const MouseButton mb) const
+        bool MouseComponent::IsButtonUp(const MouseButton mb) const
         {
             return (m_currentState.rgbButtons[to_integral(mb)] & k_buttonDownMask) == 0;
         }
 
-        bool Mouse::IsButtonDown(const MouseButton mb) const
+        bool MouseComponent::IsButtonDown(const MouseButton mb) const
         {
             return !IsButtonUp(mb);
         }
 
-        bool Mouse::WasButtonUp(const MouseButton mb) const
+        bool MouseComponent::WasButtonUp(const MouseButton mb) const
         {
             return (m_previousState.rgbButtons[to_integral(mb)] & k_buttonDownMask) == 0;
         }
 
-        bool Mouse::WasButtonDown(const MouseButton mb) const
+        bool MouseComponent::WasButtonDown(const MouseButton mb) const
         {
             return !WasButtonUp(mb);
         }
 
-        bool Mouse::WasButtonPressed(const MouseButton mb) const
+        bool MouseComponent::WasButtonPressed(const MouseButton mb) const
         {
             return IsButtonDown(mb) && WasButtonUp(mb);
         }
 
-        bool Mouse::WasButtonReleased(const MouseButton mb) const
+        bool MouseComponent::WasButtonReleased(const MouseButton mb) const
         {
             return IsButtonUp(mb) && WasButtonDown(mb);
         }
 
-        bool Mouse::IsButtonHeldDown(const MouseButton mb) const
+        bool MouseComponent::IsButtonHeldDown(const MouseButton mb) const
         {
             return IsButtonDown(mb) && WasButtonDown(mb);
         }
-    }
-}
+    } // namespace components
+} // namespace library

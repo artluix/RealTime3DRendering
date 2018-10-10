@@ -1,24 +1,22 @@
 #pragma once
 #include "library/components/DrawableComponent.h"
+#include "library/components/CameraComponent.h"
 
 namespace library
 {
     namespace components
     {
-        class Camera;
-
-        class Viewed : public rtti::Class<Viewed, Drawable>
+        class ViewedComponent : public rtti::Class<ViewedComponent, DrawableComponent>
         {
         public:
-            explicit Viewed(const Application& app, const Camera& camera);
-            ~Viewed() = default;
+            explicit ViewedComponent(const Application& app, const CameraComponent& camera);
+            ~ViewedComponent() = default;
 
-            const Camera& GetCamera() { return m_camera; }
-            //void SetCamera(Camera& camera);
+            const CameraComponent& GetCamera() { return m_camera; }
+            void SetCamera(const CameraComponent& camera);
 
         protected:
-            //std::reference_wrapper<Camera> m_camera;
-            const Camera& m_camera;
+            std::reference_wrapper<const CameraComponent> m_camera;
         };
-    }
-}
+    } // namespace components
+} // namespace library

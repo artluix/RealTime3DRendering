@@ -33,6 +33,5 @@ namespace library
 
             std::wstring m_path;
         };
-    }
-}
-
+    } // namespace filesystem
+} // namespace library

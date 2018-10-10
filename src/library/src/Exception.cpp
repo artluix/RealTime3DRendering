@@ -12,4 +12,4 @@ namespace library
     {
         return std::string(what()) + " Error: " + std::to_string(m_hr);
     }
-}
+} // namespace library

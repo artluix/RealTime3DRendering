@@ -14,7 +14,7 @@ namespace library
 
     namespace components
     {
-        Keyboard::Keyboard(const Application& app, const ComPtr<IDirectInput8>& directInput)
+        KeyboardComponent::KeyboardComponent(const Application& app, const ComPtr<IDirectInput8>& directInput)
             : Class(app)
             , m_directInput(directInput)
             , m_directInputDevice()
@@ -24,7 +24,7 @@ namespace library
             m_previousKeysState.fill(0);
         }
 
-        Keyboard::~Keyboard()
+        KeyboardComponent::~KeyboardComponent()
         {
             if (!!m_directInputDevice)
             {
@@ -33,7 +33,7 @@ namespace library
             }
         }
 
-        void Keyboard::Initialize()
+        void KeyboardComponent::Initialize()
         {
             auto hr = m_directInput->CreateDevice(GUID_SysKeyboard, m_directInputDevice.GetAddressOf(), nullptr);
             if (FAILED(hr))
@@ -60,7 +60,7 @@ namespace library
             }
         }
 
-        void Keyboard::Update(const Time& time)
+        void KeyboardComponent::Update(const Time& time)
         {
             if (!m_directInputDevice)
                 return;
@@ -81,39 +81,39 @@ namespace library
 
         /////////////////////////////////////////////////////////////////
 
-        bool Keyboard::IsKeyUp(const Key key) const
+        bool KeyboardComponent::IsKeyUp(const Key key) const
         {
             return (m_keysState[to_integral(key)] & k_keyDownMask) == 0;
         }
 
-        bool Keyboard::IsKeyDown(const Key key) const
+        bool KeyboardComponent::IsKeyDown(const Key key) const
         {
             return !IsKeyUp(key);
         }
 
-        bool Keyboard::WasKeyUp(const Key key) const
+        bool KeyboardComponent::WasKeyUp(const Key key) const
         {
             return (m_previousKeysState[to_integral(key)] & k_keyDownMask) == 0;
         }
 
-        bool Keyboard::WasKeyDown(const Key key) const
+        bool KeyboardComponent::WasKeyDown(const Key key) const
         {
             return !WasKeyUp(key);
         }
 
-        bool Keyboard::WasKeyPressed(const Key key) const
+        bool KeyboardComponent::WasKeyPressed(const Key key) const
         {
             return IsKeyDown(key) && WasKeyUp(key);
         }
 
-        bool Keyboard::WasKeyReleased(const Key key) const
+        bool KeyboardComponent::WasKeyReleased(const Key key) const
         {
             return IsKeyUp(key) && WasKeyDown(key);
         }
 
-        bool Keyboard::IsKeyHeldDown(const Key key) const
+        bool KeyboardComponent::IsKeyHeldDown(const Key key) const
         {
             return IsKeyUp(key) && IsKeyDown(key);
         }
-    }
-}
+    } // namespace components
+} // namespace library

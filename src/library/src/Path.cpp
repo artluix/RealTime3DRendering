@@ -140,5 +140,5 @@ namespace library
             static constexpr wchar_t badSep = L'\\';
             std::replace(std::begin(m_path), std::end(m_path), badSep, k_sep);
         }
-    }
-}
+    } // namespace path
+} // namespace library

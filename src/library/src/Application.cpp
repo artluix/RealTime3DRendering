@@ -7,13 +7,16 @@
 
 namespace library
 {
-    namespace defaults
+    namespace
     {
-        constexpr unsigned k_screenWidth = 800;
-        constexpr unsigned k_screenHeight = 600;
-        constexpr unsigned k_frameRate = 60;
-        constexpr unsigned k_multiSamplingCount = 4;
-        constexpr bool k_isFullscreen = false;
+        namespace defaults
+        {
+            constexpr unsigned k_screenWidth = 800;
+            constexpr unsigned k_screenHeight = 600;
+            constexpr unsigned k_frameRate = 60;
+            constexpr unsigned k_multiSamplingCount = 4;
+            constexpr bool k_isFullscreen = false;
+        }
     }
 
     Application::Application(
@@ -129,7 +132,7 @@ namespace library
     {
         for (auto component : m_components)
         {
-            auto drawableComponent = component->As<components::Drawable>();
+            auto drawableComponent = component->As<components::DrawableComponent>();
             if (!!drawableComponent && drawableComponent->IsVisible())
             {
                 drawableComponent->Draw(time);
@@ -421,4 +424,4 @@ namespace library
                 return DefWindowProc(windowHandle, message, wParam, lParam);
         }
     }
-}
+} // namespace library

@@ -12,5 +12,5 @@ namespace library
         filesystem::Path GetExecutableDirectory();
 
         void LoadBinaryFile(const filesystem::Path& path, std::vector<byte>& data);
-    };
-}
+    }; // namespace utils
+} // namespace library

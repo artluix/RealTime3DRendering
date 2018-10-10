@@ -29,4 +29,4 @@ namespace library
 
         return nullptr;
     }
-}
+} // namespace library

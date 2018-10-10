@@ -22,7 +22,7 @@ namespace library
 
     namespace components
     {
-        Fps::Fps(const Application& app)
+        FpsComponent::FpsComponent(const Application& app)
             : Class(app)
             , m_textPosition(0.0f, 0.0f)
             , m_frameCount(0)
@@ -31,18 +31,13 @@ namespace library
         {
         }
 
-        void Fps::SetTextPosition(const DirectX::XMFLOAT2& position)
-        {
-            m_textPosition = position;
-        }
-
-        void Fps::Initialize()
+        void FpsComponent::Initialize()
         {
             m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(m_app.GetD3DDeviceContext());
             m_spriteFont = std::make_unique<DirectX::SpriteFont>(m_app.GetD3DDevice(), k_fontPath.GetAsWideCString());
         }
 
-        void Fps::Update(const Time& time)
+        void FpsComponent::Update(const Time& time)
         {
             const auto elapsed = time.elapsed.GetDuration();
             if (m_timeAccumulator >= k_fpsMeasureInterval)
@@ -60,7 +55,7 @@ namespace library
             m_frameCount++;
         }
 
-        void Fps::Draw(const Time& time)
+        void FpsComponent::Draw(const Time& time)
         {
             m_spriteBatch->Begin();
 
@@ -72,5 +67,5 @@ namespace library
 
             m_spriteBatch->End();
         }
-    }
-}
+    } // namespace components
+} // namespace library

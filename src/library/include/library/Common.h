@@ -19,4 +19,4 @@ namespace library
 
     template <typename T>
     using Tuple2 = std::array<T, 2>;
-}
+} // namespace library

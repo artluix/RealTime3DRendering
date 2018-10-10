@@ -5,23 +5,23 @@ namespace library
 {
     namespace components
     {
-        Base::Base(const Application& app)
+        BaseComponent::BaseComponent(const Application& app)
             : m_app(app)
             , m_enabled(true)
         {
         }
 
-        void Base::SetEnabled(const bool enabled)
+        void BaseComponent::SetEnabled(const bool enabled)
         {
             m_enabled = enabled;
         }
 
-        void Base::Initialize()
+        void BaseComponent::Initialize()
         {
         }
 
-        void Base::Update(const Time& time)
+        void BaseComponent::Update(const Time& time)
         {
         }
-    }
-}
+    } // namespace components
+} // namespace library

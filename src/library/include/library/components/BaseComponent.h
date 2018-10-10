@@ -7,13 +7,13 @@ namespace library
 {
     namespace components
     {
-        class Base
-            : public NonCopyable<Base>
-            , public rtti::Class<Base>
+        class BaseComponent
+            : public NonCopyable<BaseComponent>
+            , public rtti::Class<BaseComponent>
         {
         public:
-            explicit Base(const Application& app);
-            virtual ~Base() = default;
+            explicit BaseComponent(const Application& app);
+            virtual ~BaseComponent() = default;
 
             bool IsEnabled() const { return m_enabled; }
             void SetEnabled(const bool enabled);
@@ -25,5 +25,5 @@ namespace library
             const Application& m_app;
             bool m_enabled;
         };
-    }
-}
+    } // namespace components
+} // namespace library
