@@ -1,11 +1,14 @@
 #include "library/components/GridComponent.h"
 
+#include "library/components/CameraComponent.h"
+#include "library/Application.h"
 #include "library/Utils.h"
 #include "library/Path.h"
 #include "library/Exception.h"
 #include "library/VertexDeclarations.h"
 
 #include <d3dx11effect.h>
+#include <d3dcompiler.h>
 #include <vector>
 
 namespace library
@@ -33,12 +36,6 @@ namespace library
             , m_color(defaults::k_color)
             , m_position(math::Vector3f::Zero)
             , m_worldMatrix(math::Matrix4::Identity)
-            , m_effect()
-            , m_technique()
-            , m_pass()
-            , m_wvpVariable()
-            , m_inputLayout()
-            , m_vertexBuffer()
         {
         }
 
@@ -49,12 +46,6 @@ namespace library
             , m_color(color)
             , m_position(math::Vector3f::Zero)
             , m_worldMatrix(math::Matrix4::Identity)
-            , m_effect()
-            , m_technique()
-            , m_pass()
-            , m_wvpVariable()
-            , m_inputLayout()
-            , m_vertexBuffer()
         {
         }
 
@@ -93,6 +84,8 @@ namespace library
         {
             if (m_position != position)
             {
+                Logger::Info("Grid position changed: %s", position.ToString().c_str());
+
                 m_position = position;
 
                 const auto translation = DirectX::XMMatrixTranslation(position.x, position.y, position.z);
@@ -112,70 +105,90 @@ namespace library
         {
             const Application& app = m_app;
 
-            ComPtr<ID3DBlob> errorBlob;
-
-            // compile shader (it should be simple load)
-            auto hr = D3DX11CompileEffectFromFile(
-                k_effectPath.GetAsWideString().c_str(),
-                nullptr,
-                nullptr,
-                0,
-                0,
-                app.GetD3DDevice(),
-                m_effect.GetAddressOf(),
-                errorBlob.GetAddressOf()
-            );
-
-            if (FAILED(hr))
+            // shader
             {
-                std::string error = std::string("D3DX11CompileEffectFromFile() failed: ")
-                    + std::string(static_cast<const char*>(errorBlob->GetBufferPointer()), errorBlob->GetBufferSize());
-                throw Exception(error.c_str(), hr);
+                ComPtr<ID3DBlob> errorBlob;
+                ComPtr<ID3DBlob> shaderBlob;
+
+                auto hr = D3DCompileFromFile(
+                    k_effectPath.GetAsWideString().c_str(),
+                    nullptr,
+                    nullptr,
+                    nullptr,
+                    "fx_5_0",
+#if defined(DEBUG) || defined(DEBUG)
+                    D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
+#else
+                    0,
+#endif
+                    0,
+                    shaderBlob.GetAddressOf(),
+                    errorBlob.GetAddressOf()
+                );
+                if (FAILED(hr))
+                {
+                    std::string error = std::string("D3DX11CompileEffectFromFile() failed: ")
+                        + std::string(static_cast<const char*>(errorBlob->GetBufferPointer()), errorBlob->GetBufferSize());
+                    throw Exception(error.c_str(), hr);
+                }
+
+                hr = D3DX11CreateEffectFromMemory(
+                    shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
+                    0,
+                    app.GetD3DDevice(),
+                    m_effect.GetAddressOf()
+                );
+                if (FAILED(hr))
+                {
+                    throw Exception("D3DX11CreateEffectFromMemory() failed.", hr);
+                }
             }
 
             // Look up the technique, pass, and WVP variable from the effect
             m_technique = m_effect->GetTechniqueByName("main11");
             if (!m_technique)
             {
-                throw Exception("ID3DX11Effect::GetTechniqueByName() could not find the specified technique.", hr);
+                throw Exception("ID3DX11Effect::GetTechniqueByName() could not find the specified technique.");
             }
 
             m_pass = m_technique->GetPassByName("p0");
             if (!m_pass)
             {
-                throw Exception("ID3DX11Effect::GetPassByName() could not find the specified pass.", hr);
+                throw Exception("ID3DX11Effect::GetPassByName() could not find the specified pass.");
             }
 
             auto variable = m_effect->GetVariableByName("WorldViewProjection");
             if (!variable)
             {
-                throw Exception("ID3DX11Effect::GetVariableByName() could not find the specified variable.", hr);
+                throw Exception("ID3DX11Effect::GetVariableByName() could not find the specified variable.");
             }
 
             m_wvpVariable = variable->AsMatrix();
             if (!m_wvpVariable->IsValid())
             {
-                throw Exception("Invalid effect variable cast.", hr);
+                throw Exception("Invalid effect variable cast.");
             }
 
             // Create the input layout
-            D3DX11_PASS_DESC passDesc;
-            m_pass->GetDesc(&passDesc);
-
-            std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions = 
             {
-                { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-                { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-            };
+                D3DX11_PASS_DESC passDesc;
+                m_pass->GetDesc(&passDesc);
 
-            hr = app.GetD3DDevice()->CreateInputLayout(
-                inputElementDescriptions.data(), inputElementDescriptions.size(),
-                passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
-                m_inputLayout.GetAddressOf()
-            );
-            if (FAILED(hr))
-            {
-                throw Exception("ID3D11Device::CreateInputLayout() failed.", hr);
+                std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
+                {
+                    { "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                    { "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+                };
+
+                auto hr = app.GetD3DDevice()->CreateInputLayout(
+                    inputElementDescriptions.data(), inputElementDescriptions.size(),
+                    passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
+                    m_inputLayout.GetAddressOf()
+                );
+                if (FAILED(hr))
+                {
+                    throw Exception("ID3D11Device::CreateInputLayout() failed.", hr);
+                }
             }
 
             Build();
@@ -184,18 +197,19 @@ namespace library
         void GridComponent::Draw(const Time& time)
         {
             auto d3dDeviceContext = m_app.GetD3DDeviceContext();
-            d3dDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-            d3dDeviceContext->IASetInputLayout(m_inputLayout.Get());
-
-            unsigned stride = sizeof(vertex::PositionColor);
-            unsigned offset = 0;
-            d3dDeviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 
             const auto worldMatrix = math::Matrix(m_worldMatrix);
             const auto wvp = worldMatrix * GetCamera().GetViewProjectionMatrix();
             m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
             m_pass->Apply(0, d3dDeviceContext);
+
+            d3dDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+            d3dDeviceContext->IASetInputLayout(m_inputLayout.Get());
+
+            unsigned stride = sizeof(vertex::PositionColor);
+            unsigned offset = 0;
+            d3dDeviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 
             d3dDeviceContext->Draw((m_size + 1) * 4, 0);
         }
@@ -205,8 +219,6 @@ namespace library
         void GridComponent::Build()
         {
             m_vertexBuffer.Reset();
-
-            auto d3dDevice = m_app.GetD3DDevice();
 
             const float adjustedScale = m_scale * 0.1f;
             const float maxPosition = m_size * adjustedScale / 2;
@@ -222,12 +234,12 @@ namespace library
                 const float position = maxPosition - (i * adjustedScale);
 
                 // vertical line
-                vertices.emplace_back(math::Vector4f(position, 0.0f, maxPosition, 1.0f), m_color);
-                vertices.emplace_back(math::Vector4f(position, 0.0f, -maxPosition, 1.0f), m_color);
+                vertices.emplace_back(math::Vector4f(position, maxPosition, 0.0f, 1.0f), m_color);
+                vertices.emplace_back(math::Vector4f(position, -maxPosition, 0.0f, 1.0f), m_color);
 
                 // horizontal line
-                vertices.emplace_back(math::Vector4f(maxPosition, 0.0f, position, 1.0f), m_color);
-                vertices.emplace_back(math::Vector4f(-maxPosition, 0.0f, position, 1.0f), m_color);
+                vertices.emplace_back(math::Vector4f(maxPosition, position, 0.0f, 1.0f), m_color);
+                vertices.emplace_back(math::Vector4f(-maxPosition, position, 0.0f, 1.0f), m_color);
             }
 
             D3D11_BUFFER_DESC vertexBufferDesc{};
@@ -238,7 +250,7 @@ namespace library
             D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
             vertexSubResourceData.pSysMem = vertices.data();
 
-            auto hr = d3dDevice->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_vertexBuffer.GetAddressOf());
+            auto hr = m_app.GetD3DDevice()->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_vertexBuffer.GetAddressOf());
             if (FAILED(hr))
             {
                 throw Exception("ID3D11Device::CreateBuffer() failed.", hr);

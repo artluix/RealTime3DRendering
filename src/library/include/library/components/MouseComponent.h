@@ -1,5 +1,5 @@
 #pragma once
-#include <library/components/BaseComponent.h>
+#include "library/components/BaseComponent.h"
 
 #include <cstdint>
 #include <dinput.h>
@@ -27,8 +27,6 @@ namespace library
             void Initialize() override;
             void Update(const Time& time) override;
 
-            // dinput doesn't return a pixel coordinates
-            // so we should limit them
             long GetX() const { return m_x; }
             long GetY() const { return m_y; }
             long GetWheel() const { return m_wheel; }

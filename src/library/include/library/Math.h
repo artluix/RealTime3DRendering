@@ -4,6 +4,7 @@
 
 #include <string>
 #include <sstream>
+#include <iomanip>
 
 namespace library
 {
@@ -65,7 +66,7 @@ namespace library
             std::string ToString() const
             {
                 std::stringstream ss;
-                ss << "(" << x << ", " << y << ")";
+                ss << std::setprecision(4) << "(" << x << ", " << y << ")";
                 return ss.str();
             }
         };
@@ -107,7 +108,7 @@ namespace library
             std::string ToString() const
             {
                 std::stringstream ss;
-                ss << "(" << x << ", " << y << ", " << z << ")";
+                ss << std::setprecision(4) << "(" << x << ", " << y << ", " << z << ")";
                 return ss.str();
             }
         };
@@ -133,10 +134,10 @@ namespace library
         const Vector3<ValueType, Aligned> Vector3<ValueType, Aligned>::Down = Vector3(ValueType(0), ValueType(-1), ValueType(0));
 
         template<typename ValueType, bool Aligned>
-        const Vector3<ValueType, Aligned> Vector3<ValueType, Aligned>::Left = Vector3(ValueType(1), ValueType(0), ValueType(0));
+        const Vector3<ValueType, Aligned> Vector3<ValueType, Aligned>::Left = Vector3(ValueType(-1), ValueType(0), ValueType(0));
 
         template<typename ValueType, bool Aligned>
-        const Vector3<ValueType, Aligned> Vector3<ValueType, Aligned>::Right = Vector3(ValueType(-1), ValueType(0), ValueType(0));
+        const Vector3<ValueType, Aligned> Vector3<ValueType, Aligned>::Right = Vector3(ValueType(1), ValueType(0), ValueType(0));
 
         /////////////////////////////////////////////////////////////////
 
@@ -160,7 +161,7 @@ namespace library
             std::string ToString() const
             {
                 std::stringstream ss;
-                ss << "(" << x << ", " << y << ", " << z << ", " << w << ")";
+                ss << std::setprecision(4) << "(" << x << ", " << y << ", " << z << ", " << w << ")";
                 return ss.str();
             }
         };

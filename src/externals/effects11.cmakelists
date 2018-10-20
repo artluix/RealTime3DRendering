@@ -42,7 +42,7 @@ if(APPLICATION)
 
     target_compile_options(effects11
         PRIVATE
-            /W4
+            /W3
             /fp:fast
             /arch:SSE2
             /EHsc

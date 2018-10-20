@@ -56,12 +56,12 @@ namespace library
     Application::~Application()
     {}
 
-    ID3D11Device1* Application::GetD3DDevice() const
+    ID3D11Device1* const Application::GetD3DDevice() const
     {
         return m_d3dDevice.Get();
     }
 
-    ID3D11DeviceContext1* Application::GetD3DDeviceContext() const
+    ID3D11DeviceContext1* const Application::GetD3DDeviceContext() const
     {
         return m_d3dDeviceContext.Get();
     }
@@ -75,7 +75,7 @@ namespace library
 
     void Application::Initialize()
     {
-        for (auto component : m_components)
+        for (const auto& component : m_components)
         {
             component->Initialize();
         }
@@ -119,7 +119,7 @@ namespace library
 
     void Application::Update(const Time& time)
     {
-        for (auto component : m_components)
+        for (const auto& component : m_components)
         {
             if (component->IsEnabled())
             {
@@ -130,7 +130,7 @@ namespace library
 
     void Application::Draw(const Time& time)
     {
-        for (auto component : m_components)
+        for (const auto& component : m_components)
         {
             auto drawableComponent = component->As<components::DrawableComponent>();
             if (!!drawableComponent && drawableComponent->IsVisible())
@@ -382,6 +382,8 @@ namespace library
 
     void Application::Shutdown()
     {
+        m_components.clear();
+
         m_renderTargetView.Reset();
         m_depthStencilView.Reset();
         m_swapChain.Reset();

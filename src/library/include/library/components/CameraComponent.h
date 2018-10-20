@@ -19,7 +19,7 @@ namespace library
                 const float farPlaneDistance
             );
 
-            ~CameraComponent() = default;
+            ~CameraComponent();
 
             // XMFLOAT3 wrappers
             const math::Vector3f& GetPosition() const { return m_position; }
@@ -67,6 +67,7 @@ namespace library
             float m_farPlaneDistance;
 
             math::Vector3f m_position;
+
             math::Vector3f m_direction;
             math::Vector3f m_up;
             math::Vector3f m_right;

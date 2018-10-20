@@ -1,5 +1,10 @@
 #pragma once
+#include "library/Logger.h"
+
 #include <array>
+#include <wrl/client.h>
+
+using Microsoft::WRL::ComPtr;
 
 namespace library
 {

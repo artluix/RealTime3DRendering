@@ -3,11 +3,6 @@
 #include "library/Color.h"
 #include "library/Math.h"
 
-struct ID3DX11Effect;
-struct ID3DX11EffectTechnique;
-struct ID3DX11EffectPass;
-struct ID3DX11EffectMatrixVariable;
-
 namespace library
 {
     namespace components

@@ -1,6 +1,7 @@
 #pragma once
 #include <type_traits>
 #include <cstdint>
+#include <memory>
 
 /////////////////////////////////////////////////////////////////
 
@@ -147,18 +148,36 @@ namespace library
             using Parent::Parent;
         };
 
-        // some wrappers
+        // wrappers
 
         template <class To, class From, typename = std::enable_if<std::is_base_of<Base, From>::value>::type>
         To* CastTo(From* self)
         {
-            return self->As<To>();
+            if (!!self)
+                return self->As<To>();
+
+            return nullptr;
         }
 
         template <class To, class From, typename = std::enable_if<std::is_base_of<Base, From>::value>::type>
         const To* CastTo(const From* self)
         {
-            return self->As<To>();
+            if (!!self)
+                return self->As<To>();
+
+            return nullptr;
         }
+
+        template <class To, class From, typename = std::enable_if<std::is_base_of<Base, From>::value>::type>
+        std::shared_ptr<To> CastTo(std::shared_ptr<From> self)
+        {
+            if (!!self && self->Is(detail::GetTypeIdImpl<To>()))
+            {
+                return std::static_pointer_cast<To>(self);
+            }
+
+            return std::shared_ptr<To>();
+        }
+
     } // namespace rtti
 } // namespace library

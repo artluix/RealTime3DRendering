@@ -1,7 +1,7 @@
 #include "library/components/KeyboardComponent.h"
 
+#include "library/Application.h"
 #include "library/Exception.h"
-#include "library/Common.h"
 
 #include <cassert>
 

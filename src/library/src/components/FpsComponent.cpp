@@ -1,5 +1,6 @@
 #include "library/components/FpsComponent.h"
 
+#include "library/Application.h"
 #include "library/Path.h"
 #include "library/Utils.h"
 

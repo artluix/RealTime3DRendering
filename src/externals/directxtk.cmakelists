@@ -94,7 +94,7 @@ if(APPLICATION)
 
     target_compile_options(directxtk
         PRIVATE
-            /Wall
+            /W3
             /fp:fast
             /arch:SSE2
             /GR

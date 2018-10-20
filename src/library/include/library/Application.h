@@ -2,20 +2,19 @@
 #include "library/NonCopyable.hpp"
 #include "library/Stopwatch.h"
 #include "library/ServiceContainer.h"
+#include "library/Common.h"
 
 #include <Windows.h>
 #include <d3d11_1.h>
 #include <vector>
 #include <string>
-#include <wrl/client.h>
-
-using Microsoft::WRL::ComPtr;
 
 namespace library
 {
     namespace components
     {
         class BaseComponent;
+        using BaseComponentPtr = std::shared_ptr<BaseComponent>;
     }
 
     class Application : public NonCopyable<Application>
@@ -38,15 +37,15 @@ namespace library
         unsigned GetScreenHeight() const { return m_screenHeight; }
         const RECT& GetWindowRect() const { return m_windowRect; }
 
-        ID3D11Device1* GetD3DDevice() const;
-        ID3D11DeviceContext1* GetD3DDeviceContext() const;
+        ID3D11Device1* const GetD3DDevice() const;
+        ID3D11DeviceContext1* const GetD3DDeviceContext() const;
         bool IsDepthBufferEnabled() const { return m_depthStencilBufferEnabled; }
         float GetAspectRatio() const;
         bool IsFullScreen() const { return m_isFullScreen; }
         const D3D11_TEXTURE2D_DESC& GetBackBufferDesc() const { return m_backBufferDesc; }
         const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
 
-        const std::vector<components::BaseComponent*>& GetComponents() const { return m_components; }
+        const std::vector<components::BaseComponentPtr>& GetComponents() const { return m_components; }
         const ServiceContainer& GetServices() const { return m_services; }
 
         virtual void Initialize();
@@ -76,7 +75,7 @@ namespace library
         Stopwatch m_stopwatch;
         Time m_time;
 
-        std::vector<components::BaseComponent*> m_components;
+        std::vector<components::BaseComponentPtr> m_components;
 
         ServiceContainer m_services;
 

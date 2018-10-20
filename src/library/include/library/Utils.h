@@ -1,5 +1,4 @@
 #pragma once
-#include "library/Common.h"
 #include "library/Path.h"
 
 namespace library

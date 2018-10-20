@@ -1,11 +1,12 @@
 #pragma once
 #include "library/components/DrawableComponent.h"
-#include "library/components/CameraComponent.h"
 
 namespace library
 {
     namespace components
     {
+        class CameraComponent;
+
         class ViewedComponent : public rtti::Class<ViewedComponent, DrawableComponent>
         {
         public:

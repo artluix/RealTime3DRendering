@@ -6,7 +6,7 @@ namespace library
     {
         DrawableComponent::DrawableComponent(const Application& app)
             : Class(app)
-            , m_visible(false)
+            , m_visible(true)
         {
         }
 

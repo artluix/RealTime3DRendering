@@ -9,11 +9,8 @@ namespace library
 {
     namespace components
     {
-        class FpsComponent;
         class KeyboardComponent;
         class MouseComponent;
-        class GridComponent;
-        class FirstPersonCameraComponent;
     } // namespace components
 } // namespace library
 
@@ -41,11 +38,8 @@ protected:
     void Shutdown() override;
 
 private:
-    std::unique_ptr<library::components::FpsComponent> m_fpsComponent;
-    std::unique_ptr<library::components::KeyboardComponent> m_keyboardComponent;
-    std::unique_ptr<library::components::MouseComponent> m_mouseComponent;
-    std::unique_ptr<library::components::GridComponent> m_gridComponent;
-    std::unique_ptr<library::components::FirstPersonCameraComponent> m_cameraComponent;
+    std::shared_ptr<library::components::KeyboardComponent> m_keyboardComponent;
+    std::shared_ptr<library::components::MouseComponent> m_mouseComponent;
 
     ComPtr<IDirectInput8> m_directInput;
 
@@ -53,4 +47,4 @@ private:
     std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
 
     DirectX::XMFLOAT2 m_mouseTextPosition;
-};
+}; // namespace library

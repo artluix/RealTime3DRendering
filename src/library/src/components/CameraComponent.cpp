@@ -1,6 +1,8 @@
 #include "library/components/CameraComponent.h"
 
-#include <sstream>
+#include "library/Application.h"
+
+#include "library/Utils.h"
 
 #define _USE_MATH_DEFINES
 #include <math.h>
@@ -15,6 +17,10 @@ namespace library
             constexpr float k_nearPlaneDistance = 0.01f;
             constexpr float k_farPlaneDistance = 1000.0f;
         }
+
+        const auto k_fontPath = utils::GetExecutableDirectory().Join(
+            filesystem::Path(L"data/fonts/Arial_14_Regular.spritefont")
+        );
     }
 
     namespace components
@@ -26,7 +32,8 @@ namespace library
             , m_nearPlaneDistance(defaults::k_nearPlaneDistance)
             , m_farPlaneDistance(defaults::k_farPlaneDistance)
             , m_isViewMatrixDirty(true)
-            , m_position(), m_direction(), m_right(), m_up()
+            , m_position()
+            , m_direction(), m_right(), m_up()
             , m_viewMatrix(), m_projectionMatrix()
         {
         }
@@ -36,6 +43,10 @@ namespace library
             , m_fieldOfView(fieldOfView)
             , m_nearPlaneDistance(nearPlaneDistance)
             , m_farPlaneDistance(farPlaneDistance)
+        {
+        }
+
+        CameraComponent::~CameraComponent()
         {
         }
 
@@ -67,10 +78,6 @@ namespace library
         {
             if (m_position != position)
             {
-                std::string message = "Position changed: " + position.ToString();
-                OutputDebugStringA(message.c_str());
-                OutputDebugStringA("\n");
-
                 m_position = position;
                 m_isViewMatrixDirty = true;
             }
@@ -113,7 +120,7 @@ namespace library
             const auto direction = GetDirectionVector();
             const auto upDirection = GetUpVector();
 
-            const auto viewMatrix = DirectX::XMMatrixLookAtRH(eyePosition, direction, upDirection);
+            const auto viewMatrix = DirectX::XMMatrixLookToRH(eyePosition, direction, upDirection);
             m_viewMatrix = math::Matrix4(viewMatrix);
         }
 

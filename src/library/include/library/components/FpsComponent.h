@@ -1,6 +1,7 @@
 #pragma once
 #include "library/components/DrawableComponent.h"
 #include "library/Math.h"
+#include "library/Time.h"
 
 namespace DirectX
 {

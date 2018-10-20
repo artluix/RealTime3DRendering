@@ -7,18 +7,24 @@ if(APPLICATION)
         # include
         include/library/Application.h
         include/library/Stopwatch.h
+        include/library/Color.h
         include/library/Common.h
 
         include/library/Components/BaseComponent.h
         include/library/Components/CameraComponent.h
         include/library/Components/DrawableComponent.h
+        include/library/Components/FirstPersonCameraComponent.h
         include/library/Components/FpsComponent.h
+        include/library/Components/GridComponent.h
         include/library/Components/KeyboardComponent.h
         include/library/Components/MouseComponent.h
+        include/library/Components/TriangleDemoComponent.h
         include/library/Components/ViewedComponent.h
 
         include/library/Exception.h
         include/library/Key.h
+        include/library/Logger.h
+        include/library/Math.inl
         include/library/Math.h
         include/library/NonCopyable.hpp
         include/library/NonConstructible.hpp
@@ -27,6 +33,7 @@ if(APPLICATION)
         include/library/ServiceContainer.h
         include/library/Time.h
         include/library/Utils.h
+        include/library/VertexDeclarations.h
 
         # src
         src/Application.cpp
@@ -34,12 +41,16 @@ if(APPLICATION)
         src/Components/BaseComponent.cpp
         src/Components/CameraComponent.cpp
         src/Components/DrawableComponent.cpp
+        src/Components/FirstPersonCameraComponent.cpp
         src/Components/FpsComponent.cpp
+        src/Components/GridComponent.cpp
         src/Components/KeyboardComponent.cpp
         src/Components/MouseComponent.cpp
+        src/Components/TriangleDemoComponent.cpp
         src/Components/ViewedComponent.cpp
 
         src/Exception.cpp
+        src/Logger.cpp
         src/Math.cpp
         src/Path.cpp
         src/ServiceContainer.cpp

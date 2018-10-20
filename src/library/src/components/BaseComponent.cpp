@@ -1,5 +1,6 @@
 #include "library/components/BaseComponent.h"
 
+#include "library/Application.h"
 
 namespace library
 {

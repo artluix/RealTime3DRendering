@@ -1,10 +1,13 @@
 #pragma once
 #include "library/NonCopyable.hpp"
-#include "library/Application.h"
 #include "library/RTTI.hpp"
+#include "library/Common.h"
 
 namespace library
 {
+    class Application;
+    struct Time;
+
     namespace components
     {
         class BaseComponent
@@ -25,5 +28,7 @@ namespace library
             const Application& m_app;
             bool m_enabled;
         };
+
+        using BaseComponentPtr = std::shared_ptr<BaseComponent>;
     } // namespace components
 } // namespace library

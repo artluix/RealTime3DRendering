@@ -1,7 +1,5 @@
 #pragma once
 #include "library/components/CameraComponent.h"
-#include "library/components/KeyboardComponent.h"
-#include "library/components/MouseComponent.h"
 
 #include <functional>
 
@@ -9,6 +7,9 @@ namespace library
 {
     namespace components
     {
+        class MouseComponent;
+        class KeyboardComponent;
+
         class FirstPersonCameraComponent : public rtti::Class<FirstPersonCameraComponent, CameraComponent>
         {
         public:
@@ -46,6 +47,8 @@ namespace library
         protected:
             std::reference_wrapper<const KeyboardComponent> m_keyboard;
             std::reference_wrapper<const MouseComponent> m_mouse;
+
+            math::Vector2f m_rotationStartPoint;
 
             float m_mouseSensitivity;
             float m_rotationRate;
