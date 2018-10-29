@@ -2,428 +2,420 @@
 
 #include "library/Exception.h"
 #include "library/components/DrawableComponent.h"
-
-/////////////////////////////////////////////////////////////////
+#include "library/components/ViewedComponent.h"
 
 namespace library
 {
-    namespace
-    {
-        namespace defaults
-        {
-            constexpr unsigned k_screenWidth = 800;
-            constexpr unsigned k_screenHeight = 600;
-            constexpr unsigned k_frameRate = 60;
-            constexpr unsigned k_multiSamplingCount = 4;
-            constexpr bool k_isFullscreen = false;
-        }
-    }
 
-    Application::Application(
-        const HINSTANCE instanceHandle,
-        const std::wstring& windowClass,
-        const std::wstring& windowTitle,
-        const int showCmd
-    )
-        : m_instanceHandle(instanceHandle)
-        , m_windowClass(windowClass)
-        , m_windowTitle(windowTitle)
-        , m_showCmd(showCmd)
-        , m_screenWidth(defaults::k_screenWidth), m_screenHeight(defaults::k_screenHeight)
-        , m_windowHandle(nullptr)
-        , m_window{}
-        , m_stopwatch()
-        , m_time()
-        , m_components{}
-        , m_services()
-        , m_featureLevel(D3D_FEATURE_LEVEL_9_1)
-        , m_d3dDevice()
-        , m_d3dDeviceContext()
-        , m_swapChain()
-        , m_frameRate(defaults::k_frameRate)
-        , m_isFullScreen(defaults::k_isFullscreen)
-        , m_depthStencilBufferEnabled(false)
-        , m_multiSamplingEnabled(false)
-        , m_multiSamplingCount(defaults::k_multiSamplingCount)
-        , m_multiSamplingQualityLevels(0)
-        , m_depthStencilBuffer()
-        , m_renderTargetView()
-        , m_depthStencilView()
-        , m_viewport()
-    {
-    }
+	namespace
+	{
+		namespace defaults
+		{
+			constexpr unsigned k_screenWidth = 1280;
+			constexpr unsigned k_screenHeight = 1024;
+			constexpr unsigned k_frameRate = 60;
+			constexpr unsigned k_multiSamplingCount = 4;
+			constexpr bool k_isFullscreen = false;
+		}
+	}
 
-    Application::~Application()
-    {}
+	Application::Application(
+		const HINSTANCE instanceHandle,
+		const std::wstring& windowClass,
+		const std::wstring& windowTitle,
+		const int showCmd
+	)
+		: m_instanceHandle(instanceHandle)
+		, m_windowClass(windowClass)
+		, m_windowTitle(windowTitle)
+		, m_showCmd(showCmd)
+		, m_screenWidth(defaults::k_screenWidth), m_screenHeight(defaults::k_screenHeight)
+		, m_windowHandle(nullptr)
+		, m_window{}
+		, m_components{}
+		, m_featureLevel(D3D_FEATURE_LEVEL_9_1)
+		, m_frameRate(defaults::k_frameRate)
+		, m_isFullScreen(defaults::k_isFullscreen)
+		, m_depthStencilBufferEnabled(false)
+		, m_multiSamplingEnabled(false)
+		, m_multiSamplingCount(defaults::k_multiSamplingCount)
+		, m_multiSamplingQualityLevels(0)
+		, m_viewport{}
+	{
+	}
 
-    ID3D11Device1* const Application::GetD3DDevice() const
-    {
-        return m_d3dDevice.Get();
-    }
+	Application::~Application()
+	{}
 
-    ID3D11DeviceContext1* const Application::GetD3DDeviceContext() const
-    {
-        return m_d3dDeviceContext.Get();
-    }
+	ID3D11Device1* const Application::GetD3DDevice() const
+	{
+		return m_d3dDevice.Get();
+	}
 
-    float Application::GetAspectRatio() const
-    {
-        return static_cast<float>(m_screenWidth) / m_screenHeight;
-    }
+	ID3D11DeviceContext1* const Application::GetD3DDeviceContext() const
+	{
+		return m_d3dDeviceContext.Get();
+	}
 
-    /////////////////////////////////////////////////////////////////
+	float Application::GetAspectRatio() const
+	{
+		return static_cast<float>(m_screenWidth) / m_screenHeight;
+	}
 
-    void Application::Initialize()
-    {
-        for (const auto& component : m_components)
-        {
-            component->Initialize();
-        }
-    }
+	//-------------------------------------------------------------------------
 
-    void Application::Run()
-    {
-        InitializeWindow();
-        InitializeDirectX();
-        Initialize();
+	void Application::Initialize()
+	{
+		for (const auto& component : m_components)
+		{
+			component->Initialize();
+		}
+	}
 
-        MSG message{};
+	void Application::Run()
+	{
+		InitializeWindow();
+		InitializeDirectX();
+		Initialize();
 
-        m_stopwatch.Reset();
+		MSG message{};
 
-        while (message.message != WM_QUIT)
-        {
-            if (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE))
-            {
-                TranslateMessage(&message);
-                DispatchMessage(&message);
-            }
-            else
-            {
-                m_stopwatch.UpdateTime(m_time);
+		m_stopwatch.Reset();
 
-                Update(m_time);
-                Draw(m_time);
-            }
-        }
+		while (message.message != WM_QUIT)
+		{
+			if (PeekMessage(&message, nullptr, 0, 0, PM_REMOVE))
+			{
+				TranslateMessage(&message);
+				DispatchMessage(&message);
+			}
+			else
+			{
+				m_stopwatch.UpdateTime(m_time);
 
-        Shutdown();
-    }
+				Update(m_time);
+				Draw(m_time);
+			}
+		}
 
-    void Application::Exit()
-    {
-        PostQuitMessage(0);
-    }
+		Shutdown();
+	}
 
-    /////////////////////////////////////////////////////////////////
+	void Application::Exit()
+	{
+		PostQuitMessage(0);
+	}
 
-    void Application::Update(const Time& time)
-    {
-        for (const auto& component : m_components)
-        {
-            if (component->IsEnabled())
-            {
-                component->Update(time);
-            }
-        }
-    }
+	//-------------------------------------------------------------------------
 
-    void Application::Draw(const Time& time)
-    {
-        for (const auto& component : m_components)
-        {
-            auto drawableComponent = component->As<components::DrawableComponent>();
-            if (!!drawableComponent && drawableComponent->IsVisible())
-            {
-                drawableComponent->Draw(time);
-            }
-        }
-    }
+	void Application::Update(const Time& time)
+	{
+		for (const auto& component : m_components)
+		{
+			if (component->IsEnabled())
+			{
+				component->Update(time);
+			}
+		}
+	}
 
-    /////////////////////////////////////////////////////////////////
+	void Application::Draw(const Time& time)
+	{
+		for (const auto& component : m_components)
+		{
+			auto drawableComponent = component->As<components::DrawableComponent>();
+			if (!!drawableComponent && drawableComponent->IsVisible())
+			{
+				drawableComponent->Draw(time);
+			}
+		}
+	}
 
-    void Application::InitializeWindow()
-    {
-        // window
-        m_window = {};
-        m_window.cbSize = sizeof(WNDCLASSEX);
-        m_window.style = CS_CLASSDC;
-        m_window.lpfnWndProc = WndProc;
-        m_window.hInstance = m_instanceHandle;
-        m_window.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
-        m_window.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
-        m_window.hCursor = LoadCursor(nullptr, IDC_ARROW);
-        m_window.hbrBackground = GetSysColorBrush(COLOR_BTNFACE);
-        m_window.lpszClassName = m_windowClass.c_str();
+	//-------------------------------------------------------------------------
 
-        RECT windowRect = { 0, 0, static_cast<int>(m_screenWidth), static_cast<int>(m_screenHeight) };
-        AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
+	void Application::InitializeWindow()
+	{
+		// window
+		m_window = {};
+		m_window.cbSize = sizeof(WNDCLASSEX);
+		m_window.style = CS_CLASSDC;
+		m_window.lpfnWndProc = WndProc;
+		m_window.hInstance = m_instanceHandle;
+		m_window.hIcon = LoadIcon(nullptr, IDI_APPLICATION);
+		m_window.hIconSm = LoadIcon(nullptr, IDI_APPLICATION);
+		m_window.hCursor = LoadCursor(nullptr, IDC_ARROW);
+		m_window.hbrBackground = GetSysColorBrush(COLOR_BTNFACE);
+		m_window.lpszClassName = m_windowClass.c_str();
 
-        RegisterClassEx(&m_window);
+		RECT windowRect = { 0, 0, static_cast<int>(m_screenWidth), static_cast<int>(m_screenHeight) };
+		AdjustWindowRect(&windowRect, WS_OVERLAPPEDWINDOW, FALSE);
 
-        POINT windowPosition = CenterWindow(m_screenWidth, m_screenHeight);
+		RegisterClassEx(&m_window);
 
-        m_windowHandle = CreateWindow(
-            m_windowClass.c_str(),
-            m_windowTitle.c_str(),
-            WS_OVERLAPPEDWINDOW,
-            windowPosition.x, windowPosition.y,
-            windowRect.right - windowRect.left, windowRect.bottom - windowRect.top,
-            nullptr,
-            nullptr,
-            m_instanceHandle,
-            nullptr
-        );
+		POINT windowPosition = CenterWindow(m_screenWidth, m_screenHeight);
 
-        ::GetWindowRect(m_windowHandle, &m_windowRect);
+		m_windowHandle = CreateWindow(
+			m_windowClass.c_str(),
+			m_windowTitle.c_str(),
+			WS_OVERLAPPEDWINDOW,
+			windowPosition.x, windowPosition.y,
+			windowRect.right - windowRect.left, windowRect.bottom - windowRect.top,
+			nullptr,
+			nullptr,
+			m_instanceHandle,
+			nullptr
+		);
 
-        // set cursor position
-        POINT p{0, 0};
-        if (ClientToScreen(m_windowHandle, &p))
-        {
-            SetCursorPos(p.x, p.y);
-        }
+		::GetWindowRect(m_windowHandle, &m_windowRect);
 
-        ShowWindow(m_windowHandle, m_showCmd);
-        UpdateWindow(m_windowHandle);
-    }
+		// set cursor position
+		POINT p{ 0, 0 };
+		if (ClientToScreen(m_windowHandle, &p))
+		{
+			SetCursorPos(p.x, p.y);
+		}
 
-    void Application::InitializeDirectX()
-    {
-        HRESULT hr;
+		ShowWindow(m_windowHandle, m_showCmd);
+		UpdateWindow(m_windowHandle);
+	}
 
-        unsigned createDeviceFlags = 0;
+	void Application::InitializeDirectX()
+	{
+		HRESULT hr;
+
+		unsigned createDeviceFlags = 0;
 #if defined(DEBUG) || defined(_DEBUG)
-        createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
+		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-        std::vector<D3D_FEATURE_LEVEL> featureLevels =
-        {
-            D3D_FEATURE_LEVEL_11_0,
-            D3D_FEATURE_LEVEL_10_1,
-            D3D_FEATURE_LEVEL_10_0,
-        };
+		std::vector<D3D_FEATURE_LEVEL> featureLevels =
+		{
+			D3D_FEATURE_LEVEL_11_0,
+			D3D_FEATURE_LEVEL_10_1,
+			D3D_FEATURE_LEVEL_10_0,
+		};
 
-        // create D3DDevice and D3DDeviceContext
-        {
-            ComPtr<ID3D11Device> d3dDevice;
-            ComPtr<ID3D11DeviceContext> d3dDeviceContext;
+		// create D3DDevice and D3DDeviceContext
+		{
+			ComPtr<ID3D11Device> d3dDevice;
+			ComPtr<ID3D11DeviceContext> d3dDeviceContext;
 
-            hr = D3D11CreateDevice(
-                nullptr,
-                D3D_DRIVER_TYPE_HARDWARE,
-                nullptr,
-                createDeviceFlags,
-                featureLevels.data(),
-                featureLevels.size(),
-                D3D11_SDK_VERSION,
-                d3dDevice.GetAddressOf(),
-                &m_featureLevel,
-                d3dDeviceContext.GetAddressOf()
-            );
-            if (FAILED(hr))
-            {
-                throw Exception("D3D11CreateDevice() failed.", hr);
-            }
+			hr = D3D11CreateDevice(
+				nullptr,
+				D3D_DRIVER_TYPE_HARDWARE,
+				nullptr,
+				createDeviceFlags,
+				featureLevels.data(),
+				featureLevels.size(),
+				D3D11_SDK_VERSION,
+				d3dDevice.GetAddressOf(),
+				&m_featureLevel,
+				d3dDeviceContext.GetAddressOf()
+			);
+			if (FAILED(hr))
+			{
+				throw Exception("D3D11CreateDevice() failed.", hr);
+			}
 
-            hr = d3dDevice.As(&m_d3dDevice);
-            if (FAILED(hr))
-            {
-                throw Exception("ID3D11Device As ID3D11Device1 failed.", hr);
-            }
+			hr = d3dDevice.As(&m_d3dDevice);
+			if (FAILED(hr))
+			{
+				throw Exception("ID3D11Device As ID3D11Device1 failed.", hr);
+			}
 
-            hr = d3dDeviceContext.As(&m_d3dDeviceContext);
-            if (FAILED(hr))
-            {
-                throw Exception("ID3D11DeviceContext As ID3D11DeviceContext1 failed.", hr);
-            }
-        }
+			hr = d3dDeviceContext.As(&m_d3dDeviceContext);
+			if (FAILED(hr))
+			{
+				throw Exception("ID3D11DeviceContext As ID3D11DeviceContext1 failed.", hr);
+			}
+		}
 
-        m_d3dDevice->CheckMultisampleQualityLevels(
-            DXGI_FORMAT_R8G8B8A8_UNORM,
-            m_multiSamplingCount,
-            &m_multiSamplingQualityLevels
-        );
-        if (!m_multiSamplingQualityLevels)
-        {
-            throw Exception("Unsupported multi-sampling quality.");
-        }
+		m_d3dDevice->CheckMultisampleQualityLevels(
+			DXGI_FORMAT_R8G8B8A8_UNORM,
+			m_multiSamplingCount,
+			&m_multiSamplingQualityLevels
+		);
+		if (!m_multiSamplingQualityLevels)
+		{
+			throw Exception("Unsupported multi-sampling quality.");
+		}
 
-        DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
-        swapChainDesc.Width = m_screenWidth;
-        swapChainDesc.Height = m_screenHeight;
-        swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
+		swapChainDesc.Width = m_screenWidth;
+		swapChainDesc.Height = m_screenHeight;
+		swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 
-        if (m_multiSamplingEnabled)
-        {
-            swapChainDesc.SampleDesc.Count = m_multiSamplingCount;
-            swapChainDesc.SampleDesc.Quality = m_multiSamplingQualityLevels - 1;
-        }
-        else
-        {
-            swapChainDesc.SampleDesc.Count = 1;
-            swapChainDesc.SampleDesc.Quality = 0;
-        }
+		if (m_multiSamplingEnabled)
+		{
+			swapChainDesc.SampleDesc.Count = m_multiSamplingCount;
+			swapChainDesc.SampleDesc.Quality = m_multiSamplingQualityLevels - 1;
+		}
+		else
+		{
+			swapChainDesc.SampleDesc.Count = 1;
+			swapChainDesc.SampleDesc.Quality = 0;
+		}
 
-        swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
-        swapChainDesc.BufferCount = 1;
-        swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
+		swapChainDesc.BufferUsage = DXGI_USAGE_RENDER_TARGET_OUTPUT;
+		swapChainDesc.BufferCount = 1;
+		swapChainDesc.SwapEffect = DXGI_SWAP_EFFECT_DISCARD;
 
-        // create DXGISwapChain
-        {
-            ComPtr<IDXGIDevice> dxgiDevice;
-            hr = m_d3dDevice.As(&dxgiDevice);
-            if (FAILED(hr))
-            {
-                throw Exception("ID3D11Device as IDXGIDevice failed.", hr);
-            }
+		// create DXGISwapChain
+		{
+			ComPtr<IDXGIDevice> dxgiDevice;
+			hr = m_d3dDevice.As(&dxgiDevice);
+			if (FAILED(hr))
+			{
+				throw Exception("ID3D11Device as IDXGIDevice failed.", hr);
+			}
 
-            ComPtr<IDXGIAdapter> dxgiAdapter;
-            hr = dxgiDevice->GetAdapter(dxgiAdapter.GetAddressOf());
-            if (FAILED(hr))
-            {
-                throw Exception("IDXGIDevice::GetAdapter() failed retrieving adapter.", hr);
-            }
+			ComPtr<IDXGIAdapter> dxgiAdapter;
+			hr = dxgiDevice->GetAdapter(dxgiAdapter.GetAddressOf());
+			if (FAILED(hr))
+			{
+				throw Exception("IDXGIDevice::GetAdapter() failed retrieving adapter.", hr);
+			}
 
-            ComPtr<IDXGIFactory2> dxgiFactory;
-            hr = dxgiAdapter->GetParent(__uuidof(IDXGIFactory2), &dxgiFactory);
-            if (FAILED(hr))
-            {
-                throw Exception("IDXGIAdapter::GetParent() failed retrieving factory.", hr);
-            }
+			ComPtr<IDXGIFactory2> dxgiFactory;
+			hr = dxgiAdapter->GetParent(__uuidof(IDXGIFactory2), &dxgiFactory);
+			if (FAILED(hr))
+			{
+				throw Exception("IDXGIAdapter::GetParent() failed retrieving factory.", hr);
+			}
 
-            DXGI_SWAP_CHAIN_FULLSCREEN_DESC fullScreenDesc = {};
-            fullScreenDesc.RefreshRate.Numerator = m_frameRate;
-            fullScreenDesc.RefreshRate.Denominator = 1;
-            fullScreenDesc.Windowed = !m_isFullScreen;
+			DXGI_SWAP_CHAIN_FULLSCREEN_DESC fullScreenDesc = {};
+			fullScreenDesc.RefreshRate.Numerator = m_frameRate;
+			fullScreenDesc.RefreshRate.Denominator = 1;
+			fullScreenDesc.Windowed = !m_isFullScreen;
 
-            hr = dxgiFactory->CreateSwapChainForHwnd(
-                dxgiDevice.Get(),
-                m_windowHandle,
-                &swapChainDesc,
-                &fullScreenDesc,
-                nullptr,
-                m_swapChain.GetAddressOf()
-            );
-            if (FAILED(hr))
-            {
-                throw Exception("IDXGIDevice::CreateSwapChainForHwnd() failed.", hr);
-            }
-        }
+			hr = dxgiFactory->CreateSwapChainForHwnd(
+				dxgiDevice.Get(),
+				m_windowHandle,
+				&swapChainDesc,
+				&fullScreenDesc,
+				nullptr,
+				m_swapChain.GetAddressOf()
+			);
+			if (FAILED(hr))
+			{
+				throw Exception("IDXGIDevice::CreateSwapChainForHwnd() failed.", hr);
+			}
+		}
 
-        // create back buffer
-        {
-            ComPtr<ID3D11Texture2D> backBuffer;
-            hr = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBuffer.GetAddressOf()));
-            if (FAILED(hr))
-            {
-                throw Exception("IDXGISwapChain::GetBuffer() failed.", hr);
-            }
+		// create back buffer
+		{
+			ComPtr<ID3D11Texture2D> backBuffer;
+			hr = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBuffer.GetAddressOf()));
+			if (FAILED(hr))
+			{
+				throw Exception("IDXGISwapChain::GetBuffer() failed.", hr);
+			}
 
-            backBuffer->GetDesc(&m_backBufferDesc);
+			backBuffer->GetDesc(&m_backBufferDesc);
 
-            hr = m_d3dDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, m_renderTargetView.GetAddressOf());
-            if (FAILED(hr))
-            {
-                throw Exception("IDXGI::CreateRenderTargetView() failed.", hr);
-            }
+			hr = m_d3dDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, m_renderTargetView.GetAddressOf());
+			if (FAILED(hr))
+			{
+				throw Exception("IDXGI::CreateRenderTargetView() failed.", hr);
+			}
 
-            if (m_depthStencilBufferEnabled)
-            {
-                D3D11_TEXTURE2D_DESC depthStencilDesc = {};
-                depthStencilDesc.Width = m_screenWidth;
-                depthStencilDesc.Height = m_screenHeight;
-                depthStencilDesc.MipLevels = 1;
-                depthStencilDesc.ArraySize = 1;
-                depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-                depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-                depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+			if (m_depthStencilBufferEnabled)
+			{
+				D3D11_TEXTURE2D_DESC depthStencilDesc = {};
+				depthStencilDesc.Width = m_screenWidth;
+				depthStencilDesc.Height = m_screenHeight;
+				depthStencilDesc.MipLevels = 1;
+				depthStencilDesc.ArraySize = 1;
+				depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+				depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+				depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
 
-                if (m_multiSamplingEnabled)
-                {
-                    depthStencilDesc.SampleDesc.Count = m_multiSamplingCount;
-                    depthStencilDesc.SampleDesc.Quality = m_multiSamplingQualityLevels - 1;
-                }
-                else
-                {
-                    depthStencilDesc.SampleDesc.Count = 1;
-                    depthStencilDesc.SampleDesc.Quality = 0;
-                }
+				if (m_multiSamplingEnabled)
+				{
+					depthStencilDesc.SampleDesc.Count = m_multiSamplingCount;
+					depthStencilDesc.SampleDesc.Quality = m_multiSamplingQualityLevels - 1;
+				}
+				else
+				{
+					depthStencilDesc.SampleDesc.Count = 1;
+					depthStencilDesc.SampleDesc.Quality = 0;
+				}
 
-                hr = m_d3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, m_depthStencilBuffer.GetAddressOf());
-                if (FAILED(hr))
-                {
-                    throw Exception("IDXGIDevice::CreateTexture2D() failed.", hr);
-                }
+				hr = m_d3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, m_depthStencilBuffer.GetAddressOf());
+				if (FAILED(hr))
+				{
+					throw Exception("IDXGIDevice::CreateTexture2D() failed.", hr);
+				}
 
-                hr = m_d3dDevice->CreateDepthStencilView(
-                    m_depthStencilBuffer.Get(),
-                    nullptr,
-                    m_depthStencilView.GetAddressOf()
-                );
-                if (FAILED(hr))
-                {
-                    throw Exception("IDXGIDevice::CreateDepthStencilView() failed.", hr);
-                }
-            }
+				hr = m_d3dDevice->CreateDepthStencilView(
+					m_depthStencilBuffer.Get(),
+					nullptr,
+					m_depthStencilView.GetAddressOf()
+				);
+				if (FAILED(hr))
+				{
+					throw Exception("IDXGIDevice::CreateDepthStencilView() failed.", hr);
+				}
+			}
 
-            m_d3dDeviceContext->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());
+			m_d3dDeviceContext->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());
 
-            m_viewport.TopLeftX = 0.0f;
-            m_viewport.TopLeftY = 0.0f;
-            m_viewport.Width = static_cast<float>(m_screenWidth);
-            m_viewport.Height = static_cast<float>(m_screenHeight);
-            m_viewport.MinDepth = 0.0f;
-            m_viewport.MaxDepth = 1.0f;
+			m_viewport.TopLeftX = 0.0f;
+			m_viewport.TopLeftY = 0.0f;
+			m_viewport.Width = static_cast<float>(m_screenWidth);
+			m_viewport.Height = static_cast<float>(m_screenHeight);
+			m_viewport.MinDepth = 0.0f;
+			m_viewport.MaxDepth = 1.0f;
 
-            m_d3dDeviceContext->RSSetViewports(1, &m_viewport);
-        }
-    }
+			m_d3dDeviceContext->RSSetViewports(1, &m_viewport);
+		}
+	}
 
-    void Application::Shutdown()
-    {
-        m_components.clear();
+	void Application::Shutdown()
+	{
+		m_components.clear();
 
-        m_renderTargetView.Reset();
-        m_depthStencilView.Reset();
-        m_swapChain.Reset();
-        m_depthStencilBuffer.Reset();
+		m_renderTargetView.Reset();
+		m_depthStencilView.Reset();
+		m_swapChain.Reset();
+		m_depthStencilBuffer.Reset();
 
-        if (!!m_d3dDeviceContext)
-        {
-            m_d3dDeviceContext->ClearState();
-        }
+		if (!!m_d3dDeviceContext)
+		{
+			m_d3dDeviceContext->ClearState();
+		}
 
-        m_d3dDeviceContext.Reset();
-        m_d3dDevice.Reset();
+		m_d3dDeviceContext.Reset();
+		m_d3dDevice.Reset();
 
-        UnregisterClass(m_windowClass.c_str(), m_instanceHandle);
-    }
+		UnregisterClass(m_windowClass.c_str(), m_instanceHandle);
+	}
 
-    /////////////////////////////////////////////////////////////////
+	//-------------------------------------------------------------------------
 
-    POINT Application::CenterWindow(const unsigned windowWidth, const unsigned windowHeight)
-    {
-        const unsigned screenWidth = GetSystemMetrics(SM_CXSCREEN);
-        const unsigned screenHeight = GetSystemMetrics(SM_CYSCREEN);
+	POINT Application::CenterWindow(const unsigned windowWidth, const unsigned windowHeight)
+	{
+		const unsigned screenWidth = GetSystemMetrics(SM_CXSCREEN);
+		const unsigned screenHeight = GetSystemMetrics(SM_CYSCREEN);
 
-        POINT center;
-        center.x = (screenWidth - windowWidth) >> 1;
-        center.y = (screenHeight - windowHeight) >> 1;
+		POINT center;
+		center.x = (screenWidth - windowWidth) >> 1;
+		center.y = (screenHeight - windowHeight) >> 1;
 
-        return center;
-    }
+		return center;
+	}
 
-    LRESULT WINAPI Application::WndProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam)
-    {
-        switch (message)
-        {
-            case WM_DESTROY:
-                PostQuitMessage(0);
-                return 0;
+	LRESULT WINAPI Application::WndProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam)
+	{
+		switch (message)
+		{
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			return 0;
 
-            default:
-                return DefWindowProc(windowHandle, message, wParam, lParam);
-        }
-    }
+		default:
+			return DefWindowProc(windowHandle, message, wParam, lParam);
+		}
+	}
+
 } // namespace library

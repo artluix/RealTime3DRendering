@@ -7,10 +7,16 @@ namespace library
 	namespace components
 	{
 
-		class TriangleDemoComponent : public rtti::Class<TriangleDemoComponent, ViewedComponent>
+		class KeyboardComponent;
+
+		class CubeDemoComponent : public rtti::Class<CubeDemoComponent, ViewedComponent>
 		{
 		public:
-			explicit TriangleDemoComponent(const Application& app, const CameraComponent& camera);
+			explicit CubeDemoComponent(
+				const Application& app,
+				const CameraComponent& camera,
+				const KeyboardComponent& keyboard
+			);
 
 			void Initialize() override;
 			void Update(const Time& time) override;
@@ -23,7 +29,10 @@ namespace library
 			ComPtr<ID3DX11EffectMatrixVariable> m_wvpVariable;
 
 			ComPtr<ID3D11InputLayout> m_inputLayout;
+			ComPtr<ID3D11Buffer> m_indexBuffer;
 			ComPtr<ID3D11Buffer> m_vertexBuffer;
+
+			std::reference_wrapper<const KeyboardComponent> m_keyboard;
 		};
 
 	} // namespace components

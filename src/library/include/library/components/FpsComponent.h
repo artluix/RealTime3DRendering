@@ -5,38 +5,40 @@
 
 namespace DirectX
 {
-    class SpriteBatch;
-    class SpriteFont;
+	class SpriteBatch;
+	class SpriteFont;
 }
 
 namespace library
 {
-    namespace components
-    {
-        class FpsComponent : public rtti::Class<FpsComponent, DrawableComponent>
-        {
-        public:
-            explicit FpsComponent(const Application& app);
-            ~FpsComponent() = default;
+	namespace components
+	{
 
-            math::Vector2f GetTextPosition() const { return m_textPosition; }
-            void SetTextPosition(const math::Vector2f& position) { m_textPosition = position; }
+		class FpsComponent : public rtti::Class<FpsComponent, DrawableComponent>
+		{
+		public:
+			explicit FpsComponent(const Application& app);
+			~FpsComponent() = default;
 
-            unsigned GetFrameRate() const { return m_frameRate; }
+			math::Vector2 GetTextPosition() const { return m_textPosition; }
+			void SetTextPosition(const math::Vector2& position) { m_textPosition = position; }
 
-            void Initialize() override;
-            void Update(const Time& time) override;
-            void Draw(const Time& time) override;
+			unsigned GetFrameRate() const { return m_frameRate; }
 
-        private:
-            std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
-            std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
+			void Initialize() override;
+			void Update(const Time& time) override;
+			void Draw(const Time& time) override;
 
-            math::Vector2f m_textPosition;
-            unsigned m_frameCount;
-            unsigned m_frameRate;
+		private:
+			std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
+			std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
 
-            Duration m_timeAccumulator;
-        };
-    } // namespace components
+			math::Vector2 m_textPosition;
+			unsigned m_frameCount;
+			unsigned m_frameRate;
+
+			Duration m_timeAccumulator;
+		};
+
+	} // namespace components
 } // namespace library

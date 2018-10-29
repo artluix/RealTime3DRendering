@@ -1,220 +1,403 @@
 #pragma once
-#include "library/NonConstructible.hpp"
-#include "library/Math.inl"
-
+#include <array>
+#include <cstdio>
 #include <string>
-#include <sstream>
-#include <iomanip>
+#include <DirectXMath.h>
 
 namespace library
 {
-    /////////////////////////////////////////////////////////////////
-    // forward DirectX operators to library namespace
-    /////////////////////////////////////////////////////////////////
+	namespace math
+	{
 
-    using DirectX::operator*;
-    using DirectX::operator/;
-    using DirectX::operator+;
-    using DirectX::operator-;
-    using DirectX::operator*=;
-    using DirectX::operator/=;
-    using DirectX::operator+=;
-    using DirectX::operator-=;
+		//-------------------------------------------------------------------------
+		// Common
+		//-------------------------------------------------------------------------
 
-    namespace math
-    {
-        /////////////////////////////////////////////////////////////////
-        // common
-        /////////////////////////////////////////////////////////////////
+		template <typename T>
+		inline T Min(const T& lhs, const T& rhs)
+		{
+			return (lhs < rhs) ? lhs : rhs;
+		}
 
-        template <typename T>
-        inline T Min(const T& lhs, const T& rhs)
-        {
-            return (lhs < rhs) ? lhs : rhs;
-        }
+		template <typename T>
+		inline T Max(const T& lhs, const T& rhs)
+		{
+			return (lhs > rhs) ? lhs : rhs;
+		}
 
-        template <typename T>
-        inline T Max(const T& lhs, const T& rhs)
-        {
-            return (lhs > rhs) ? lhs : rhs;
-        }
+		template <typename T>
+		inline T Clamp(const T& x, const T& min, const T& max)
+		{
+			return Min(Max(x, min), max);
+		}
 
-        template <typename T>
-        inline T Clamp(const T& x, const T& min, const T& max)
-        {
-            return Min(Max(x, min), max);
-        }
+		//-------------------------------------------------------------------------
+		// forward declarations
+		//-------------------------------------------------------------------------
 
-        /////////////////////////////////////////////////////////////////
-        // vectors
-        /////////////////////////////////////////////////////////////////
+		using XMVector = DirectX::XMVECTOR;
+		using XMMatrix = DirectX::XMMATRIX;
 
-        using Vector = XMVector;
+		//-------------------------------------------------------------------------
 
-        /////////////////////////////////////////////////////////////////
-        // vector2
-        /////////////////////////////////////////////////////////////////
+		template<std::size_t Size>
+		struct Vector;
 
-        template<typename ValueType, bool Aligned=false>
-        struct Vector2 : public XMV<2, ValueType, Aligned>
-        {
-            using XMV<2, ValueType, Aligned>::XMV;
+		using Vector2 = Vector<2>;
+		using Vector3 = Vector<3>;
+		using Vector4 = Vector<4>;
 
-            static const Vector2 Zero;
-            static const Vector2 One;
+		//-------------------------------------------------------------------------
 
-            std::string ToString() const
-            {
-                std::stringstream ss;
-                ss << std::setprecision(4) << "(" << x << ", " << y << ")";
-                return ss.str();
-            }
-        };
+		template<std::size_t Size>
+		struct Matrix;
 
-        /////////////////////////////////////////////////////////////////
+		using Matrix3 = Matrix<3>;
+		using Matrix4 = Matrix<4>;
 
-        template<typename ValueType, bool Aligned>
-        const Vector2<ValueType, Aligned> Vector2<ValueType, Aligned>::Zero = Vector2(ValueType(0), ValueType(0));
-        
-        template<typename ValueType, bool Aligned>
-        const Vector2<ValueType, Aligned> Vector2<ValueType, Aligned>::One = Vector2(ValueType(1), ValueType(1));
+		//-------------------------------------------------------------------------
+		// Vector2
+		//-------------------------------------------------------------------------
 
-        /////////////////////////////////////////////////////////////////
+		template<>
+		struct Vector<2>
+		{
+			union
+			{
+				struct
+				{
+					float x, y;
+				};
 
-        using Vector2f = Vector2<float>;
-        using Vector2fa = Vector2<float, true>;
-        using Vector2i = Vector2<int>;
-        using Vector2u = Vector2<unsigned>;
+				std::array<float, 2> data;
+			};
 
-        /////////////////////////////////////////////////////////////////
-        // vector 3
-        /////////////////////////////////////////////////////////////////
+			//-------------------------------------------------------------------------
 
-        template<typename ValueType, bool Aligned = false>
-        struct Vector3 : public XMV<3, ValueType, Aligned>
-        {
-            using XMV<3, ValueType, Aligned>::XMV;
+			Vector(const float value = 0.f);
+			Vector(const float x, const float y) : x(x), y(y) {}
+			Vector(const DirectX::XMFLOAT2& xmFloat2) : x(xmFloat2.x), y(xmFloat2.y) {}
 
-            static const Vector3 Zero;
-            static const Vector3 One;
+			//-------------------------------------------------------------------------
 
-            static const Vector3 Forward;
-            static const Vector3 Backward;
-            static const Vector3 Up;
-            static const Vector3 Down;
-            static const Vector3 Left;
-            static const Vector3 Right;
+			static const Vector Zero;
+			static const Vector One;
 
-            std::string ToString() const
-            {
-                std::stringstream ss;
-                ss << std::setprecision(4) << "(" << x << ", " << y << ", " << z << ")";
-                return ss.str();
-            }
-        };
+			static XMVector Load(const Vector& vector);
+			static Vector Store(const XMVector& xmVector);
 
-        /////////////////////////////////////////////////////////////////
+			//-------------------------------------------------------------------------
 
-        template<typename ValueType, bool Aligned>
-        const Vector3<ValueType, Aligned> Vector3<ValueType, Aligned>::Zero = Vector3(ValueType(0), ValueType(0), ValueType(0));
+			std::string ToString() const;
 
-        template<typename ValueType, bool Aligned>
-        const Vector3<ValueType, Aligned> Vector3<ValueType, Aligned>::One = Vector3(ValueType(1), ValueType(1), ValueType(1));
+			XMVector Load() const;
 
-        template<typename ValueType, bool Aligned>
-        const Vector3<ValueType, Aligned> Vector3<ValueType, Aligned>::Forward = Vector3(ValueType(0), ValueType(0), ValueType(-1));
+			bool IsZero() const;
 
-        template<typename ValueType, bool Aligned>
-        const Vector3<ValueType, Aligned> Vector3<ValueType, Aligned>::Backward = Vector3(ValueType(0), ValueType(0), ValueType(1));
+			//-------------------------------------------------------------------------
 
-        template<typename ValueType, bool Aligned>
-        const Vector3<ValueType, Aligned> Vector3<ValueType, Aligned>::Up = Vector3(ValueType(0), ValueType(1), ValueType(0));
+			Vector Cross(const Vector& vector) const;
 
-        template<typename ValueType, bool Aligned>
-        const Vector3<ValueType, Aligned> Vector3<ValueType, Aligned>::Down = Vector3(ValueType(0), ValueType(-1), ValueType(0));
+			Vector Normalize() const;
+			float Length() const;
 
-        template<typename ValueType, bool Aligned>
-        const Vector3<ValueType, Aligned> Vector3<ValueType, Aligned>::Left = Vector3(ValueType(-1), ValueType(0), ValueType(0));
+			//-------------------------------------------------------------------------
 
-        template<typename ValueType, bool Aligned>
-        const Vector3<ValueType, Aligned> Vector3<ValueType, Aligned>::Right = Vector3(ValueType(1), ValueType(0), ValueType(0));
+			explicit operator DirectX::XMFLOAT2() const { return DirectX::XMFLOAT2(x, y); }
+			explicit operator bool() const { return !IsZero(); }
+			explicit operator const float* () const { return data.data(); }
 
-        /////////////////////////////////////////////////////////////////
+			const float& operator[] (const std::size_t idx) const { return data[idx]; }
+			float& operator[] (const std::size_t idx) { return data[idx]; }
+		};
 
-        using Vector3f = Vector3<float>;
-        using Vector3fa = Vector3<float, true>;
-        using Vector3i = Vector3<int>;
-        using Vector3u = Vector3<unsigned>;
+		//-------------------------------------------------------------------------
+		// Vector3
+		//-------------------------------------------------------------------------
 
-        /////////////////////////////////////////////////////////////////
-        // vector 4
-        /////////////////////////////////////////////////////////////////
+		template<>
+		struct Vector<3>
+		{
+			union
+			{
+				struct
+				{
+					float x, y, z;
+				};
 
-        template<typename ValueType, bool Aligned = false>
-        struct Vector4 : public XMV<4, ValueType, Aligned>
-        {
-            using XMV<4, ValueType, Aligned>::XMV;
+				std::array<float, 3> data;
+			};
 
-            static const Vector4 Zero;
-            static const Vector4 One;
+			Vector(const float value = 0.f);
+			Vector(const float x, const float y, const float z) : x(x), y(y), z(z) {}
+			Vector(const DirectX::XMFLOAT3& xmFloat3) : x(xmFloat3.x), y(xmFloat3.y), z(xmFloat3.z) {}
+			Vector(const Vector<2>& vec2) : x(vec2.x), y(vec2.y), z(0.f) {}
 
-            std::string ToString() const
-            {
-                std::stringstream ss;
-                ss << std::setprecision(4) << "(" << x << ", " << y << ", " << z << ", " << w << ")";
-                return ss.str();
-            }
-        };
+			//-------------------------------------------------------------------------
 
-        /////////////////////////////////////////////////////////////////
+			static const Vector Zero;
+			static const Vector One;
 
-        template<typename ValueType, bool Aligned>
-        typename const Vector4<ValueType, Aligned> Vector4<ValueType, Aligned>::Zero = Vector4(ValueType(0), ValueType(0), ValueType(0), ValueType(0));
+			static const Vector Forward;
+			static const Vector Backward;
+			static const Vector Up;
+			static const Vector Down;
+			static const Vector Right;
+			static const Vector Left;
 
-        template<typename ValueType, bool Aligned>
-        typename const Vector4<ValueType, Aligned> Vector4<ValueType, Aligned>::One = Vector4(ValueType(1), ValueType(1), ValueType(1), ValueType(1));
+			static XMVector Load(const Vector& vector);
+			static Vector Store(const XMVector& vector);
 
-        /////////////////////////////////////////////////////////////////
+			//-------------------------------------------------------------------------
 
-        using Vector4f = Vector4<float>;
-        using Vector4fa = Vector4<float, true>;
-        using Vector4i = Vector4<int>;
-        using Vector4u = Vector4<unsigned>;
+			std::string ToString() const;
 
-        /////////////////////////////////////////////////////////////////
-        // matrices (always float and not aligned)
-        /////////////////////////////////////////////////////////////////
+			XMVector Load() const;
 
-        using Matrix = XMMatrix;
+			bool IsZero() const;
 
-        /////////////////////////////////////////////////////////////////
+			//-------------------------------------------------------------------------
 
-        struct Matrix3 : public XMM<3, 3>
-        {
-            using XMM::XMM;
+			Vector Cross(const Vector& vector) const;
 
-            static const Matrix3 Zero;
-            static const Matrix3 Idendity;
-        };
+			Vector Normalize() const;
+			float Length() const;
 
-        /////////////////////////////////////////////////////////////////
+			template <std::size_t Size>
+			Vector Transform(const Matrix<Size>& matrix) const;
 
-        struct Matrix4 : public XMM<4, 4>
-        {
-            using XMM::XMM;
+			template <std::size_t Size>
+			Vector TransformNormal(const Matrix<Size>& matrix) const;
 
-            static const Matrix4 Zero;
-            static const Matrix4 Identity;
+			//-------------------------------------------------------------------------
 
-            static Vector3f GetForward(const Matrix& matrix);
-            static Vector3f GetUp(const Matrix& matrix);
-            static Vector3f GetRight(const Matrix& matrix);
-            static Vector3f GetTranslation(const Matrix& matrix);
+			explicit operator DirectX::XMFLOAT3() const { return DirectX::XMFLOAT3(x, y, z); }
+			explicit operator bool() const { return !IsZero(); }
+			explicit operator const float* () const { return data.data(); }
 
-            static Matrix& SetForward(Matrix& matrix, const Vector3f& vector);
-            static Matrix& SetUp(Matrix& matrix, const Vector3f& vector);
-            static Matrix& SetRight(Matrix& matrix, const Vector3f& vector);
-            static Matrix& SetTranslation(Matrix& matrix, const Vector3f& vector);
-        };
-    } // namespace math
+			const float& operator[] (const std::size_t idx) const { return data[idx]; }
+			float& operator[] (const std::size_t idx) { return data[idx]; }
+		};
+
+		//-------------------------------------------------------------------------
+		// Vector4
+		//-------------------------------------------------------------------------
+
+		template<>
+		struct Vector<4>
+		{
+			union
+			{
+				struct
+				{
+					float x, y, z, w;
+				};
+
+				std::array<float, 4> data;
+			};
+
+			//-------------------------------------------------------------------------
+
+			Vector(const float value = 0.f);
+			Vector(const float x, const float y, const float z, const float w) : x(x), y(y), z(z), w(w) {}
+			Vector(const DirectX::XMFLOAT4& xmFloat4) : x(xmFloat4.x), y(xmFloat4.y), z(xmFloat4.z), w(xmFloat4.w) {}
+			Vector(const Vector<3>& vec3) : x(vec3.x), y(vec3.y), z(vec3.z), w(0.f) {}
+
+			//-------------------------------------------------------------------------
+
+			static const Vector Zero;
+			static const Vector One;
+
+			static XMVector Load(const Vector& vector);
+			static Vector Store(const XMVector& xmVector);
+
+			//-------------------------------------------------------------------------
+
+			std::string ToString() const;
+
+			XMVector Load() const;
+
+			bool IsZero() const;
+
+			//-------------------------------------------------------------------------
+
+			Vector Cross(const Vector& vector1, const Vector& vector2) const;
+
+			Vector Normalize() const;
+			float Length() const;
+
+			Vector Transform(const Matrix4& matrix) const;
+
+			//-------------------------------------------------------------------------
+
+			explicit operator DirectX::XMFLOAT4() const { return DirectX::XMFLOAT4(x, y, z, w); }
+			explicit operator bool() const { return !IsZero(); }
+			explicit operator const float* () const { return data.data(); }
+
+			const float& operator[] (const std::size_t idx) const { return data[idx]; }
+			float& operator[] (const std::size_t idx) { return data[idx]; }
+		};
+
+		//-------------------------------------------------------------------------
+		// Matrix3
+		//-------------------------------------------------------------------------
+
+		template<>
+		struct Matrix<3>
+		{
+			union
+			{
+				struct
+				{
+					float _11, _12, _13;
+					float _21, _22, _23;
+					float _31, _32, _33;
+				};
+
+				std::array<Vector3, 3> rows;
+				std::array<float, 3 * 3> data;
+			};
+
+			//-------------------------------------------------------------------------
+
+			Matrix(const float value = 0.f);
+			Matrix(
+				const float _11, const float _12, const float _13,
+				const float _21, const float _22, const float _23,
+				const float _31, const float _32, const float _33
+			);
+			Matrix(const Vector3& r1, const Vector3& r2, const Vector3& r3);
+			Matrix(const DirectX::XMFLOAT3X3& xmFloat3x3);
+
+			//-------------------------------------------------------------------------
+
+			static const Matrix Identity;
+			static const Matrix Zero;
+
+			static XMMatrix Load(const Matrix& matrix);
+			static Matrix Store(const XMMatrix& matrix);
+
+			//-------------------------------------------------------------------------
+
+			std::string ToString() const;
+
+			XMMatrix Load() const;
+
+			//-------------------------------------------------------------------------
+
+			Matrix Transpose() const;
+
+			//-------------------------------------------------------------------------
+
+			explicit operator DirectX::XMFLOAT3X3() const;
+			explicit operator const float* () const { return data.data(); }
+
+			const float& operator() (const std::size_t rowIdx, const std::size_t colIdx) const;
+			float& operator() (const std::size_t rowIdx, const std::size_t colIdx);
+		};
+
+		//-------------------------------------------------------------------------
+		// Matrix4
+		//-------------------------------------------------------------------------
+
+		template<>
+		struct Matrix<4>
+		{
+			union
+			{
+				struct
+				{
+					float _11, _12, _13, _14;
+					float _21, _22, _23, _24;
+					float _31, _32, _33, _34;
+					float _41, _42, _43, _44;
+				};
+
+				std::array<Vector4, 4> rows;
+				std::array<float, 4 * 4> data;
+			};
+
+			//-------------------------------------------------------------------------
+
+			Matrix(const float value = 0.f);
+			Matrix(
+				const float _11, const float _12, const float _13, const float _14,
+				const float _21, const float _22, const float _23, const float _24,
+				const float _31, const float _32, const float _33, const float _34,
+				const float _41, const float _42, const float _43, const float _44
+			);
+			Matrix(const Vector4& r1, const Vector4& r2, const Vector4& r3, const Vector4& r4);
+			Matrix(const DirectX::XMFLOAT4X4& xmFloat4x4);
+
+			//-------------------------------------------------------------------------
+
+			static const Matrix Zero;
+			static const Matrix Identity;
+
+			static XMMatrix Load(const Matrix& mat);
+			static Matrix Store(const XMMatrix& xmMat);
+
+			//-------------------------------------------------------------------------
+
+			static Matrix LookAtLH(const Vector3& eyePos, const Vector3& focusPos, const Vector3& upDir);
+			static Matrix LookAtRH(const Vector3& eyePos, const Vector3& focusPos, const Vector3& upDir);
+
+			static Matrix LookToLH(const Vector3& eyePos, const Vector3& eyeDir, const Vector3& upDir);
+			static Matrix LookToRH(const Vector3& eyePos, const Vector3& eyeDir, const Vector3& upDir);
+
+			//-------------------------------------------------------------------------
+
+			static Matrix Translation(const Vector3& vector);
+			static Matrix Translation(const float x, const float y, const float z);
+
+			//-------------------------------------------------------------------------
+
+			static Matrix PerspectiveFovLH(const float fovAngleY, const float aspectRatio, const float nearZ, const float farZ);
+			static Matrix PerspectiveFovRH(const float fovAngleY, const float aspectRatio, const float nearZ, const float farZ);
+
+			//-------------------------------------------------------------------------
+
+			static Matrix RotationAxis(const Vector3& axis, const float angle);
+
+			static Matrix RotationRollPitchYaw(const float roll, const float pitch, const float yaw);
+			static Matrix RotationRollPitchYaw(const Vector3& vector);
+
+			static Matrix RotationX(const float angle);
+			static Matrix RotationY(const float angle);
+			static Matrix RotationZ(const float angle);
+
+			//-------------------------------------------------------------------------
+
+			std::string ToString() const;
+
+			XMMatrix Load() const;
+
+			//-------------------------------------------------------------------------
+
+			Matrix Transpose() const;
+
+			Vector3 GetForward() const;
+			Matrix& SetForward(const Vector3& vector);
+
+			Vector3 GetUp() const;
+			Matrix& SetUp(const Vector3& vector);
+
+			Vector3 GetRight() const;
+			Matrix& SetRight(const Vector3& vector);
+
+			Vector3 GetTranslation() const;
+			Matrix& SetTranslation(const Vector3& vector);
+
+			//-------------------------------------------------------------------------
+
+			explicit operator DirectX::XMFLOAT4X4() const;
+			explicit operator const float* () const { return data.data(); }
+
+			const float& operator() (const std::size_t rowIdx, const std::size_t colIdx) const;
+			float& operator() (const std::size_t rowIdx, const std::size_t colIdx);
+		};
+
+	} // namespace math
 } // namespace library
+
+#include "library/Math.inl"

@@ -9,137 +9,136 @@
 
 namespace library
 {
-    namespace components
-    {
-        namespace defaults
-        {
-            constexpr float k_mouseSensitivity = 0.1f;
-            const float k_rotationRate = DirectX::XMConvertToRadians(0.5f);
-            constexpr float k_movementRate = 0.1f;
-        }
 
-        FirstPersonCameraComponent::FirstPersonCameraComponent(const Application& app, const KeyboardComponent& keyboard, const MouseComponent& mouse)
-            : Class(app)
-            , m_keyboard(keyboard)
-            , m_mouse(mouse)
-            , m_mouseSensitivity(defaults::k_mouseSensitivity)
-            , m_rotationRate(defaults::k_rotationRate)
-            , m_movementRate(defaults::k_movementRate)
-            , m_rotationStartPoint(0.f, 0.f)
-        {
-        }
+	namespace components
+	{
+		namespace defaults
+		{
+			constexpr float k_mouseSensitivity = 0.1f;
+			const float k_rotationRate = DirectX::XMConvertToRadians(0.5f);
+			constexpr float k_movementRate = 0.1f;
+		}
 
-        FirstPersonCameraComponent::FirstPersonCameraComponent(
-            const Application& app,
-            const KeyboardComponent& keyboard,
-            const MouseComponent& mouse,
-            const float fieldOfView,
-            const float aspectRatio,
-            const float nearPlaneDistance,
-            const float farPlaneDistance
-        )
-            : Class(app, fieldOfView, aspectRatio, nearPlaneDistance, farPlaneDistance)
-            , m_keyboard(keyboard)
-            , m_mouse(mouse)
-            , m_mouseSensitivity(defaults::k_mouseSensitivity)
-            , m_rotationRate(defaults::k_rotationRate)
-            , m_movementRate(defaults::k_movementRate)
-            , m_rotationStartPoint(0.f, 0.f)
-        {
-        }
+		FirstPersonCameraComponent::FirstPersonCameraComponent(
+			const Application& app,
+			const KeyboardComponent& keyboard,
+			const MouseComponent& mouse
+		)
+			: Class(app)
+			, m_keyboard(keyboard)
+			, m_mouse(mouse)
+			, m_mouseSensitivity(defaults::k_mouseSensitivity)
+			, m_rotationRate(defaults::k_rotationRate)
+			, m_movementRate(defaults::k_movementRate)
+			, m_rotationStartPoint(0.f, 0.f)
+		{
+		}
 
-        void FirstPersonCameraComponent::Initialize()
-        {
-            CameraComponent::Initialize();
-        }
+		FirstPersonCameraComponent::FirstPersonCameraComponent(
+			const Application& app,
+			const KeyboardComponent& keyboard,
+			const MouseComponent& mouse,
+			const float fieldOfView,
+			const float aspectRatio,
+			const float nearPlaneDistance,
+			const float farPlaneDistance
+		)
+			: Class(app, fieldOfView, aspectRatio, nearPlaneDistance, farPlaneDistance)
+			, m_keyboard(keyboard)
+			, m_mouse(mouse)
+			, m_mouseSensitivity(defaults::k_mouseSensitivity)
+			, m_rotationRate(defaults::k_rotationRate)
+			, m_movementRate(defaults::k_movementRate)
+			, m_rotationStartPoint(0.f, 0.f)
+		{
+		}
 
-        void FirstPersonCameraComponent::Update(const Time& time)
-        {
-            const auto elapsedTime = time.elapsed.GetMilliseconds<float>();
-            const auto right = GetRightVector();
+		void FirstPersonCameraComponent::Initialize()
+		{
+			CameraComponent::Initialize();
+		}
 
-            // compute movement
-            bool isMoved = false;
-            auto movementAmount = math::Vector2f::Zero;
-            {
-                const KeyboardComponent& keyboard = m_keyboard;
+		void FirstPersonCameraComponent::Update(const Time& time)
+		{
+			const auto elapsedTime = time.elapsed.GetMilliseconds<float>();
 
-                if (keyboard.IsKeyDown(Key::W))
-                {
-                    movementAmount.y = 1.0f;
-                    isMoved = true;
-                }
+			// compute movement
+			auto movementAmount = math::Vector2::Zero;
+			{
+				const KeyboardComponent& keyboard = m_keyboard;
 
-                if (keyboard.IsKeyDown(Key::S))
-                {
-                    movementAmount.y = -1.0f;
-                    isMoved = true;
-                }
+				if (keyboard.IsKeyDown(Key::W))
+				{
+					movementAmount.y += 1.0f;
+				}
 
-                if (keyboard.IsKeyDown(Key::A))
-                {
-                    movementAmount.x = -1.0f;
-                    isMoved = true;
-                }
+				if (keyboard.IsKeyDown(Key::S))
+				{
+					movementAmount.y -= 1.0f;
+				}
 
-                if (keyboard.IsKeyDown(Key::D))
-                {
-                    movementAmount.x = 1.0f;
-                    isMoved = true;
-                } 
-            }
+				if (keyboard.IsKeyDown(Key::A))
+				{
+					movementAmount.x -= 1.0f;
+				}
 
-            // compute rotation
-            {
-                const MouseComponent& mouse = m_mouse;
+				if (keyboard.IsKeyDown(Key::D))
+				{
+					movementAmount.x += 1.0f;
+				}
+			}
 
-                if (mouse.WasButtonReleased(MouseButton::Left))
-                {
-                    m_rotationStartPoint.x = 0.f;
-                    m_rotationStartPoint.y = 0.f;
-                }
+			// compute rotation
+			{
+				const MouseComponent& mouse = m_mouse;
 
-                if (mouse.WasButtonPressed(MouseButton::Left))
-                {
-                    m_rotationStartPoint.x = mouse.GetX() * m_mouseSensitivity;
-                    m_rotationStartPoint.y = mouse.GetY() * m_mouseSensitivity;
-                }
+				if (mouse.WasButtonReleased(MouseButton::Left))
+				{
+					m_rotationStartPoint.x = 0.f;
+					m_rotationStartPoint.y = 0.f;
+				}
 
+				if (mouse.WasButtonPressed(MouseButton::Left))
+				{
+					m_rotationStartPoint.x = mouse.GetX() * m_mouseSensitivity;
+					m_rotationStartPoint.y = mouse.GetY() * m_mouseSensitivity;
+				}
 
-                if (mouse.IsButtonHeldDown(MouseButton::Left))
-                {
-                    auto prevPoint = m_rotationStartPoint;
+				if (mouse.IsButtonHeldDown(MouseButton::Left))
+				{
+					auto prevPoint = m_rotationStartPoint;
 
-                    m_rotationStartPoint.x = mouse.GetX() * m_mouseSensitivity;
-                    m_rotationStartPoint.y = mouse.GetY() * m_mouseSensitivity;
+					m_rotationStartPoint.x = mouse.GetX() * m_mouseSensitivity;
+					m_rotationStartPoint.y = mouse.GetY() * m_mouseSensitivity;
 
-                    math::Vector2f rotationDelta(m_rotationStartPoint.x - prevPoint.x, m_rotationStartPoint.y -prevPoint.y);
-                    Logger::Info("Rotation delta: %s", rotationDelta.ToString().c_str());
+					const auto rotationDelta = m_rotationStartPoint - prevPoint;
+					Logger::Info("Rotation delta: %s", rotationDelta.ToString().c_str());
 
-                    const auto rotationVector = math::Vector(rotationDelta) * m_rotationRate * elapsedTime;
+					const auto rotation = rotationDelta * m_rotationRate * elapsedTime;
 
-                    const auto pitchMatrix = DirectX::XMMatrixRotationAxis(right, DirectX::XMVectorGetY(rotationVector));
-                    const auto yawMatrix = DirectX::XMMatrixRotationY(DirectX::XMVectorGetX(rotationVector));
+					const auto pitchMatrix = math::Matrix4::RotationAxis(m_right, rotation.y);
+					const auto yawMatrix = math::Matrix4::RotationY(rotation.x);
 
-                    ApplyRotation(DirectX::XMMatrixMultiply(pitchMatrix, yawMatrix));
-                }
-            }
+					ApplyRotation(pitchMatrix * yawMatrix);
+				}
+			}
 
-            if (isMoved)
-            {
-                auto position = GetPositionVector();
-                const auto movement = math::Vector(movementAmount) * m_movementRate * elapsedTime;
+			if (movementAmount)
+			{
+				const auto movement = movementAmount * m_movementRate * elapsedTime;
+				auto position = m_position;
 
-                const auto strafe = right * DirectX::XMVectorGetX(movement);
-                position += strafe;
+				const auto strafe = m_right * movement.x;
+				position += strafe;
 
-                const auto forward = GetDirectionVector() * DirectX::XMVectorGetY(movement);
-                position += forward;
+				const auto forward = m_direction * movement.y;
+				position += forward;
 
-                SetPosition(position);
-            }
+				SetPosition(position);
+			}
 
-            CameraComponent::Update(time);
-        }
-    } // namespace components
+			CameraComponent::Update(time);
+		}
+
+	} // namespace components
 } // namespace library

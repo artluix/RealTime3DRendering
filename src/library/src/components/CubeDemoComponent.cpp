@@ -1,6 +1,7 @@
-#include "library/components/TriangleDemoComponent.h"
+#include "library/components/CubeDemoComponent.h"
 
 #include "library/components/CameraComponent.h"
+#include "library/components/KeyboardComponent.h"
 
 #include "library/VertexTypes.h"
 #include "library/Application.h"
@@ -14,28 +15,33 @@
 
 namespace library
 {
-
 	namespace components
 	{
+
 		namespace
 		{
 			const auto k_effectPath = utils::GetExecutableDirectory().Join(
 				filesystem::Path(L"data/effects/BasicEffect.fx")
 			);
+
+			constexpr unsigned k_indicesCount = 6 * 2 * 3;
+			constexpr unsigned k_verticesCount = 8;
+
+			const float k_rotationAngle = DirectX::XM_PIDIV2;
+			constexpr float k_movementRate = 0.01f;
 		}
 
-		TriangleDemoComponent::TriangleDemoComponent(const Application& app, const CameraComponent& camera)
+		CubeDemoComponent::CubeDemoComponent(
+			const Application& app,
+			const CameraComponent& camera,
+			const KeyboardComponent& keyboard
+		)
 			: Class(app, camera)
-			, m_effect()
-			, m_technique()
-			, m_pass()
-			, m_wvpVariable()
-			, m_inputLayout()
-			, m_vertexBuffer()
+			, m_keyboard(keyboard)
 		{
 		}
 
-		void TriangleDemoComponent::Initialize()
+		void CubeDemoComponent::Initialize()
 		{
 			const Application& app = m_app;
 
@@ -128,15 +134,59 @@ namespace library
 				}
 			}
 
+			// index buffer
+			{
+				std::array<unsigned, k_indicesCount> indices =
+				{
+					0, 1, 2,
+					0, 2, 3,
+
+					4, 5, 6,
+					4, 6, 7,
+
+					0, 4, 5,
+					0, 5, 1,
+
+					3, 7, 6,
+					3, 6, 2,
+
+					0, 4, 7,
+					0, 7, 3,
+
+					1, 5, 6,
+					1, 6, 2
+				};
+
+				D3D11_BUFFER_DESC indexBufferDesc{};
+				indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
+				indexBufferDesc.ByteWidth = sizeof(unsigned) * indices.size();
+				indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
+
+				D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
+				vertexSubResourceData.pSysMem = indices.data();
+
+				auto hr = m_app.GetD3DDevice()->CreateBuffer(&indexBufferDesc, &vertexSubResourceData, m_indexBuffer.GetAddressOf());
+				if (FAILED(hr))
+				{
+					throw Exception("ID3D11Device::CreateBuffer() failed.", hr);
+				}
+			}
+
 			// vertex buffer
 			{
-				const float l = sqrt(3) / 2;
-
-				std::array<VertexPositionColor, 3> vertices =
+				std::array<VertexPositionColor, k_verticesCount> vertices =
 				{
-					VertexPositionColor(DirectX::XMFLOAT4(-l, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)), // left red
-					VertexPositionColor(DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 1.0f, 0.0f, 1.0f)), // up green
-					VertexPositionColor(DirectX::XMFLOAT4(l, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f)), // right blue
+					// bottom
+					VertexPositionColor(DirectX::XMFLOAT4(-1.0f, -1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f)),
+					VertexPositionColor(DirectX::XMFLOAT4(-1.0f, 1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(0.5f, 1.0f, 0.5f, 1.0f)),
+					VertexPositionColor(DirectX::XMFLOAT4(1.0f, 1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 0.5f, 1.0f)),
+					VertexPositionColor(DirectX::XMFLOAT4(1.0f, -1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f)),
+
+					// top
+					VertexPositionColor(DirectX::XMFLOAT4(-1.0f, -1.0f, 1.0f, 1.0f), DirectX::XMFLOAT4(0.5f, 0.5f, 1.0f, 1.0f)),
+					VertexPositionColor(DirectX::XMFLOAT4(-1.0f, 1.0f, 1.0f, 1.0f), DirectX::XMFLOAT4(0.5f, 1.0f, 1.0f, 1.0f)),
+					VertexPositionColor(DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)),
+					VertexPositionColor(DirectX::XMFLOAT4(1.0f, -1.0f, 1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.5f, 1.0f, 1.0f)),
 				};
 
 				D3D11_BUFFER_DESC vertexBufferDesc{};
@@ -147,11 +197,7 @@ namespace library
 				D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 				vertexSubResourceData.pSysMem = vertices.data();
 
-				auto hr = m_app.GetD3DDevice()->CreateBuffer(
-					&vertexBufferDesc,
-					&vertexSubResourceData,
-					m_vertexBuffer.GetAddressOf()
-				);
+				auto hr = m_app.GetD3DDevice()->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_vertexBuffer.GetAddressOf());
 				if (FAILED(hr))
 				{
 					throw Exception("ID3D11Device::CreateBuffer() failed.", hr);
@@ -159,14 +205,48 @@ namespace library
 			}
 		}
 
-		void TriangleDemoComponent::Update(const Time& time)
+		void CubeDemoComponent::Update(const Time& time)
 		{
-			auto rotation = m_rotation;
-			rotation.z += DirectX::XM_PIDIV2 * time.elapsed.GetSeconds<float>();
-			SetRotation(rotation);
+			const KeyboardComponent& keyboard = m_keyboard;
+
+			// rotation
+			if (keyboard.IsKeyDown(Key::R))
+			{
+				const auto rotationDelta = DirectX::XM_PIDIV2 * time.elapsed.GetSeconds<float>();
+				Rotate(rotationDelta);
+			}
+
+			// movement
+			{
+				auto movementAmount = math::Vector2::Zero;
+				if (keyboard.IsKeyDown(Key::Up))
+				{
+					movementAmount.y += 1.0f;
+				}
+
+				if (keyboard.IsKeyDown(Key::Down))
+				{
+					movementAmount.y -= 1.0f;
+				}
+
+				if (keyboard.IsKeyDown(Key::Left))
+				{
+					movementAmount.x -= 1.0f;
+				}
+
+				if (keyboard.IsKeyDown(Key::Right))
+				{
+					movementAmount.x += 1.0f;
+				}
+
+				if (movementAmount)
+				{
+					Translate(math::Vector3(movementAmount * k_movementRate));
+				}
+			}
 		}
 
-		void TriangleDemoComponent::Draw(const Time& time)
+		void CubeDemoComponent::Draw(const Time& time)
 		{
 			auto d3dDeviceContext = m_app.GetD3DDeviceContext();
 
@@ -178,11 +258,13 @@ namespace library
 			d3dDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 			d3dDeviceContext->IASetInputLayout(m_inputLayout.Get());
 
+			d3dDeviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+
 			unsigned stride = sizeof(VertexPositionColor);
 			unsigned offset = 0;
 			d3dDeviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 
-			d3dDeviceContext->Draw(3, 0);
+			d3dDeviceContext->DrawIndexed(k_indicesCount, 0, 0);
 		}
 
 	} // namespace components

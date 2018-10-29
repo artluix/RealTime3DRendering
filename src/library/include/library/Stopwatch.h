@@ -4,16 +4,18 @@
 
 namespace library
 {
-    class Stopwatch : public NonCopyable<Stopwatch>
-    {
-    public:
-        explicit Stopwatch();
 
-        void Reset();
-        void UpdateTime(Time& time);
+	class Stopwatch : public NonCopyable<Stopwatch>
+	{
+	public:
+		explicit Stopwatch();
 
-    private:
-        TimePoint m_startTimePoint;
-        TimePoint m_currentTimePoint;
-    };
+		void Reset();
+		void UpdateTime(Time& time);
+
+	private:
+		TimePoint m_startTimePoint;
+		TimePoint m_currentTimePoint;
+	};
+
 } // namespace library

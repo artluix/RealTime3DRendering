@@ -2,85 +2,60 @@
 
 namespace library
 {
-    namespace math
-    {
-        const Matrix3 Matrix3::Zero = Matrix3(
-            0.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 0.0f
-        );
+	namespace math
+	{
 
-        const Matrix3 Matrix3::Idendity = Matrix3(
-            1.f, 0.f, 0.f,
-            0.f, 1.f, 0.f,
-            0.f, 0.f, 1.f
-        );
+		//-------------------------------------------------------------------------
+		// Vector2
+		//-------------------------------------------------------------------------
 
-        /////////////////////////////////////////////////////////////////
+		const Vector<2> Vector<2>::Zero(0.f);
+		const Vector<2> Vector<2>::One(1.f);
 
-        const Matrix4 Matrix4::Zero = Matrix4(
-            0.0f, 0.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 0.0f, 0.0f,
-            0.0f, 0.0f, 0.0f, 0.0f
-        );
+		//-------------------------------------------------------------------------
+		// Vector3
+		//-------------------------------------------------------------------------
 
-        const Matrix4 Matrix4::Identity = Matrix4(
-            1.f, 0.f, 0.f, 0.f,
-            0.f, 1.f, 0.f, 0.f,
-            0.f, 0.f, 1.f, 0.f,
-            0.f, 0.f, 0.f, 1.f
-        );
+		const Vector<3> Vector<3>::Zero(0.f);
+		const Vector<3> Vector<3>::One(1.f);
 
-        Vector3f Matrix4::GetForward(const Matrix& matrix)
-        {
-            const auto r = Vector4f(matrix.r[2]);
-            return Vector3f(-r.x, -r.y, -r.z);
-        }
+		const Vector<3> Vector<3>::Forward(0.f, 0.f, -1.f);
+		const Vector<3> Vector<3>::Backward(0.f, 0.f, 1.f);
+		const Vector<3> Vector<3>::Up(0.f, 1.f, 0.f);
+		const Vector<3> Vector<3>::Down(0.f, -1.f, 0.f);
+		const Vector<3> Vector<3>::Right(1.f, 0.f, 0.f);
+		const Vector<3> Vector<3>::Left(-1.f, 0.f, 0.f);
 
-        Vector3f Matrix4::GetUp(const Matrix& matrix)
-        {
-            const auto r = Vector4f(matrix.r[1]);
-            return Vector3f(r.x, r.y, r.z);
-        }
+		//-------------------------------------------------------------------------
+		// Vector4
+		//-------------------------------------------------------------------------
 
-        Vector3f Matrix4::GetRight(const Matrix& matrix)
-        {
-            const auto r = Vector4f(matrix.r[0]);
-            return Vector3f(r.x, r.y, r.z);
-        }
+		const Vector<4> Vector<4>::Zero(0.f);
+		const Vector<4> Vector<4>::One(1.f);
 
-        Vector3f Matrix4::GetTranslation(const Matrix& matrix)
-        {
-            const auto r = Vector4f(matrix.r[3]);
-            return Vector3f(r.x, r.y, r.z);
-        }
+		//-------------------------------------------------------------------------
+		// Matrix3
+		//-------------------------------------------------------------------------
 
-        /////////////////////////////////////////////////////////////////
+		const Matrix<3> Matrix<3>::Zero(0.f);
+		const Matrix<3> Matrix<3>::Identity(
+			1.f, 0.f, 0.f,
+			0.f, 1.f, 0.f,
+			0.f, 0.f, 1.f
+		);
 
-        Matrix& Matrix4::SetForward(Matrix& matrix, const Vector3f& vector)
-        {
-            auto v = Vector(vector);
-            matrix.r[2] = DirectX::XMVectorNegate(v);
-            return matrix;
-        }
+		//-------------------------------------------------------------------------
+		// Matrix4
+		//-------------------------------------------------------------------------
 
-        Matrix& Matrix4::SetUp(Matrix& matrix, const Vector3f& vector)
-        {
-            matrix.r[1] = Vector(vector);
-            return matrix;
-        }
+		const Matrix<4> Matrix<4>::Zero(0.f);
+		const Matrix<4> Matrix<4>::Identity(
+			1.f, 0.f, 0.f, 0.f,
+			0.f, 1.f, 0.f, 0.f,
+			0.f, 0.f, 1.f, 0.f,
+			0.f, 0.f, 0.f, 1.f
+		);
 
-        Matrix& Matrix4::SetRight(Matrix& matrix, const Vector3f& vector)
-        {
-            matrix.r[0] = Vector(vector);
-            return matrix;
-        }
-
-        Matrix& Matrix4::SetTranslation(Matrix& matrix, const Vector3f& vector)
-        {
-            matrix.r[3] = Vector(vector);
-            return matrix;
-        }
-    } // namespace math
+	} // namespace math
 } // namespace library
+

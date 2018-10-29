@@ -7,36 +7,38 @@
 
 namespace library
 {
-    namespace components
-    {
-        class KeyboardComponent : public rtti::Class<KeyboardComponent, BaseComponent>
-        {
-        public:
-            explicit KeyboardComponent(const Application& app, const ComPtr<IDirectInput8>& directInput);
-            ~KeyboardComponent();
+	namespace components
+	{
 
-            void Initialize() override;
-            void Update(const Time& time) override;
+		class KeyboardComponent : public rtti::Class<KeyboardComponent, BaseComponent>
+		{
+		public:
+			explicit KeyboardComponent(const Application& app, const ComPtr<IDirectInput8>& directInput);
+			~KeyboardComponent();
 
-            bool IsKeyUp(const Key key) const;
-            bool IsKeyDown(const Key key) const;
+			void Initialize() override;
+			void Update(const Time& time) override;
 
-            bool WasKeyUp(const Key key) const;
-            bool WasKeyDown(const Key key) const;
+			bool IsKeyUp(const Key key) const;
+			bool IsKeyDown(const Key key) const;
 
-            bool WasKeyPressed(const Key key) const;
-            bool WasKeyReleased(const Key key) const;
+			bool WasKeyUp(const Key key) const;
+			bool WasKeyDown(const Key key) const;
 
-            bool IsKeyHeldDown(const Key key) const;
+			bool WasKeyPressed(const Key key) const;
+			bool WasKeyReleased(const Key key) const;
 
-        private:
-            using KeysStateArray = std::array<BYTE, 256>;
+			bool IsKeyHeldDown(const Key key) const;
 
-            ComPtr<IDirectInput8> m_directInput;
-            ComPtr<IDirectInputDevice8> m_directInputDevice;
+		private:
+			using KeysStateArray = std::array<BYTE, 256>;
 
-            KeysStateArray m_keysState;
-            KeysStateArray m_previousKeysState;
-        };
-    } // namespace components
+			ComPtr<IDirectInput8> m_directInput;
+			ComPtr<IDirectInputDevice8> m_directInputDevice;
+
+			KeysStateArray m_keysState;
+			KeysStateArray m_previousKeysState;
+		};
+
+	} // namespace components
 } // namespace library

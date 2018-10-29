@@ -3,6 +3,7 @@
 
 namespace library
 {
-    // we use 4 float component color
-    using Color = math::Vector4f;
+
+	using Color = math::Vector4; // we use 4 float vector for color
+
 } // namespace library

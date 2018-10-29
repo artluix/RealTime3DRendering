@@ -5,47 +5,49 @@
 
 namespace library
 {
-    namespace utils
-    {
-        std::wstring ToWideString(const std::string& str)
-        {
-            std::wstring result(std::cbegin(str), std::cend(str));
-            return result;
-        }
+	namespace utils
+	{
 
-        filesystem::Path GetCurrentDirectory()
-        {
-            std::array<wchar_t, MAX_PATH> buffer;
-            ::GetCurrentDirectory(MAX_PATH, buffer.data());
-            return filesystem::Path(buffer.data());
-        }
+		std::wstring ToWideString(const std::string& str)
+		{
+			std::wstring result(std::cbegin(str), std::cend(str));
+			return result;
+		}
 
-        filesystem::Path GetExecutableDirectory()
-        {
-            std::array<wchar_t, MAX_PATH> buffer;
-            ::GetModuleFileName(nullptr, buffer.data(), MAX_PATH);
-            return filesystem::Path(buffer.data()).GetDirName();
-        }
+		filesystem::Path GetCurrentDirectory()
+		{
+			std::array<wchar_t, MAX_PATH> buffer;
+			::GetCurrentDirectory(MAX_PATH, buffer.data());
+			return filesystem::Path(buffer.data());
+		}
 
-        void LoadBinaryFile(const filesystem::Path& path, std::vector<byte>& data)
-        {
-            std::ifstream file(path.GetAsWideCString(), std::ios::binary);
-            if (file.bad())
-            {
-                throw std::exception("Could not open file.");
-            }
+		filesystem::Path GetExecutableDirectory()
+		{
+			std::array<wchar_t, MAX_PATH> buffer;
+			::GetModuleFileName(nullptr, buffer.data(), MAX_PATH);
+			return filesystem::Path(buffer.data()).GetDirName();
+		}
 
-            file.seekg(0, std::ios::end);
-            const auto size = file.tellg();
+		void LoadBinaryFile(const filesystem::Path& path, std::vector<byte>& data)
+		{
+			std::ifstream file(path.GetAsWideCString(), std::ios::binary);
+			if (file.bad())
+			{
+				throw std::exception("Could not open file.");
+			}
 
-            if (size > 0)
-            {
-                data.resize(std::size_t(size));
-                file.seekg(0, std::ios::beg);
-                file.read(reinterpret_cast<char*>(data.data()), size);
-            }
+			file.seekg(0, std::ios::end);
+			const auto size = file.tellg();
 
-            file.close();
-        }
-    } // namespace utils
+			if (size > 0)
+			{
+				data.resize(std::size_t(size));
+				file.seekg(0, std::ios::beg);
+				file.read(reinterpret_cast<char*>(data.data()), size);
+			}
+
+			file.close();
+		}
+
+	} // namespace utils
 } // namespace library

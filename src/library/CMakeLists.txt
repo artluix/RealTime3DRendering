@@ -12,6 +12,7 @@ if(APPLICATION)
 
         include/library/Components/BaseComponent.h
         include/library/Components/CameraComponent.h
+        include/library/Components/CubeDemoComponent.h
         include/library/Components/DrawableComponent.h
         include/library/Components/FirstPersonCameraComponent.h
         include/library/Components/FpsComponent.h
@@ -33,13 +34,14 @@ if(APPLICATION)
         include/library/ServiceContainer.h
         include/library/Time.h
         include/library/Utils.h
-        include/library/VertexDeclarations.h
+        include/library/VertexTypes.h
 
         # src
         src/Application.cpp
 
         src/Components/BaseComponent.cpp
         src/Components/CameraComponent.cpp
+        src/Components/CubeDemoComponent.cpp
         src/Components/DrawableComponent.cpp
         src/Components/FirstPersonCameraComponent.cpp
         src/Components/FpsComponent.cpp

@@ -3,13 +3,15 @@
 
 namespace library
 {
-    namespace utils
-    {
-        std::wstring ToWideString(const std::string& str);
+	namespace utils
+	{
 
-        filesystem::Path GetCurrentDirectory();
-        filesystem::Path GetExecutableDirectory();
+		std::wstring ToWideString(const std::string& str);
 
-        void LoadBinaryFile(const filesystem::Path& path, std::vector<byte>& data);
-    }; // namespace utils
+		filesystem::Path GetCurrentDirectory();
+		filesystem::Path GetExecutableDirectory();
+
+		void LoadBinaryFile(const filesystem::Path& path, std::vector<byte>& data);
+
+	}; // namespace utils
 } // namespace library

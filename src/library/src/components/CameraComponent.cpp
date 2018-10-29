@@ -1,7 +1,6 @@
 #include "library/components/CameraComponent.h"
 
 #include "library/Application.h"
-
 #include "library/Utils.h"
 
 #define _USE_MATH_DEFINES
@@ -9,174 +8,146 @@
 
 namespace library
 {
-    namespace
-    {
-        namespace defaults
-        {
-            constexpr float k_fieldOfView = float(M_PI_4);
-            constexpr float k_nearPlaneDistance = 0.01f;
-            constexpr float k_farPlaneDistance = 1000.0f;
-        }
 
-        const auto k_fontPath = utils::GetExecutableDirectory().Join(
-            filesystem::Path(L"data/fonts/Arial_14_Regular.spritefont")
-        );
-    }
+	namespace
+	{
+		namespace defaults
+		{
+			constexpr float k_fieldOfView = float(M_PI_4);
+			constexpr float k_nearPlaneDistance = 0.01f;
+			constexpr float k_farPlaneDistance = 1000.0f;
+		}
 
-    namespace components
-    {
-        CameraComponent::CameraComponent(const Application& app)
-            : Class(app)
-            , m_aspectRatio(app.GetAspectRatio())
-            , m_fieldOfView(defaults::k_fieldOfView)
-            , m_nearPlaneDistance(defaults::k_nearPlaneDistance)
-            , m_farPlaneDistance(defaults::k_farPlaneDistance)
-            , m_isViewMatrixDirty(true)
-            , m_position()
-            , m_direction(), m_right(), m_up()
-            , m_viewMatrix(), m_projectionMatrix()
-        {
-        }
+		const auto k_fontPath = utils::GetExecutableDirectory().Join(
+			filesystem::Path(L"data/fonts/Arial_14_Regular.spritefont")
+		);
+	}
 
-        CameraComponent::CameraComponent(const Application& app, const float fieldOfView, const float aspectRatio, const float nearPlaneDistance, const float farPlaneDistance)
-            : Class(app)
-            , m_fieldOfView(fieldOfView)
-            , m_nearPlaneDistance(nearPlaneDistance)
-            , m_farPlaneDistance(farPlaneDistance)
-        {
-        }
+	namespace components
+	{
+		CameraComponent::CameraComponent(const Application& app)
+			: Class(app)
+			, m_aspectRatio(app.GetAspectRatio())
+			, m_fieldOfView(defaults::k_fieldOfView)
+			, m_nearPlaneDistance(defaults::k_nearPlaneDistance)
+			, m_farPlaneDistance(defaults::k_farPlaneDistance)
+			, m_isViewMatrixDirty(true)
+			, m_position()
+			, m_direction(), m_right(), m_up()
+			, m_viewMatrix(), m_projectionMatrix()
+		{
+		}
 
-        CameraComponent::~CameraComponent()
-        {
-        }
+		CameraComponent::CameraComponent(
+			const Application& app,
+			const float fieldOfView,
+			const float aspectRatio,
+			const float nearPlaneDistance,
+			const float farPlaneDistance
+		)
+			: Class(app)
+			, m_fieldOfView(fieldOfView)
+			, m_nearPlaneDistance(nearPlaneDistance)
+			, m_farPlaneDistance(farPlaneDistance)
+		{
+		}
 
-        /////////////////////////////////////////////////////////////////
+		CameraComponent::~CameraComponent()
+		{
+		}
 
-        DirectX::XMMATRIX CameraComponent::GetViewProjectionMatrix() const
-        {
-            const auto viewMatrix = GetViewMatrix();
-            const auto projectionMatrix = GetProjectionMatrix();
+		//-------------------------------------------------------------------------
 
-            return DirectX::XMMatrixMultiply(viewMatrix, projectionMatrix);
-        }
+		math::Matrix4 CameraComponent::GetViewProjectionMatrix() const
+		{
+			return m_viewMatrix * m_projectionMatrix;
+		}
 
-        /////////////////////////////////////////////////////////////////
+		//-------------------------------------------------------------------------
 
-        void CameraComponent::SetPosition(const float x, const float y, const float z)
-        {
-            const auto position = math::Vector3f(x, y, z);
-            SetPosition(position);
-        }
+		void CameraComponent::SetPosition(const math::Vector3& position)
+		{
+			if (m_position != position)
+			{
+				m_position = position;
+				m_isViewMatrixDirty = true;
+			}
+		}
 
-        void CameraComponent::SetPosition(const math::Vector& positionVector)
-        {
-            const auto position = math::Vector3f(positionVector);
-            SetPosition(position);
-        }
+		//-------------------------------------------------------------------------
 
-        void CameraComponent::SetPosition(const math::Vector3f& position)
-        {
-            if (m_position != position)
-            {
-                m_position = position;
-                m_isViewMatrixDirty = true;
-            }
-        }
+		void CameraComponent::Reset()
+		{
+			m_position = math::Vector3::Zero;
+			m_direction = math::Vector3::Forward;
+			m_up = math::Vector3::Up;
+			m_right = math::Vector3::Right;
 
-        /////////////////////////////////////////////////////////////////
+			UpdateViewMatrix();
+		}
 
-        void CameraComponent::Reset()
-        {
-            m_position = math::Vector3f::Zero;
-            m_direction = math::Vector3f::Forward;
-            m_up = math::Vector3f::Up;
-            m_right = math::Vector3f::Right;
+		//-------------------------------------------------------------------------
 
-            UpdateViewMatrix();
-        }
+		void CameraComponent::Initialize()
+		{
+			UpdateProjectionMatrix();
+			Reset();
+		}
 
-        /////////////////////////////////////////////////////////////////
+		void CameraComponent::Update(const Time& time)
+		{
+			if (m_isViewMatrixDirty)
+			{
+				UpdateViewMatrix();
+				m_isViewMatrixDirty = false;
+			}
+		}
 
-        void CameraComponent::Initialize()
-        {
-            UpdateProjectionMatrix();
-            Reset();
-        }
+		//-------------------------------------------------------------------------
 
-        void CameraComponent::Update(const Time& time)
-        {
-            if (m_isViewMatrixDirty)
-            {
-                UpdateViewMatrix();
-                m_isViewMatrixDirty = false;
-            }
-        }
+		void CameraComponent::UpdateViewMatrix()
+		{
+			m_viewMatrix = math::Matrix4::LookToRH(m_position, m_direction, m_up);
+		}
 
-        /////////////////////////////////////////////////////////////////
+		void CameraComponent::UpdateProjectionMatrix()
+		{
+			m_projectionMatrix = math::Matrix4::PerspectiveFovRH(
+				m_fieldOfView,
+				m_aspectRatio,
+				m_nearPlaneDistance,
+				m_farPlaneDistance
+			);
+		}
 
-        void CameraComponent::UpdateViewMatrix()
-        {
-            const auto eyePosition = GetPositionVector();
-            const auto direction = GetDirectionVector();
-            const auto upDirection = GetUpVector();
+		//-------------------------------------------------------------------------
 
-            const auto viewMatrix = DirectX::XMMatrixLookToRH(eyePosition, direction, upDirection);
-            m_viewMatrix = math::Matrix4(viewMatrix);
-        }
+		void CameraComponent::ApplyRotation(const math::Matrix4& transform)
+		{
+			const auto direction = m_direction.TransformNormal(transform);
+			auto up = m_up.TransformNormal(transform);
 
-        void CameraComponent::UpdateProjectionMatrix()
-        {
-            const auto projectionMatrix = DirectX::XMMatrixPerspectiveFovRH(
-                m_fieldOfView,
-                m_aspectRatio,
-                m_nearPlaneDistance,
-                m_farPlaneDistance
-            );
-            m_projectionMatrix = math::Matrix4(projectionMatrix);
-        }
+			const auto right = direction.Cross(up);
+			up = right.Cross(direction);
 
-        /////////////////////////////////////////////////////////////////
+			if (m_direction != direction)
+			{
+				m_direction = direction;
+				m_isViewMatrixDirty = true;
+			}
 
-        void CameraComponent::ApplyRotation(const math::Matrix& transform)
-        {
-            auto direction = GetDirectionVector();
-            auto up = GetUpVector();
+			if (m_up != up)
+			{
+				m_up = up;
+				m_isViewMatrixDirty = true;
+			}
 
-            direction = DirectX::XMVector3TransformNormal(direction, transform);
-            direction = DirectX::XMVector3Normalize(direction);
+			if (m_right != right)
+			{
+				m_right = right;
+				m_isViewMatrixDirty = true;
+			}
+		}
 
-            up = DirectX::XMVector3TransformNormal(up, transform);
-            up = DirectX::XMVector3Normalize(up);
-
-            const auto right = DirectX::XMVector3Cross(direction, up);
-            up = DirectX::XMVector3Cross(right, direction);
-
-            const auto newDirection = math::Vector3f(direction);
-            if (m_direction != newDirection)
-            {
-                m_direction = newDirection;
-                m_isViewMatrixDirty = true;
-            }
-
-            const auto newUp = math::Vector3f(up);
-            if (m_up != newUp)
-            {
-                m_up = newUp;
-                m_isViewMatrixDirty = true;
-            }
-
-            const auto newRight = math::Vector3f(right);
-            if (m_right != newRight)
-            {
-                m_right = newRight;
-                m_isViewMatrixDirty = true;
-            }
-        }
-
-        void CameraComponent::ApplyRotation(const math::Matrix4& transform)
-        {
-            const auto transformMatrix = math::Matrix(transform);
-            ApplyRotation(transformMatrix);
-        }
-    } // namespace components
+	} // namespace components
 } // namespace library

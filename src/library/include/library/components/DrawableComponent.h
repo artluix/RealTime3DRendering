@@ -10,21 +10,23 @@ struct ID3D11Buffer;
 
 namespace library
 {
-    namespace components
-    {
-        class DrawableComponent : public rtti::Class<DrawableComponent, BaseComponent>
-        {
-        public:
-            explicit DrawableComponent(const Application& app);
-            ~DrawableComponent() = default;
+	namespace components
+	{
 
-            bool IsVisible() const { return m_visible; }
-            void SetVisible(const bool visible);
+		class DrawableComponent : public rtti::Class<DrawableComponent, BaseComponent>
+		{
+		public:
+			explicit DrawableComponent(const Application& app);
+			~DrawableComponent() = default;
 
-            virtual void Draw(const Time& time);
+			bool IsVisible() const { return m_visible; }
+			void SetVisible(const bool visible);
 
-        protected:
-            bool m_visible;
-        };
-    } // namespace components
+			virtual void Draw(const Time& time);
+
+		protected:
+			bool m_visible;
+		};
+
+	} // namespace components
 } // namespace library

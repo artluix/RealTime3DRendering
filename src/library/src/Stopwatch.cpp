@@ -2,26 +2,28 @@
 
 namespace library
 {
-    Stopwatch::Stopwatch()
-    {
-        Reset();
-    }
 
-    void Stopwatch::Reset()
-    {
-        m_startTimePoint = m_currentTimePoint = Clock::now();
-    }
+	Stopwatch::Stopwatch()
+	{
+		Reset();
+	}
 
-    void Stopwatch::UpdateTime(Time& time)
-    {
-        const auto now = Clock::now();
+	void Stopwatch::Reset()
+	{
+		m_startTimePoint = m_currentTimePoint = Clock::now();
+	}
 
-        const auto elapsed = now - m_currentTimePoint;
-        const auto total = now - m_startTimePoint;
+	void Stopwatch::UpdateTime(Time& time)
+	{
+		const auto now = Clock::now();
 
-        time.elapsed = TimeValue(elapsed);
-        time.total = TimeValue(total);
+		const auto elapsed = now - m_currentTimePoint;
+		const auto total = now - m_startTimePoint;
 
-        m_currentTimePoint = now;
-    }
+		time.elapsed = TimeValue(elapsed);
+		time.total = TimeValue(total);
+
+		m_currentTimePoint = now;
+	}
+
 } // namespace library
