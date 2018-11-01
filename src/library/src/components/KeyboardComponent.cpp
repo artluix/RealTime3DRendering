@@ -7,14 +7,9 @@
 
 namespace library
 {
-
-	namespace
-	{
-		constexpr auto k_keyDownMask = static_cast<BYTE>(0x80);
-	}
-
 	namespace components
 	{
+
 		KeyboardComponent::KeyboardComponent(const Application& app, const ComPtr<IDirectInput8>& directInput)
 			: Class(app)
 			, m_directInput(directInput)
@@ -84,7 +79,7 @@ namespace library
 
 		bool KeyboardComponent::IsKeyUp(const Key key) const
 		{
-			return (m_keysState[to_integral(key)] & k_keyDownMask) == 0;
+			return (m_keysState[static_cast<unsigned>(key)] & k_keyDownMask) == 0;
 		}
 
 		bool KeyboardComponent::IsKeyDown(const Key key) const
@@ -94,7 +89,7 @@ namespace library
 
 		bool KeyboardComponent::WasKeyUp(const Key key) const
 		{
-			return (m_previousKeysState[to_integral(key)] & k_keyDownMask) == 0;
+			return (m_previousKeysState[static_cast<unsigned>(key)] & k_keyDownMask) == 0;
 		}
 
 		bool KeyboardComponent::WasKeyDown(const Key key) const

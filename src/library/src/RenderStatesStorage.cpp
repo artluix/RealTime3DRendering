@@ -2,25 +2,17 @@
 
 #include "library/Application.h"
 
-#include <limits>
-
 namespace library
 {
 
-	namespace defaults
-	{
-		constexpr unsigned k_sampleMask = -1;
-		constexpr unsigned k_stencilRef = -1;
-	} // namespace defaults
-
-	RenderStateStorage::RenderStateStorage(const Application& app)
+	RenderStatesStorage::RenderStatesStorage(const Application& app)
 		: m_app(app)
-		, m_sampleMask(defaults::k_sampleMask)
-		, m_stencilRef(defaults::k_stencilRef)
+		, m_sampleMask(k_defaultSampleMask)
+		, m_stencilRef(k_defaultStencilRef)
 	{
 	}
 
-	void RenderStateStorage::Reset(const RenderState rs /*= RenderState::All*/)
+	void RenderStatesStorage::Reset(const RenderState rs /*= RenderState::All*/)
 	{
 		auto deviceContext = m_app.GetD3DDeviceContext();
 
@@ -32,12 +24,12 @@ namespace library
 			break;
 
 		case RenderState::Blend:
-			deviceContext->OMSetBlendState(nullptr, nullptr, defaults::k_sampleMask);
+			deviceContext->OMSetBlendState(nullptr, nullptr, k_defaultSampleMask);
 			m_blendState.Reset();
 			break;
 
 		case RenderState::DepthStencil:
-			deviceContext->OMSetDepthStencilState(nullptr, defaults::k_stencilRef);
+			deviceContext->OMSetDepthStencilState(nullptr, k_defaultStencilRef);
 			m_depthStencilState.Reset();
 			break;
 
@@ -52,21 +44,24 @@ namespace library
 		}
 	}
 
-	void RenderStateStorage::SaveState(const RenderState rs /*= RenderState::All*/)
+	void RenderStatesStorage::SaveState(const RenderState rs /*= RenderState::All*/)
 	{
 		auto deviceContext = m_app.GetD3DDeviceContext();
 
 		switch (rs)
 		{
 		case RenderState::Rasterizer:
+			m_rasterizerState.Reset();
 			deviceContext->RSGetState(m_rasterizerState.GetAddressOf());
 			break;
 
 		case RenderState::Blend:
+			m_blendState.Reset();
 			deviceContext->OMGetBlendState(m_blendState.GetAddressOf(), m_blendFactor.data(), &m_sampleMask);
 			break;
 
 		case RenderState::DepthStencil:
+			m_depthStencilState.Reset();
 			deviceContext->OMGetDepthStencilState(m_depthStencilState.GetAddressOf(), &m_stencilRef);
 			break;
 
@@ -81,7 +76,7 @@ namespace library
 		}
 	}
 
-	void RenderStateStorage::RestoreState(const RenderState rs /*= RenderState::All*/)
+	void RenderStatesStorage::RestoreState(const RenderState rs /*= RenderState::All*/)
 	{
 		auto deviceContext = m_app.GetD3DDeviceContext();
 

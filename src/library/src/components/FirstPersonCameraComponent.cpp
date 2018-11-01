@@ -9,15 +9,12 @@
 
 namespace library
 {
-
 	namespace components
 	{
-		namespace defaults
-		{
-			constexpr float k_mouseSensitivity = 0.1f;
-			const float k_rotationRate = DirectX::XMConvertToRadians(0.5f);
-			constexpr float k_movementRate = 0.1f;
-		}
+
+		const float FirstPersonCameraComponent::k_defaultMouseSensitivity = 0.1f;
+		const float FirstPersonCameraComponent::k_defaultRotationRate = DirectX::XMConvertToRadians(0.5f);
+		const float FirstPersonCameraComponent::k_defaultMovementRate = 0.1f;
 
 		FirstPersonCameraComponent::FirstPersonCameraComponent(
 			const Application& app,
@@ -27,9 +24,9 @@ namespace library
 			: Class(app)
 			, m_keyboard(keyboard)
 			, m_mouse(mouse)
-			, m_mouseSensitivity(defaults::k_mouseSensitivity)
-			, m_rotationRate(defaults::k_rotationRate)
-			, m_movementRate(defaults::k_movementRate)
+			, m_mouseSensitivity(k_defaultMouseSensitivity)
+			, m_rotationRate(k_defaultRotationRate)
+			, m_movementRate(k_defaultMovementRate)
 			, m_rotationStartPoint(0.f, 0.f)
 		{
 		}
@@ -46,9 +43,9 @@ namespace library
 			: Class(app, fieldOfView, aspectRatio, nearPlaneDistance, farPlaneDistance)
 			, m_keyboard(keyboard)
 			, m_mouse(mouse)
-			, m_mouseSensitivity(defaults::k_mouseSensitivity)
-			, m_rotationRate(defaults::k_rotationRate)
-			, m_movementRate(defaults::k_movementRate)
+			, m_mouseSensitivity(k_defaultMouseSensitivity)
+			, m_rotationRate(k_defaultRotationRate)
+			, m_movementRate(k_defaultMovementRate)
 			, m_rotationStartPoint(0.f, 0.f)
 		{
 		}

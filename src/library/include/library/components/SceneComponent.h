@@ -9,11 +9,11 @@ namespace library
 
 		class CameraComponent;
 
-		class ViewedComponent : public rtti::Class<ViewedComponent, DrawableComponent>
+		class SceneComponent : public rtti::Class<SceneComponent, DrawableComponent>
 		{
 		public:
-			explicit ViewedComponent(const Application& app, const CameraComponent& camera);
-			~ViewedComponent() = default;
+			explicit SceneComponent(const Application& app, const CameraComponent& camera);
+			~SceneComponent() = default;
 
 			const CameraComponent& GetCamera() { return m_camera; }
 			void SetCamera(const CameraComponent& camera);

@@ -8,14 +8,9 @@
 
 namespace library
 {
-
-	namespace
-	{
-		constexpr auto k_buttonDownMask = static_cast<BYTE>(0x80);
-	}
-
 	namespace components
 	{
+
 		MouseComponent::MouseComponent(const Application& app, ComPtr<IDirectInput8>& directInput)
 			: Class(app)
 			, m_directInput(directInput)
@@ -90,7 +85,7 @@ namespace library
 
 		bool MouseComponent::IsButtonUp(const MouseButton mb) const
 		{
-			return (m_currentState.rgbButtons[to_integral(mb)] & k_buttonDownMask) == 0;
+			return (m_currentState.rgbButtons[static_cast<unsigned>(mb)] & k_buttonDownMask) == 0;
 		}
 
 		bool MouseComponent::IsButtonDown(const MouseButton mb) const
@@ -100,7 +95,7 @@ namespace library
 
 		bool MouseComponent::WasButtonUp(const MouseButton mb) const
 		{
-			return (m_previousState.rgbButtons[to_integral(mb)] & k_buttonDownMask) == 0;
+			return (m_previousState.rgbButtons[static_cast<unsigned>(mb)] & k_buttonDownMask) == 0;
 		}
 
 		bool MouseComponent::WasButtonDown(const MouseButton mb) const

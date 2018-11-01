@@ -1,8 +1,9 @@
 #pragma once
 #include "library/NonCopyable.hpp"
 #include "library/Stopwatch.h"
-#include "library/ServiceContainer.h"
 #include "library/Common.h"
+#include "library/ServiceContainer.h"
+#include "library/RenderStatesStorage.h"
 
 #include <Windows.h>
 #include <d3d11_1.h>
@@ -61,7 +62,6 @@ namespace library
 		virtual void InitializeDirectX();
 		virtual void Shutdown();
 
-
 		HINSTANCE m_instanceHandle;
 		std::wstring m_windowClass;
 		std::wstring m_windowTitle;
@@ -77,8 +77,8 @@ namespace library
 		Time m_time;
 
 		std::vector<components::BaseComponentPtr> m_components;
-
 		ServiceContainer m_services;
+		RenderStatesStorage m_renderStatesStorage;
 
 		// DirectX
 		D3D_FEATURE_LEVEL m_featureLevel;
@@ -103,6 +103,12 @@ namespace library
 		POINT CenterWindow(const unsigned windowWidth, const unsigned windowHeight);
 
 		static LRESULT WINAPI WndProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam);
+
+		static const unsigned k_defaultScreenWidth;
+		static const unsigned k_defaultScreenHeight;
+		static const unsigned k_defaultFrameRate;
+		static const unsigned k_defaultMultiSamplingCount;
+		static const bool k_defaultIsFullscreen;
 	};
 
 } // namespace library

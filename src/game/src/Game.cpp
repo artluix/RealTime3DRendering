@@ -9,23 +9,11 @@
 #include <library/components/CubeDemoComponent.h>
 
 #include <library/Exception.h>
-#include <library/Path.h>
-#include <library/Utils.h>
-
-#include <SpriteFont.h>
-#include <SpriteBatch.h>
-#include <DirectXColors.h>
 
 #include <sstream>
 #include <iomanip>
 
-namespace
-{
-	const auto k_backgroundColor = DirectX::Colors::Black;
-	const auto k_fontPath = library::utils::GetExecutableDirectory().Join(
-		library::filesystem::Path(L"data/fonts/Arial_14_Regular.spritefont")
-	);
-}
+const library::Color Game::k_backgroundColor = library::colors::Black;
 
 Game::Game(
 	const HINSTANCE instanceHandle,
@@ -37,9 +25,6 @@ Game::Game(
 	, m_keyboardComponent()
 	, m_mouseComponent()
 	, m_directInput()
-	, m_spriteBatch()
-	, m_spriteFont()
-	, m_mouseTextPosition(0.f, 50.f)
 {
 	m_depthStencilBufferEnabled = true;
 	m_multiSamplingEnabled = true;
@@ -61,9 +46,6 @@ void Game::Initialize()
 
 	using namespace library;
 	using namespace components;
-
-	m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(GetD3DDeviceContext());
-	m_spriteFont = std::make_unique<DirectX::SpriteFont>(GetD3DDevice(), k_fontPath.GetAsWideCString());
 
 	m_keyboardComponent = std::make_shared<KeyboardComponent>(*this, m_directInput);
 	m_components.push_back(m_keyboardComponent);
@@ -88,6 +70,27 @@ void Game::Initialize()
 
 	auto cubeDemoComponent = std::make_shared<CubeDemoComponent>(*this, *cameraComponent, *m_keyboardComponent);
 	m_components.push_back(cubeDemoComponent);
+	
+	// mouse text component
+	auto mouseTextComponent = std::make_shared<TextComponent>(*this);
+	mouseTextComponent->SetGeneratorFunction([mouse=m_mouseComponent]() -> std::wstring
+		{
+			static const std::wstring empty;
+
+			if (!!mouse)
+			{
+				std::wostringstream woss;
+				woss <<
+					L"Mouse Position: " << mouse->GetX() << ", " << mouse->GetY() << std::endl <<
+					L"Mouse Wheel: " << mouse->GetWheel();
+				return woss.str();
+			}
+
+			return empty;
+		}
+	);
+	mouseTextComponent->SetPosition(math::Vector2(0.f, 50.f));
+	m_components.push_back(mouseTextComponent);
 
 	Application::Initialize();
 
@@ -106,23 +109,10 @@ void Game::Update(const library::Time& time)
 
 void Game::Draw(const library::Time& time)
 {
-	m_d3dDeviceContext->ClearRenderTargetView(m_renderTargetView.Get(), k_backgroundColor);
-	m_d3dDeviceContext->ClearDepthStencilView(
-		m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	m_d3dDeviceContext->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
+	m_d3dDeviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	Application::Draw(time);
-
-	// render mouse info
-	m_spriteBatch->Begin();
-
-	std::wostringstream woss;
-	woss <<
-		L"Mouse Position: " << m_mouseComponent->GetX() << ", " << m_mouseComponent->GetY() << std::endl <<
-		L"Mouse Wheel: " << m_mouseComponent->GetWheel();
-
-	m_spriteFont->DrawString(m_spriteBatch.get(), woss.str().c_str(), m_mouseTextPosition);
-
-	m_spriteBatch->End();
 
 	HRESULT hr = m_swapChain->Present(0, 0);
 	if (FAILED(hr))
@@ -133,8 +123,6 @@ void Game::Draw(const library::Time& time)
 
 void Game::Shutdown()
 {
-	m_spriteFont.reset();
-	m_spriteBatch.reset();
 	m_directInput.Reset();
 
 	Application::Shutdown();

@@ -27,6 +27,8 @@ namespace library
 		static void Message(std::string msg, const bool newline = true);
 
 	private:
+		static const unsigned k_bufferSize;
+
 		static void Log(const Level level, const char* fmt, const va_list ap);
 	};
 

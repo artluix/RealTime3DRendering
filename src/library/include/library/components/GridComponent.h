@@ -1,14 +1,15 @@
 #pragma once
-#include "library/components/ViewedComponent.h"
+#include "library/components/SceneComponent.h"
 #include "library/Color.h"
 #include "library/Math.h"
+#include "library/Path.h"
 
 namespace library
 {
 	namespace components
 	{
 
-		class GridComponent : public rtti::Class<GridComponent, ViewedComponent>
+		class GridComponent : public rtti::Class<GridComponent, SceneComponent>
 		{
 		public:
 			explicit GridComponent(const Application& app, const CameraComponent& camera);
@@ -36,6 +37,11 @@ namespace library
 
 		private:
 			void Build();
+
+			static const unsigned k_defaultSize;
+			static const unsigned k_defaultScale;
+			static const Color k_defaultColor;
+			static const filesystem::Path k_effectPath;
 
 			unsigned m_size;
 			unsigned m_scale;

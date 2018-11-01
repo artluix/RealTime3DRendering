@@ -1,6 +1,7 @@
 #pragma once
-#include "library/components/ViewedComponent.h"
+#include "library/components/SceneComponent.h"
 #include "library/Math.h"
+#include "library/Path.h"
 
 namespace library
 {
@@ -9,7 +10,7 @@ namespace library
 
 		class KeyboardComponent;
 
-		class CubeDemoComponent : public rtti::Class<CubeDemoComponent, ViewedComponent>
+		class CubeDemoComponent : public rtti::Class<CubeDemoComponent, SceneComponent>
 		{
 		public:
 			explicit CubeDemoComponent(
@@ -23,6 +24,12 @@ namespace library
 			void Draw(const Time& time) override;
 
 		private:
+			static const unsigned k_indicesCount;
+			static const unsigned k_verticesCount;
+			static const float k_rotationAngle;
+			static const float k_movementRate;
+			static const filesystem::Path k_effectPath;
+
 			ComPtr<ID3DX11Effect> m_effect;
 			ComPtr<ID3DX11EffectTechnique> m_technique;
 			ComPtr<ID3DX11EffectPass> m_pass;

@@ -1,4 +1,4 @@
-#include "library/components/ViewedComponent.h"
+#include "library/components/SceneComponent.h"
 
 #include "library/components/CameraComponent.h"
 
@@ -7,19 +7,19 @@ namespace library
 	namespace components
 	{
 
-		ViewedComponent::ViewedComponent(const Application& app, const CameraComponent& camera)
+		SceneComponent::SceneComponent(const Application& app, const CameraComponent& camera)
 			: Class(app)
 			, m_camera(camera)
 		{
 			UpdateWorldMatrix();
 		}
 
-		void ViewedComponent::SetCamera(const CameraComponent& camera)
+		void SceneComponent::SetCamera(const CameraComponent& camera)
 		{
 			m_camera = camera;
 		}
 
-		void ViewedComponent::SetPosition(const math::Vector3& position)
+		void SceneComponent::SetPosition(const math::Vector3& position)
 		{
 			if (m_position != position)
 			{
@@ -28,7 +28,7 @@ namespace library
 			}
 		}
 
-		void ViewedComponent::Translate(const math::Vector3& translation)
+		void SceneComponent::Translate(const math::Vector3& translation)
 		{
 			if (!translation)
 				return;
@@ -36,7 +36,7 @@ namespace library
 			SetPosition(m_position + translation);
 		}
 
-		void ViewedComponent::SetRotation(const math::Vector3& rotation)
+		void SceneComponent::SetRotation(const math::Vector3& rotation)
 		{
 			if (m_rotation != rotation)
 			{
@@ -45,7 +45,7 @@ namespace library
 			}
 		}
 
-		void ViewedComponent::Rotate(const math::Vector3& rotation)
+		void SceneComponent::Rotate(const math::Vector3& rotation)
 		{
 			if (!rotation)
 				return;
@@ -53,7 +53,7 @@ namespace library
 			SetRotation(m_rotation + rotation);
 		}
 
-		void ViewedComponent::UpdateWorldMatrix()
+		void SceneComponent::UpdateWorldMatrix()
 		{
 			const auto translationMatrix = math::Matrix4::Translation(m_position);
 			const auto rotationMatrix = math::Matrix4::RotationRollPitchYaw(m_rotation);

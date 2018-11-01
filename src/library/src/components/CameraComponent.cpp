@@ -3,34 +3,24 @@
 #include "library/Application.h"
 #include "library/Utils.h"
 
-#define _USE_MATH_DEFINES
-#include <math.h>
-
 namespace library
 {
-
-	namespace
-	{
-		namespace defaults
-		{
-			constexpr float k_fieldOfView = float(M_PI_4);
-			constexpr float k_nearPlaneDistance = 0.01f;
-			constexpr float k_farPlaneDistance = 1000.0f;
-		}
-
-		const auto k_fontPath = utils::GetExecutableDirectory().Join(
-			filesystem::Path(L"data/fonts/Arial_14_Regular.spritefont")
-		);
-	}
-
 	namespace components
 	{
+
+		const float CameraComponent::k_defaultFieldOfView = float(DirectX::XM_PIDIV4);
+		const float CameraComponent::k_defaultNearPlaneDistance = 0.01f;
+		const float CameraComponent::k_defaultFarPlaneDistance = 1000.0f;
+		const filesystem::Path CameraComponent::k_defaultFontPath = utils::GetExecutableDirectory().Join(
+			filesystem::Path(L"data/fonts/Arial_14_Regular.spritefont")
+		);
+
 		CameraComponent::CameraComponent(const Application& app)
 			: Class(app)
 			, m_aspectRatio(app.GetAspectRatio())
-			, m_fieldOfView(defaults::k_fieldOfView)
-			, m_nearPlaneDistance(defaults::k_nearPlaneDistance)
-			, m_farPlaneDistance(defaults::k_farPlaneDistance)
+			, m_fieldOfView(k_defaultFieldOfView)
+			, m_nearPlaneDistance(k_defaultNearPlaneDistance)
+			, m_farPlaneDistance(k_defaultFarPlaneDistance)
 			, m_isViewMatrixDirty(true)
 			, m_position()
 			, m_direction(), m_right(), m_up()

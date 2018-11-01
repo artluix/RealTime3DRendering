@@ -26,12 +26,12 @@ namespace library
 			template <class T>
 			TypeId GetTypeIdImpl()
 			{
-				static const int generator = 0;
+				static constexpr int generator = 0;
 				const auto typeId = reinterpret_cast<TypeId>(&generator);
 				return typeId;
 			}
 
-			template <class Cls, class Parent, bool = std::is_base_of<Base, Parent>::value>
+			template <class Cls, class Parent, bool = std::is_base_of_v<Base, Parent>>
 			struct ParentIsImpl;
 
 			template <class Cls, class Parent>
@@ -149,7 +149,7 @@ namespace library
 
 		// wrappers
 
-		template <class To, class From, typename = std::enable_if<std::is_base_of<Base, From>::value>::type>
+		template <class To, class From, typename = std::enable_if_t<std::is_base_of_v<Base, From>>>
 		To* CastTo(From* self)
 		{
 			if (!!self)
@@ -158,7 +158,7 @@ namespace library
 			return nullptr;
 		}
 
-		template <class To, class From, typename = std::enable_if<std::is_base_of<Base, From>::value>::type>
+		template <class To, class From, typename = std::enable_if_t<std::is_base_of_v<Base, From>>>
 		const To* CastTo(const From* self)
 		{
 			if (!!self)
@@ -167,7 +167,7 @@ namespace library
 			return nullptr;
 		}
 
-		template <class To, class From, typename = std::enable_if<std::is_base_of<Base, From>::value>::type>
+		template <class To, class From, typename = std::enable_if_t<std::is_base_of_v<Base, From>>>
 		std::shared_ptr<To> CastTo(std::shared_ptr<From> self)
 		{
 			if (!!self && self->Is(detail::GetTypeIdImpl<To>()))

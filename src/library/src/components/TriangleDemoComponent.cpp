@@ -10,19 +10,15 @@
 
 #include <d3dx11effect.h>
 #include <d3dcompiler.h>
-#include <DirectXColors.h>
 
 namespace library
 {
-
 	namespace components
 	{
-		namespace
-		{
-			const auto k_effectPath = utils::GetExecutableDirectory().Join(
-				filesystem::Path(L"data/effects/BasicEffect.fx")
-			);
-		}
+
+		const filesystem::Path TriangleDemoComponent::k_effectPath = utils::GetExecutableDirectory().Join(
+			filesystem::Path(L"data/effects/BasicEffect.fx")
+		);
 
 		TriangleDemoComponent::TriangleDemoComponent(const Application& app, const CameraComponent& camera)
 			: Class(app, camera)

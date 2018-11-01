@@ -19,8 +19,10 @@ if(APPLICATION)
         include/library/Components/GridComponent.h
         include/library/Components/KeyboardComponent.h
         include/library/Components/MouseComponent.h
+        include/library/Components/SceneComponent.h
+        include/library/Components/TextComponent.h
         include/library/Components/TriangleDemoComponent.h
-        include/library/Components/ViewedComponent.h
+        include/library/Components/UIComponent.h
 
         include/library/Exception.h
         include/library/Key.h
@@ -31,6 +33,7 @@ if(APPLICATION)
         include/library/NonConstructible.hpp
         include/library/Path.h
         include/library/RTTI.hpp
+        include/library/RenderStatesStorage.h
         include/library/ServiceContainer.h
         include/library/Time.h
         include/library/Utils.h
@@ -48,13 +51,16 @@ if(APPLICATION)
         src/Components/GridComponent.cpp
         src/Components/KeyboardComponent.cpp
         src/Components/MouseComponent.cpp
+        src/Components/SceneComponent.cpp
+        src/Components/TextComponent.cpp
         src/Components/TriangleDemoComponent.cpp
-        src/Components/ViewedComponent.cpp
+        src/Components/UIComponent.cpp
 
         src/Exception.cpp
         src/Logger.cpp
         src/Math.cpp
         src/Path.cpp
+        src/RenderStatesStorage.cpp
         src/ServiceContainer.cpp
         src/Stopwatch.cpp
         src/Utils.cpp
@@ -83,6 +89,7 @@ if(APPLICATION)
         PUBLIC
             /GR- # disable rtti
             /MP
+            /std:c++17
     )
 
     target_compile_definitions(library

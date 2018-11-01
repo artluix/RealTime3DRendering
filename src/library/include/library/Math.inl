@@ -255,13 +255,6 @@ namespace library
 		// Vector2
 		//-------------------------------------------------------------------------
 
-		inline Vector<2>::Vector(const float value /*= 0.f*/)
-		{
-			data.fill(value);
-		}
-
-		//-------------------------------------------------------------------------
-		
 		inline XMVector Vector<2>::Load(const Vector & vector)
 		{
 			return vector.Load();
@@ -313,13 +306,6 @@ namespace library
 
 		//-------------------------------------------------------------------------
 		// Vector3
-		//-------------------------------------------------------------------------
-
-		inline Vector3::Vector(const float value /*= 0.f*/)
-		{
-			data.fill(value);
-		}
-
 		//-------------------------------------------------------------------------
 
 		inline XMVector Vector<3>::Load(const Vector & vector)
@@ -385,13 +371,6 @@ namespace library
 
 		//-------------------------------------------------------------------------
 		// Vector4
-		//-------------------------------------------------------------------------
-
-		inline Vector<4>::Vector(const float value /*= 0.f*/)
-		{
-			data.fill(value);
-		}
-
 		//-------------------------------------------------------------------------
 
 		inline XMVector Vector<4>::Load(const Vector & vector)
@@ -532,8 +511,10 @@ namespace library
 		//-------------------------------------------------------------------------
 
 		inline Matrix<3>::Matrix(const float value /*= 0.f*/)
+			: _11(value), _12(value), _13(value)
+			, _21(value), _22(value), _23(value)
+			, _31(value), _32(value), _33(value)
 		{
-			data.fill(value);
 		}
 
 		inline Matrix<3>::Matrix(
@@ -541,11 +522,9 @@ namespace library
 			const float _21, const float _22, const float _23,
 			const float _31, const float _32, const float _33
 		)
-			: data{
-				_11, _12, _13,
-				_21, _22, _23,
-				_31, _32, _33
-			}
+			: _11(_11), _12(_12), _13(_13)
+			, _21(_21), _22(_22), _23(_23)
+			, _31(_31), _32(_32), _33(_33)
 		{
 		}
 
@@ -555,11 +534,9 @@ namespace library
 		}
 
 		inline Matrix<3>::Matrix(const DirectX::XMFLOAT3X3& xmFloat3x3)
-			: data{
-				xmFloat3x3._11, xmFloat3x3._12, xmFloat3x3._13,
-				xmFloat3x3._21, xmFloat3x3._22, xmFloat3x3._23,
-				xmFloat3x3._31, xmFloat3x3._32, xmFloat3x3._33
-			}
+			: _11(xmFloat3x3._11), _12(xmFloat3x3._12), _13(xmFloat3x3._13)
+			, _21(xmFloat3x3._21), _22(xmFloat3x3._22), _23(xmFloat3x3._23)
+			, _31(xmFloat3x3._31), _32(xmFloat3x3._32), _33(xmFloat3x3._33)
 		{
 		}
 
@@ -622,8 +599,11 @@ namespace library
 		//-------------------------------------------------------------------------
 
 		inline Matrix<4>::Matrix(const float value /*= 0.f*/)
+			: _11(value), _12(value), _13(value), _14(value)
+			, _21(value), _22(value), _23(value), _24(value)
+			, _31(value), _32(value), _33(value), _34(value)
+			, _41(value), _42(value), _43(value), _44(value)
 		{
-			data.fill(value);
 		}
 
 		inline Matrix<4>::Matrix(
@@ -632,12 +612,10 @@ namespace library
 			const float _31, const float _32, const float _33, const float _34,
 			const float _41, const float _42, const float _43, const float _44
 		)
-			: data{
-				_11, _12, _13, _14,
-				_21, _22, _23, _24,
-				_31, _32, _33, _34,
-				_41, _42, _43, _44
-			}
+			: _11(_11), _12(_12), _13(_13), _14(_14)
+			, _21(_21), _22(_22), _23(_23), _24(_24)
+			, _31(_31), _32(_32), _33(_33), _34(_34)
+			, _41(_41), _42(_42), _43(_43), _44(_44)
 		{
 		}
 
@@ -647,12 +625,10 @@ namespace library
 		}
 
 		inline Matrix<4>::Matrix(const DirectX::XMFLOAT4X4& xmFloat4x4)
-			: data{
-				xmFloat4x4._11, xmFloat4x4._12, xmFloat4x4._13, xmFloat4x4._14,
-				xmFloat4x4._21, xmFloat4x4._22, xmFloat4x4._23, xmFloat4x4._24,
-				xmFloat4x4._31, xmFloat4x4._32, xmFloat4x4._33, xmFloat4x4._34,
-				xmFloat4x4._41, xmFloat4x4._42, xmFloat4x4._43, xmFloat4x4._44
-			}
+			: _11(xmFloat4x4._11), _12(xmFloat4x4._12), _13(xmFloat4x4._13), _14(xmFloat4x4._14)
+			, _21(xmFloat4x4._21), _22(xmFloat4x4._22), _23(xmFloat4x4._23), _24(xmFloat4x4._24)
+			, _31(xmFloat4x4._31), _32(xmFloat4x4._32), _33(xmFloat4x4._33), _34(xmFloat4x4._34)
+			, _41(xmFloat4x4._41), _42(xmFloat4x4._42), _43(xmFloat4x4._43), _44(xmFloat4x4._44)
 		{
 		}
 

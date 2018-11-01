@@ -22,6 +22,7 @@ if(APPLICATION)
         PUBLIC
             /GR- # disable rtti
             /MP
+            /std:c++17
     )
 
     target_compile_definitions(library

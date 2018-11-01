@@ -3,7 +3,6 @@
 #include "library/components/CameraComponent.h"
 #include "library/Application.h"
 #include "library/Utils.h"
-#include "library/Path.h"
 #include "library/Exception.h"
 #include "library/VertexTypes.h"
 
@@ -13,28 +12,21 @@
 
 namespace library
 {
-	namespace
-	{
-
-		namespace defaults
-		{
-			constexpr unsigned k_size = 16;
-			constexpr unsigned k_scale = 16;
-			const auto k_color = Color(1.0f, 1.0f, 1.0f, 1.0f);
-		}
-
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-			filesystem::Path(L"data/effects/BasicEffect.fx")
-		);
-	}
-
 	namespace components
 	{
+
+		const unsigned GridComponent::k_defaultSize = 16;
+		const unsigned GridComponent::k_defaultScale = 16;
+		const Color GridComponent::k_defaultColor = colors::White;
+		const filesystem::Path GridComponent::k_effectPath = utils::GetExecutableDirectory().Join(
+			filesystem::Path(L"data/effects/BasicEffect.fx")
+		);
+
 		GridComponent::GridComponent(const Application& app, const CameraComponent& camera)
 			: Class(app, camera)
-			, m_size(defaults::k_size)
-			, m_scale(defaults::k_scale)
-			, m_color(defaults::k_color)
+			, m_size(k_defaultSize)
+			, m_scale(k_defaultScale)
+			, m_color(k_defaultColor)
 		{
 		}
 

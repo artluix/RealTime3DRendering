@@ -21,11 +21,11 @@ namespace library
 
 	class Application;
 
-	class RenderStateStorage : public NonCopyable<RenderStateStorage>
+	class RenderStatesStorage : public NonCopyable<RenderStatesStorage>
 	{
 	public:
-		explicit RenderStateStorage(const Application& app);
-		~RenderStateStorage() = default;
+		explicit RenderStatesStorage(const Application& app);
+		~RenderStatesStorage() = default;
 
 		void Reset(const RenderState rs = RenderState::All);
 
@@ -37,6 +37,9 @@ namespace library
 		ID3D11DepthStencilState* const GetDepthStencilState() { return m_depthStencilState.Get(); }
 
 	private:
+		static const unsigned k_defaultSampleMask = -1;
+		static const unsigned k_defaultStencilRef = -1;
+
 		const Application& m_app;
 
 		ComPtr<ID3D11RasterizerState> m_rasterizerState;

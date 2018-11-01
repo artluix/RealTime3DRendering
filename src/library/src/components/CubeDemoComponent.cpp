@@ -6,30 +6,23 @@
 #include "library/VertexTypes.h"
 #include "library/Application.h"
 #include "library/Utils.h"
-#include "library/Path.h"
 #include "library/Exception.h"
 
 #include <d3dx11effect.h>
 #include <d3dcompiler.h>
-#include <DirectXColors.h>
 
 namespace library
 {
 	namespace components
 	{
 
-		namespace
-		{
-			const auto k_effectPath = utils::GetExecutableDirectory().Join(
-				filesystem::Path(L"data/effects/BasicEffect.fx")
-			);
-
-			constexpr unsigned k_indicesCount = 6 * 2 * 3;
-			constexpr unsigned k_verticesCount = 8;
-
-			const float k_rotationAngle = DirectX::XM_PIDIV2;
-			constexpr float k_movementRate = 0.01f;
-		}
+		const unsigned CubeDemoComponent::k_indicesCount = 6 * 2 * 3;
+		const unsigned CubeDemoComponent::k_verticesCount = 8;
+		const float CubeDemoComponent::k_rotationAngle = DirectX::XM_PIDIV2;
+		const float CubeDemoComponent::k_movementRate = 0.01f;
+		const filesystem::Path CubeDemoComponent::k_effectPath = utils::GetExecutableDirectory().Join(
+			filesystem::Path(L"data/effects/BasicEffect.fx")
+		);
 
 		CubeDemoComponent::CubeDemoComponent(
 			const Application& app,
@@ -212,7 +205,7 @@ namespace library
 			// rotation
 			if (keyboard.IsKeyDown(Key::R))
 			{
-				const auto rotationDelta = DirectX::XM_PIDIV2 * time.elapsed.GetSeconds<float>();
+				const auto rotationDelta = k_rotationAngle * time.elapsed.GetSeconds<float>();
 				Rotate(rotationDelta);
 			}
 

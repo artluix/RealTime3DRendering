@@ -32,11 +32,29 @@ namespace library
 			Tuple2<Path> SplitExt() const;
 			Path GetExt() const;
 
+			bool operator != (const Path& other) const;
+			bool operator == (const Path& other) const;
+
 		private:
 			void FixSeparator();
 
+			static const wchar_t k_sep;
+
 			std::wstring m_path;
 		};
+
+		//-------------------------------------------------------------------------
+
+		inline bool Path::operator != (const Path& other) const
+		{
+			return m_path != other.m_path;
+		}
+
+
+		inline bool Path::operator == (const Path& other) const
+		{
+			return m_path == other.m_path;
+		}
 
 	} // namespace filesystem
 } // namespace library

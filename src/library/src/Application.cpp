@@ -2,22 +2,17 @@
 
 #include "library/Exception.h"
 #include "library/components/DrawableComponent.h"
-#include "library/components/ViewedComponent.h"
+#include "library/components/SceneComponent.h"
+#include "library/components/UIComponent.h"
 
 namespace library
 {
 
-	namespace
-	{
-		namespace defaults
-		{
-			constexpr unsigned k_screenWidth = 1280;
-			constexpr unsigned k_screenHeight = 1024;
-			constexpr unsigned k_frameRate = 60;
-			constexpr unsigned k_multiSamplingCount = 4;
-			constexpr bool k_isFullscreen = false;
-		}
-	}
+	const unsigned Application::k_defaultScreenWidth = 1280;
+	const unsigned Application::k_defaultScreenHeight = 1024;
+	const unsigned Application::k_defaultFrameRate = 60;
+	const unsigned Application::k_defaultMultiSamplingCount = 4;
+	const bool Application::k_defaultIsFullscreen = false;
 
 	Application::Application(
 		const HINSTANCE instanceHandle,
@@ -29,18 +24,19 @@ namespace library
 		, m_windowClass(windowClass)
 		, m_windowTitle(windowTitle)
 		, m_showCmd(showCmd)
-		, m_screenWidth(defaults::k_screenWidth), m_screenHeight(defaults::k_screenHeight)
+		, m_screenWidth(k_defaultScreenWidth), m_screenHeight(k_defaultScreenHeight)
 		, m_windowHandle(nullptr)
 		, m_window{}
 		, m_components{}
 		, m_featureLevel(D3D_FEATURE_LEVEL_9_1)
-		, m_frameRate(defaults::k_frameRate)
-		, m_isFullScreen(defaults::k_isFullscreen)
+		, m_frameRate(k_defaultFrameRate)
+		, m_isFullScreen(k_defaultIsFullscreen)
 		, m_depthStencilBufferEnabled(false)
 		, m_multiSamplingEnabled(false)
-		, m_multiSamplingCount(defaults::k_multiSamplingCount)
+		, m_multiSamplingCount(k_defaultMultiSamplingCount)
 		, m_multiSamplingQualityLevels(0)
 		, m_viewport{}
+		, m_renderStatesStorage(*this)
 	{
 	}
 
@@ -121,13 +117,40 @@ namespace library
 
 	void Application::Draw(const Time& time)
 	{
+		std::vector<components::SceneComponent*> sceneComponents;
+		std::vector<components::UIComponent*> uiComponents;
+
 		for (const auto& component : m_components)
 		{
 			auto drawableComponent = component->As<components::DrawableComponent>();
 			if (!!drawableComponent && drawableComponent->IsVisible())
 			{
-				drawableComponent->Draw(time);
+				if (auto sceneComponent = drawableComponent->As<components::SceneComponent>())
+					sceneComponents.push_back(sceneComponent);
+
+				if (auto uiComponent = drawableComponent->As<components::UIComponent>())
+					uiComponents.push_back(uiComponent);
 			}
+		}
+
+		// render scene first
+		{
+			for (auto sceneComponent : sceneComponents)
+			{
+				sceneComponent->Draw(time);
+			}
+		}
+
+		// render UI after
+		{
+			m_renderStatesStorage.SaveState(RenderState::All);
+
+			for (auto uiComponent : uiComponents)
+			{
+				uiComponent->Draw(time);
+			}
+
+			m_renderStatesStorage.RestoreState(RenderState::All);
 		}
 	}
 
