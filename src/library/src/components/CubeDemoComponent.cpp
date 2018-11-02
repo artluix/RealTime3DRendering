@@ -16,13 +16,16 @@ namespace library
 	namespace components
 	{
 
-		const unsigned CubeDemoComponent::k_indicesCount = 6 * 2 * 3;
-		const unsigned CubeDemoComponent::k_verticesCount = 8;
-		const float CubeDemoComponent::k_rotationAngle = DirectX::XM_PIDIV2;
-		const float CubeDemoComponent::k_movementRate = 0.01f;
-		const filesystem::Path CubeDemoComponent::k_effectPath = utils::GetExecutableDirectory().Join(
-			filesystem::Path(L"data/effects/BasicEffect.fx")
-		);
+		namespace
+		{
+			constexpr unsigned k_indicesCount = 6 * 2 * 3;
+			constexpr unsigned k_verticesCount = 8;
+			constexpr float k_rotationAngle = math::constants::Pi_Div_2;
+			constexpr float k_movementRate = 0.01f;
+			const filesystem::Path k_effectPath = utils::GetExecutableDirectory().Join(
+				filesystem::Path(L"data/effects/BasicEffect.fx")
+			);
+		}
 
 		CubeDemoComponent::CubeDemoComponent(
 			const Application& app,
@@ -129,7 +132,7 @@ namespace library
 
 			// index buffer
 			{
-				std::array<unsigned, k_indicesCount> indices =
+				constexpr std::array<unsigned, k_indicesCount> k_indices =
 				{
 					0, 1, 2,
 					0, 2, 3,
@@ -152,11 +155,11 @@ namespace library
 
 				D3D11_BUFFER_DESC indexBufferDesc{};
 				indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-				indexBufferDesc.ByteWidth = sizeof(unsigned) * indices.size();
+				indexBufferDesc.ByteWidth = sizeof(unsigned) * k_indices.size();
 				indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
 				D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
-				vertexSubResourceData.pSysMem = indices.data();
+				vertexSubResourceData.pSysMem = k_indices.data();
 
 				auto hr = m_app.GetD3DDevice()->CreateBuffer(&indexBufferDesc, &vertexSubResourceData, m_indexBuffer.GetAddressOf());
 				if (FAILED(hr))
@@ -211,7 +214,7 @@ namespace library
 
 			// movement
 			{
-				auto movementAmount = math::Vector2::Zero;
+				math::Vector2 movementAmount;
 				if (keyboard.IsKeyDown(Key::Up))
 				{
 					movementAmount.y += 1.0f;

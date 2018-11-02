@@ -42,9 +42,6 @@ namespace library
 			void Draw(const Time& time) override;
 
 		private:
-			static const Color k_defaultColor;
-			static const filesystem::Path k_defaultFontPath;
-
 			std::wstring m_text;
 			Color m_color;
 			filesystem::Path m_fontPath;

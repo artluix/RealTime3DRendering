@@ -6,7 +6,10 @@
 namespace library
 {
 
-	const unsigned Logger::k_bufferSize = 256;
+	namespace
+	{
+		constexpr unsigned k_bufferSize = 256;
+	}
 
 	void Logger::Log(const Level level, const char* fmt, ...)
 	{

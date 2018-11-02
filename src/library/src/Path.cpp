@@ -5,7 +5,10 @@ namespace library
 	namespace filesystem
 	{
 
-		const wchar_t Path::k_sep = L'/';
+		namespace
+		{
+			constexpr wchar_t k_sep = L'/';
+		}
 
 		Path::Path(const std::string& s)
 			: m_path(std::cbegin(s), std::cend(s))

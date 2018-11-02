@@ -5,7 +5,6 @@
 #include "library/VertexTypes.h"
 #include "library/Application.h"
 #include "library/Utils.h"
-#include "library/Path.h"
 #include "library/Exception.h"
 
 #include <d3dx11effect.h>
@@ -16,9 +15,12 @@ namespace library
 	namespace components
 	{
 
-		const filesystem::Path TriangleDemoComponent::k_effectPath = utils::GetExecutableDirectory().Join(
-			filesystem::Path(L"data/effects/BasicEffect.fx")
-		);
+		namespace
+		{
+			const auto k_effectPath = utils::GetExecutableDirectory().Join(
+				filesystem::Path(L"data/effects/BasicEffect.fx")
+			);
+		}
 
 		TriangleDemoComponent::TriangleDemoComponent(const Application& app, const CameraComponent& camera)
 			: Class(app, camera)
@@ -126,7 +128,7 @@ namespace library
 
 			// vertex buffer
 			{
-				const float l = sqrt(3) / 2;
+				const float l = sqrt(3.f) / 2;
 
 				std::array<VertexPositionColor, 3> vertices =
 				{
@@ -158,7 +160,7 @@ namespace library
 		void TriangleDemoComponent::Update(const Time& time)
 		{
 			auto rotation = m_rotation;
-			rotation.z += DirectX::XM_PIDIV2 * time.elapsed.GetSeconds<float>();
+			rotation.z += math::constants::Pi_Div_2 * time.elapsed.GetSeconds<float>();
 			SetRotation(rotation);
 		}
 

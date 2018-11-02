@@ -10,11 +10,13 @@ namespace library
 {
 	namespace components
 	{
-
-		const Color TextComponent::k_defaultColor = colors::White;
-		const filesystem::Path TextComponent::k_defaultFontPath = utils::GetExecutableDirectory().Join(
-			filesystem::Path(L"data/fonts/Arial_14_Regular.spritefont")
-		);
+		namespace
+		{
+			constexpr auto k_defaultColor = colors::White;
+			const auto k_defaultFontPath = utils::GetExecutableDirectory().Join(
+				filesystem::Path(L"data/fonts/Arial_14_Regular.spritefont")
+			);
+		}
 
 		TextComponent::TextComponent(const Application& app)
 			: Class(app)

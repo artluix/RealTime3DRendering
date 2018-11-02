@@ -7,7 +7,6 @@ namespace library
 
 		UIComponent::UIComponent(const Application& app)
 			: Class(app)
-			, m_position(math::Vector2::Zero)
 		{
 		}
 

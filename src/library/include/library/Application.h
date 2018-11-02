@@ -103,12 +103,6 @@ namespace library
 		POINT CenterWindow(const unsigned windowWidth, const unsigned windowHeight);
 
 		static LRESULT WINAPI WndProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam);
-
-		static const unsigned k_defaultScreenWidth;
-		static const unsigned k_defaultScreenHeight;
-		static const unsigned k_defaultFrameRate;
-		static const unsigned k_defaultMultiSamplingCount;
-		static const bool k_defaultIsFullscreen;
 	};
 
 } // namespace library

@@ -11,12 +11,17 @@ namespace library
 	namespace components
 	{
 
+		namespace
+		{
+			constexpr BYTE k_buttonDownMask = 0x80;
+		}
+
 		MouseComponent::MouseComponent(const Application& app, ComPtr<IDirectInput8>& directInput)
 			: Class(app)
 			, m_directInput(directInput)
 			, m_directInputDevice()
-			, m_x(0), m_y(0), m_wheel(0)
 			, m_currentState{}, m_previousState{}
+			, m_x(0), m_y(0), m_wheel(0)
 		{
 		}
 

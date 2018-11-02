@@ -27,8 +27,8 @@ if(APPLICATION)
         include/library/Exception.h
         include/library/Key.h
         include/library/Logger.h
-        include/library/Math.inl
         include/library/Math.h
+        include/library/Matrix.h
         include/library/NonCopyable.hpp
         include/library/NonConstructible.hpp
         include/library/Path.h
@@ -37,6 +37,7 @@ if(APPLICATION)
         include/library/ServiceContainer.h
         include/library/Time.h
         include/library/Utils.h
+        include/library/Vector.h
         include/library/VertexTypes.h
 
         # src
@@ -58,12 +59,13 @@ if(APPLICATION)
 
         src/Exception.cpp
         src/Logger.cpp
-        src/Math.cpp
+        src/Matrix.cpp
         src/Path.cpp
         src/RenderStatesStorage.cpp
         src/ServiceContainer.cpp
         src/Stopwatch.cpp
         src/Utils.cpp
+        src/Vector.cpp
     )
 
     add_library(library

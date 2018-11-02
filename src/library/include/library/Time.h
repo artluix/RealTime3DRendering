@@ -55,8 +55,8 @@ namespace library
 	{
 		explicit Time() = default;
 		explicit Time(const TimeValue& _elapsed, const TimeValue& _total)
-			: elapsed(_elapsed)
-			, total(_total)
+			: total(_total)
+			, elapsed(_elapsed)
 		{
 		}
 

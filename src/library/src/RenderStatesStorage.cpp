@@ -5,6 +5,12 @@
 namespace library
 {
 
+	namespace
+	{
+		constexpr unsigned k_defaultSampleMask = -1;
+		constexpr unsigned k_defaultStencilRef = -1;
+	}
+
 	RenderStatesStorage::RenderStatesStorage(const Application& app)
 		: m_app(app)
 		, m_sampleMask(k_defaultSampleMask)

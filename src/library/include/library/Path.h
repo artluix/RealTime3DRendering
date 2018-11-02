@@ -38,8 +38,6 @@ namespace library
 		private:
 			void FixSeparator();
 
-			static const wchar_t k_sep;
-
 			std::wstring m_path;
 		};
 

@@ -8,11 +8,14 @@
 namespace library
 {
 
-	const unsigned Application::k_defaultScreenWidth = 1280;
-	const unsigned Application::k_defaultScreenHeight = 1024;
-	const unsigned Application::k_defaultFrameRate = 60;
-	const unsigned Application::k_defaultMultiSamplingCount = 4;
-	const bool Application::k_defaultIsFullscreen = false;
+	namespace
+	{
+		constexpr unsigned k_defaultScreenWidth = 1280;
+		constexpr unsigned k_defaultScreenHeight = 1024;
+		constexpr unsigned k_defaultFrameRate = 60;
+		constexpr unsigned k_defaultMultiSamplingCount = 4;
+		constexpr bool k_defaultIsFullscreen = false;
+	}
 
 	Application::Application(
 		const HINSTANCE instanceHandle,
@@ -24,9 +27,9 @@ namespace library
 		, m_windowClass(windowClass)
 		, m_windowTitle(windowTitle)
 		, m_showCmd(showCmd)
-		, m_screenWidth(k_defaultScreenWidth), m_screenHeight(k_defaultScreenHeight)
 		, m_windowHandle(nullptr)
 		, m_window{}
+		, m_screenWidth(k_defaultScreenWidth), m_screenHeight(k_defaultScreenHeight)
 		, m_components{}
 		, m_featureLevel(D3D_FEATURE_LEVEL_9_1)
 		, m_frameRate(k_defaultFrameRate)
@@ -35,8 +38,8 @@ namespace library
 		, m_multiSamplingEnabled(false)
 		, m_multiSamplingCount(k_defaultMultiSamplingCount)
 		, m_multiSamplingQualityLevels(0)
-		, m_viewport{}
 		, m_renderStatesStorage(*this)
+		, m_viewport{}
 	{
 	}
 
@@ -418,8 +421,8 @@ namespace library
 
 	POINT Application::CenterWindow(const unsigned windowWidth, const unsigned windowHeight)
 	{
-		const unsigned screenWidth = GetSystemMetrics(SM_CXSCREEN);
-		const unsigned screenHeight = GetSystemMetrics(SM_CYSCREEN);
+		const auto screenWidth = static_cast<unsigned>(GetSystemMetrics(SM_CXSCREEN));
+		const auto screenHeight = static_cast<unsigned>(GetSystemMetrics(SM_CYSCREEN));
 
 		POINT center;
 		center.x = (screenWidth - windowWidth) >> 1;

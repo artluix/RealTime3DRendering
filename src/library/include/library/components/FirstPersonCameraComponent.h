@@ -58,11 +58,6 @@ namespace library
 			float m_mouseSensitivity;
 			float m_rotationRate;
 			float m_movementRate;
-
-		private:
-			static const float k_defaultMouseSensitivity;
-			static const float k_defaultRotationRate;
-			static const float k_defaultMovementRate;
 		};
 
 	} // namespace components

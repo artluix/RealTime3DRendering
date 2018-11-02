@@ -33,8 +33,6 @@ namespace library
 		private:
 			using KeysStateArray = std::array<BYTE, 256>;
 
-			static const BYTE k_keyDownMask = 0x80;
-
 			ComPtr<IDirectInput8> m_directInput;
 			ComPtr<IDirectInputDevice8> m_directInputDevice;
 

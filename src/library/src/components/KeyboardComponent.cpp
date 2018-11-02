@@ -10,6 +10,11 @@ namespace library
 	namespace components
 	{
 
+		namespace
+		{
+			constexpr BYTE k_keyDownMask = 0x80;
+		}
+
 		KeyboardComponent::KeyboardComponent(const Application& app, const ComPtr<IDirectInput8>& directInput)
 			: Class(app)
 			, m_directInput(directInput)

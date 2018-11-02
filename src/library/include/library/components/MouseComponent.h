@@ -44,8 +44,6 @@ namespace library
 			bool IsButtonHeldDown(const MouseButton mb) const;
 
 		private:
-			static const BYTE k_buttonDownMask = 0x80;
-
 			ComPtr<IDirectInput8> m_directInput;
 			ComPtr<IDirectInputDevice8> m_directInputDevice;
 

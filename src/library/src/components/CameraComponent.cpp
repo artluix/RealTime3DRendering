@@ -7,24 +7,23 @@ namespace library
 {
 	namespace components
 	{
-
-		const float CameraComponent::k_defaultFieldOfView = float(DirectX::XM_PIDIV4);
-		const float CameraComponent::k_defaultNearPlaneDistance = 0.01f;
-		const float CameraComponent::k_defaultFarPlaneDistance = 1000.0f;
-		const filesystem::Path CameraComponent::k_defaultFontPath = utils::GetExecutableDirectory().Join(
-			filesystem::Path(L"data/fonts/Arial_14_Regular.spritefont")
-		);
+		namespace
+		{
+			constexpr auto k_defaultFieldOfView = math::constants::Pi_Div_4;
+			constexpr auto k_defaultNearPlaneDistance = 0.01f;
+			constexpr auto k_defaultFarPlaneDistance = 1000.f;
+			const auto k_defaultFontPath = utils::GetExecutableDirectory().Join(
+				filesystem::Path(L"data/fonts/Arial_14_Regular.spritefont")
+			);
+		}
 
 		CameraComponent::CameraComponent(const Application& app)
 			: Class(app)
-			, m_aspectRatio(app.GetAspectRatio())
 			, m_fieldOfView(k_defaultFieldOfView)
+			, m_aspectRatio(app.GetAspectRatio())
 			, m_nearPlaneDistance(k_defaultNearPlaneDistance)
 			, m_farPlaneDistance(k_defaultFarPlaneDistance)
 			, m_isViewMatrixDirty(true)
-			, m_position()
-			, m_direction(), m_right(), m_up()
-			, m_viewMatrix(), m_projectionMatrix()
 		{
 		}
 
@@ -68,10 +67,10 @@ namespace library
 
 		void CameraComponent::Reset()
 		{
-			m_position = math::Vector3::Zero;
-			m_direction = math::Vector3::Forward;
-			m_up = math::Vector3::Up;
-			m_right = math::Vector3::Right;
+			m_position = math::constants::vector<3>::Zero;
+			m_direction = math::constants::vector<3>::Forward;
+			m_up = math::constants::vector<3>::Up;
+			m_right = math::constants::vector<3>::Right;
 
 			UpdateViewMatrix();
 		}

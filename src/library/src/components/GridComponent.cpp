@@ -15,12 +15,15 @@ namespace library
 	namespace components
 	{
 
-		const unsigned GridComponent::k_defaultSize = 16;
-		const unsigned GridComponent::k_defaultScale = 16;
-		const Color GridComponent::k_defaultColor = colors::White;
-		const filesystem::Path GridComponent::k_effectPath = utils::GetExecutableDirectory().Join(
-			filesystem::Path(L"data/effects/BasicEffect.fx")
-		);
+		namespace
+		{
+			constexpr unsigned k_defaultSize = 16;
+			constexpr unsigned k_defaultScale = 16;
+			constexpr auto k_defaultColor = colors::White;
+			const auto k_effectPath = utils::GetExecutableDirectory().Join(
+				filesystem::Path(L"data/effects/BasicEffect.fx")
+			);
+		}
 
 		GridComponent::GridComponent(const Application& app, const CameraComponent& camera)
 			: Class(app, camera)

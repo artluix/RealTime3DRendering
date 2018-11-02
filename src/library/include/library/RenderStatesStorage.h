@@ -37,9 +37,6 @@ namespace library
 		ID3D11DepthStencilState* const GetDepthStencilState() { return m_depthStencilState.Get(); }
 
 	private:
-		static const unsigned k_defaultSampleMask = -1;
-		static const unsigned k_defaultStencilRef = -1;
-
 		const Application& m_app;
 
 		ComPtr<ID3D11RasterizerState> m_rasterizerState;

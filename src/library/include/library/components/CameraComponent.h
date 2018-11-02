@@ -2,7 +2,6 @@
 #include "library/components/BaseComponent.h"
 #include "library/RTTI.hpp"
 #include "library/Math.h"
-#include "library/Path.h"
 
 namespace library
 {
@@ -68,12 +67,6 @@ namespace library
 			bool m_isViewMatrixDirty;
 
 			math::Matrix4 m_projectionMatrix;
-
-		private:
-			static const float k_defaultFieldOfView;
-			static const float k_defaultNearPlaneDistance;
-			static const float k_defaultFarPlaneDistance;
-			static const filesystem::Path k_defaultFontPath;
 		};
 
 	} // namespace components
