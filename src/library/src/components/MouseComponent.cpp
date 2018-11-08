@@ -1,10 +1,9 @@
+#include "StdAfx.h"
 #include "library/components/MouseComponent.h"
 
 #include "library/Application.h"
 #include "library/Exception.h"
 #include "library/Math.h"
-
-#include <cassert>
 
 namespace library
 {

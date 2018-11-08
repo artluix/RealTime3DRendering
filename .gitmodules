@@ -6,3 +6,7 @@
 	path = src/externals/effects11
 	url = git://github.com/Microsoft/FX11
 	ignore = dirty
+[submodule "src/externals/assimp"]
+	path = src/externals/assimp
+	url = https://github.com/assimp/assimp.git
+	ignore = dirty

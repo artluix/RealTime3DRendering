@@ -9,8 +9,12 @@ if "%1" == "tools" (
     set TARGET=TOOLS
 )
 
+if NOT exist %BUILD_FOLDER% (
+    mkdir %BUILD_FOLDER%
+)
+
 pushd %BUILD_FOLDER%
-cmake -G "%GENERATOR%" %SOURCE_FOLDER% -D%TARGET%=TRUE
+cmake -G "%GENERATOR%" %SOURCE_FOLDER% -D%TARGET%=TRUE -T v141
 popd
 
 echo.

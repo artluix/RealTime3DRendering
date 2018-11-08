@@ -1,3 +1,4 @@
+#include "StdAfx.h"
 #include "library/components/BaseComponent.h"
 
 #include "library/Application.h"

@@ -1,3 +1,4 @@
+#include "StdAfx.h"
 #include "library/Application.h"
 
 #include "library/Exception.h"

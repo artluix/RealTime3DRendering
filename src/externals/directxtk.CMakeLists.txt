@@ -80,9 +80,7 @@ if(APPLICATION)
         Src/WICTextureLoader.cpp
     )
 
-    add_library(directxtk OBJECT
-        ${DIRECTXTK_FILES}
-    )
+    add_library(directxtk STATIC ${DIRECTXTK_FILES})
 
     target_include_directories(directxtk
         PUBLIC 
@@ -221,7 +219,7 @@ if (XTK_AUDIO)
         Audio/WAVFileReader.cpp
     )
 
-    add_library(directxtkaudio OBJECT
+    add_library(directxtkaudio STATIC
         ${DIRECTXTKAUDIO_FILES}
     )
 

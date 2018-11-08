@@ -1,7 +1,4 @@
 build
 bin
-data
-!data/shaders
-!data/texts
-dist
 tools/bin
+*.log

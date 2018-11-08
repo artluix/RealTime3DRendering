@@ -12,7 +12,6 @@ if(APPLICATION)
 
         include/library/Components/BaseComponent.h
         include/library/Components/CameraComponent.h
-        include/library/Components/CubeDemoComponent.h
         include/library/Components/DrawableComponent.h
         include/library/Components/FirstPersonCameraComponent.h
         include/library/Components/FpsComponent.h
@@ -21,14 +20,16 @@ if(APPLICATION)
         include/library/Components/MouseComponent.h
         include/library/Components/SceneComponent.h
         include/library/Components/TextComponent.h
-        include/library/Components/TriangleDemoComponent.h
         include/library/Components/UIComponent.h
 
         include/library/Exception.h
         include/library/Key.h
         include/library/Logger.h
+        include/library/Material.h
         include/library/Math.h
         include/library/Matrix.h
+        include/library/Mesh.h
+        include/library/Model.h
         include/library/NonCopyable.hpp
         include/library/NonConstructible.hpp
         include/library/Path.h
@@ -45,7 +46,6 @@ if(APPLICATION)
 
         src/Components/BaseComponent.cpp
         src/Components/CameraComponent.cpp
-        src/Components/CubeDemoComponent.cpp
         src/Components/DrawableComponent.cpp
         src/Components/FirstPersonCameraComponent.cpp
         src/Components/FpsComponent.cpp
@@ -54,26 +54,27 @@ if(APPLICATION)
         src/Components/MouseComponent.cpp
         src/Components/SceneComponent.cpp
         src/Components/TextComponent.cpp
-        src/Components/TriangleDemoComponent.cpp
         src/Components/UIComponent.cpp
 
         src/Exception.cpp
         src/Logger.cpp
+        src/Material.cpp
         src/Matrix.cpp
+        src/Mesh.cpp
+        src/Model.cpp
         src/Path.cpp
         src/RenderStatesStorage.cpp
         src/ServiceContainer.cpp
         src/Stopwatch.cpp
         src/Utils.cpp
         src/Vector.cpp
+
+        # precompiled header
+        src/StdAfx.h
+        src/StdAfx.cpp
     )
 
-    add_library(library
-        STATIC
-            $<TARGET_OBJECTS:directxtk>
-            $<TARGET_OBJECTS:effects11>
-        ${LIBRARY_FILES}
-    )
+    add_library(library STATIC ${LIBRARY_FILES})
 
     target_include_directories(library
         PUBLIC
@@ -85,11 +86,12 @@ if(APPLICATION)
             src
     )
 
-    target_link_libraries(library d3d11 d3dcompiler dxguid dinput8)
+    target_link_libraries(library effects11 directxtk assimp d3d11 d3dcompiler dxguid dinput8)
 
     target_compile_options(library
-        PUBLIC
+        PRIVATE
             /GR- # disable rtti
+            /YuStdAfx.h
             /MP
             /std:c++17
     )
@@ -104,13 +106,8 @@ if(APPLICATION)
             # release
     )
 
+    set_source_files_properties(src/StdAfx.cpp PROPERTIES COMPILE_FLAGS /YcStdAfx.h)
+
     # ide filters
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${LIBRARY_FILES})
-
-    # install
-    install(TARGETS library
-        LIBRARY DESTINATION ${DIST_DIR}/library/lib
-        ARCHIVE DESTINATION ${DIST_DIR}/library/lib
-    )
-    install(DIRECTORY include DESTINATION ${DIST_DIR}/library)
 endif()

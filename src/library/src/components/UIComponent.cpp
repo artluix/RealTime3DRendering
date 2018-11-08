@@ -1,3 +1,4 @@
+#include "StdAfx.h"
 #include "library/components/UIComponent.h"
 
 namespace library

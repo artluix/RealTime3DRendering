@@ -1,3 +1,4 @@
+#include "StdAfx.h"
 #include "library/components/FirstPersonCameraComponent.h"
 
 #include "library/Application.h"

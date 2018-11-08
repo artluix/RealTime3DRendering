@@ -1,7 +1,5 @@
+#include "StdAfx.h"
 #include "library/components/FpsComponent.h"
-
-#include <sstream>
-#include <iomanip>
 
 namespace library
 {

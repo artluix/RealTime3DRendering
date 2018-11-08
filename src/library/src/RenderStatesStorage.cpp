@@ -1,3 +1,4 @@
+#include "StdAfx.h"
 #include "library/RenderStatesStorage.h"
 
 #include "library/Application.h"

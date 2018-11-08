@@ -1,3 +1,4 @@
+#include "StdAfx.h"
 #include "library/components/DrawableComponent.h"
 
 namespace library

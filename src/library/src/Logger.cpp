@@ -1,7 +1,5 @@
+#include "StdAfx.h"
 #include "library/Logger.h"
-
-#include <cstdio>
-#include <Windows.h>
 
 namespace library
 {

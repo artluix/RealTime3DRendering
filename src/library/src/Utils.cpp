@@ -1,3 +1,4 @@
+#include "StdAfx.h"
 #include "library/Utils.h"
 
 #include <Shlwapi.h>

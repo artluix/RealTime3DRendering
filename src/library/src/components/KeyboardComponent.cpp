@@ -1,9 +1,8 @@
+#include "StdAfx.h"
 #include "library/components/KeyboardComponent.h"
 
 #include "library/Application.h"
 #include "library/Exception.h"
-
-#include <cassert>
 
 namespace library
 {

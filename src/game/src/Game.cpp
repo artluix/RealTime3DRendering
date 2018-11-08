@@ -5,15 +5,19 @@
 #include <library/components/MouseComponent.h>
 #include <library/components/GridComponent.h>
 #include <library/components/FirstPersonCameraComponent.h>
-#include <library/components/TriangleDemoComponent.h>
-#include <library/components/CubeDemoComponent.h>
+
+#include "TriangleDemoComponent.h"
+#include "CubeDemoComponent.h"
 
 #include <library/Exception.h>
 
 #include <sstream>
 #include <iomanip>
 
-const library::Color Game::k_backgroundColor = library::colors::Black;
+namespace
+{
+	constexpr auto k_backgroundColor = library::colors::Black;
+}
 
 Game::Game(
 	const HINSTANCE instanceHandle,
@@ -73,16 +77,16 @@ void Game::Initialize()
 	
 	// mouse text component
 	auto mouseTextComponent = std::make_shared<TextComponent>(*this);
-	mouseTextComponent->SetGeneratorFunction([mouse=m_mouseComponent]() -> std::wstring
+	mouseTextComponent->SetGeneratorFunction([this]() -> std::wstring
 		{
 			static const std::wstring empty;
 
-			if (!!mouse)
+			if (!!m_mouseComponent)
 			{
 				std::wostringstream woss;
 				woss <<
-					L"Mouse Position: " << mouse->GetX() << ", " << mouse->GetY() << std::endl <<
-					L"Mouse Wheel: " << mouse->GetWheel();
+					L"Mouse Position: " << m_mouseComponent->GetX() << ", " << m_mouseComponent->GetY() << std::endl <<
+					L"Mouse Wheel: " << m_mouseComponent->GetWheel();
 				return woss.str();
 			}
 

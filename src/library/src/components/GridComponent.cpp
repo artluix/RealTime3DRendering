@@ -1,3 +1,4 @@
+#include "StdAfx.h"
 #include "library/components/GridComponent.h"
 
 #include "library/components/CameraComponent.h"

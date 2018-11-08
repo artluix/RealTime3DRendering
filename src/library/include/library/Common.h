@@ -8,6 +8,7 @@ using Microsoft::WRL::ComPtr;
 
 namespace library
 {
+
 	enum class byte : std::uint8_t {};
 
 	template <typename T>

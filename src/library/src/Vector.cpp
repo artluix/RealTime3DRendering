@@ -1,9 +1,7 @@
+#include "StdAfx.h"
 #include "library/Vector.h"
 
 #include "library/Matrix.h"
-
-#include <sstream>
-#include <iomanip>
 
 namespace library
 {

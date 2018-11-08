@@ -32,8 +32,6 @@ protected:
 	void Shutdown() override;
 
 private:
-	static const library::Color k_backgroundColor;
-
 	std::shared_ptr<library::components::KeyboardComponent> m_keyboardComponent;
 	std::shared_ptr<library::components::MouseComponent> m_mouseComponent;
 

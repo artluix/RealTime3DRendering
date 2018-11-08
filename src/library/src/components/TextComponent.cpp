@@ -1,10 +1,8 @@
+#include "StdAfx.h"
 #include "library/components/TextComponent.h"
 
 #include "library/Application.h"
 #include "library/Utils.h"
-
-#include <SpriteFont.h>
-#include <SpriteBatch.h>
 
 namespace library
 {

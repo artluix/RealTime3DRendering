@@ -28,9 +28,7 @@ if(APPLICATION)
         pchfx.h
     )
 
-    add_library(effects11 OBJECT
-        ${EFFECTS11_FILES}
-    )
+    add_library(effects11 STATIC ${EFFECTS11_FILES})
 
     target_include_directories(effects11
         PUBLIC
@@ -55,7 +53,7 @@ if(APPLICATION)
             $<$<CONFIG:DEBUG>: /Od /RTC1>
 
             # release
-            $<$<CONFIG:RELEASE>: /O2 /Gy /Oi>
+            $<$<CONFIG:RELEASE>: /MD /O2 /Gy /Oi>
     )
 
     target_compile_definitions(effects11

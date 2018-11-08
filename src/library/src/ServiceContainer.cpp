@@ -1,3 +1,4 @@
+#include "StdAfx.h"
 #include "library/ServiceContainer.h"
 
 namespace library

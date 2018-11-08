@@ -1,8 +1,6 @@
 cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 
 if(APPLICATION)
-    set(INSTALL_GAME FALSE)
-
     project(game VERSION 0.1)
 
     set(GAME_FILES
@@ -10,6 +8,13 @@ if(APPLICATION)
         src/Program.cpp
         src/Game.h
         src/Game.cpp
+
+        # demo
+        src/CubeDemoComponent.h
+        src/CubeDemoComponent.cpp
+
+        src/TriangleDemoComponent.h
+        src/TriangleDemoComponent.cpp
     )
 
     add_executable(game
@@ -35,15 +40,13 @@ if(APPLICATION)
             # release
     )
 
-    # set postfix
+    # properties
     set_target_properties(game PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
-
     set_target_properties(game PROPERTIES WIN32_EXECUTABLE TRUE)
+    set_target_properties(game PROPERTIES LINK_FLAGS_DEBUG /DEBUG:FASTLINK)
 
     # ide filters
     source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${GAME_FILES})
-
-    message(STATUS "Install game: " ${INSTALL_GAME})
 
     if (${INSTALL_GAME})
         install(TARGETS game RUNTIME DESTINATION ${BIN_DIR})
