@@ -47,5 +47,4 @@ namespace library
 		}
 
 	} // namespace math
-
 } // namespace library

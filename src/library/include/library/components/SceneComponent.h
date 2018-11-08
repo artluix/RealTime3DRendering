@@ -6,7 +6,6 @@ namespace library
 {
 	namespace components
 	{
-
 		class CameraComponent;
 
 		class SceneComponent : public rtti::Class<SceneComponent, DrawableComponent>
@@ -37,6 +36,5 @@ namespace library
 
 			std::reference_wrapper<const CameraComponent> m_camera;
 		};
-
 	} // namespace components
 } // namespace library

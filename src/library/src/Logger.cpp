@@ -3,7 +3,6 @@
 
 namespace library
 {
-
 	namespace
 	{
 		constexpr unsigned k_bufferSize = 256;
@@ -88,5 +87,4 @@ namespace library
 
 		OutputDebugStringA(msg.c_str());
 	}
-
 } // namespace library

@@ -5,7 +5,6 @@ namespace library
 {
 	namespace math
 	{
-
 		using XMMatrix = DirectX::XMMATRIX;
 
 		//-------------------------------------------------------------------------

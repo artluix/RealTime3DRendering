@@ -80,6 +80,5 @@ namespace library
 			m_spriteFont->DrawString(m_spriteBatch.get(), m_text.c_str(), DirectX::XMFLOAT2(m_position), m_color.Load());
 			m_spriteBatch->End();
 		}
-
 	} // namespace components
 } // namespace library

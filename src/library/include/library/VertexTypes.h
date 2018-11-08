@@ -6,7 +6,6 @@
 
 namespace library
 {
-
 	struct VertexPosition
 	{
 		DirectX::XMFLOAT4 position;
@@ -97,5 +96,4 @@ namespace library
 		{
 		}
 	};
-
 } // namespace library

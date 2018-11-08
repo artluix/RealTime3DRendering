@@ -6,7 +6,6 @@
 
 namespace library
 {
-
 	struct Logger : public NonConstructible<Logger>
 	{
 		enum class Level
@@ -29,5 +28,4 @@ namespace library
 	private:
 		static void Log(const Level level, const char* fmt, const va_list ap);
 	};
-
 } // namespace library

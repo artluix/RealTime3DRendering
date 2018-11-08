@@ -18,8 +18,8 @@ set(CMAKE_DEBUG_POSTFIX "_d") # set global debug postfix for all libraries
 
 add_subdirectory(externals)
 add_subdirectory(library)
-add_subdirectory(game)
+add_subdirectory(demo)
 
 if(APPLICATION)
-    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT game)
+    set_property(DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR} PROPERTY VS_STARTUP_PROJECT demo)
 endif()

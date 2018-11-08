@@ -2,7 +2,6 @@
 
 namespace library
 {
-
 	template<class T>
 	class NonCopyable
 	{
@@ -18,5 +17,4 @@ namespace library
 		explicit NonCopyable(const NonCopyable&) = delete;
 		NonCopyable& operator=(const NonCopyable&) = delete;
 	};
-
 } // namespace library

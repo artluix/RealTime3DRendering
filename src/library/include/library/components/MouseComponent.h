@@ -6,7 +6,6 @@
 
 namespace library
 {
-
 	struct Time;
 
 	enum class MouseButton : std::uint8_t
@@ -52,6 +51,5 @@ namespace library
 
 			long m_x, m_y, m_wheel;
 		};
-
 	} // namespace components
 } // namespace library

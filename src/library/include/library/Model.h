@@ -7,7 +7,6 @@
 
 namespace library
 {
-
 	class Application;
 
 	class Mesh;

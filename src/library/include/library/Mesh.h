@@ -17,7 +17,6 @@ namespace DirectX
 
 namespace library
 {
-
 	class Material;
 	using MaterialPtr = std::shared_ptr<Material>;
 
@@ -67,5 +66,4 @@ namespace library
 
 		std::vector<unsigned> m_indices;
 	};
-
 } // namespace library

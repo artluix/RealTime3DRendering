@@ -8,7 +8,6 @@ namespace library
 {
 	namespace utils
 	{
-
 		std::wstring ToWideString(const std::string& str)
 		{
 			std::wstring result(std::cbegin(str), std::cend(str));
@@ -49,6 +48,5 @@ namespace library
 
 			file.close();
 		}
-
 	} // namespace utils
 } // namespace library

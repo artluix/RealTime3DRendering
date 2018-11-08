@@ -8,7 +8,6 @@
 
 namespace library
 {
-
 	namespace
 	{
 		constexpr unsigned k_defaultScreenWidth = 1280;
@@ -444,5 +443,4 @@ namespace library
 			return DefWindowProc(windowHandle, message, wParam, lParam);
 		}
 	}
-
 } // namespace library

@@ -9,7 +9,6 @@ namespace library
 {
 	namespace components
 	{
-
 		namespace
 		{
 			constexpr BYTE k_buttonDownMask = 0x80;
@@ -121,6 +120,5 @@ namespace library
 		{
 			return IsButtonDown(mb) && WasButtonDown(mb);
 		}
-
 	} // namespace components
 } // namespace library

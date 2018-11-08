@@ -12,7 +12,6 @@
 
 namespace library
 {
-
 	Model::Model(const Application& app, const std::string& filename, const bool flipUVs /*= false*/)
 		: m_app(app)
 	{
@@ -70,5 +69,4 @@ namespace library
 
 		return m_materials[materialIdx];
 	}
-
 } // namespace library

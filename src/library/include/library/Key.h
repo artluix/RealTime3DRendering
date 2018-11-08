@@ -3,7 +3,6 @@
 
 namespace library
 {
-
 	enum class Key : std::uint8_t
 	{
 		Escape = DIK_ESCAPE,
@@ -63,5 +62,4 @@ namespace library
 		// #Count
 		Count
 	};
-
 } // namespace library

@@ -7,7 +7,6 @@ namespace library
 {
 	namespace components
 	{
-
 		class GridComponent : public rtti::Class<GridComponent, SceneComponent>
 		{
 		public:
@@ -49,6 +48,5 @@ namespace library
 			ComPtr<ID3D11InputLayout> m_inputLayout;
 			ComPtr<ID3D11Buffer> m_vertexBuffer;
 		};
-
 	} // namespace components
 } // namespace library

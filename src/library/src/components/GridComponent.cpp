@@ -15,7 +15,6 @@ namespace library
 {
 	namespace components
 	{
-
 		namespace
 		{
 			constexpr unsigned k_defaultSize = 16;
@@ -235,6 +234,5 @@ namespace library
 				throw Exception("ID3D11Device::CreateBuffer() failed.", hr);
 			}
 		}
-
 	} // namespace components
 } // namespace library

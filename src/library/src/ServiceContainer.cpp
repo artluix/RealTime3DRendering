@@ -3,7 +3,6 @@
 
 namespace library
 {
-
 	void ServiceContainer::AddService(const rtti::TypeId typeId, void* const service)
 	{
 		if (m_services.find(typeId) == m_services.end())
@@ -31,5 +30,4 @@ namespace library
 
 		return nullptr;
 	}
-
 } // namespace library

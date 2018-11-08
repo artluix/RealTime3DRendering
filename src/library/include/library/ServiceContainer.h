@@ -6,7 +6,6 @@
 
 namespace library
 {
-
 	class ServiceContainer : public NonCopyable<ServiceContainer>
 	{
 	public:
@@ -20,5 +19,4 @@ namespace library
 	private:
 		std::map<rtti::TypeId, void* const> m_services;
 	};
-
 } // namespace library

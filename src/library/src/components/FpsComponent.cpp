@@ -3,7 +3,6 @@
 
 namespace library
 {
-
 	namespace
 	{
 		const auto k_fpsMeasureInterval = std::chrono::seconds(1);
@@ -43,6 +42,5 @@ namespace library
 
 			SetText(woss.str());
 		}
-
 	} // namespace components
 } // namespace library

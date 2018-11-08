@@ -12,7 +12,6 @@
 
 namespace library
 {
-
 	namespace components
 	{
 		class BaseComponent;
@@ -104,5 +103,4 @@ namespace library
 
 		static LRESULT WINAPI WndProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam);
 	};
-
 } // namespace library

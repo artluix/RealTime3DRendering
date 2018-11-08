@@ -9,7 +9,6 @@
 
 namespace library
 {
-
 	Mesh::Mesh(Model& model, aiMesh& mesh)
 		: m_model(model)
 		, m_name(mesh.mName.C_Str())
@@ -155,5 +154,4 @@ namespace library
 
 		return indexBuffer;
 	}
-
 } // namespace library

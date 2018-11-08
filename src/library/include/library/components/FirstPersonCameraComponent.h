@@ -7,7 +7,6 @@ namespace library
 {
 	namespace components
 	{
-
 		class MouseComponent;
 		class KeyboardComponent;
 
@@ -59,6 +58,5 @@ namespace library
 			float m_rotationRate;
 			float m_movementRate;
 		};
-
 	} // namespace components
 } // namespace library

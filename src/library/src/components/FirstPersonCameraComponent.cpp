@@ -12,7 +12,6 @@ namespace library
 {
 	namespace components
 	{
-
 		namespace
 		{
 			constexpr float k_defaultMouseSensitivity = 0.1f;
@@ -140,6 +139,5 @@ namespace library
 
 			CameraComponent::Update(time);
 		}
-
 	} // namespace components
 } // namespace library

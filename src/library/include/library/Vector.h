@@ -10,7 +10,6 @@ namespace library
 {
 	namespace math
 	{
-
 		using XMVector = DirectX::XMVECTOR;
 
 		//-------------------------------------------------------------------------

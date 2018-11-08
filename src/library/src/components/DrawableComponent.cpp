@@ -5,7 +5,6 @@ namespace library
 {
 	namespace components
 	{
-
 		DrawableComponent::DrawableComponent(const Application& app)
 			: Class(app)
 			, m_visible(true)
@@ -20,6 +19,5 @@ namespace library
 		void DrawableComponent::Draw(const Time& time)
 		{
 		}
-
 	} // namespace components
 } // namespace library

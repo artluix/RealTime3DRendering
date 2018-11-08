@@ -6,7 +6,6 @@ namespace library
 {
 	namespace components
 	{
-
 		class UIComponent : public rtti::Class<UIComponent, DrawableComponent>
 		{
 		public:
@@ -17,6 +16,5 @@ namespace library
 
 			math::Vector2 m_position;
 		};
-
 	} // namespace components
 } // namespace library

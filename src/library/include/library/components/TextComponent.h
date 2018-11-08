@@ -10,13 +10,12 @@ namespace DirectX
 {
 	class SpriteBatch;
 	class SpriteFont;
-}
+} // namespace DirectX
 
 namespace library
 {
 	namespace components
 	{
-
 		class TextComponent : public rtti::Class<TextComponent, UIComponent>
 		{
 		public:
@@ -51,6 +50,5 @@ namespace library
 			std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
 			std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
 		};
-
 	} // namespace components
 } // namespace library

@@ -9,7 +9,6 @@ struct aiMaterial;
 
 namespace library
 {
-
 	enum class TextureType
 	{
 		Diffuse = 0,
@@ -75,5 +74,4 @@ namespace library
 		std::string m_name;
 		std::map<TextureType, TextureNamesVector> m_textures;
 	};
-
 } // namespace library

@@ -3,7 +3,6 @@
 
 namespace library
 {
-
 	Stopwatch::Stopwatch()
 	{
 		Reset();
@@ -26,5 +25,4 @@ namespace library
 
 		m_currentTimePoint = now;
 	}
-
 } // namespace library

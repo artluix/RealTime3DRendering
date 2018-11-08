@@ -9,7 +9,6 @@
 
 namespace library
 {
-
 	namespace
 	{
 		const std::map<TextureType, aiTextureType> k_textureTypeMappings =
@@ -39,34 +38,33 @@ namespace library
 	}
 
 	Material::Material(Model& model, aiMaterial& material)
-			: m_model(model)
+		: m_model(model)
+	{
+		aiString name;
+		material.Get(AI_MATKEY_NAME, name);
+		m_name = name.C_Str();
+
+		for (const auto& tt : TextureType())
 		{
-			aiString name;
-			material.Get(AI_MATKEY_NAME, name);
-			m_name = name.C_Str();
+			const auto aiTextureType = k_textureTypeMappings.at(tt);
 
-			for (const auto& tt : TextureType())
+			const auto texturesCount = material.GetTextureCount(aiTextureType);
+			if (texturesCount > 0)
 			{
-				const auto aiTextureType = k_textureTypeMappings.at(tt);
+				TextureNamesVector textureNames;
+				textureNames.reserve(texturesCount);
 
-				const auto texturesCount = material.GetTextureCount(aiTextureType);
-				if (texturesCount > 0)
+				for (unsigned i = 0; i < texturesCount; i++)
 				{
-					TextureNamesVector textureNames;
-					textureNames.reserve(texturesCount);
-
-					for (unsigned i = 0; i < texturesCount; i++)
+					aiString path;
+					if (material.GetTexture(aiTextureType, i, &path) == AI_SUCCESS)
 					{
-						aiString path;
-						if (material.GetTexture(aiTextureType, i, &path) == AI_SUCCESS)
-						{
-							textureNames.emplace_back(utils::ToWideString(std::string(path.C_Str())));
-						}
+						textureNames.emplace_back(utils::ToWideString(std::string(path.C_Str())));
 					}
-
-					m_textures.emplace(tt, textureNames);
 				}
+
+				m_textures.emplace(tt, textureNames);
 			}
 		}
-
+	}
 } // namespace library

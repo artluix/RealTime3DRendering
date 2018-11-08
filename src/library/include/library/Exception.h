@@ -5,7 +5,6 @@
 
 namespace library
 {
-
 	class Exception : public std::exception
 	{
 	public:
@@ -17,5 +16,4 @@ namespace library
 	private:
 		HRESULT m_hr;
 	};
-
 } // namespace library

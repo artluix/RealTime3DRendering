@@ -8,7 +8,6 @@ namespace library
 {
 	namespace components
 	{
-
 		namespace
 		{
 			constexpr BYTE k_keyDownMask = 0x80;
@@ -115,6 +114,5 @@ namespace library
 		{
 			return IsKeyDown(key) && WasKeyDown(key);
 		}
-
 	} // namespace components
 } // namespace library

@@ -5,7 +5,6 @@
 
 namespace library
 {
-
 	namespace
 	{
 		constexpr unsigned k_defaultSampleMask = -1;
@@ -111,5 +110,4 @@ namespace library
 			break;
 		}
 	}
-
 } // namespace library

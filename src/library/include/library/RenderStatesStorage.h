@@ -8,7 +8,6 @@ struct ID3D11DepthStencilState;
 
 namespace library
 {
-
 	enum class RenderState
 	{
 		Rasterizer,
@@ -47,5 +46,4 @@ namespace library
 		unsigned m_sampleMask;
 		unsigned m_stencilRef;
 	};
-
 } // namespace library

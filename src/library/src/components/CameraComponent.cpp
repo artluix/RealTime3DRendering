@@ -138,6 +138,5 @@ namespace library
 				m_isViewMatrixDirty = true;
 			}
 		}
-
 	} // namespace components
 } // namespace library

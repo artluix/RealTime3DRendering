@@ -7,7 +7,6 @@ namespace library
 {
 	namespace components
 	{
-
 		class CameraComponent : public rtti::Class<CameraComponent, BaseComponent>
 		{
 		public:
@@ -68,7 +67,6 @@ namespace library
 
 			math::Matrix4 m_projectionMatrix;
 		};
-
 	} // namespace components
 } // namespace library
 

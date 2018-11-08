@@ -6,13 +6,12 @@ namespace DirectX
 {
 	class SpriteBatch;
 	class SpriteFont;
-}
+} // namespace DirectX
 
 namespace library
 {
 	namespace components
 	{
-
 		class FpsComponent : public rtti::Class<FpsComponent, TextComponent>
 		{
 		public:
@@ -29,6 +28,5 @@ namespace library
 
 			Duration m_timeAccumulator;
 		};
-
 	} // namespace components
 } // namespace library

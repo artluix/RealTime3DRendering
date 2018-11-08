@@ -12,7 +12,6 @@ namespace library
 {
 	namespace components
 	{
-
 		class DrawableComponent : public rtti::Class<DrawableComponent, BaseComponent>
 		{
 		public:
@@ -27,6 +26,5 @@ namespace library
 		protected:
 			bool m_visible;
 		};
-
 	} // namespace components
 } // namespace library

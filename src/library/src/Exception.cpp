@@ -3,7 +3,6 @@
 
 namespace library
 {
-
 	Exception::Exception(const char* const& message, const HRESULT hr /*= S_OK*/)
 		: exception(message)
 		, m_hr(hr)
@@ -14,5 +13,4 @@ namespace library
 	{
 		return std::string(what()) + " Error: " + std::to_string(m_hr);
 	}
-
 } // namespace library

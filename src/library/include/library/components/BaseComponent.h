@@ -5,7 +5,6 @@
 
 namespace library
 {
-
 	class Application;
 	struct Time;
 

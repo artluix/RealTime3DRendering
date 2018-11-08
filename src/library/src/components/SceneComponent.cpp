@@ -7,7 +7,6 @@ namespace library
 {
 	namespace components
 	{
-
 		SceneComponent::SceneComponent(const Application& app, const CameraComponent& camera)
 			: Class(app)
 			, m_camera(camera)
@@ -61,6 +60,5 @@ namespace library
 
 			m_worldMatrix = rotationMatrix * translationMatrix;
 		}
-
 	} // namespace components
 } // namespace library

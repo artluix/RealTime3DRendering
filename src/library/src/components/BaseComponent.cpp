@@ -7,7 +7,6 @@ namespace library
 {
 	namespace components
 	{
-
 		BaseComponent::BaseComponent(const Application& app)
 			: m_app(app)
 			, m_enabled(true)
@@ -26,6 +25,5 @@ namespace library
 		void BaseComponent::Update(const Time& time)
 		{
 		}
-
 	} // namespace components
 } // namespace library

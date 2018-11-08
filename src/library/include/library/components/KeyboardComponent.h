@@ -9,7 +9,6 @@ namespace library
 {
 	namespace components
 	{
-
 		class KeyboardComponent : public rtti::Class<KeyboardComponent, BaseComponent>
 		{
 		public:
@@ -39,6 +38,5 @@ namespace library
 			KeysStateArray m_keysState;
 			KeysStateArray m_previousKeysState;
 		};
-
 	} // namespace components
 } // namespace library

@@ -4,7 +4,6 @@
 
 namespace library
 {
-
 	class Stopwatch : public NonCopyable<Stopwatch>
 	{
 	public:
@@ -17,5 +16,4 @@ namespace library
 		TimePoint m_startTimePoint;
 		TimePoint m_currentTimePoint;
 	};
-
 } // namespace library

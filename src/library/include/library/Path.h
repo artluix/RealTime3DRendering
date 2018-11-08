@@ -8,7 +8,6 @@ namespace library
 {
 	namespace filesystem
 	{
-
 		class Path
 		{
 		public:
@@ -53,6 +52,5 @@ namespace library
 		{
 			return m_path == other.m_path;
 		}
-
 	} // namespace filesystem
 } // namespace library

@@ -5,7 +5,6 @@ namespace library
 {
 	namespace components
 	{
-
 		UIComponent::UIComponent(const Application& app)
 			: Class(app)
 		{
@@ -18,6 +17,5 @@ namespace library
 				m_position = position;
 			}
 		}
-
 	} // namespace components
 } // namespace library

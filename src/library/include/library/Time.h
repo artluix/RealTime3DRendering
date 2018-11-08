@@ -3,7 +3,6 @@
 
 namespace library
 {
-
 	using Clock = std::chrono::steady_clock;
 	using TimePoint = Clock::time_point;
 	using Duration = Clock::duration;
@@ -63,5 +62,4 @@ namespace library
 		TimeValue total;
 		TimeValue elapsed;
 	};
-
 } // namespace library

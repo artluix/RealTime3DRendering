@@ -7,7 +7,6 @@ namespace library
 {
 	namespace rtti
 	{
-
 		using TypeId = std::uintptr_t;
 
 		class Base
@@ -177,6 +176,5 @@ namespace library
 
 			return std::shared_ptr<To>();
 		}
-
 	} // namespace rtti
 } // namespace library
