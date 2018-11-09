@@ -43,6 +43,7 @@ if(APPLICATION)
 
         # src
         src/Application.cpp
+        src/Color.cpp
 
         src/Components/BaseComponent.cpp
         src/Components/CameraComponent.cpp
