@@ -16,21 +16,21 @@ namespace library
 
 		filesystem::Path GetCurrentDirectory()
 		{
-			std::array<wchar_t, MAX_PATH> buffer;
-			::GetCurrentDirectory(MAX_PATH, buffer.data());
+			std::array<char, MAX_PATH> buffer;
+			::GetCurrentDirectoryA(MAX_PATH, buffer.data());
 			return filesystem::Path(buffer.data());
 		}
 
 		filesystem::Path GetExecutableDirectory()
 		{
-			std::array<wchar_t, MAX_PATH> buffer;
-			::GetModuleFileName(nullptr, buffer.data(), MAX_PATH);
+			std::array<char, MAX_PATH> buffer;
+			::GetModuleFileNameA(nullptr, buffer.data(), MAX_PATH);
 			return filesystem::Path(buffer.data()).GetDirName();
 		}
 
 		void LoadBinaryFile(const filesystem::Path& path, std::vector<byte>& data)
 		{
-			std::ifstream file(path.GetAsWideCString(), std::ios::binary);
+			std::ifstream file(path.GetWideString(), std::ios::binary);
 			if (file.bad())
 			{
 				throw std::exception("Could not open file.");

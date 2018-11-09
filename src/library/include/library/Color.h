@@ -12,8 +12,10 @@ namespace library
 
 		void Transform(const math::Matrix4&) = delete;
 		math::Vector4 Cross(const math::Vector4&) = delete;
+
+		static Color Random();
 	};
-	
+
 	namespace colors
 	{
 		inline constexpr Color White = Color(1.f, 1.f, 1.f, 1.f);

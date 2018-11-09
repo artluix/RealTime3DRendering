@@ -1,6 +1,9 @@
 #pragma once
 #include <library/components/SceneComponent.h>
 
+struct ID3D11Buffer;
+struct ID3D11Device;
+
 namespace library
 {
 	class Mesh;
@@ -27,6 +30,8 @@ namespace demo
 		void Draw(const library::Time& time) override;
 
 	private:
+		void CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const library::Mesh& mesh);
+
 		ComPtr<ID3DX11Effect> m_effect;
 		ComPtr<ID3DX11EffectTechnique> m_technique;
 		ComPtr<ID3DX11EffectPass> m_pass;

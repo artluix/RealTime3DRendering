@@ -40,13 +40,13 @@ namespace library
 		// Tangents and Binormals
 		if (mesh.HasTangentsAndBitangents())
 		{
-			m_tangents.reserve(mesh.mNumVertices);
-			m_binormals.reserve(mesh.mNumVertices);
+			m_tangentBinormals.reserve(mesh.mNumVertices);
 
 			for (unsigned i = 0; i < mesh.mNumVertices; i++)
 			{
-				m_tangents.push_back(reinterpret_cast<const DirectX::XMFLOAT3&>(mesh.mTangents[i]));
-				m_binormals.push_back(reinterpret_cast<const DirectX::XMFLOAT3&>(mesh.mBitangents[i]));
+				const auto& tangent = reinterpret_cast<const DirectX::XMFLOAT3&>(mesh.mTangents[i]);
+				const auto& binormal = reinterpret_cast<const DirectX::XMFLOAT3&>(mesh.mBitangents[i]);
+				m_tangentBinormals.emplace_back(tangent, binormal);
 			}
 		}
 
@@ -110,23 +110,13 @@ namespace library
 
 	const DirectX::XMFLOAT3Vector& Mesh::GetTextureCoordinates(const unsigned textureIdx) const
 	{
-		if (textureIdx > m_texturesCoordinates.size())
-		{
-			static const DirectX::XMFLOAT3Vector nullTextureCoordinates;
-			return nullTextureCoordinates;
-		}
-
+		assert(textureIdx < m_texturesCoordinates.size());
 		return m_texturesCoordinates[textureIdx];
 	}
 
 	const DirectX::XMFLOAT4Vector& Mesh::GetVertexColors(const unsigned vertexIdx) const
 	{
-		if (vertexIdx > m_texturesCoordinates.size())
-		{
-			static const DirectX::XMFLOAT4Vector nullVertexColors;
-			return nullVertexColors;
-		}
-
+		assert(vertexIdx < m_verticesColors.size());
 		return m_verticesColors[vertexIdx];
 	}
 

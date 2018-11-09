@@ -13,12 +13,13 @@ namespace library
 		public:
 			explicit Path() = default;
 			explicit Path(const std::string& s);
-			explicit Path(const std::wstring& ws);
 			explicit Path(std::string&& s);
-			explicit Path(std::wstring&& ws);
 
-			const std::wstring& GetAsWideString() const;
-			const wchar_t* GetAsWideCString() const;
+			const std::string& GetString() const { return m_string; }
+			const char* GetCString() const { return m_string.c_str(); }
+
+			const std::wstring& GetWideString() const { return m_wstring; }
+			const wchar_t* GetWideCString() const { return m_wstring.c_str(); }
 
 			Path GetBaseName() const;
 			Path GetDirName() const;
@@ -37,20 +38,21 @@ namespace library
 		private:
 			void FixSeparator();
 
-			std::wstring m_path;
+			std::string m_string;
+			std::wstring m_wstring; // just for caching
 		};
 
 		//-------------------------------------------------------------------------
 
 		inline bool Path::operator != (const Path& other) const
 		{
-			return m_path != other.m_path;
+			return m_string != other.m_string;
 		}
 
 
 		inline bool Path::operator == (const Path& other) const
 		{
-			return m_path == other.m_path;
+			return m_string == other.m_string;
 		}
 	} // namespace filesystem
 } // namespace library

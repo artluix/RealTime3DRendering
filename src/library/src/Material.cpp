@@ -28,12 +28,7 @@ namespace library
 	const TextureNamesVector& Material::GetTextureNames(const TextureType textureType) const
 	{
 		auto it = m_textures.find(textureType);
-		if (it == m_textures.end())
-		{
-			static const TextureNamesVector nullTextureNames;
-			return nullTextureNames;
-		}
-
+		assert(it != m_textures.end());
 		return it->second;
 	}
 

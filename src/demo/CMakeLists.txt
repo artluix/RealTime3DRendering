@@ -6,8 +6,8 @@ if(APPLICATION)
     set(DEMO_FILES
         # src
         src/Program.cpp
-        src/Game.h
-        src/Game.cpp
+        src/Application.h
+        src/Application.cpp
 
         # demo
         src/CubeComponent.h
@@ -20,9 +20,7 @@ if(APPLICATION)
         src/ModelComponent.cpp
     )
 
-    add_executable(demo
-        ${DEMO_FILES}
-    )
+    add_executable(demo WIN32 ${DEMO_FILES})
 
     target_link_libraries(demo library)
 
@@ -45,7 +43,6 @@ if(APPLICATION)
 
     # properties
     set_target_properties(demo PROPERTIES DEBUG_POSTFIX ${CMAKE_DEBUG_POSTFIX})
-    set_target_properties(demo PROPERTIES WIN32_EXECUTABLE TRUE)
     set_target_properties(demo PROPERTIES LINK_FLAGS_DEBUG /DEBUG:FASTLINK)
 
     # ide filters

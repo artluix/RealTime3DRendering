@@ -14,7 +14,7 @@ namespace library
 			constexpr auto k_defaultNearPlaneDistance = 0.01f;
 			constexpr auto k_defaultFarPlaneDistance = 1000.f;
 			const auto k_defaultFontPath = utils::GetExecutableDirectory().Join(
-				filesystem::Path(L"data/fonts/Arial_14_Regular.spritefont")
+				filesystem::Path("data/fonts/Arial_14_Regular.spritefont")
 			);
 		}
 

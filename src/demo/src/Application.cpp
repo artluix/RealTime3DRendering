@@ -8,6 +8,7 @@
 
 #include "TriangleComponent.h"
 #include "CubeComponent.h"
+#include "ModelComponent.h"
 
 #include <library/Exception.h>
 
@@ -70,11 +71,14 @@ namespace demo
 		auto gridComponent = std::make_shared<GridComponent>(*this, *cameraComponent);
 		m_components.push_back(gridComponent);
 
-		auto triangleDemoComponent = std::make_shared<TriangleComponent>(*this, *cameraComponent);
-		//m_components.push_back(triangleDemoComponent);
+		auto triangleComponent = std::make_shared<TriangleComponent>(*this, *cameraComponent);
+		//m_components.push_back(triangleComponent);
 
-		auto cubeDemoComponent = std::make_shared<CubeComponent>(*this, *cameraComponent, *m_keyboardComponent);
-		m_components.push_back(cubeDemoComponent);
+		auto cubeComponent = std::make_shared<CubeComponent>(*this, *cameraComponent, *m_keyboardComponent);
+		//m_components.push_back(cubeComponent);
+
+		auto modelComponent = std::make_shared<ModelComponent>(*this, *cameraComponent, *m_keyboardComponent);
+		m_components.push_back(modelComponent);
 
 		// mouse text component
 		auto mouseTextComponent = std::make_shared<TextComponent>(*this);
@@ -97,7 +101,7 @@ namespace demo
 		mouseTextComponent->SetPosition(library::math::Vector2(0.f, 50.f));
 		m_components.push_back(mouseTextComponent);
 
-		Application::Initialize();
+		library::Application::Initialize();
 
 		cameraComponent->SetPosition(library::math::Vector3(0.0f, 0.0f, 50.0f));
 	}
@@ -109,7 +113,7 @@ namespace demo
 			Exit();
 		}
 
-		Application::Update(time);
+		library::Application::Update(time);
 	}
 
 	void Application::Draw(const library::Time& time)
@@ -117,7 +121,7 @@ namespace demo
 		m_d3dDeviceContext->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
 		m_d3dDeviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-		Application::Draw(time);
+		library::Application::Draw(time);
 
 		HRESULT hr = m_swapChain->Present(0, 0);
 		if (FAILED(hr))
@@ -130,6 +134,6 @@ namespace demo
 	{
 		m_directInput.Reset();
 
-		Application::Shutdown();
+		library::Application::Shutdown();
 	}
 } // namespace demo

@@ -21,7 +21,7 @@ namespace library
 			constexpr unsigned k_defaultScale = 16;
 			constexpr auto k_defaultColor = colors::White;
 			const auto k_effectPath = utils::GetExecutableDirectory().Join(
-				filesystem::Path(L"data/effects/BasicEffect.fx")
+				filesystem::Path("data/effects/BasicEffect.fx")
 			);
 		}
 
@@ -88,7 +88,7 @@ namespace library
 				ComPtr<ID3DBlob> shaderBlob;
 
 				auto hr = D3DCompileFromFile(
-					k_effectPath.GetAsWideString().c_str(),
+					k_effectPath.GetWideCString(),
 					nullptr,
 					nullptr,
 					nullptr,

@@ -2,9 +2,11 @@
 #include "library/Model.h"
 
 #include "library/Application.h"
+#include "library/Application.h"
 #include "library/Exception.h"
 #include "library/Mesh.h"
 #include "library/Material.h"
+#include "library/Path.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -12,7 +14,7 @@
 
 namespace library
 {
-	Model::Model(const Application& app, const std::string& filename, const bool flipUVs /*= false*/)
+	Model::Model(const Application& app, const filesystem::Path& filePath, const bool flipUVs /*= false*/)
 		: m_app(app)
 	{
 		Assimp::Importer importer;
@@ -26,7 +28,7 @@ namespace library
 		if (flipUVs)
 			flags |= aiProcess_FlipUVs;
 
-		if (const auto scene = importer.ReadFile(filename, flags))
+		if (const auto scene = importer.ReadFile(filePath.GetString(), flags))
 		{
 			if (scene->HasMaterials())
 			{
@@ -54,19 +56,15 @@ namespace library
 		}
 	}
 
-	MeshPtr Model::GetMesh(const unsigned meshIdx) const
+	const MeshPtr& Model::GetMesh(const unsigned meshIdx) const
 	{
-		if (meshIdx >= m_meshes.size())
-			return MeshPtr();
-
+		assert(meshIdx <= m_meshes.size());
 		return m_meshes[meshIdx];
 	}
 
-	MaterialPtr Model::GetMaterial(const unsigned materialIdx) const
+	const MaterialPtr& Model::GetMaterial(const unsigned materialIdx) const
 	{
-		if (materialIdx >= m_meshes.size())
-			return MaterialPtr();
-
+		assert(materialIdx <= m_materials.size());
 		return m_materials[materialIdx];
 	}
 } // namespace library

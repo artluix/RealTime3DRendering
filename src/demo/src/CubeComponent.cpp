@@ -22,7 +22,7 @@ namespace demo
 		constexpr float k_rotationAngle = math::constants::Pi_Div_2;
 		constexpr float k_movementRate = 0.01f;
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-			filesystem::Path(L"data/effects/BasicEffect.fx")
+			filesystem::Path("data/effects/BasicEffect.fx")
 		);
 	}
 
@@ -46,7 +46,7 @@ namespace demo
 			ComPtr<ID3DBlob> shaderBlob;
 
 			auto hr = D3DCompileFromFile(
-				k_effectPath.GetAsWideString().c_str(),
+				k_effectPath.GetWideCString(),
 				nullptr,
 				nullptr,
 				nullptr,

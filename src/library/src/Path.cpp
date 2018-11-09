@@ -7,41 +7,22 @@ namespace library
 	{
 		namespace
 		{
-			constexpr wchar_t k_sep = L'/';
+			constexpr char k_sep = '/';
+			constexpr char k_badSep = '\\';
 		}
 
 		Path::Path(const std::string& s)
-			: m_path(std::cbegin(s), std::cend(s))
-		{
-			FixSeparator();
-		}
-
-		Path::Path(const std::wstring& ws)
-			: m_path(ws)
+			: m_string(s)
+			, m_wstring(std::cbegin(s), std::cend(s))
 		{
 			FixSeparator();
 		}
 
 		Path::Path(std::string&& s)
-			: m_path(std::cbegin(s), std::cend(s))
+			: m_string(s)
+			, m_wstring(std::cbegin(s), std::cend(s))
 		{
 			FixSeparator();
-		}
-
-		Path::Path(std::wstring&& ws)
-			: m_path(std::forward<std::wstring>(ws))
-		{
-			FixSeparator();
-		}
-
-		const std::wstring& Path::GetAsWideString() const
-		{
-			return m_path;
-		}
-
-		const wchar_t* Path::GetAsWideCString() const
-		{
-			return m_path.c_str();
 		}
 
 		Path Path::GetBaseName() const
@@ -56,17 +37,17 @@ namespace library
 
 		Tuple2<Path> Path::Split() const
 		{
-			if (m_path.empty())
+			if (m_string.empty())
 				return {};
 
-			const auto lastSlashIdx = m_path.find_last_of(L"/");
-			if (lastSlashIdx != std::wstring::npos)
+			const auto lastSlashIdx = m_string.find_last_of('/');
+			if (lastSlashIdx != std::string::npos)
 			{
 				Tuple2<Path> result;
-				result[0] = Path(m_path.substr(0, lastSlashIdx));
+				result[0] = Path(m_string.substr(0, lastSlashIdx));
 
-				if (lastSlashIdx < m_path.length() - 1)
-					result[1] = Path(m_path.substr(lastSlashIdx + 1));
+				if (lastSlashIdx < m_string.length() - 1)
+					result[1] = Path(m_string.substr(lastSlashIdx + 1));
 
 				return result;
 			}
@@ -78,21 +59,21 @@ namespace library
 
 		Path& Path::Join(const Path& other)
 		{
-			const auto& otherWString = other.GetAsWideString();
+			const auto& otherString = other.GetString();
 
-			const bool haveEndSlash = m_path.back() == L'/';
-			const bool haveStartSlash = otherWString.front() == L'/';
+			const bool haveEndSlash = (m_string.back() == '/');
+			const bool haveStartSlash = (otherString.front() == '/');
 
 			if (haveStartSlash && haveEndSlash)
 			{
-				m_path.pop_back();
+				m_string.pop_back();
 			}
 			else if (!haveStartSlash && !haveEndSlash)
 			{
-				m_path += L"/";
+				m_string += '/';
 			}
 
-			m_path += otherWString;
+			m_string += otherString;
 			return *this;
 		}
 
@@ -111,17 +92,17 @@ namespace library
 
 		Tuple2<Path> Path::SplitExt() const
 		{
-			if (m_path.empty())
+			if (m_string.empty())
 				return {};
 
-			const auto lastDotIdx = m_path.find_last_of(L".");
-			if (lastDotIdx != std::wstring::npos)
+			const auto lastDotIdx = m_string.find_last_of('.');
+			if (lastDotIdx != std::string::npos)
 			{
 				Tuple2<Path> result;
-				result[0] = Path(m_path.substr(0, lastDotIdx));
+				result[0] = Path(m_string.substr(0, lastDotIdx));
 
-				if (lastDotIdx < m_path.length() - 1)
-					result[1] = Path(m_path.substr(lastDotIdx + 1));
+				if (lastDotIdx < m_string.length() - 1)
+					result[1] = Path(m_string.substr(lastDotIdx + 1));
 
 				return result;
 			}
@@ -138,8 +119,7 @@ namespace library
 
 		void Path::FixSeparator()
 		{
-			static const wchar_t badSep = L'\\';
-			std::replace(std::begin(m_path), std::end(m_path), badSep, k_sep);
+			std::replace(std::begin(m_string), std::end(m_string), k_badSep, k_sep);
 		}
 	} // namespace path
 } // namespace library

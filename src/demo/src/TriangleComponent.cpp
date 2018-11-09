@@ -17,7 +17,7 @@ namespace demo
 	namespace
 	{
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-			filesystem::Path(L"data/effects/BasicEffect.fx")
+			filesystem::Path("data/effects/BasicEffect.fx")
 		);
 	}
 
@@ -42,7 +42,7 @@ namespace demo
 			ComPtr<ID3DBlob> shaderBlob;
 
 			auto hr = D3DCompileFromFile(
-				k_effectPath.GetAsWideString().c_str(),
+				k_effectPath.GetWideCString(),
 				nullptr,
 				nullptr,
 				nullptr,
