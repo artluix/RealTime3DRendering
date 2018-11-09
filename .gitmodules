@@ -1,10 +1,10 @@
 [submodule "src/externals/directxtk"]
 	path = src/externals/directxtk
-	url = git://github.com/Microsoft/DirectXTK
+	url = https://github.com/Microsoft/DirectXTK.git
 	ignore = dirty
 [submodule "src/externals/effects11"]
 	path = src/externals/effects11
-	url = git://github.com/Microsoft/FX11
+	url = https://github.com/Microsoft/FX11.git
 	ignore = dirty
 [submodule "src/externals/assimp"]
 	path = src/externals/assimp
