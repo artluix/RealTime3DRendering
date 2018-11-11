@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "library/Path.h"
 
+#include "library/Utils.h"
+
 namespace library
 {
 	namespace filesystem
@@ -13,14 +15,12 @@ namespace library
 
 		Path::Path(const std::string& s)
 			: m_string(s)
-			, m_wstring(std::cbegin(s), std::cend(s))
 		{
 			FixSeparator();
 		}
 
 		Path::Path(std::string&& s)
 			: m_string(s)
-			, m_wstring(std::cbegin(s), std::cend(s))
 		{
 			FixSeparator();
 		}
@@ -74,6 +74,9 @@ namespace library
 			}
 
 			m_string += otherString;
+
+			UpdateCached();
+
 			return *this;
 		}
 
@@ -120,6 +123,12 @@ namespace library
 		void Path::FixSeparator()
 		{
 			std::replace(std::begin(m_string), std::end(m_string), k_badSep, k_sep);
+			UpdateCached();
+		}
+
+		void Path::UpdateCached()
+		{
+			m_wstring = utils::ToWideString(m_string);
 		}
 	} // namespace path
 } // namespace library

@@ -21,8 +21,6 @@ namespace demo
 
 	namespace
 	{
-		constexpr unsigned k_indicesCount = 6 * 2 * 3;
-		constexpr unsigned k_verticesCount = 8;
 		constexpr float k_rotationAngle = math::constants::Pi_Div_2;
 		constexpr float k_movementRate = 0.01f;
 		
@@ -210,7 +208,7 @@ namespace demo
 		unsigned offset = 0;
 		d3dDeviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 
-		d3dDeviceContext->DrawIndexed(k_indicesCount, 0, 0);
+		d3dDeviceContext->DrawIndexed(m_indicesCount, 0, 0);
 	}
 
 	void ModelComponent::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const Mesh& mesh)

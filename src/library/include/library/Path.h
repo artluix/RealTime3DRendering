@@ -37,9 +37,10 @@ namespace library
 
 		private:
 			void FixSeparator();
+			void UpdateCached(); // will update wstring
 
 			std::string m_string;
-			std::wstring m_wstring; // just for caching
+			std::wstring m_wstring;
 		};
 
 		//-------------------------------------------------------------------------
