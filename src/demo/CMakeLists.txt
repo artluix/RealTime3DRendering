@@ -18,6 +18,9 @@ if(APPLICATION)
 
         src/ModelComponent.h
         src/ModelComponent.cpp
+
+        src/TextureModelComponent.h
+        src/TextureModelComponent.cpp
     )
 
     add_executable(demo WIN32 ${DEMO_FILES})

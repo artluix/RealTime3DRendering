@@ -1,4 +1,4 @@
-#include "ModelComponent.h"
+#include "TextureModelComponent.h"
 
 #include <library/components/CameraComponent.h>
 #include <library/components/KeyboardComponent.h>
@@ -14,6 +14,7 @@
 
 #include <d3dx11effect.h>
 #include <d3dcompiler.h>
+#include <WICTextureLoader.h>
 
 namespace demo
 {
@@ -25,20 +26,23 @@ namespace demo
 		constexpr float k_movementRate = 0.01f;
 		
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-			filesystem::Path("data/effects/BasicEffect.fx")
+			filesystem::Path("data/effects/TextureMapping.fx")
 		);
 		const auto k_modelPath = utils::GetExecutableDirectory().Join(
 			filesystem::Path("data/models/Sphere.obj")
+		);
+		const auto k_texturePath = utils::GetExecutableDirectory().Join(
+			filesystem::Path("data/textures/EarthComposite.jpg")
 		);
 	}
 
 	//-------------------------------------------------------------------------
 
-	using VertexType = library::VertexPositionColor;
+	using VertexType = library::VertexPositionTexture;
 
 	//-------------------------------------------------------------------------
 
-	ModelComponent::ModelComponent(
+	TextureModelComponent::TextureModelComponent(
 		const Application& app,
 		const components::CameraComponent& camera,
 		const components::KeyboardComponent& keyboard
@@ -49,7 +53,7 @@ namespace demo
 	{
 	}
 
-	void ModelComponent::Initialize()
+	void TextureModelComponent::Initialize()
 	{
 		const Application& app = m_app;
 
@@ -93,7 +97,7 @@ namespace demo
 		}
 
 		// Look up the technique, pass, and WVP variable from the effect
-		m_technique = m_effect->GetTechniqueByName("main11");
+		m_technique = m_effect->GetTechniqueByName("main10");
 		if (!m_technique)
 		{
 			throw Exception("ID3DX11Effect::GetTechniqueByName() could not find the specified technique.");
@@ -106,12 +110,27 @@ namespace demo
 			throw Exception("ID3DX11Effect::GetPassByName() could not find the specified pass.");
 		}
 
-		// get abstract variable
-		if (auto variable = m_effect->GetVariableByName("WorldViewProjection"))
+		// get wvp variable
+		if (auto variable = m_effect->GetVariableByName("wvp"))
 		{
 			// cast variable to specific type
 			m_wvpVariable = variable->AsMatrix();
 			if (!m_wvpVariable->IsValid())
+			{
+				throw Exception("Invalid effect variable cast.");
+			}
+		}
+		else
+		{
+			throw Exception("ID3DX11Effect::GetVariableByName() could not find the specified variable.");
+		}
+
+		// get color texture variable
+		if (auto variable = m_effect->GetVariableByName("ColorTexture"))
+		{
+			// cast variable to specific type
+			m_colorTextureVariable = variable->AsShaderResource();
+			if (!m_colorTextureVariable->IsValid())
 			{
 				throw Exception("Invalid effect variable cast.");
 			}
@@ -129,7 +148,7 @@ namespace demo
 			std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 			{
 				{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-				{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			};
 
 			auto hr = app.GetD3DDevice()->CreateInputLayout(
@@ -153,9 +172,24 @@ namespace demo
 			m_indexBuffer = mesh->CreateIndexBuffer();
 			m_indicesCount = mesh->GetIndicesCount();
 		}
+
+		// Load the texture
+		{
+			auto hr = DirectX::CreateWICTextureFromFile(
+				app.GetD3DDevice(),
+				app.GetD3DDeviceContext(),
+				k_texturePath.GetWideCString(),
+				nullptr,
+				m_textureShaderResourceView.GetAddressOf()
+			);
+			if (FAILED(hr))
+			{
+				throw Exception("CreateWICTextureFromFile() failed.", hr);
+			}
+		}
 	}
 
-	void ModelComponent::Update(const Time& time)
+	void TextureModelComponent::Update(const Time& time)
 	{
 		const components::KeyboardComponent& keyboard = m_keyboard;
 
@@ -196,12 +230,14 @@ namespace demo
 		}
 	}
 
-	void ModelComponent::Draw(const Time& time)
+	void TextureModelComponent::Draw(const Time& time)
 	{
 		auto d3dDeviceContext = m_app.GetD3DDeviceContext();
 
 		const auto wvp = m_worldMatrix * GetCamera().GetViewProjectionMatrix();
 		m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
+
+		m_colorTextureVariable->SetResource(m_textureShaderResourceView.Get());
 
 		m_pass->Apply(0, d3dDeviceContext);
 
@@ -217,36 +253,26 @@ namespace demo
 		d3dDeviceContext->DrawIndexed(m_indicesCount, 0, 0);
 	}
 
-	void ModelComponent::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const Mesh& mesh)
+	void TextureModelComponent::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const Mesh& mesh)
 	{
 		std::vector<VertexType> vertices;
 
 		if (mesh.HasVertices())
 		{
 			const auto& meshVertices = mesh.GetVertices();
+			const auto& textureCoordinates = mesh.GetTextureCoordinates(0);
 			const auto verticesCount = meshVertices.size();
 
 			vertices.reserve(verticesCount);
 
-			if (mesh.HasVerticesColors())
+			for (unsigned i = 0; i < verticesCount; i++)
 			{
-				const auto& vertexColors = mesh.GetVertexColors(0);
-
-				for (unsigned i = 0; i < verticesCount; i++)
-				{
-					const auto& position = meshVertices[i];
-					const auto& color = vertexColors[i];
-					vertices.emplace_back(DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f), color);
-				}
-			}
-			else
-			{
-				for (unsigned i = 0; i < verticesCount; i++)
-				{
-					const auto& position = meshVertices[i];
-					const auto& color = DirectX::XMFLOAT4(library::Color::Random());
-					vertices.emplace_back(DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f), color);
-				}
+				const auto& position = meshVertices[i];
+				const auto& uv = textureCoordinates[i];
+				vertices.emplace_back(
+					DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f),
+					DirectX::XMFLOAT2(uv.x, uv.y)
+				);
 			}
 
 			D3D11_BUFFER_DESC vertexBufferDesc{};
