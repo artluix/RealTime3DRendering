@@ -10,3 +10,7 @@
 	path = src/externals/assimp
 	url = https://github.com/assimp/assimp.git
 	ignore = dirty
+[submodule "src/externals/directxtex"]
+	path = src/externals/directxtex
+	url = https://github.com/Microsoft/DirectXTex.git
+	ignore=dirty

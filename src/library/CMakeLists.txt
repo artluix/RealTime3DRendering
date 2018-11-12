@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 if(APPLICATION)
     project(library VERSION 0.1)
 
-    set(LIBRARY_FILES
+    set(LIBRARY_SOURCES
         # include
         include/library/Application.h
         include/library/Stopwatch.h
@@ -75,7 +75,7 @@ if(APPLICATION)
         src/StdAfx.cpp
     )
 
-    add_library(library STATIC ${LIBRARY_FILES})
+    add_library(library STATIC ${LIBRARY_SOURCES})
 
     target_include_directories(library
         PUBLIC
@@ -110,5 +110,5 @@ if(APPLICATION)
     set_source_files_properties(src/StdAfx.cpp PROPERTIES COMPILE_FLAGS /YcStdAfx.h)
 
     # ide filters
-    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${LIBRARY_FILES})
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${LIBRARY_SOURCES})
 endif()

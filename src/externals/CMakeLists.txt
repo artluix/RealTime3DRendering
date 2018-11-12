@@ -37,12 +37,14 @@ endforeach()
 
 # currently added manually
 add_subdirectory(directxtk)
-
+add_subdirectory(directxtex)
 add_subdirectory(effects11)
 
-set (BUILD_SHARED_LIBS FALSE)
-set (ASSIMP_BUILD_ASSIMP_TOOLS FALSE)
-set (ASSIMP_BUILD_SAMPLES FALSE)
-set (ASSIMP_BUILD_TESTS FALSE)
-set (ASSIMP_BUILD_ZLIB TRUE)
-add_subdirectory(assimp)
+if(APPLICATION)
+    set (BUILD_SHARED_LIBS FALSE)
+    set (ASSIMP_BUILD_ASSIMP_TOOLS FALSE)
+    set (ASSIMP_BUILD_SAMPLES FALSE)
+    set (ASSIMP_BUILD_TESTS FALSE)
+    set (ASSIMP_BUILD_ZLIB TRUE)
+    add_subdirectory(assimp)
+endif()

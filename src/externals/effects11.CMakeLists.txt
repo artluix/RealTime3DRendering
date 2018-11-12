@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 if(APPLICATION)
     project(effects11)
 
-    set(EFFECTS11_FILES
+    set(EFFECTS11_SOURCES
         # Binary
         Binary/EffectBinaryFormat.h
         Binary/EffectStateBase11.h
@@ -28,7 +28,7 @@ if(APPLICATION)
         pchfx.h
     )
 
-    add_library(effects11 STATIC ${EFFECTS11_FILES})
+    add_library(effects11 STATIC ${EFFECTS11_SOURCES})
 
     target_include_directories(effects11
         PUBLIC
@@ -69,5 +69,5 @@ if(APPLICATION)
     set_source_files_properties(d3dxGlobal.cpp PROPERTIES COMPILE_FLAGS /Ycpchfx.h)
 
     # ide filters
-    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${EFFECTS11_FILES})
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${EFFECTS11_SOURCES})
 endif()

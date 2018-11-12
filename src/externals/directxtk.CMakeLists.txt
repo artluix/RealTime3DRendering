@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 if(APPLICATION)
     project(directxtk)
 
-    set(DIRECTXTK_FILES
+    set(DIRECTXTK_SOURCES
         # Inc
         Inc/CommonStates.h
         Inc/DDSTextureLoader.h
@@ -80,7 +80,7 @@ if(APPLICATION)
         Src/WICTextureLoader.cpp
     )
 
-    add_library(directxtk STATIC ${DIRECTXTK_FILES})
+    add_library(directxtk STATIC ${DIRECTXTK_SOURCES})
 
     target_include_directories(directxtk
         PUBLIC 
@@ -103,7 +103,7 @@ if(APPLICATION)
             $<$<CONFIG:DEBUG>: /Od>
 
             # release
-            $<$<CONFIG:RELEASE>: /O2 /Gy /Oi>
+            $<$<CONFIG:RELEASE>: /MD /O2 /Gy /Oi>
     )
 
     target_compile_definitions(directxtk
@@ -118,24 +118,22 @@ if(APPLICATION)
     set_source_files_properties(Src/pch.cpp PROPERTIES COMPILE_FLAGS /Ycpch.h)
 
     # ide filters
-    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${DIRECTXTK_FILES})
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${DIRECTXTK_SOURCES})
 
 elseif(TOOLS)
     # xwbtool
     project(xwbtool)
 
-    set (XWBTOOL_FILES
+    set(XWBTOOL_SOURCES
         Audio/WAVFileReader.h
         Audio/WAVFileReader.cpp
         XWBtool/xwbtool.cpp
     )
 
-    add_executable(xwbtool
-        ${XWBTOOL_FILES}
-    )
+    add_executable(xwbtool ${XWBTOOL_SOURCES})
 
     target_include_directories(xwbtool
-        PUBLIC 
+        PUBLIC
             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/Audio>
         PRIVATE
             Inc
@@ -151,7 +149,7 @@ elseif(TOOLS)
     )
 
     # ide filters
-    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${XWBTOOL_FILES})
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${XWBTOOL_SOURCES})
 
     # install
     install(TARGETS xwbtool
@@ -161,7 +159,7 @@ elseif(TOOLS)
     # MakeSpriteFont
     project(MakeSpriteFont CSharp)
 
-    set (MAKESPRITEFONT_FILES
+    set(MAKESPRITEFONT_SOURCES
         MakeSpriteFont/BitmapImporter.cs
         MakeSpriteFont/BitmapUtils.cs
         MakeSpriteFont/CharacterRegion.cs
@@ -177,9 +175,7 @@ elseif(TOOLS)
         MakeSpriteFont/TrueTypeImporter.cs
     )
 
-    add_executable(MakeSpriteFont
-        ${MAKESPRITEFONT_FILES}
-    )
+    add_executable(MakeSpriteFont ${MAKESPRITEFONT_SOURCES})
 
     set_target_properties(MakeSpriteFont PROPERTIES VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1")
     set_target_properties(MakeSpriteFont PROPERTIES VS_DOTNET_REFERENCE_System "System")
@@ -192,7 +188,7 @@ elseif(TOOLS)
     )
 
     # ide filters
-    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${MAKESPRITEFONT_FILES})
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${MAKESPRITEFONT_SOURCES})
 
     # install
     install(TARGETS MakeSpriteFont
@@ -204,7 +200,7 @@ endif()
 if (XTK_AUDIO)
     project(directxtkaudio)
 
-    set(DIRECTXTKAUDIO_FILES
+    set(DIRECTXTKAUDIO_SOURCES
         Inc/Audio.h
         Audio/AudioEngine.cpp
         Audio/DynamicSoundEffectInstance.cpp
@@ -219,9 +215,7 @@ if (XTK_AUDIO)
         Audio/WAVFileReader.cpp
     )
 
-    add_library(directxtkaudio STATIC
-        ${DIRECTXTKAUDIO_FILES}
-    )
+    add_library(directxtkaudio STATIC ${DIRECTXTKAUDIO_SOURCES})
 
     target_compile_options(directxtkaudio
         PRIVATE
@@ -255,5 +249,5 @@ if (XTK_AUDIO)
     set_source_files_properties(Audio/AudioEngine.cpp PROPERTIES COMPILE_FLAGS /Ycpch.h)
 
     # ide filters
-    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${DIRECTXTKAUDIO_FILES})
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${DIRECTXTKAUDIO_SOURCES})
 endif()

@@ -3,7 +3,7 @@ cmake_minimum_required(VERSION 3.2 FATAL_ERROR)
 if(APPLICATION)
     project(demo VERSION 0.1)
 
-    set(DEMO_FILES
+    set(DEMO_SOURCES
         # src
         src/Program.cpp
         src/Application.h
@@ -23,7 +23,7 @@ if(APPLICATION)
         src/TextureModelComponent.cpp
     )
 
-    add_executable(demo WIN32 ${DEMO_FILES})
+    add_executable(demo WIN32 ${DEMO_SOURCES})
 
     target_link_libraries(demo library)
 
@@ -49,7 +49,7 @@ if(APPLICATION)
     set_target_properties(demo PROPERTIES LINK_FLAGS_DEBUG /DEBUG:FASTLINK)
 
     # ide filters
-    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${DEMO_FILES})
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${DEMO_SOURCES})
 
     # change target path instead
     set_target_properties(demo PROPERTIES RUNTIME_OUTPUT_DIRECTORY_DEBUG ${BIN_DIR})
