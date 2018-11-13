@@ -8,7 +8,6 @@
 #include "library/VertexTypes.h"
 
 #include <d3dx11effect.h>
-#include <d3dcompiler.h>
 #include <vector>
 
 namespace library
@@ -21,7 +20,11 @@ namespace library
 			constexpr unsigned k_defaultScale = 16;
 			constexpr auto k_defaultColor = colors::White;
 			const auto k_effectPath = utils::GetExecutableDirectory().Join(
-				filesystem::Path("data/effects/BasicEffect.fx")
+#if defined(DEBUG) || defined(DEBUG)
+				filesystem::Path("data/effects/BasicEffect_d.fxc")
+#else
+				filesystem::Path("data/effects/BasicEffect.fxc")
+#endif
 			);
 		}
 
@@ -84,33 +87,16 @@ namespace library
 
 			// shader
 			{
-				ComPtr<ID3DBlob> errorBlob;
-				ComPtr<ID3DBlob> shaderBlob;
-
-				auto hr = D3DCompileFromFile(
-					k_effectPath.GetWideCString(),
-					nullptr,
-					nullptr,
-					nullptr,
-					"fx_5_0",
-#if defined(DEBUG) || defined(DEBUG)
-					D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-#else
-					0,
-#endif
-					0,
-					shaderBlob.GetAddressOf(),
-					errorBlob.GetAddressOf()
-				);
-				if (FAILED(hr))
+				std::vector<library::byte> effectData;
+				utils::LoadBinaryFile(k_effectPath, effectData);
+				if (effectData.empty())
 				{
-					std::string error = std::string("D3DX11CompileEffectFromFile() failed: ")
-						+ std::string(static_cast<const char*>(errorBlob->GetBufferPointer()), errorBlob->GetBufferSize());
-					throw Exception(error.c_str(), hr);
+					throw Exception("Load compiled effect failed.");
 				}
 
-				hr = D3DX11CreateEffectFromMemory(
-					shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
+				auto hr = D3DX11CreateEffectFromMemory(
+					//shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
+					effectData.data(), effectData.size(),
 					0,
 					app.GetD3DDevice(),
 					m_effect.GetAddressOf()

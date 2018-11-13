@@ -80,9 +80,6 @@ if(APPLICATION)
     target_include_directories(library
         PUBLIC
             $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/include>
-            $<INSTALL_INTERFACE:include>
-            $<TARGET_PROPERTY:directxtk,INTERFACE_INCLUDE_DIRECTORIES>
-            $<TARGET_PROPERTY:effects11,INTERFACE_INCLUDE_DIRECTORIES>
         PRIVATE
             src
     )
