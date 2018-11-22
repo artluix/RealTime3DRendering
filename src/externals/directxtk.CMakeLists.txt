@@ -94,10 +94,11 @@ if(APPLICATION)
         PRIVATE
             /W3
             /fp:fast
-            /arch:SSE2
             /GR
             /Yupch.h
             /MP
+
+            $<$<BOOL:${IS_WIN32}>: /arch:SSE2>
 
             # debug
             $<$<CONFIG:DEBUG>: /Od>
@@ -221,8 +222,10 @@ if (XTK_AUDIO)
         PRIVATE
             /Wall
             /fp:fast
-            /arch:SSE2
             /Yupch.h
+
+            $<$<BOOL:${IS_WIN32}>: /arch:SSE2>
+
             # debug
             $<$<CONFIG:DEBUG>:/Od /Gm>
             # release

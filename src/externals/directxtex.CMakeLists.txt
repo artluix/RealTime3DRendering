@@ -36,29 +36,7 @@ if(TOOLS)
         directxtex/DirectXTexUtil.cpp
         directxtex/DirectXTexWIC.cpp
 
-        # DDSTextureLoader
-        DDSTextureLoader/DDSTextureLoader.h
-        DDSTextureLoader/DDSTextureLoader12.h
-        DDSTextureLoader/DDSTextureLoader.cpp
-        DDSTextureLoader/DDSTextureLoader12.cpp
-
-        # WICTextureLoader
-        WICTextureLoader/WICTextureLoader.h
-        WICTextureLoader/WICTextureLoader12.h
-        WICTextureLoader/WICTextureLoader.cpp
-        WICTextureLoader/WICTextureLoader12.cpp
-
-        # ScreenGrab(aka screenshot)
-        ScreenGrab/ScreenGrab.h
-        ScreenGrab/ScreenGrab12.h
-        ScreenGrab/ScreenGrab.cpp
-        ScreenGrab/ScreenGrab12.cpp
-
-        # shaders
-        directxtex/Shaders/BC6HEncode.hlsl
-        directxtex/Shaders/BC7Encode.hlsl
-
-        # shaders (compiled)
+        # compiled shaders
         directxtex/Shaders/Compiled/BC6HEncode_EncodeBlockCS.inc
         directxtex/Shaders/Compiled/BC6HEncode_EncodeBlockCS.pdb
         directxtex/Shaders/Compiled/BC6HEncode_TryModeG10CS.inc
@@ -76,7 +54,32 @@ if(TOOLS)
         # directxtex/Shaders/CompileShaders.cmd
     )
 
-    add_library(directxtex STATIC ${DIRECTXTEX_SOURCES})
+    set(DIRECTXTEX_SHADER_SOURCES
+        directxtex/Shaders/BC6HEncode.hlsl
+        directxtex/Shaders/BC7Encode.hlsl
+    )
+
+    set(DIRECTXTEX_ADDITIONAL_SOURCES
+        # DDSTextureLoader
+        DDSTextureLoader/DDSTextureLoader.h
+        DDSTextureLoader/DDSTextureLoader12.h
+        DDSTextureLoader/DDSTextureLoader.cpp
+        DDSTextureLoader/DDSTextureLoader12.cpp
+
+        # WICTextureLoader
+        WICTextureLoader/WICTextureLoader.h
+        WICTextureLoader/WICTextureLoader12.h
+        WICTextureLoader/WICTextureLoader.cpp
+        WICTextureLoader/WICTextureLoader12.cpp
+
+        # ScreenGrab(aka screenshot)
+        ScreenGrab/ScreenGrab.h
+        ScreenGrab/ScreenGrab12.h
+        ScreenGrab/ScreenGrab.cpp
+        ScreenGrab/ScreenGrab12.cpp
+    )
+
+    add_library(directxtex STATIC ${DIRECTXTEX_SOURCES} ${DIRECTXTEX_SHADER_SOURCES} ${DIRECTXTEX_ADDITIONAL_SOURCES})
 
     target_include_directories(directxtex
         PUBLIC
@@ -91,7 +94,8 @@ if(TOOLS)
             /W3
             /fp:fast
             /openmp
-            /arch:SSE2
+
+            $<$<BOOL:${IS_WIN32}>: /arch:SSE2>
 
             # /permissive-
             /YuDirectXTexP.h
@@ -118,12 +122,14 @@ if(TOOLS)
     )
 
     # avoid compilation of shaders (enabled by default)
-    set_source_files_properties(directxtex/Shaders/BC6HEncode.hlsl PROPERTIES VS_TOOL_OVERRIDE "None")
-    set_source_files_properties(directxtex/Shaders/BC7Encode.hlsl PROPERTIES VS_TOOL_OVERRIDE "None")
+    set_source_files_properties(${DIRECTXTEX_SHADER_SOURCES} PROPERTIES VS_TOOL_OVERRIDE "None")
+
+    # avoid compilation of additional sources
+    set_source_files_properties(${DIRECTXTEX_ADDITIONAL_SOURCES} PROPERTIES HEADER_FILE_ONLY ON)
 
     set_source_files_properties(directxtex/DirectXTexUtil.cpp PROPERTIES COMPILE_FLAGS /YcDirectXTexP.h)
 
-    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${DIRECTXTEX_SOURCES})
+    source_group(TREE ${CMAKE_CURRENT_SOURCE_DIR} FILES ${DIRECTXTEX_SOURCES} ${DIRECTXTEX_SHADER_SOURCES} ${DIRECTXTEX_ADDITIONAL_SOURCES})
 
     # ddsview
     project(ddsview)
@@ -146,7 +152,8 @@ if(TOOLS)
         PRIVATE
             /W4
             /fp:fast
-            /arch:SSE2
+
+            $<$<BOOL:${IS_WIN32}>: /arch:SSE2>
 
             /guard:cf
             /sdl
@@ -199,7 +206,8 @@ if(TOOLS)
         PRIVATE
             /W4
             /fp:fast
-            /arch:SSE2
+
+            $<$<BOOL:${IS_WIN32}>: /arch:SSE2>
 
             /guard:cf
             /sdl
@@ -252,7 +260,8 @@ if(TOOLS)
         PRIVATE
             /W4
             /fp:fast
-            /arch:SSE2
+
+            $<$<BOOL:${IS_WIN32}>: /arch:SSE2>
 
             /guard:cf
             /sdl
@@ -308,7 +317,8 @@ if(TOOLS)
         PRIVATE
             /W4
             /fp:fast
-            /arch:SSE2
+
+            $<$<BOOL:${IS_WIN32}>: /arch:SSE2>
 
             /guard:cf
             /sdl

@@ -42,12 +42,13 @@ if(APPLICATION)
         PRIVATE
             /W3
             /fp:fast
-            /arch:SSE2
             /EHsc
             /openmp-
             /GR-
             /Yupchfx.h
             /MP
+
+            $<$<BOOL:${IS_WIN32}>: /arch:SSE2>
 
             # debug
             $<$<CONFIG:DEBUG>: /Od /RTC1>
@@ -61,8 +62,8 @@ if(APPLICATION)
             -DUNICODE
             -D_UNICODE
             -DD3DXFX_LARGEADDRESS_HANDLE
-            -D_WIN32_WINNT=0x0600
             -D_WIN7_PLATFORM_UPDATE
+            -D_WIN32_WINNT=0x0600
             -DWIN32
     )
 

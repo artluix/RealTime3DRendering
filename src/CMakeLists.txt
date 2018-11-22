@@ -6,6 +6,20 @@ elseif(TOOLS)
     project(RealTime3DRendering_Tools VERSION 0.1)
 endif()
 
+# set platform bools (works only after first project command)
+set(IS_X64 FALSE)
+set(IS_WIN32 FALSE)
+
+if(CMAKE_VS_PLATFORM_NAME STREQUAL "x64")
+    set(IS_X64 TRUE)
+elseif(CMAKE_VS_PLATFORM_NAME STREQUAL "Win32")
+    set(IS_WIN32 TRUE)
+endif()
+
+message("Platform: " ${CMAKE_VS_PLATFORM_NAME})
+message("Platform Win32: " ${IS_WIN32})
+message("Platform x64: " ${IS_X64})
+
 set(BIN_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../bin)
 set(TOOLS_DIR ${CMAKE_CURRENT_SOURCE_DIR}/../tools)
 
