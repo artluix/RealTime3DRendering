@@ -7,6 +7,6 @@ if /i "%1" == "Debug" (
     set CONFIG=DEBUG
 )
 
-cmake --build build --config %CONFIG%
+cmake --build build --target install --config %CONFIG%
 
 pause

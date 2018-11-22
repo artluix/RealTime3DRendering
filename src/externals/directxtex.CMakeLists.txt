@@ -183,7 +183,7 @@ if(TOOLS)
     set_target_properties(ddsview PROPERTIES LINK_FLAGS_RELEASE /OPT:REF)
 
     install(TARGETS ddsview
-        RUNTIME DESTINATION ${TOOLS_DIR}/bin/ddsview
+        RUNTIME DESTINATION ${TOOLS_DIR}/bin/ddsview/${CMAKE_VS_PLATFORM_NAME}
     )
 
     # texassemble
@@ -237,7 +237,7 @@ if(TOOLS)
     set_target_properties(texassemble PROPERTIES LINK_FLAGS_RELEASE /OPT:REF)
 
     install(TARGETS texassemble
-        RUNTIME DESTINATION ${TOOLS_DIR}/bin/texassemble
+        RUNTIME DESTINATION ${TOOLS_DIR}/bin/texassemble/${CMAKE_VS_PLATFORM_NAME}
     )
 
     # texconv
@@ -294,7 +294,7 @@ if(TOOLS)
     set_target_properties(texconv PROPERTIES LINK_FLAGS_RELEASE /OPT:REF)
 
     install(TARGETS texconv
-        RUNTIME DESTINATION ${TOOLS_DIR}/bin/texconv
+        RUNTIME DESTINATION ${TOOLS_DIR}/bin/texconv/${CMAKE_VS_PLATFORM_NAME}
     )
 
     # texdiag
@@ -348,7 +348,7 @@ if(TOOLS)
     set_target_properties(texdiag PROPERTIES LINK_FLAGS_RELEASE /OPT:REF)
 
     install(TARGETS texdiag
-        RUNTIME DESTINATION ${TOOLS_DIR}/bin/texdiag
+        RUNTIME DESTINATION ${TOOLS_DIR}/bin/texdiag/${CMAKE_VS_PLATFORM_NAME}
     )
 
 endif()

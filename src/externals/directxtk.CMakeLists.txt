@@ -154,7 +154,7 @@ elseif(TOOLS)
 
     # install
     install(TARGETS xwbtool
-        RUNTIME DESTINATION ${TOOLS_DIR}/bin/xwbtool
+        RUNTIME DESTINATION ${TOOLS_DIR}/bin/xwbtool/${CMAKE_VS_PLATFORM_NAME}
     )
 
     # MakeSpriteFont
@@ -193,7 +193,7 @@ elseif(TOOLS)
 
     # install
     install(TARGETS MakeSpriteFont
-        RUNTIME DESTINATION ${TOOLS_DIR}/bin/MakeSpriteFont
+        RUNTIME DESTINATION ${TOOLS_DIR}/bin/MakeSpriteFont/${CMAKE_VS_PLATFORM_NAME}
     )
 endif()
 
