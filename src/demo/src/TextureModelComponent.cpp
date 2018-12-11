@@ -27,17 +27,16 @@ namespace demo
 
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
 #if defined(DEBUG) || defined(DEBUG)
-			filesystem::Path("data/effects/TextureMapping_d.fxc")
+			filesystem::Path("../data/effects/TextureMapping_d.fxc")
 #else
-			filesystem::Path("data/effects/TextureMapping.fxc")
+			filesystem::Path("../data/effects/TextureMapping.fxc")
 #endif
 		);
 		const auto k_modelPath = utils::GetExecutableDirectory().Join(
-			filesystem::Path("data/models/Sphere.obj")
+			filesystem::Path("../data/models/Sphere.obj")
 		);
 		const auto k_texturePath = utils::GetExecutableDirectory().Join(
-			//filesystem::Path("data/textures/EarthComposite.jpg")
-			filesystem::Path("data/textures/EarthComposite.dds")
+			filesystem::Path("../data/textures/EarthComposite.dds")
 		);
 	}
 

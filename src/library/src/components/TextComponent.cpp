@@ -12,7 +12,7 @@ namespace library
 		{
 			constexpr auto k_defaultColor = colors::White;
 			const auto k_defaultFontPath = utils::GetExecutableDirectory().Join(
-				filesystem::Path("data/fonts/Arial_14_Regular.spritefont")
+				filesystem::Path("../data/fonts/Arial_14_Regular.spritefont")
 			);
 		}
 

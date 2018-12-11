@@ -17,7 +17,7 @@ namespace demo
 	namespace
 	{
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-			filesystem::Path("data/effects/BasicEffect.fx")
+			filesystem::Path("../data/effects/BasicEffect.fx")
 		);
 	}
 

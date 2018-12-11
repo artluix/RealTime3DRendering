@@ -21,9 +21,9 @@ namespace library
 			constexpr auto k_defaultColor = colors::White;
 			const auto k_effectPath = utils::GetExecutableDirectory().Join(
 #if defined(DEBUG) || defined(DEBUG)
-				filesystem::Path("data/effects/BasicEffect_d.fxc")
+				filesystem::Path("../data/effects/BasicEffect_d.fxc")
 #else
-				filesystem::Path("data/effects/BasicEffect.fxc")
+				filesystem::Path("../data/effects/BasicEffect.fxc")
 #endif
 			);
 		}
