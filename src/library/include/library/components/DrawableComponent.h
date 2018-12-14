@@ -1,13 +1,6 @@
 #pragma once
 #include "library/components/BaseComponent.h"
 
-struct ID3DX11Effect;
-struct ID3DX11EffectTechnique;
-struct ID3DX11EffectPass;
-struct ID3DX11EffectMatrixVariable;
-struct ID3D11InputLayout;
-struct ID3D11Buffer;
-
 namespace library
 {
 	namespace components

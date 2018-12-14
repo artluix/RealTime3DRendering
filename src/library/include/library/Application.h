@@ -38,8 +38,8 @@ namespace library
 		unsigned GetScreenHeight() const { return m_screenHeight; }
 		const RECT& GetWindowRect() const { return m_windowRect; }
 
-		ID3D11Device1* const GetD3DDevice() const;
-		ID3D11DeviceContext1* const GetD3DDeviceContext() const;
+		ID3D11Device1* const GetD3DDevice() const { return m_d3dDevice.Get(); }
+		ID3D11DeviceContext1* const GetD3DDeviceContext() const { return m_d3dDeviceContext.Get(); }
 		bool IsDepthBufferEnabled() const { return m_depthStencilBufferEnabled; }
 		float GetAspectRatio() const;
 		bool IsFullScreen() const { return m_isFullScreen; }

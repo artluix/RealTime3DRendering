@@ -46,16 +46,6 @@ namespace library
 	Application::~Application()
 	{}
 
-	ID3D11Device1* const Application::GetD3DDevice() const
-	{
-		return m_d3dDevice.Get();
-	}
-
-	ID3D11DeviceContext1* const Application::GetD3DDeviceContext() const
-	{
-		return m_d3dDeviceContext.Get();
-	}
-
 	float Application::GetAspectRatio() const
 	{
 		return static_cast<float>(m_screenWidth) / m_screenHeight;

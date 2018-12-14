@@ -1,6 +1,14 @@
 #pragma once
 #include <library/components/SceneComponent.h>
 
+struct ID3D11Buffer;
+struct ID3D11Device;
+
+struct ID3DX11Effect;
+struct ID3DX11EffectTechnique;
+struct ID3DX11EffectPass;
+struct ID3DX11EffectMatrixVariable;
+
 namespace demo
 {
 	class TriangleComponent : public library::rtti::Class<TriangleComponent, library::components::SceneComponent>
