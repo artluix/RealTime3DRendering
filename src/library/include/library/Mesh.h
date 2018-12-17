@@ -33,8 +33,8 @@ namespace library
 
 	//////////////////////////////////////////////////////////////////////////
 
-	class Material;
-	using MaterialPtr = std::shared_ptr<Material>;
+	class ModelMaterial;
+	using MaterialPtr = std::shared_ptr<ModelMaterial>;
 
 	class Mesh : public NonCopyable<Mesh>
 	{
@@ -104,4 +104,5 @@ namespace library
 
 		std::vector<unsigned> m_indices;
 	};
+
 } // namespace library

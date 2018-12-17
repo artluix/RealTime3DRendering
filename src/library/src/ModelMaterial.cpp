@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "library/Material.h"
+#include "library/ModelMaterial.h"
 
 #include "library/Model.h"
 #include "library/Exception.h"
@@ -25,14 +25,14 @@ namespace library
 		};
 	}
 
-	const TextureNamesVector& Material::GetTextureNames(const TextureType textureType) const
+	const TextureNamesVector& ModelMaterial::GetTextureNames(const TextureType textureType) const
 	{
 		auto it = m_textures.find(textureType);
 		assert(it != m_textures.end());
 		return it->second;
 	}
 
-	Material::Material(Model& model, aiMaterial& material)
+	ModelMaterial::ModelMaterial(Model& model, aiMaterial& material)
 		: m_model(model)
 	{
 		aiString name;

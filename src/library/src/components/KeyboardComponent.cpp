@@ -114,5 +114,6 @@ namespace library
 		{
 			return IsKeyDown(key) && WasKeyDown(key);
 		}
+
 	} // namespace components
 } // namespace library

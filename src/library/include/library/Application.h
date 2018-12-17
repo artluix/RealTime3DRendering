@@ -16,7 +16,7 @@ namespace library
 	{
 		class BaseComponent;
 		using BaseComponentPtr = std::shared_ptr<BaseComponent>;
-	}
+	} // namespace components
 
 	class Application : public NonCopyable<Application>
 	{
@@ -103,4 +103,5 @@ namespace library
 
 		static LRESULT WINAPI WndProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam);
 	};
+
 } // namespace library

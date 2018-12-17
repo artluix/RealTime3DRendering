@@ -38,5 +38,6 @@ namespace library
 			KeysStateArray m_keysState;
 			KeysStateArray m_previousKeysState;
 		};
+
 	} // namespace components
 } // namespace library

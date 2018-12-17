@@ -6,6 +6,9 @@
 #include "library/Utils.h"
 #include "library/Exception.h"
 
+#include "library/EffectTechnique.h"
+#include "library/EffectVariable.h"
+
 namespace library
 {
 	Effect::Effect(const Application& app)
@@ -52,11 +55,33 @@ namespace library
 		{
 			throw Exception("D3DX11CreateEffectFromMemory() failed.", hr);
 		}
+
+		return effect;
 	}
 
-	void Effect::LoadCompiledEffect(ID3D11Device* const d3dDevice, const filesystem::Path& path)
+	ComPtr<ID3DX11Effect> Effect::LoadCompiledEffect(ID3D11Device* const d3dDevice, const filesystem::Path& path)
 	{
+		std::vector<library::byte> effectData;
+		utils::LoadBinaryFile(path, effectData);
+		if (effectData.empty())
+		{
+			throw Exception("Load compiled effect failed.");
+		}
 
+		ComPtr<ID3DX11Effect> effect;
+
+		auto hr = D3DX11CreateEffectFromMemory(
+			effectData.data(), effectData.size(),
+			0,
+			d3dDevice,
+			effect.GetAddressOf()
+		);
+		if (FAILED(hr))
+		{
+			throw Exception("D3DX11CreateEffectFromMemory() failed.", hr);
+		}
+
+		return effect;
 	}
 
 	void Effect::SetEffect(const ComPtr<ID3DX11Effect>& effect)
@@ -69,7 +94,18 @@ namespace library
 
 	void Effect::Initialize()
 	{
+		auto hr = m_effect->GetDesc(&m_effectDesc);
+		if (FAILED(hr))
+		{
+			throw Exception("ID3DX11Effect::GetDesc() failed.", hr);
+		}
 
+		for (unsigned i = 0; i < m_effectDesc.Techniques; i++)
+		{
+			auto technique = std::make_shared<EffectTechnique>(m_app, *this, m_effect->GetTechniqueByIndex(i));
+			m_techniques.push_back(technique);
+			m_techniquesMap.insert(std::make_pair(technique->GetName(), technique));
+		}
 	}
 
 } // namespace library

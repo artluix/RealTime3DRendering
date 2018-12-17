@@ -54,12 +54,12 @@ namespace library
 
 	using TextureNamesVector = std::vector<std::wstring>;
 
-	class Material : public NonCopyable<Material>
+	class ModelMaterial : public NonCopyable<ModelMaterial>
 	{
 		friend class Model;
 
 	public:
-		~Material() = default;
+		~ModelMaterial() = default;
 
 		Model& GetModel() { return m_model; }
 		const std::string& GetName() const { return m_name; }
@@ -68,7 +68,7 @@ namespace library
 		const TextureNamesVector& GetTextureNames(const TextureType textureType) const;
 
 	private:
-		explicit Material(Model& model, aiMaterial& material);
+		explicit ModelMaterial(Model& model, aiMaterial& material);
 
 		Model& m_model;
 		std::string m_name;

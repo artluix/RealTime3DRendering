@@ -5,7 +5,7 @@
 #include "library/Application.h"
 #include "library/Exception.h"
 #include "library/Mesh.h"
-#include "library/Material.h"
+#include "library/ModelMaterial.h"
 #include "library/Path.h"
 
 #include <assimp/Importer.hpp>
@@ -36,7 +36,7 @@ namespace library
 
 				for (unsigned i = 0; i < scene->mNumMaterials; i++)
 				{
-					m_materials.emplace_back(new Material(*this, *(scene->mMaterials[i])));
+					m_materials.emplace_back(new ModelMaterial(*this, *(scene->mMaterials[i])));
 				}
 			}
 

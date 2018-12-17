@@ -22,14 +22,19 @@ if(APPLICATION)
         include/library/Components/TextComponent.h
         include/library/Components/UIComponent.h
 
+        include/library/Effect.h
+        include/library/EffectMaterial.h
+        include/library/EffectPass.h
+        include/library/EffectTechnique.h
+        include/library/EffectVariable.h
         include/library/Exception.h
         include/library/Key.h
         include/library/Logger.h
-        include/library/Material.h
         include/library/Math.h
         include/library/Matrix.h
         include/library/Mesh.h
         include/library/Model.h
+        include/library/ModelMaterial.h
         include/library/NonCopyable.hpp
         include/library/NonConstructible.hpp
         include/library/Path.h
@@ -57,10 +62,15 @@ if(APPLICATION)
         src/Components/TextComponent.cpp
         src/Components/UIComponent.cpp
 
+        src/Effect.cpp
+        src/EffectMaterial.cpp
+        src/EffectPass.cpp
+        src/EffectTechnique.cpp
+        src/EffectVariable.cpp
         src/Exception.cpp
         src/Logger.cpp
-        src/Material.cpp
         src/Matrix.cpp
+        src/ModelMaterial.cpp
         src/Mesh.cpp
         src/Model.cpp
         src/Path.cpp

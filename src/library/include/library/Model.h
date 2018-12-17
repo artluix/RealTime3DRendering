@@ -17,8 +17,8 @@ namespace library
 	class Mesh;
 	using MeshPtr = std::shared_ptr<Mesh>;
 
-	class Material;
-	using MaterialPtr = std::shared_ptr<Material>;
+	class ModelMaterial;
+	using MaterialPtr = std::shared_ptr<ModelMaterial>;
 
 	class Model : public NonCopyable<Model>
 	{

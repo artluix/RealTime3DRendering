@@ -11,10 +11,10 @@ namespace library
 
 		// uncomment to enable moving
 		//explicit NonCopyable(NonCopyable&&) = default;
-		//NonCopyable& operator=(NonCopyable&&) = default;
+		//NonCopyable& operator = (NonCopyable&&) = default;
 
 		// disable copying
 		explicit NonCopyable(const NonCopyable&) = delete;
-		NonCopyable& operator=(const NonCopyable&) = delete;
+		NonCopyable& operator = (const NonCopyable&) = delete;
 	};
 } // namespace library

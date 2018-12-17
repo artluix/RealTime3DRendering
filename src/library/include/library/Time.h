@@ -62,4 +62,5 @@ namespace library
 		TimeValue total;
 		TimeValue elapsed;
 	};
+
 } // namespace library

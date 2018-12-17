@@ -86,21 +86,22 @@ namespace demo
 
 		// mouse text component
 		auto mouseTextComponent = std::make_shared<TextComponent>(*this);
-		mouseTextComponent->SetGeneratorFunction([this]() -> std::wstring
-		{
-			static const std::wstring empty;
-
-			if (!!m_mouseComponent)
+		mouseTextComponent->SetGeneratorFunction(
+			[this]() -> std::wstring
 			{
-				std::wostringstream woss;
-				woss <<
-					L"Mouse Position: " << m_mouseComponent->GetX() << ", " << m_mouseComponent->GetY() << std::endl <<
-					L"Mouse Wheel: " << m_mouseComponent->GetWheel();
-				return woss.str();
-			}
+				static const std::wstring empty;
 
-			return empty;
-		}
+				if (!!m_mouseComponent)
+				{
+					std::wostringstream woss;
+					woss <<
+						L"Mouse Position: " << m_mouseComponent->GetX() << ", " << m_mouseComponent->GetY() << std::endl <<
+						L"Mouse Wheel: " << m_mouseComponent->GetWheel();
+					return woss.str();
+				}
+
+				return empty;
+			}
 		);
 		mouseTextComponent->SetPosition(library::math::Vector2(0.f, 50.f));
 		m_components.push_back(mouseTextComponent);
