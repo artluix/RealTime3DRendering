@@ -22,11 +22,12 @@ if(APPLICATION)
         include/library/Components/TextComponent.h
         include/library/Components/UIComponent.h
 
-        include/library/Effect.h
-        include/library/EffectMaterial.h
-        include/library/EffectPass.h
-        include/library/EffectTechnique.h
-        include/library/EffectVariable.h
+        include/library/effects/Effect.h
+        include/library/effects/Material.h
+        include/library/effects/Pass.h
+        include/library/effects/Technique.h
+        include/library/effects/Variable.h
+
         include/library/Exception.h
         include/library/Key.h
         include/library/Logger.h
@@ -62,11 +63,12 @@ if(APPLICATION)
         src/Components/TextComponent.cpp
         src/Components/UIComponent.cpp
 
-        src/Effect.cpp
-        src/EffectMaterial.cpp
-        src/EffectPass.cpp
-        src/EffectTechnique.cpp
-        src/EffectVariable.cpp
+        src/effects/Effect.cpp
+        src/effects/Material.cpp
+        src/effects/Pass.cpp
+        src/effects/Technique.cpp
+        src/effects/Variable.cpp
+
         src/Exception.cpp
         src/Logger.cpp
         src/Matrix.cpp
