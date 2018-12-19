@@ -1,11 +1,7 @@
 #pragma once
 #include <library/components/SceneComponent.h>
 #include <library/Math.h>
-
-struct ID3DX11Effect;
-struct ID3DX11EffectTechnique;
-struct ID3DX11EffectPass;
-struct ID3DX11EffectMatrixVariable;
+#include <library/DirectXForwardDeclarations.h>
 
 namespace library
 {

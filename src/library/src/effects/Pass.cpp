@@ -9,7 +9,7 @@ namespace library
 {
 	namespace effects
 	{
-		Pass::Pass(Application& app, Technique& technique, const ComPtr<ID3DX11EffectPass>& pass)
+		Pass::Pass(const Application& app, Technique& technique, const ComPtr<ID3DX11EffectPass>& pass)
 			: m_app(app)
 			, m_technique(technique)
 			, m_pass(pass)

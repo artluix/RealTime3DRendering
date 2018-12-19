@@ -1,16 +1,6 @@
 #pragma once
 #include <library/components/SceneComponent.h>
-
-struct ID3D11Buffer;
-struct ID3D11Device;
-
-struct ID3DX11Effect;
-struct ID3DX11EffectTechnique;
-struct ID3DX11EffectPass;
-struct ID3DX11EffectMatrixVariable;
-
-struct ID3D11ShaderResourceView;
-struct ID3DX11EffectShaderResourceVariable;
+#include <library/DirectXForwardDeclarations.h>
 
 namespace library
 {

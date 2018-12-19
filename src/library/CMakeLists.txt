@@ -22,6 +22,8 @@ if(APPLICATION)
         include/library/Components/TextComponent.h
         include/library/Components/UIComponent.h
 
+        include/library/DirectXForwardDeclarations.h
+
         include/library/effects/Effect.h
         include/library/effects/Material.h
         include/library/effects/Pass.h

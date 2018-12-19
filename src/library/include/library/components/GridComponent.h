@@ -1,4 +1,5 @@
 #pragma once
+#include "library/DirectXForwardDeclarations.h"
 #include "library/components/SceneComponent.h"
 #include "library/Color.h"
 #include "library/Math.h"

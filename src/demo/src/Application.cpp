@@ -32,7 +32,6 @@ namespace demo
 		: library::Application(instanceHandle, windowClass, windowTitle, showCmd)
 		, m_keyboardComponent()
 		, m_mouseComponent()
-		, m_directInput()
 	{
 		m_depthStencilBufferEnabled = true;
 		m_multiSamplingEnabled = true;
@@ -123,8 +122,8 @@ namespace demo
 
 	void Application::Draw(const library::Time& time)
 	{
-		m_d3dDeviceContext->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
-		m_d3dDeviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
+		m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		library::Application::Draw(time);
 
