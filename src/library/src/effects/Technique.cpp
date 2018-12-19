@@ -24,5 +24,19 @@ namespace library
 			}
 		}
 
+		Pass* const Technique::GetPass(const std::string& passName) const
+		{
+			auto it = m_passesMap.find(passName);
+			if (it != m_passesMap.end())
+				return it->second.get();
+
+			return nullptr;
+		}
+
+		Pass* const Technique::GetPass(const unsigned passIdx) const
+		{
+			return m_passes[passIdx].get();
+		}
+
 	} // namespace effects
 } // namespace library

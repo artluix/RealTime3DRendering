@@ -18,13 +18,13 @@ namespace library
 			m_name = m_passDesc.Name;
 		}
 
-		ComPtr<ID3D11InputLayout> Pass::CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC& inputElementDesc, const unsigned elementsCount)
+		ComPtr<ID3D11InputLayout> Pass::CreateInputLayout(const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions)
 		{
 			ComPtr<ID3D11InputLayout> inputLayout;
 
 			auto hr = m_app.GetD3DDevice()->CreateInputLayout(
-				&inputElementDesc,
-				elementsCount,
+				inputElementDescriptions.data(),
+				inputElementDescriptions.size(),
 				m_passDesc.pIAInputSignature,
 				m_passDesc.IAInputSignatureSize,
 				inputLayout.GetAddressOf()

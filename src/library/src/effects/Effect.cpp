@@ -18,7 +18,7 @@ namespace library
 		{
 		}
 
-		ComPtr<ID3DX11Effect> Effect::CompileFromFile(ID3D11Device* const d3dDevice, const filesystem::Path& path)
+		ComPtr<ID3DX11Effect> Effect::CompileFromFile(ID3D11Device* const device, const filesystem::Path& path)
 		{
 			ComPtr<ID3DX11Effect> effect;
 
@@ -50,7 +50,7 @@ namespace library
 			hr = D3DX11CreateEffectFromMemory(
 				shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
 				0,
-				d3dDevice,
+				device,
 				effect.GetAddressOf()
 			);
 			if (FAILED(hr))
@@ -61,7 +61,7 @@ namespace library
 			return effect;
 		}
 
-		ComPtr<ID3DX11Effect> Effect::LoadCompiledEffect(ID3D11Device* const d3dDevice, const filesystem::Path& path)
+		ComPtr<ID3DX11Effect> Effect::LoadCompiledEffect(ID3D11Device* const device, const filesystem::Path& path)
 		{
 			std::vector<library::byte> effectData;
 			utils::LoadBinaryFile(path, effectData);
@@ -75,7 +75,7 @@ namespace library
 			auto hr = D3DX11CreateEffectFromMemory(
 				effectData.data(), effectData.size(),
 				0,
-				d3dDevice,
+				device,
 				effect.GetAddressOf()
 			);
 			if (FAILED(hr))
@@ -93,6 +93,40 @@ namespace library
 				m_effect = effect;
 			}
 		}
+
+		//-------------------------------------------------------------------------
+
+		Technique* Effect::GetTechnique(const std::string& techniqueName) const
+		{
+			const auto it = m_techniquesMap.find(techniqueName);
+			if (it != m_techniquesMap.cend())
+				return it->second.get();
+
+			return nullptr;
+		}
+
+		Technique* Effect::GetTechnique(const unsigned techniqueIdx) const
+		{
+			return m_techniques[techniqueIdx].get();
+		}
+
+		//-------------------------------------------------------------------------
+
+		Variable* Effect::GetVariable(const std::string& variableName) const
+		{
+			const auto it = m_variablesMap.find(variableName);
+			if (it != m_variablesMap.cend())
+				return it->second.get();
+
+			return nullptr;
+		}
+
+		Variable* Effect::GetVariable(const unsigned variableIdx) const
+		{
+			return m_variables[variableIdx].get();
+		}
+
+		//-------------------------------------------------------------------------
 
 		void Effect::Initialize()
 		{

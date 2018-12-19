@@ -110,13 +110,11 @@ namespace library
 
 	const DirectX::XMFLOAT3Vector& Mesh::GetTextureCoordinates(const unsigned textureIdx) const
 	{
-		assert(textureIdx < m_texturesCoordinates.size());
 		return m_texturesCoordinates[textureIdx];
 	}
 
 	const DirectX::XMFLOAT4Vector& Mesh::GetVertexColors(const unsigned vertexIdx) const
 	{
-		assert(vertexIdx < m_verticesColors.size());
 		return m_verticesColors[vertexIdx];
 	}
 

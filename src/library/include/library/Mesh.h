@@ -34,7 +34,6 @@ namespace library
 	//////////////////////////////////////////////////////////////////////////
 
 	class ModelMaterial;
-	using MaterialPtr = std::shared_ptr<ModelMaterial>;
 
 	class Mesh : public NonCopyable<Mesh>
 	{
@@ -44,7 +43,7 @@ namespace library
 		~Mesh() = default;
 
 		Model& GetModel() { return m_model; }
-		const MaterialPtr& GetMaterial() const { return m_material; }
+		ModelMaterial* GetMaterial() const { return m_material; }
 
 		const std::string& GetName() const { return m_name; }
 
@@ -90,7 +89,7 @@ namespace library
 		explicit Mesh(Model& model, aiMesh& mesh);
 
 		Model& m_model;
-		MaterialPtr m_material;
+		ModelMaterial* m_material;
 
 		std::string m_name;
 

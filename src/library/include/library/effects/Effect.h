@@ -35,8 +35,8 @@ namespace library
 			explicit Effect(const Application& app);
 			~Effect() = default;
 
-			static ComPtr<ID3DX11Effect> CompileFromFile(ID3D11Device* const d3dDevice, const filesystem::Path& path);
-			static ComPtr<ID3DX11Effect> LoadCompiledEffect(ID3D11Device* const d3dDevice, const filesystem::Path& path);
+			static ComPtr<ID3DX11Effect> CompileFromFile(ID3D11Device* const device, const filesystem::Path& path);
+			static ComPtr<ID3DX11Effect> LoadCompiledEffect(ID3D11Device* const device, const filesystem::Path& path);
 
 			const Application& GetApp() const { return m_app; }
 
@@ -45,11 +45,13 @@ namespace library
 
 			const D3DX11_EFFECT_DESC& GetEffectDesc() const { return m_effectDesc; }
 
-			const std::vector<TechniquePtr>& GetTechniques() const { return m_techniques; }
-			const std::vector<VariablePtr>& GetVariables() const { return m_variables; }
+			Technique* GetTechnique(const std::string& techniqueName) const;
+			Technique* GetTechnique(const unsigned techniqueIdx) const;
+			std::size_t GetTechniquesCount() const { return m_techniques.size(); }
 
-			const std::map<std::string, TechniquePtr>& GetTechniquesMap() const { return m_techniquesMap; }
-			const std::map<std::string, VariablePtr>& GetVariablesMap() const { return m_variablesMap; }
+			Variable* GetVariable(const std::string& variableName) const;
+			Variable* GetVariable(const unsigned variableIdx) const;
+			std::size_t GetVariablesCount() const { return m_variables.size(); }
 
 		private:
 			void Initialize();

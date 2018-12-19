@@ -4,6 +4,7 @@
 
 #include <d3dx11effect.h>
 #include <string>
+#include <vector>
 
 interface ID3DX11EffectPass;
 interface ID3D11DeviceContext;
@@ -26,7 +27,7 @@ namespace library
 			ID3DX11EffectPass* const GetPass() const { return m_pass.Get(); }
 			const D3DX11_PASS_DESC& GetPassDesc() const { return m_passDesc; }
 
-			ComPtr<ID3D11InputLayout> CreateInputLayout(const D3D11_INPUT_ELEMENT_DESC& inputElementDesc, const unsigned elementsCount);
+			ComPtr<ID3D11InputLayout> CreateInputLayout(const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions);
 			void Apply(const unsigned flags, ID3D11DeviceContext* const deviceContext);
 
 		private:

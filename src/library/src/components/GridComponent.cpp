@@ -159,21 +159,21 @@ namespace library
 
 		void GridComponent::Draw(const Time& time)
 		{
-			auto d3dDeviceContext = m_app.GetD3DDeviceContext();
+			auto deviceContext = m_app.GetD3DDeviceContext();
 
 			const auto wvp = m_worldMatrix * GetCamera().GetViewProjectionMatrix();
 			m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
-			m_pass->Apply(0, d3dDeviceContext);
+			m_pass->Apply(0, deviceContext);
 
-			d3dDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-			d3dDeviceContext->IASetInputLayout(m_inputLayout.Get());
+			deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
+			deviceContext->IASetInputLayout(m_inputLayout.Get());
 
 			unsigned stride = sizeof(VertexPositionColor);
 			unsigned offset = 0;
-			d3dDeviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
+			deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 
-			d3dDeviceContext->Draw((m_size + 1) * 4, 0);
+			deviceContext->Draw((m_size + 1) * 4, 0);
 		}
 
 		//-------------------------------------------------------------------------

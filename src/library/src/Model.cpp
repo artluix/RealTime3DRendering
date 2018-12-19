@@ -56,15 +56,13 @@ namespace library
 		}
 	}
 
-	const MeshPtr& Model::GetMesh(const unsigned meshIdx) const
+	Mesh* Model::GetMesh(const unsigned meshIdx) const
 	{
-		assert(meshIdx <= m_meshes.size());
-		return m_meshes[meshIdx];
+		return m_meshes[meshIdx].get();
 	}
 
-	const MaterialPtr& Model::GetMaterial(const unsigned materialIdx) const
+	ModelMaterial* Model::GetMaterial(const unsigned materialIdx) const
 	{
-		assert(materialIdx <= m_materials.size());
-		return m_materials[materialIdx];
+		return m_materials[materialIdx].get();
 	}
 } // namespace library

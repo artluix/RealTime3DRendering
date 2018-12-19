@@ -4,9 +4,12 @@
 #include "library/effects/Effect.h"
 #include "library/effects/Technique.h"
 #include "library/effects/Variable.h"
+#include "library/effects/Pass.h"
 
 #include "library/Model.h"
 #include "library/Mesh.h"
+
+#include <cassert>
 
 namespace library
 {
@@ -29,12 +32,7 @@ namespace library
 
 		Variable* Material::operator[](const std::string& variableName) const
 		{
-			const auto& variables = m_effect->GetVariablesMap();
-			const auto it = variables.find(variableName);
-			if (it != variables.end())
-				return it->second.get();
-
-			return nullptr;
+			return m_effect->GetVariable(variableName);
 		}
 
 		void Material::SetCurrentTechnique(Technique* const technique)
@@ -56,12 +54,26 @@ namespace library
 
 		void Material::Initialize(Effect* const effect)
 		{
+			if (m_effect != effect)
+			{
+				m_effect = effect;
+				assert(!!m_effect);
+			}
 
-		}
+			Technique* defaultTechnique = nullptr;
+			assert(m_effect->GetTechniquesCount() != 0);
 
-		std::vector<ComPtr<ID3D11Buffer>> Material::CreateVertexBuffers(ID3D11Device* const device, const Model& model) const
-		{
+			if (!m_defaultTechniqueName.empty())
+			{
+				defaultTechnique = m_effect->GetTechnique(m_defaultTechniqueName);
+				assert(!!defaultTechnique);
+			}
+			else
+			{
+				defaultTechnique = m_effect->GetTechnique(0);
+			}
 
+			SetCurrentTechnique(defaultTechnique);
 		}
 
 		void Material::CreateInputLayout(
@@ -70,7 +82,30 @@ namespace library
 			const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions
 		)
 		{
+			auto technique = m_effect->GetTechnique(techniqueName);
+			assert(!!technique);
 
+			auto pass = technique->GetPass(passName);
+			assert(!!technique);
+
+			auto inputLayout = pass->CreateInputLayout(inputElementDescriptions);
+		}
+
+		std::vector<ComPtr<ID3D11Buffer>> Material::CreateVertexBuffers(ID3D11Device* const device, const Model& model) const
+		{
+			std::vector<ComPtr<ID3D11Buffer>> vertexBuffers;
+			
+			const auto meshesCount = model.GetMeshesCount();
+			vertexBuffers.reserve(meshesCount);
+
+			for (unsigned i = 0; i < meshesCount; i++)
+			{
+				auto mesh = model.GetMesh(i);
+				auto vertexBuffer = CreateVertexBuffer(device, *mesh);
+				vertexBuffers.push_back(vertexBuffer);
+			}
+
+			return vertexBuffers;
 		}
 
 	} // namespace effects

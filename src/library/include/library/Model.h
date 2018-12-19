@@ -18,7 +18,7 @@ namespace library
 	using MeshPtr = std::shared_ptr<Mesh>;
 
 	class ModelMaterial;
-	using MaterialPtr = std::shared_ptr<ModelMaterial>;
+	using ModelMaterialPtr = std::shared_ptr<ModelMaterial>;
 
 	class Model : public NonCopyable<Model>
 	{
@@ -31,20 +31,20 @@ namespace library
 		// meshes
 		bool HasMeshes() const { return !m_meshes.empty(); }
 		std::size_t GetMeshesCount() const { return m_meshes.size(); }
-		const std::vector<MeshPtr>& GetMeshes() const { return m_meshes; }
-		const MeshPtr& GetMesh(const unsigned meshIdx) const;
+		//const std::vector<MeshPtr>& GetMeshes() const { return m_meshes; }
+		Mesh* GetMesh(const unsigned meshIdx) const;
 
 		// materials
 		bool HasMaterials() const { return !m_materials.empty(); }
 		std::size_t GetMaterialsCount() const { return m_materials.size(); }
-		const std::vector<MaterialPtr>& GetMaterials() const { return m_materials; }
-		const MaterialPtr& GetMaterial(const unsigned materialIdx) const;
+		//const std::vector<MaterialPtr>& GetMaterials() const { return m_materials; }
+		ModelMaterial* GetMaterial(const unsigned materialIdx) const;
 
 	private:
 		const Application& m_app;
 
 		std::vector<MeshPtr> m_meshes;
-		std::vector<MaterialPtr> m_materials;
+		std::vector<ModelMaterialPtr> m_materials;
 	};
 
 	using ModelPtr = std::shared_ptr<Model>;

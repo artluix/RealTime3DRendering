@@ -213,8 +213,8 @@ namespace library
 
 		// create D3DDevice and D3DDeviceContext
 		{
-			ComPtr<ID3D11Device> d3dDevice;
-			ComPtr<ID3D11DeviceContext> d3dDeviceContext;
+			ComPtr<ID3D11Device> device;
+			ComPtr<ID3D11DeviceContext> deviceContext;
 
 			hr = D3D11CreateDevice(
 				nullptr,
@@ -224,29 +224,29 @@ namespace library
 				featureLevels.data(),
 				featureLevels.size(),
 				D3D11_SDK_VERSION,
-				d3dDevice.GetAddressOf(),
+				device.GetAddressOf(),
 				&m_featureLevel,
-				d3dDeviceContext.GetAddressOf()
+				deviceContext.GetAddressOf()
 			);
 			if (FAILED(hr))
 			{
 				throw Exception("D3D11CreateDevice() failed.", hr);
 			}
 
-			hr = d3dDevice.As(&m_d3dDevice);
+			hr = device.As(&m_device);
 			if (FAILED(hr))
 			{
 				throw Exception("ID3D11Device As ID3D11Device1 failed.", hr);
 			}
 
-			hr = d3dDeviceContext.As(&m_d3dDeviceContext);
+			hr = deviceContext.As(&m_deviceContext);
 			if (FAILED(hr))
 			{
 				throw Exception("ID3D11DeviceContext As ID3D11DeviceContext1 failed.", hr);
 			}
 		}
 
-		m_d3dDevice->CheckMultisampleQualityLevels(
+		m_device->CheckMultisampleQualityLevels(
 			DXGI_FORMAT_R8G8B8A8_UNORM,
 			m_multiSamplingCount,
 			&m_multiSamplingQualityLevels
@@ -279,7 +279,7 @@ namespace library
 		// create DXGISwapChain
 		{
 			ComPtr<IDXGIDevice> dxgiDevice;
-			hr = m_d3dDevice.As(&dxgiDevice);
+			hr = m_device.As(&dxgiDevice);
 			if (FAILED(hr))
 			{
 				throw Exception("ID3D11Device as IDXGIDevice failed.", hr);
@@ -329,7 +329,7 @@ namespace library
 
 			backBuffer->GetDesc(&m_backBufferDesc);
 
-			hr = m_d3dDevice->CreateRenderTargetView(backBuffer.Get(), nullptr, m_renderTargetView.GetAddressOf());
+			hr = m_device->CreateRenderTargetView(backBuffer.Get(), nullptr, m_renderTargetView.GetAddressOf());
 			if (FAILED(hr))
 			{
 				throw Exception("IDXGI::CreateRenderTargetView() failed.", hr);
@@ -357,13 +357,13 @@ namespace library
 					depthStencilDesc.SampleDesc.Quality = 0;
 				}
 
-				hr = m_d3dDevice->CreateTexture2D(&depthStencilDesc, nullptr, m_depthStencilBuffer.GetAddressOf());
+				hr = m_device->CreateTexture2D(&depthStencilDesc, nullptr, m_depthStencilBuffer.GetAddressOf());
 				if (FAILED(hr))
 				{
 					throw Exception("IDXGIDevice::CreateTexture2D() failed.", hr);
 				}
 
-				hr = m_d3dDevice->CreateDepthStencilView(
+				hr = m_device->CreateDepthStencilView(
 					m_depthStencilBuffer.Get(),
 					nullptr,
 					m_depthStencilView.GetAddressOf()
@@ -374,7 +374,7 @@ namespace library
 				}
 			}
 
-			m_d3dDeviceContext->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());
+			m_deviceContext->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());
 
 			m_viewport.TopLeftX = 0.0f;
 			m_viewport.TopLeftY = 0.0f;
@@ -383,7 +383,7 @@ namespace library
 			m_viewport.MinDepth = 0.0f;
 			m_viewport.MaxDepth = 1.0f;
 
-			m_d3dDeviceContext->RSSetViewports(1, &m_viewport);
+			m_deviceContext->RSSetViewports(1, &m_viewport);
 		}
 	}
 
@@ -396,13 +396,13 @@ namespace library
 		m_swapChain.Reset();
 		m_depthStencilBuffer.Reset();
 
-		if (!!m_d3dDeviceContext)
+		if (!!m_deviceContext)
 		{
-			m_d3dDeviceContext->ClearState();
+			m_deviceContext->ClearState();
 		}
 
-		m_d3dDeviceContext.Reset();
-		m_d3dDevice.Reset();
+		m_deviceContext.Reset();
+		m_device.Reset();
 
 		UnregisterClass(m_windowClass.c_str(), m_instanceHandle);
 	}
