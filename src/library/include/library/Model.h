@@ -32,13 +32,13 @@ namespace library
 		bool HasMeshes() const { return !m_meshes.empty(); }
 		std::size_t GetMeshesCount() const { return m_meshes.size(); }
 		//const std::vector<MeshPtr>& GetMeshes() const { return m_meshes; }
-		Mesh* GetMesh(const unsigned meshIdx) const;
+		Mesh* const GetMesh(const unsigned meshIdx) const;
 
 		// materials
 		bool HasMaterials() const { return !m_materials.empty(); }
 		std::size_t GetMaterialsCount() const { return m_materials.size(); }
 		//const std::vector<MaterialPtr>& GetMaterials() const { return m_materials; }
-		ModelMaterial* GetMaterial(const unsigned materialIdx) const;
+		ModelMaterial* const GetMaterial(const unsigned materialIdx) const;
 
 	private:
 		const Application& m_app;

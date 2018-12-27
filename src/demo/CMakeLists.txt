@@ -9,21 +9,30 @@ if(APPLICATION)
         src/Application.h
         src/Application.cpp
 
-        # demo
-        src/CubeComponent.h
-        src/CubeComponent.cpp
+        # components
+        src/components/CubeComponent.h
+        src/components/CubeComponent.cpp
 
-        src/TriangleComponent.h
-        src/TriangleComponent.cpp
+        src/components/TriangleComponent.h
+        src/components/TriangleComponent.cpp
 
-        src/ModelComponent.h
-        src/ModelComponent.cpp
+        src/components/ModelComponent.h
+        src/components/ModelComponent.cpp
 
-        src/TextureModelComponent.h
-        src/TextureModelComponent.cpp
+        src/components/TextureModelComponent.h
+        src/components/TextureModelComponent.cpp
+
+        # effects
+        src/effects/BasicMaterial.h
+        src/effects/BasicMaterial.cpp
     )
 
     add_executable(demo WIN32 ${DEMO_SOURCES})
+
+    target_include_directories(demo
+        PRIVATE
+            src
+    )
 
     target_link_libraries(demo library)
 

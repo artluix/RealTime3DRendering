@@ -33,6 +33,8 @@ namespace library
 			{
 				throw Exception("ID3D11Device::CreateInputLayout() failed.", hr);
 			}
+
+			return inputLayout;
 		}
 
 		void Pass::Apply(const unsigned flags, ID3D11DeviceContext* const deviceContext)

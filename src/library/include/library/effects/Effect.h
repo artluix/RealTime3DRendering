@@ -49,8 +49,8 @@ namespace library
 			Technique* GetTechnique(const unsigned techniqueIdx) const;
 			std::size_t GetTechniquesCount() const { return m_techniques.size(); }
 
-			Variable* GetVariable(const std::string& variableName) const;
-			Variable* GetVariable(const unsigned variableIdx) const;
+			Variable* const GetVariable(const std::string& variableName) const;
+			Variable* const GetVariable(const unsigned variableIdx) const;
 			std::size_t GetVariablesCount() const { return m_variables.size(); }
 
 		private:

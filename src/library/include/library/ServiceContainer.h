@@ -17,6 +17,6 @@ namespace library
 		void* const GetService(const rtti::TypeId typeId) const;
 
 	private:
-		std::map<rtti::TypeId, void* const> m_services;
+		std::map<rtti::TypeId, void*> m_services;
 	};
 } // namespace library

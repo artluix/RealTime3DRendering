@@ -56,12 +56,12 @@ namespace library
 		}
 	}
 
-	Mesh* Model::GetMesh(const unsigned meshIdx) const
+	Mesh* const Model::GetMesh(const unsigned meshIdx) const
 	{
 		return m_meshes[meshIdx].get();
 	}
 
-	ModelMaterial* Model::GetMaterial(const unsigned materialIdx) const
+	ModelMaterial* const Model::GetMaterial(const unsigned materialIdx) const
 	{
 		return m_materials[materialIdx].get();
 	}

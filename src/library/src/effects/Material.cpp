@@ -30,7 +30,7 @@ namespace library
 
 		Material::~Material() = default;
 
-		Variable* Material::operator[](const std::string& variableName) const
+		Variable* const Material::operator[](const std::string& variableName) const
 		{
 			return m_effect->GetVariable(variableName);
 		}
@@ -43,7 +43,7 @@ namespace library
 			}
 		}
 
-		ID3D11InputLayout* Material::GetInputLayout(Pass* const pass) const
+		ID3D11InputLayout* const Material::GetInputLayout(Pass* const pass) const
 		{
 			const auto it = m_inputLayouts.find(pass);
 			if (it != m_inputLayouts.cend())
@@ -86,7 +86,7 @@ namespace library
 			assert(!!technique);
 
 			auto pass = technique->GetPass(passName);
-			assert(!!technique);
+			assert(!!pass);
 
 			auto inputLayout = pass->CreateInputLayout(inputElementDescriptions);
 		}

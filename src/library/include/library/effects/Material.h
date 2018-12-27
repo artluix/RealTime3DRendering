@@ -32,13 +32,13 @@ namespace library
 
 			virtual ~Material();
 
-			Variable* operator[](const std::string& variableName) const;
-			Effect* GetEffect() const { return m_effect; }
+			Variable* const operator[](const std::string& variableName) const;
+			Effect* const GetEffect() const { return m_effect; }
 			
-			Technique* GetCurrentTechnique() const { return m_currentTechnique; }
+			Technique* const GetCurrentTechnique() const { return m_currentTechnique; }
 			void SetCurrentTechnique(Technique* const technique);
 
-			ID3D11InputLayout* GetInputLayout(Pass* const pass) const;
+			ID3D11InputLayout* const GetInputLayout(Pass* const pass) const;
 
 			virtual void Initialize(Effect* const effect);
 

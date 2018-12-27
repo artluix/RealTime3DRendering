@@ -112,7 +112,7 @@ namespace library
 
 		//-------------------------------------------------------------------------
 
-		Variable* Effect::GetVariable(const std::string& variableName) const
+		Variable* const Effect::GetVariable(const std::string& variableName) const
 		{
 			const auto it = m_variablesMap.find(variableName);
 			if (it != m_variablesMap.cend())
@@ -121,7 +121,7 @@ namespace library
 			return nullptr;
 		}
 
-		Variable* Effect::GetVariable(const unsigned variableIdx) const
+		Variable* const  Effect::GetVariable(const unsigned variableIdx) const
 		{
 			return m_variables[variableIdx].get();
 		}

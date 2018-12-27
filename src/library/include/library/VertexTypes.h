@@ -44,7 +44,7 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	using PositionSize = VertexPositionTexture;
+	using VertexPositionSize = VertexPositionTexture;
 
 	//-------------------------------------------------------------------------
 
