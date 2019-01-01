@@ -1,5 +1,7 @@
 #include "effects/BasicMaterial.h"
 
+using namespace library;
+
 namespace demo
 {
 	namespace effects

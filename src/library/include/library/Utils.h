@@ -7,10 +7,10 @@ namespace library
 	{
 		std::wstring ToWideString(const std::string& str);
 
-		filesystem::Path GetCurrentDirectory();
-		filesystem::Path GetExecutableDirectory();
+		fs::Path GetCurrentDirectory();
+		fs::Path GetExecutableDirectory();
 
-		void LoadBinaryFile(const filesystem::Path& path, std::vector<byte>& data);
+		void LoadBinaryFile(const fs::Path& path, std::vector<byte>& data);
 	}; // namespace utils
 
 } // namespace library

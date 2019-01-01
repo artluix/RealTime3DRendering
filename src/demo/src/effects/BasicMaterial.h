@@ -1,11 +1,11 @@
 #pragma once
-#include <library/effects/Material.h>
+#include <library/effects/EffectMaterial.h>
 
 namespace demo
 {
 	namespace effects
 	{
-		class BasicMaterial : public library::effects::Material
+		class BasicMaterial : public library::EffectMaterial
 		{
 
 		};

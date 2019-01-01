@@ -7,7 +7,7 @@
 
 namespace library
 {
-	namespace filesystem
+	namespace fs
 	{
 		class Path;
 	} // namespace filesystem
@@ -23,7 +23,7 @@ namespace library
 	class Model : public NonCopyable<Model>
 	{
 	public:
-		explicit Model(const Application& app, const filesystem::Path& filePath, const bool flipUVs = false);
+		explicit Model(const Application& app, const fs::Path& filePath, const bool flipUVs = false);
 		~Model() = default;
 
 		const Application& GetApplication() const { return m_app; }

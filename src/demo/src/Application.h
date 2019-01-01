@@ -7,11 +7,8 @@
 
 namespace library
 {
-	namespace components
-	{
-		class KeyboardComponent;
-		class MouseComponent;
-	} // namespace components
+	class KeyboardComponent;
+	class MouseComponent;
 } // namespace library
 
 namespace demo
@@ -34,8 +31,8 @@ namespace demo
 		void Shutdown() override;
 
 	private:
-		std::shared_ptr<library::components::KeyboardComponent> m_keyboardComponent;
-		std::shared_ptr<library::components::MouseComponent> m_mouseComponent;
+		std::shared_ptr<library::KeyboardComponent> m_keyboardComponent;
+		std::shared_ptr<library::MouseComponent> m_mouseComponent;
 
 		ComPtr<IDirectInput8> m_directInput;
 	};

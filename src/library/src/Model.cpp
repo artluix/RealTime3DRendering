@@ -14,7 +14,7 @@
 
 namespace library
 {
-	Model::Model(const Application& app, const filesystem::Path& filePath, const bool flipUVs /*= false*/)
+	Model::Model(const Application& app, const fs::Path& filePath, const bool flipUVs /*= false*/)
 		: m_app(app)
 	{
 		Assimp::Importer importer;

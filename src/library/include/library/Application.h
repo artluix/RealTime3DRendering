@@ -12,11 +12,8 @@
 
 namespace library
 {
-	namespace components
-	{
-		class BaseComponent;
-		using BaseComponentPtr = std::shared_ptr<BaseComponent>;
-	} // namespace components
+	class BaseComponent;
+	using BaseComponentPtr = std::shared_ptr<BaseComponent>;
 
 	class Application : public NonCopyable<Application>
 	{
@@ -46,7 +43,7 @@ namespace library
 		const D3D11_TEXTURE2D_DESC& GetBackBufferDesc() const { return m_backBufferDesc; }
 		const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
 
-		const std::vector<components::BaseComponentPtr>& GetComponents() const { return m_components; }
+		const std::vector<BaseComponentPtr>& GetComponents() const { return m_components; }
 		const ServiceContainer& GetServices() const { return m_services; }
 
 		virtual void Initialize();
@@ -75,7 +72,7 @@ namespace library
 		Stopwatch m_stopwatch;
 		Time m_time;
 
-		std::vector<components::BaseComponentPtr> m_components;
+		std::vector<BaseComponentPtr> m_components;
 		ServiceContainer m_services;
 		RenderStatesStorage m_renderStatesStorage;
 

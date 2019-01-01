@@ -110,18 +110,18 @@ namespace library
 
 	void Application::Draw(const Time& time)
 	{
-		std::vector<components::SceneComponent*> sceneComponents;
-		std::vector<components::UIComponent*> uiComponents;
+		std::vector<SceneComponent*> sceneComponents;
+		std::vector<UIComponent*> uiComponents;
 
 		for (const auto& component : m_components)
 		{
-			auto drawableComponent = component->As<components::DrawableComponent>();
+			auto drawableComponent = component->As<DrawableComponent>();
 			if (!!drawableComponent && drawableComponent->IsVisible())
 			{
-				if (auto sceneComponent = drawableComponent->As<components::SceneComponent>())
+				if (auto sceneComponent = drawableComponent->As<SceneComponent>())
 					sceneComponents.push_back(sceneComponent);
 
-				if (auto uiComponent = drawableComponent->As<components::UIComponent>())
+				if (auto uiComponent = drawableComponent->As<UIComponent>())
 					uiComponents.push_back(uiComponent);
 			}
 		}

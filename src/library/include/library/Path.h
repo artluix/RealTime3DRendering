@@ -6,7 +6,7 @@
 
 namespace library
 {
-	namespace filesystem
+	namespace fs
 	{
 		class Path
 		{
@@ -55,5 +55,6 @@ namespace library
 		{
 			return m_string == other.m_string;
 		}
-	} // namespace filesystem
+
+	} // namespace fs
 } // namespace library

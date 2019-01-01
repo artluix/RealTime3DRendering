@@ -6,114 +6,111 @@
 
 namespace library
 {
-	namespace components
+	namespace
 	{
-		namespace
+		constexpr BYTE k_keyDownMask = 0x80;
+	}
+
+	KeyboardComponent::KeyboardComponent(const Application& app, const ComPtr<IDirectInput8>& directInput)
+		: Class(app)
+		, m_directInput(directInput)
+		, m_directInputDevice()
+	{
+		assert(!!directInput);
+		m_keysState.fill(0);
+		m_previousKeysState.fill(0);
+	}
+
+	KeyboardComponent::~KeyboardComponent()
+	{
+		if (!!m_directInputDevice)
 		{
-			constexpr BYTE k_keyDownMask = 0x80;
+			m_directInputDevice->Unacquire();
+			m_directInputDevice.Reset();
+		}
+	}
+
+	void KeyboardComponent::Initialize()
+	{
+		auto hr = m_directInput->CreateDevice(GUID_SysKeyboard, m_directInputDevice.GetAddressOf(), nullptr);
+		if (FAILED(hr))
+		{
+			throw Exception("IDirectInput8::CreateDevice() failed.", hr);
 		}
 
-		KeyboardComponent::KeyboardComponent(const Application& app, const ComPtr<IDirectInput8>& directInput)
-			: Class(app)
-			, m_directInput(directInput)
-			, m_directInputDevice()
+		hr = m_directInputDevice->SetDataFormat(&c_dfDIKeyboard);
+		if (FAILED(hr))
 		{
-			assert(!!directInput);
-			m_keysState.fill(0);
-			m_previousKeysState.fill(0);
+			throw Exception("IDirectInputDevice::SetDataFormat() failed.", hr);
 		}
 
-		KeyboardComponent::~KeyboardComponent()
+		hr = m_directInputDevice->SetCooperativeLevel(m_app.GetWindowHandle(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+		if (FAILED(hr))
 		{
-			if (!!m_directInputDevice)
-			{
-				m_directInputDevice->Unacquire();
-				m_directInputDevice.Reset();
-			}
+			throw Exception("IDirectInputDevice::SetCooperativeLevel() failed.", hr);
 		}
 
-		void KeyboardComponent::Initialize()
+		hr = m_directInputDevice->Acquire();
+		if (FAILED(hr))
 		{
-			auto hr = m_directInput->CreateDevice(GUID_SysKeyboard, m_directInputDevice.GetAddressOf(), nullptr);
-			if (FAILED(hr))
-			{
-				throw Exception("IDirectInput8::CreateDevice() failed.", hr);
-			}
+			throw Exception("IDirectInputDevice8::Acquire() failed.", hr);
+		}
+	}
 
-			hr = m_directInputDevice->SetDataFormat(&c_dfDIKeyboard);
-			if (FAILED(hr))
-			{
-				throw Exception("IDirectInputDevice::SetDataFormat() failed.", hr);
-			}
+	void KeyboardComponent::Update(const Time& time)
+	{
+		if (!m_directInputDevice)
+			return;
 
-			hr = m_directInputDevice->SetCooperativeLevel(m_app.GetWindowHandle(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
-			if (FAILED(hr))
-			{
-				throw Exception("IDirectInputDevice::SetCooperativeLevel() failed.", hr);
-			}
+		m_previousKeysState = m_keysState;
 
+		auto hr = m_directInputDevice->GetDeviceState(m_keysState.size(), m_keysState.data());
+		if (FAILED(hr))
+		{
+			// try to reacquire the device
 			hr = m_directInputDevice->Acquire();
-			if (FAILED(hr))
+			if (SUCCEEDED(hr))
 			{
-				throw Exception("IDirectInputDevice8::Acquire() failed.", hr);
+				m_directInputDevice->GetDeviceState(m_keysState.size(), m_keysState.data());
 			}
 		}
+	}
 
-		void KeyboardComponent::Update(const Time& time)
-		{
-			if (!m_directInputDevice)
-				return;
+	//-------------------------------------------------------------------------
 
-			m_previousKeysState = m_keysState;
+	bool KeyboardComponent::IsKeyUp(const Key key) const
+	{
+		return (m_keysState[static_cast<unsigned>(key)] & k_keyDownMask) == 0;
+	}
 
-			auto hr = m_directInputDevice->GetDeviceState(m_keysState.size(), m_keysState.data());
-			if (FAILED(hr))
-			{
-				// try to reacquire the device
-				hr = m_directInputDevice->Acquire();
-				if (SUCCEEDED(hr))
-				{
-					m_directInputDevice->GetDeviceState(m_keysState.size(), m_keysState.data());
-				}
-			}
-		}
+	bool KeyboardComponent::IsKeyDown(const Key key) const
+	{
+		return !IsKeyUp(key);
+	}
 
-		//-------------------------------------------------------------------------
+	bool KeyboardComponent::WasKeyUp(const Key key) const
+	{
+		return (m_previousKeysState[static_cast<unsigned>(key)] & k_keyDownMask) == 0;
+	}
 
-		bool KeyboardComponent::IsKeyUp(const Key key) const
-		{
-			return (m_keysState[static_cast<unsigned>(key)] & k_keyDownMask) == 0;
-		}
+	bool KeyboardComponent::WasKeyDown(const Key key) const
+	{
+		return !WasKeyUp(key);
+	}
 
-		bool KeyboardComponent::IsKeyDown(const Key key) const
-		{
-			return !IsKeyUp(key);
-		}
+	bool KeyboardComponent::WasKeyPressed(const Key key) const
+	{
+		return IsKeyDown(key) && WasKeyUp(key);
+	}
 
-		bool KeyboardComponent::WasKeyUp(const Key key) const
-		{
-			return (m_previousKeysState[static_cast<unsigned>(key)] & k_keyDownMask) == 0;
-		}
+	bool KeyboardComponent::WasKeyReleased(const Key key) const
+	{
+		return IsKeyUp(key) && WasKeyDown(key);
+	}
 
-		bool KeyboardComponent::WasKeyDown(const Key key) const
-		{
-			return !WasKeyUp(key);
-		}
+	bool KeyboardComponent::IsKeyHeldDown(const Key key) const
+	{
+		return IsKeyDown(key) && WasKeyDown(key);
+	}
 
-		bool KeyboardComponent::WasKeyPressed(const Key key) const
-		{
-			return IsKeyDown(key) && WasKeyUp(key);
-		}
-
-		bool KeyboardComponent::WasKeyReleased(const Key key) const
-		{
-			return IsKeyUp(key) && WasKeyDown(key);
-		}
-
-		bool KeyboardComponent::IsKeyHeldDown(const Key key) const
-		{
-			return IsKeyDown(key) && WasKeyDown(key);
-		}
-
-	} // namespace components
 } // namespace library

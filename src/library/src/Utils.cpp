@@ -14,21 +14,21 @@ namespace library
 			return result;
 		}
 
-		filesystem::Path GetCurrentDirectory()
+		fs::Path GetCurrentDirectory()
 		{
 			std::array<char, MAX_PATH> buffer;
 			::GetCurrentDirectoryA(MAX_PATH, buffer.data());
-			return filesystem::Path(buffer.data());
+			return fs::Path(buffer.data());
 		}
 
-		filesystem::Path GetExecutableDirectory()
+		fs::Path GetExecutableDirectory()
 		{
 			std::array<char, MAX_PATH> buffer;
 			::GetModuleFileNameA(nullptr, buffer.data(), MAX_PATH);
-			return filesystem::Path(buffer.data()).GetDirName();
+			return fs::Path(buffer.data()).GetDirName();
 		}
 
-		void LoadBinaryFile(const filesystem::Path& path, std::vector<byte>& data)
+		void LoadBinaryFile(const fs::Path& path, std::vector<byte>& data)
 		{
 			std::ifstream file(path.GetWideString(), std::ios::binary);
 			if (file.bad())

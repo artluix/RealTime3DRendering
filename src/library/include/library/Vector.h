@@ -257,25 +257,29 @@ namespace library
 		namespace constants
 		{
 			template<std::size_t Size>
-			struct vector : public NonConstructible<vector<Size>>
+			struct Vector : public NonConstructible<Vector<Size>>
 			{
-				static constexpr Vector<Size> Zero = Vector<Size>(0.f);
-				static constexpr Vector<Size> One = Vector<Size>(1.f);
+				static constexpr math::Vector<Size> Zero = math::Vector<Size>(0.f);
+				static constexpr math::Vector<Size> One = math::Vector<Size>(1.f);
 			};
 
 			template<>
-			struct vector<3> : public NonConstructible<vector<3>>
+			struct Vector<3> : public NonConstructible<Vector<3>>
 			{
-				static constexpr Vector3 Zero = Vector3(0.f);
-				static constexpr Vector3 One = Vector3(1.f);
+				static constexpr math::Vector3 Zero = math::Vector3(0.f);
+				static constexpr math::Vector3 One = math::Vector3(1.f);
 
-				static constexpr Vector3 Forward = Vector3(0.f, 0.f, -1.f);
-				static constexpr Vector3 Backward = Vector3(0.f, 0.f, 1.f);
-				static constexpr Vector3 Up = Vector3(0.f, 1.f, 0.f);
-				static constexpr Vector3 Down = Vector3(0.f, -1.f, 0.f);
-				static constexpr Vector3 Right = Vector3(1.f, 0.f, 0.f);
-				static constexpr Vector3 Left = Vector3(-1.f, 0.f, 0.f);
+				static constexpr math::Vector3 Forward = math::Vector3(0.f, 0.f, -1.f);
+				static constexpr math::Vector3 Backward = math::Vector3(0.f, 0.f, 1.f);
+				static constexpr math::Vector3 Up = math::Vector3(0.f, 1.f, 0.f);
+				static constexpr math::Vector3 Down = math::Vector3(0.f, -1.f, 0.f);
+				static constexpr math::Vector3 Right = math::Vector3(1.f, 0.f, 0.f);
+				static constexpr math::Vector3 Left = math::Vector3(-1.f, 0.f, 0.f);
 			};
+
+			using Vector2 = Vector<2>;
+			using Vector3 = Vector<3>;
+			using Vector4 = Vector<4>;
 		} // namespace constants
 
 		//-------------------------------------------------------------------------

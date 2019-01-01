@@ -9,7 +9,7 @@
 //#include "TriangleComponent.h"
 //#include "CubeComponent.h"
 //#include "ModelComponent.h"
-#include "TextureModelComponent.h"
+#include "components/TextureModelComponent.h"
 
 #include <library/Exception.h>
 
@@ -39,6 +39,8 @@ namespace demo
 
 	void Application::Initialize()
 	{
+		using namespace library;
+
 		HRESULT hr = DirectInput8Create(
 			m_instanceHandle,
 			DIRECTINPUT_VERSION,
@@ -48,10 +50,8 @@ namespace demo
 		);
 		if (FAILED(hr))
 		{
-			throw library::Exception("DirectInput8Create() failed", hr);
+			throw Exception("DirectInput8Create() failed", hr);
 		}
-
-		using namespace library::components;
 
 		m_keyboardComponent = std::make_shared<KeyboardComponent>(*this, m_directInput);
 		m_components.push_back(m_keyboardComponent);

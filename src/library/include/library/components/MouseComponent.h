@@ -16,40 +16,38 @@ namespace library
 		X1
 	};
 
-	namespace components
+	class MouseComponent : public rtti::Class<MouseComponent, BaseComponent>
 	{
-		class MouseComponent : public rtti::Class<MouseComponent, BaseComponent>
-		{
-		public:
-			explicit MouseComponent(const Application& app, ComPtr<IDirectInput8>& directInput);
-			~MouseComponent();
+	public:
+		explicit MouseComponent(const Application& app, ComPtr<IDirectInput8>& directInput);
+		~MouseComponent();
 
-			void Initialize() override;
-			void Update(const Time& time) override;
+		void Initialize() override;
+		void Update(const Time& time) override;
 
-			long GetX() const { return m_x; }
-			long GetY() const { return m_y; }
-			long GetWheel() const { return m_wheel; }
+		long GetX() const { return m_x; }
+		long GetY() const { return m_y; }
+		long GetWheel() const { return m_wheel; }
 
-			bool IsButtonUp(const MouseButton mb) const;
-			bool IsButtonDown(const MouseButton mb) const;
+		bool IsButtonUp(const MouseButton mb) const;
+		bool IsButtonDown(const MouseButton mb) const;
 
-			bool WasButtonUp(const MouseButton mb) const;
-			bool WasButtonDown(const MouseButton mb) const;
+		bool WasButtonUp(const MouseButton mb) const;
+		bool WasButtonDown(const MouseButton mb) const;
 
-			bool WasButtonPressed(const MouseButton mb) const;
-			bool WasButtonReleased(const MouseButton mb) const;
+		bool WasButtonPressed(const MouseButton mb) const;
+		bool WasButtonReleased(const MouseButton mb) const;
 
-			bool IsButtonHeldDown(const MouseButton mb) const;
+		bool IsButtonHeldDown(const MouseButton mb) const;
 
-		private:
-			ComPtr<IDirectInput8> m_directInput;
-			ComPtr<IDirectInputDevice8> m_directInputDevice;
+	private:
+		ComPtr<IDirectInput8> m_directInput;
+		ComPtr<IDirectInputDevice8> m_directInputDevice;
 
-			DIMOUSESTATE m_currentState;
-			DIMOUSESTATE m_previousState;
+		DIMOUSESTATE m_currentState;
+		DIMOUSESTATE m_previousState;
 
-			long m_x, m_y, m_wheel;
-		};
-	} // namespace components
+		long m_x, m_y, m_wheel;
+	};
+
 } // namespace library

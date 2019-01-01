@@ -10,23 +10,21 @@ namespace DirectX
 
 namespace library
 {
-	namespace components
+	class FpsComponent : public rtti::Class<FpsComponent, TextComponent>
 	{
-		class FpsComponent : public rtti::Class<FpsComponent, TextComponent>
-		{
-		public:
-			explicit FpsComponent(const Application& app);
-			~FpsComponent() = default;
+	public:
+		explicit FpsComponent(const Application& app);
+		~FpsComponent() = default;
 
-			unsigned GetFrameRate() const { return m_frameRate; }
+		unsigned GetFrameRate() const { return m_frameRate; }
 
-			void Update(const Time& time) override;
+		void Update(const Time& time) override;
 
-		private:
-			unsigned m_frameCount;
-			unsigned m_frameRate;
+	private:
+		unsigned m_frameCount;
+		unsigned m_frameRate;
 
-			Duration m_timeAccumulator;
-		};
-	} // namespace components
+		Duration m_timeAccumulator;
+	};
+
 } // namespace library

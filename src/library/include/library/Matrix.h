@@ -237,13 +237,13 @@ namespace library
 		namespace constants
 		{
 			template<std::size_t Size>
-			struct matrix;
+			struct Matrix;
 
 			template<>
-			struct matrix<3> : NonConstructible<matrix<3>>
+			struct Matrix<3> : NonConstructible<Matrix<3>>
 			{
-				static constexpr Matrix3 Zero = Matrix3(0.f);
-				static constexpr Matrix3 Identity = Matrix3(
+				static constexpr math::Matrix3 Zero = math::Matrix3(0.f);
+				static constexpr math::Matrix3 Identity = math::Matrix3(
 					1.f, 0.f, 0.f,
 					0.f, 1.f, 0.f,
 					0.f, 0.f, 1.f
@@ -251,16 +251,19 @@ namespace library
 			};
 
 			template<>
-			struct matrix<4> : NonConstructible<matrix<4>>
+			struct Matrix<4> : NonConstructible<Matrix<4>>
 			{
-				static constexpr Matrix4 Zero = Matrix4(0.f);
-				static constexpr Matrix4 Identity = Matrix4(
+				static constexpr math::Matrix4 Zero = math::Matrix4(0.f);
+				static constexpr math::Matrix4 Identity = math::Matrix4(
 					1.f, 0.f, 0.f, 0.f,
 					0.f, 1.f, 0.f, 0.f,
 					0.f, 0.f, 1.f, 0.f,
 					0.f, 0.f, 0.f, 1.f
 				);
 			};
+
+			using Matrix3 = Matrix<3>;
+			using Matrix4 = Matrix<4>;
 		} // namespace constants
 
 		//-------------------------------------------------------------------------

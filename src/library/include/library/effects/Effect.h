@@ -11,64 +11,60 @@ interface ID3D11Device;
 
 namespace library
 {
-	namespace filesystem
+	namespace fs
 	{
 		class Path;
 	}; // namespace filesystem
 
 	class Application;
 
-	namespace effects
+		class EffectTechnique;
+		using TechniquePtr = std::shared_ptr<EffectTechnique>;
+
+		class EffectVariable;
+		using VariablePtr = std::shared_ptr<EffectVariable>;
+
+	// ----------------------------------------------------------------------------------------------------------
+
+	class Effect : public NonCopyable<Effect>
 	{
+	public:
+		explicit Effect(const Application& app);
+		~Effect() = default;
 
-		class Technique;
-		using TechniquePtr = std::shared_ptr<Technique>;
+		static ComPtr<ID3DX11Effect> CompileFromFile(ID3D11Device* const device, const fs::Path& path);
+		static ComPtr<ID3DX11Effect> LoadCompiledEffect(ID3D11Device* const device, const fs::Path& path);
 
-		class Variable;
-		using VariablePtr = std::shared_ptr<Variable>;
+		const Application& GetApp() const { return m_app; }
 
-		// ----------------------------------------------------------------------------------------------------------
+		ID3DX11Effect* const GetEffect() const { return m_effect.Get(); }
+		void SetEffect(const ComPtr<ID3DX11Effect>& effect);
 
-		class Effect : public NonCopyable<Effect>
-		{
-		public:
-			explicit Effect(const Application& app);
-			~Effect() = default;
+		const D3DX11_EFFECT_DESC& GetEffectDesc() const { return m_effectDesc; }
 
-			static ComPtr<ID3DX11Effect> CompileFromFile(ID3D11Device* const device, const filesystem::Path& path);
-			static ComPtr<ID3DX11Effect> LoadCompiledEffect(ID3D11Device* const device, const filesystem::Path& path);
+		EffectTechnique* GetTechnique(const std::string& techniqueName) const;
+		EffectTechnique* GetTechnique(const unsigned techniqueIdx) const;
+		std::size_t GetTechniquesCount() const { return m_techniques.size(); }
 
-			const Application& GetApp() const { return m_app; }
+		EffectVariable* const GetVariable(const std::string& variableName) const;
+		EffectVariable* const GetVariable(const unsigned variableIdx) const;
+		std::size_t GetVariablesCount() const { return m_variables.size(); }
 
-			ID3DX11Effect* const GetEffect() const { return m_effect.Get(); }
-			void SetEffect(const ComPtr<ID3DX11Effect>& effect);
+	private:
+		void Initialize();
 
-			const D3DX11_EFFECT_DESC& GetEffectDesc() const { return m_effectDesc; }
+		const Application& m_app;
 
-			Technique* GetTechnique(const std::string& techniqueName) const;
-			Technique* GetTechnique(const unsigned techniqueIdx) const;
-			std::size_t GetTechniquesCount() const { return m_techniques.size(); }
+		ComPtr<ID3DX11Effect> m_effect;
+		D3DX11_EFFECT_DESC m_effectDesc;
 
-			Variable* const GetVariable(const std::string& variableName) const;
-			Variable* const GetVariable(const unsigned variableIdx) const;
-			std::size_t GetVariablesCount() const { return m_variables.size(); }
+		std::vector<TechniquePtr> m_techniques;
+		std::vector<VariablePtr> m_variables;
 
-		private:
-			void Initialize();
+		std::map<std::string, TechniquePtr> m_techniquesMap;
+		std::map<std::string, VariablePtr> m_variablesMap;
+	};
 
-			const Application& m_app;
+	using EffectPtr = std::shared_ptr<Effect>;
 
-			ComPtr<ID3DX11Effect> m_effect;
-			D3DX11_EFFECT_DESC m_effectDesc;
-
-			std::vector<TechniquePtr> m_techniques;
-			std::vector<VariablePtr> m_variables;
-
-			std::map<std::string, TechniquePtr> m_techniquesMap;
-			std::map<std::string, VariablePtr> m_variablesMap;
-		};
-
-		using EffectPtr = std::shared_ptr<Effect>;
-
-	} // namespace effects
 } // namespace library

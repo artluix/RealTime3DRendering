@@ -5,7 +5,7 @@
 
 namespace library
 {
-	namespace filesystem
+	namespace fs
 	{
 		namespace
 		{
@@ -130,5 +130,6 @@ namespace library
 		{
 			m_wstring = utils::ToWideString(m_string);
 		}
-	} // namespace path
+
+	} // namespace fs
 } // namespace library

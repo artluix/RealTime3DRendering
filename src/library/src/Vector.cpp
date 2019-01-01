@@ -41,7 +41,7 @@ namespace library
 
 		bool Vector<2>::IsZero() const
 		{
-			return *this == constants::vector<2>::Zero;
+			return *this == constants::Vector<2>::Zero;
 		}
 
 		//-------------------------------------------------------------------------
@@ -128,7 +128,7 @@ namespace library
 
 		bool Vector<3>::IsZero() const
 		{
-			return *this == constants::vector<3>::Zero;
+			return *this == constants::Vector<3>::Zero;
 		}
 
 		//-------------------------------------------------------------------------
@@ -213,7 +213,7 @@ namespace library
 
 		bool Vector<4>::IsZero() const
 		{
-			return *this == constants::vector<4>::Zero;
+			return *this == constants::Vector<4>::Zero;
 		}
 
 		//-------------------------------------------------------------------------

@@ -14,41 +14,39 @@ namespace DirectX
 
 namespace library
 {
-	namespace components
+	class TextComponent : public rtti::Class<TextComponent, UIComponent>
 	{
-		class TextComponent : public rtti::Class<TextComponent, UIComponent>
-		{
-		public:
-			using TextGeneratorFunction = std::function<std::wstring(void)>;
+	public:
+		using TextGeneratorFunction = std::function<std::wstring(void)>;
 
-			explicit TextComponent(const Application& app);
-			~TextComponent();
+		explicit TextComponent(const Application& app);
+		~TextComponent();
 
-			void SetText(const std::string& text);
-			void SetText(const std::wstring& text);
-			const std::wstring& GetText() const { return m_text; }
+		void SetText(const std::string& text);
+		void SetText(const std::wstring& text);
+		const std::wstring& GetText() const { return m_text; }
 
-			void SetColor(const Color& color);
-			const Color& GetColor() const { return m_color; }
+		void SetColor(const Color& color);
+		const Color& GetColor() const { return m_color; }
 
-			void SetFontPath(const filesystem::Path& fontPath);
-			const filesystem::Path& GetPath() const { return m_fontPath; }
+		void SetFontPath(const fs::Path& fontPath);
+		const fs::Path& GetPath() const { return m_fontPath; }
 
-			void SetGeneratorFunction(const TextGeneratorFunction& generatorFunction);
+		void SetGeneratorFunction(const TextGeneratorFunction& generatorFunction);
 
-			void Initialize() override;
-			void Update(const Time& time) override;
-			void Draw(const Time& time) override;
+		void Initialize() override;
+		void Update(const Time& time) override;
+		void Draw(const Time& time) override;
 
-		private:
-			std::wstring m_text;
-			Color m_color;
-			filesystem::Path m_fontPath;
+	private:
+		std::wstring m_text;
+		Color m_color;
+		fs::Path m_fontPath;
 
-			TextGeneratorFunction m_generatorFunction;
+		TextGeneratorFunction m_generatorFunction;
 
-			std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
-			std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
-		};
-	} // namespace components
+		std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
+		std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
+	};
+
 } // namespace library
