@@ -11,10 +11,10 @@
 #include <d3dx11effect.h>
 #include <d3dcompiler.h>
 
-using namespace library;
-
 namespace demo
 {
+	using namespace library;
+	
 	namespace
 	{
 		constexpr unsigned k_indicesCount = 6 * 2 * 3;
@@ -27,9 +27,9 @@ namespace demo
 	}
 
 	CubeComponent::CubeComponent(
-		const library::Application& app,
-		const library::CameraComponent& camera,
-		const library::KeyboardComponent& keyboard
+		const Application& app,
+		const CameraComponent& camera,
+		const KeyboardComponent& keyboard
 	)
 		: Class(app, camera)
 		, m_keyboard(keyboard)
@@ -38,7 +38,7 @@ namespace demo
 
 	void CubeComponent::Initialize()
 	{
-		const library::Application& app = m_app;
+		const Application& app = m_app;
 
 		// shader
 		{
@@ -203,7 +203,7 @@ namespace demo
 
 	void CubeComponent::Update(const Time& time)
 	{
-		const library::KeyboardComponent& keyboard = m_keyboard;
+		const KeyboardComponent& keyboard = m_keyboard;
 
 		// rotation
 		if (keyboard.IsKeyDown(Key::R))

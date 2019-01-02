@@ -16,6 +16,8 @@ namespace library
 	{
 	}
 
+	Effect::~Effect() = default;
+
 	ComPtr<ID3DX11Effect> Effect::CompileFromFile(ID3D11Device* const device, const fs::Path& path)
 	{
 		ComPtr<ID3DX11Effect> effect;
@@ -82,6 +84,18 @@ namespace library
 		}
 
 		return effect;
+	}
+
+	void Effect::CompileFromFile(const fs::Path& path)
+	{
+		m_effect = CompileFromFile(m_app.GetD3DDevice(), path);
+		Initialize();
+	}
+
+	void Effect::LoadCompiledEffect(const fs::Path& path)
+	{
+		m_effect = LoadCompiledEffect(m_app.GetD3DDevice(), path);
+		Initialize();
 	}
 
 	void Effect::SetEffect(const ComPtr<ID3DX11Effect>& effect)

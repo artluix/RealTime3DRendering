@@ -43,7 +43,7 @@ namespace library
 		virtual std::vector<ComPtr<ID3D11Buffer>> CreateVertexBuffers(ID3D11Device* const device, const Model& model) const;
 		virtual ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const = 0;
 
-		virtual unsigned GetVerticesCount() const = 0;
+		virtual unsigned GetVertexSize() const = 0;
 
 	protected:
 		virtual void CreateInputLayout(

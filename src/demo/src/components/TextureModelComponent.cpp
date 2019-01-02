@@ -16,10 +16,10 @@
 
 #include <DDSTextureLoader.h>
 
-using namespace library;
-
 namespace demo
 {
+	using namespace library;
+
 	namespace
 	{
 		constexpr float k_rotationAngle = math::constants::Pi_Div_2;
@@ -42,14 +42,14 @@ namespace demo
 
 	//-------------------------------------------------------------------------
 
-	using VertexType = library::VertexPositionTexture;
+	using VertexType = VertexPositionTexture;
 
 	//-------------------------------------------------------------------------
 
 	TextureModelComponent::TextureModelComponent(
 		const Application& app,
-		const library::CameraComponent& camera,
-		const library::KeyboardComponent& keyboard
+		const CameraComponent& camera,
+		const KeyboardComponent& keyboard
 	)
 		: Class(app, camera)
 		, m_keyboard(keyboard)
@@ -150,7 +150,7 @@ namespace demo
 		}
 
 		// Load the model
-		library::Model model(app, k_modelPath, true);
+		Model model(app, k_modelPath, true);
 
 		// Create the vertex and index buffers
 		if (const auto& mesh = model.GetMesh(0))
@@ -185,7 +185,7 @@ namespace demo
 
 	void TextureModelComponent::Update(const Time& time)
 	{
-		const library::KeyboardComponent& keyboard = m_keyboard;
+		const KeyboardComponent& keyboard = m_keyboard;
 
 		// rotation
 		if (keyboard.IsKeyDown(Key::R))

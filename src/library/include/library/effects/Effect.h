@@ -30,10 +30,13 @@ namespace library
 	{
 	public:
 		explicit Effect(const Application& app);
-		~Effect() = default;
+		~Effect();
 
 		static ComPtr<ID3DX11Effect> CompileFromFile(ID3D11Device* const device, const fs::Path& path);
 		static ComPtr<ID3DX11Effect> LoadCompiledEffect(ID3D11Device* const device, const fs::Path& path);
+
+		void CompileFromFile(const fs::Path& path);
+		void LoadCompiledEffect(const fs::Path& path);
 
 		const Application& GetApp() const { return m_app; }
 

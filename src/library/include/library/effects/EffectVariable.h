@@ -59,15 +59,17 @@ namespace library
 	template<std::size_t Size>
 	inline EffectVariable& EffectVariable::operator << (const math::Matrix<Size>& value)
 	{
-		this << value.Load();
-		return *this;
+		auto& thisRef = *this;
+		thisRef << value.Load();
+		return thisRef;
 	}
 
 	template<std::size_t Size>
 	inline EffectVariable& EffectVariable::operator<<(const math::Vector<Size>& value)
 	{
-		this << value.Load();
-		return *this;
+		auto& thisRef = *this;
+		thisRef << value.Load();
+		return thisRef;
 	}
 
 } // namespace library

@@ -25,10 +25,10 @@ if(APPLICATION)
         include/library/DirectXForwardDeclarations.h
 
         include/library/effects/Effect.h
-        include/library/effects/Material.h
-        include/library/effects/Pass.h
-        include/library/effects/Technique.h
-        include/library/effects/Variable.h
+        include/library/effects/EffectMaterial.h
+        include/library/effects/EffectPass.h
+        include/library/effects/EffectTechnique.h
+        include/library/effects/EffectVariable.h
 
         include/library/Exception.h
         include/library/Key.h
@@ -66,10 +66,10 @@ if(APPLICATION)
         src/Components/UIComponent.cpp
 
         src/effects/Effect.cpp
-        src/effects/Material.cpp
-        src/effects/Pass.cpp
-        src/effects/Technique.cpp
-        src/effects/Variable.cpp
+        src/effects/EffectMaterial.cpp
+        src/effects/EffectPass.cpp
+        src/effects/EffectTechnique.cpp
+        src/effects/EffectVariable.cpp
 
         src/Exception.cpp
         src/Logger.cpp

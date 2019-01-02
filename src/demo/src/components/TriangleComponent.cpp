@@ -10,10 +10,11 @@
 #include <d3dx11effect.h>
 #include <d3dcompiler.h>
 
-using namespace library;
 
 namespace demo
 {
+	using namespace library;
+
 	namespace
 	{
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
@@ -21,7 +22,7 @@ namespace demo
 		);
 	}
 
-	TriangleComponent::TriangleComponent(const Application& app, const library::CameraComponent& camera)
+	TriangleComponent::TriangleComponent(const Application& app, const CameraComponent& camera)
 		: Class(app, camera)
 		, m_effect()
 		, m_technique()

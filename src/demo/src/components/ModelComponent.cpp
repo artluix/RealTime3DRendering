@@ -15,10 +15,10 @@
 #include <d3dx11effect.h>
 #include <d3dcompiler.h>
 
-using namespace library;
-
 namespace demo
 {
+	using namespace library;
+	
 	namespace
 	{
 		constexpr float k_rotationAngle = math::constants::Pi_Div_2;
@@ -34,14 +34,14 @@ namespace demo
 
 	//-------------------------------------------------------------------------
 
-	using VertexType = library::VertexPositionColor;
+	using VertexType = VertexPositionColor;
 
 	//-------------------------------------------------------------------------
 
 	ModelComponent::ModelComponent(
 		const Application& app,
-		const library::CameraComponent& camera,
-		const library::KeyboardComponent& keyboard
+		const CameraComponent& camera,
+		const KeyboardComponent& keyboard
 	)
 		: Class(app, camera)
 		, m_keyboard(keyboard)
@@ -144,7 +144,7 @@ namespace demo
 		}
 
 		// Load the model
-		library::Model model(app, k_modelPath, true);
+		Model model(app, k_modelPath, true);
 
 		// Create the vertex and index buffers
 		if (const auto& mesh = model.GetMesh(0))
@@ -157,7 +157,7 @@ namespace demo
 
 	void ModelComponent::Update(const Time& time)
 	{
-		const library::KeyboardComponent& keyboard = m_keyboard;
+		const KeyboardComponent& keyboard = m_keyboard;
 
 		// rotation
 		if (keyboard.IsKeyDown(Key::R))
@@ -219,10 +219,10 @@ namespace demo
 
 	void ModelComponent::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const Mesh& mesh)
 	{
-		std::vector<VertexType> vertices;
-
 		if (mesh.HasVertices())
 		{
+			std::vector<VertexType> vertices;
+
 			const auto& meshVertices = mesh.GetVertices();
 			const auto verticesCount = meshVertices.size();
 
@@ -244,7 +244,7 @@ namespace demo
 				for (unsigned i = 0; i < verticesCount; i++)
 				{
 					const auto& position = meshVertices[i];
-					const auto& color = DirectX::XMFLOAT4(library::Color::Random());
+					const auto& color = DirectX::XMFLOAT4(Color::Random());
 					vertices.emplace_back(DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f), color);
 				}
 			}

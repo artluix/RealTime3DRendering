@@ -26,5 +26,6 @@ namespace library
 		inline constexpr Color Cyan = Color(0.f, 1.f, 1.f, 1.f);
 		inline constexpr Color Magenta = Color(1.f, 0.f, 1.f, 1.f);
 		inline constexpr Color Yellow = Color(1.f, 1.f, 0.f, 1.f);
+
 	} // namespace colors
 } // namespace library

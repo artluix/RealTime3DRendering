@@ -16,6 +16,9 @@ if(APPLICATION)
         src/components/TriangleComponent.h
         src/components/TriangleComponent.cpp
 
+        src/components/MaterialComponent.h
+        src/components/MaterialComponent.cpp
+
         src/components/ModelComponent.h
         src/components/ModelComponent.cpp
 
