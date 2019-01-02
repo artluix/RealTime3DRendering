@@ -29,7 +29,7 @@ namespace demo
 #if defined(DEBUG) || defined(DEBUG)
 			fs::Path("../data/effects/TextureMapping_d.fxc")
 #else
-			filesystem::Path("../data/effects/TextureMapping.fxc")
+			fs::Path("../data/effects/TextureMapping.fxc")
 #endif
 		);
 		const auto k_modelPath = utils::GetExecutableDirectory().Join(
