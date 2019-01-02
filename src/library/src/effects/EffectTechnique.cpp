@@ -16,24 +16,25 @@ namespace library
 
 		for (unsigned i = 0; i < m_techniqueDesc.Passes; i++)
 		{
-			auto pass = std::make_shared<EffectPass>(app, *this, m_technique->GetPassByIndex(i));
+			auto pass = std::make_unique<EffectPass>(app, *this, m_technique->GetPassByIndex(i));
 			m_passes.push_back(pass);
-			m_passesMap.insert(std::make_pair(pass->GetName(), pass));
+			m_passesMap.emplace(pass->GetName(), *pass);
 		}
 	}
 
-	EffectPass* const EffectTechnique::GetPass(const std::string& passName) const
+	bool EffectTechnique::HasPass(const std::string& passName) const
 	{
-		auto it = m_passesMap.find(passName);
-		if (it != m_passesMap.end())
-			return it->second.get();
-
-		return nullptr;
+		return m_passesMap.find(passName) != m_passesMap.end();
 	}
 
-	EffectPass* const EffectTechnique::GetPass(const unsigned passIdx) const
+	EffectPass& EffectTechnique::GetPass(const std::string& passName) const
 	{
-		return m_passes[passIdx].get();
+		return m_passesMap.at(passName);
+	}
+
+	EffectPass& EffectTechnique::GetPass(const unsigned passIdx) const
+	{
+		return *m_passes.at(passIdx);
 	}
 
 } // namespace library

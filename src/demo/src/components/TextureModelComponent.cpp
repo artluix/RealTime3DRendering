@@ -153,12 +153,10 @@ namespace demo
 		Model model(app, k_modelPath, true);
 
 		// Create the vertex and index buffers
-		if (const auto& mesh = model.GetMesh(0))
-		{
-			CreateVertexBuffer(app.GetD3DDevice(), *mesh);
-			m_indexBuffer = mesh->CreateIndexBuffer();
-			m_indicesCount = mesh->GetIndicesCount();
-		}
+		const auto& mesh = model.GetMesh(0);
+		CreateVertexBuffer(app.GetD3DDevice(), mesh);
+		m_indexBuffer = mesh.CreateIndexBuffer();
+		m_indicesCount = mesh.GetIndicesCount();
 
 		// Load the texture
 		{

@@ -59,7 +59,7 @@ namespace library
 		friend class Model;
 
 	public:
-		~ModelMaterial() = default;
+		~ModelMaterial();
 
 		Model& GetModel() { return m_model; }
 		const std::string& GetName() const { return m_name; }

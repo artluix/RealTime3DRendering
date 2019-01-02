@@ -11,11 +11,10 @@ namespace library
 {
 	Mesh::Mesh(Model& model, aiMesh& mesh)
 		: m_model(model)
+		, m_material(m_model.GetMaterial(mesh.mMaterialIndex))
 		, m_name(mesh.mName.C_Str())
 		, m_facesCount(0)
 	{
-		m_material = m_model.GetMaterial(mesh.mMaterialIndex);
-
 		// Vertices
 		{
 			m_vertices.reserve(mesh.mNumVertices);
@@ -118,7 +117,7 @@ namespace library
 		return m_verticesColors[vertexIdx];
 	}
 
-	ComPtr<ID3D11Buffer> Mesh::CreateIndexBuffer()
+	ComPtr<ID3D11Buffer> Mesh::CreateIndexBuffer() const
 	{
 		D3D11_BUFFER_DESC indexBufferDesc{};
 		indexBufferDesc.ByteWidth = sizeof(unsigned) * m_indices.size();

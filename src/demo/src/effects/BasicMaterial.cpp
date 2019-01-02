@@ -5,21 +5,19 @@
 #include <library/Color.h>
 #include <library/Exception.h>
 
-using namespace library;
-
 namespace demo
 {
-	BasicMaterial::BasicMaterial()
-		: Class("main11")
-		, m_worldViewProjection(nullptr)
+	using namespace library;
+
+	BasicMaterial::BasicMaterial(library::Effect& effect)
+		: Class(effect, "main11")
+		, m_worldViewProjection(effect.GetVariable("WorldViewProjection"))
 	{
 	}
 
-	void BasicMaterial::Initialize(library::Effect* const effect)
+	void BasicMaterial::Initialize()
 	{
-		EffectMaterial::Initialize(effect);
-
-		m_worldViewProjection = GetEffect()->GetVariable("WorldViewProjection");
+		EffectMaterial::Initialize();
 
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{

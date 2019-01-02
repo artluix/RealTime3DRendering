@@ -10,44 +10,39 @@ namespace library
 	namespace fs
 	{
 		class Path;
-	} // namespace filesystem
+	} // namespace fs
 
 	class Application;
-
 	class Mesh;
-	using MeshPtr = std::shared_ptr<Mesh>;
-
 	class ModelMaterial;
-	using ModelMaterialPtr = std::shared_ptr<ModelMaterial>;
 
 	class Model : public NonCopyable<Model>
 	{
 	public:
 		explicit Model(const Application& app, const fs::Path& filePath, const bool flipUVs = false);
-		~Model() = default;
+		~Model();
 
 		const Application& GetApplication() const { return m_app; }
 
 		// meshes
 		bool HasMeshes() const { return !m_meshes.empty(); }
 		std::size_t GetMeshesCount() const { return m_meshes.size(); }
-		//const std::vector<MeshPtr>& GetMeshes() const { return m_meshes; }
-		Mesh* const GetMesh(const unsigned meshIdx) const;
+		Mesh& GetMesh(const unsigned meshIdx) const;
 
 		// materials
 		bool HasMaterials() const { return !m_materials.empty(); }
 		std::size_t GetMaterialsCount() const { return m_materials.size(); }
-		//const std::vector<MaterialPtr>& GetMaterials() const { return m_materials; }
-		ModelMaterial* const GetMaterial(const unsigned materialIdx) const;
+		ModelMaterial& GetMaterial(const unsigned materialIdx) const;
 
 	private:
+		using MeshPtr = std::unique_ptr<Mesh>;
+		using ModelMaterialPtr = std::unique_ptr<ModelMaterial>;
+
 		const Application& m_app;
 
 		std::vector<MeshPtr> m_meshes;
 		std::vector<ModelMaterialPtr> m_materials;
 	};
-
-	using ModelPtr = std::shared_ptr<Model>;
 
 } // namespace library
 

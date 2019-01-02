@@ -6,17 +6,15 @@
 
 namespace demo
 {
-	class BasicMaterial : public library::rtti::Class<BasicMaterial, library::EffectMaterial>
+	class SkyboxMaterial : public library::rtti::Class<SkyboxMaterial, library::EffectMaterial>
 	{
 	public:
 		struct Vertex
 		{
 			DirectX::XMFLOAT4 position;
-			DirectX::XMFLOAT4 color;
 
-			explicit Vertex(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& color)
+			explicit Vertex(const DirectX::XMFLOAT4& position)
 				: position(position)
-				, color(color)
 			{
 			}
 		};
@@ -25,9 +23,10 @@ namespace demo
 
 		//-------------------------------------------------------------------------
 
-		explicit BasicMaterial(library::Effect& effect);
+		explicit SkyboxMaterial(library::Effect& effect);
 
-		library::EffectVariable& GetWorldViewProjection() const { return m_worldViewProjection; }
+		library::EffectVariable& GetWorldViewProjection() const { return *m_worldViewProjection; }
+		library::EffectVariable& GetSkyboxTexture() const { return *m_skyboxTexture; }
 
 		void Initialize() override;
 
@@ -37,7 +36,8 @@ namespace demo
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }
 
 	private:
-		library::EffectVariable& m_worldViewProjection;
+		library::EffectVariable* m_worldViewProjection;
+		library::EffectVariable* m_skyboxTexture;
 	};
 
 } // namespace demo

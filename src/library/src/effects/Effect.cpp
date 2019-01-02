@@ -108,34 +108,36 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	EffectTechnique* Effect::GetTechnique(const std::string& techniqueName) const
+	bool Effect::HasTechnique(const std::string& techniqueName) const
 	{
-		const auto it = m_techniquesMap.find(techniqueName);
-		if (it != m_techniquesMap.cend())
-			return it->second.get();
-
-		return nullptr;
+		return m_techniquesMap.find(techniqueName) != m_techniquesMap.cend();
 	}
 
-	EffectTechnique* Effect::GetTechnique(const unsigned techniqueIdx) const
+	EffectTechnique& Effect::GetTechnique(const std::string& techniqueName) const
 	{
-		return m_techniques[techniqueIdx].get();
+		return m_techniquesMap.at(techniqueName);
+	}
+
+	EffectTechnique& Effect::GetTechnique(const unsigned techniqueIdx) const
+	{
+		return *m_techniques.at(techniqueIdx);
 	}
 
 	//-------------------------------------------------------------------------
 
-	EffectVariable* const Effect::GetVariable(const std::string& variableName) const
+	bool Effect::HasVariable(const std::string& variableName) const
 	{
-		const auto it = m_variablesMap.find(variableName);
-		if (it != m_variablesMap.cend())
-			return it->second.get();
-
-		return nullptr;
+		return m_variablesMap.find(variableName) != m_variablesMap.cend();
 	}
 
-	EffectVariable* const  Effect::GetVariable(const unsigned variableIdx) const
+	EffectVariable& Effect::GetVariable(const std::string& variableName) const
 	{
-		return m_variables[variableIdx].get();
+		return m_variablesMap.at(variableName);
+	}
+
+	EffectVariable& Effect::GetVariable(const unsigned variableIdx) const
+	{
+		return *m_variables.at(variableIdx);
 	}
 
 	//-------------------------------------------------------------------------
@@ -150,9 +152,9 @@ namespace library
 
 		for (unsigned i = 0; i < m_effectDesc.Techniques; i++)
 		{
-			auto technique = std::make_shared<EffectTechnique>(m_app, *this, m_effect->GetTechniqueByIndex(i));
+			auto technique = std::make_unique<EffectTechnique>(m_app, *this, m_effect->GetTechniqueByIndex(i));
 			m_techniques.push_back(technique);
-			m_techniquesMap.insert(std::make_pair(technique->GetName(), technique));
+			m_techniquesMap.emplace(technique->GetName(), *technique);
 		}
 	}
 

@@ -43,7 +43,7 @@ namespace library
 		~Mesh() = default;
 
 		Model& GetModel() { return m_model; }
-		ModelMaterial* GetMaterial() const { return m_material; }
+		ModelMaterial& GetMaterial() const { return m_material; }
 
 		const std::string& GetName() const { return m_name; }
 
@@ -83,13 +83,13 @@ namespace library
 		bool HasFaces() const { return m_facesCount > 0; }
 		unsigned GetFacesCount() const { return m_facesCount; }
 
-		ComPtr<ID3D11Buffer> CreateIndexBuffer();
+		ComPtr<ID3D11Buffer> CreateIndexBuffer() const;
 
 	private:
 		explicit Mesh(Model& model, aiMesh& mesh);
 
 		Model& m_model;
-		ModelMaterial* m_material;
+		ModelMaterial& m_material;
 
 		std::string m_name;
 

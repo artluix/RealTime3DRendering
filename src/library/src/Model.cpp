@@ -56,13 +56,15 @@ namespace library
 		}
 	}
 
-	Mesh* const Model::GetMesh(const unsigned meshIdx) const
+	Model::~Model() = default;
+
+	Mesh& Model::GetMesh(const unsigned meshIdx) const
 	{
-		return m_meshes[meshIdx].get();
+		return *m_meshes.at(meshIdx);
 	}
 
-	ModelMaterial* const Model::GetMaterial(const unsigned materialIdx) const
+	ModelMaterial& Model::GetMaterial(const unsigned materialIdx) const
 	{
-		return m_materials[materialIdx].get();
+		return *m_materials.at(materialIdx);
 	}
 } // namespace library

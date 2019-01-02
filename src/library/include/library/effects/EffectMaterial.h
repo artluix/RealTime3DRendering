@@ -7,6 +7,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <functional>
 
 struct D3D11_INPUT_ELEMENT_DESC;
 
@@ -20,25 +21,25 @@ namespace library
 	class EffectTechnique;
 	class EffectPass;
 
+	// ----------------------------------------------------------------------------------------------------------
+
 	class EffectMaterial
 		: public rtti::Class<EffectMaterial>
 		, public NonCopyable<EffectMaterial>
 	{
 	public:
-		explicit EffectMaterial();
-		explicit EffectMaterial(const std::string& defaultTechniqueName);
-
+		explicit EffectMaterial(Effect& effect, const std::string& defaultTechniqueName="");
 		virtual ~EffectMaterial();
 
-		EffectVariable* const operator[](const std::string& variableName) const;
-		Effect* const GetEffect() const { return m_effect; }
+		EffectVariable& operator[](const std::string& variableName) const;
+		Effect& GetEffect() const { return m_effect; }
 
-		EffectTechnique* const GetCurrentTechnique() const { return m_currentTechnique; }
-		void SetCurrentTechnique(EffectTechnique* const technique);
+		const EffectTechnique& GetCurrentTechnique() const { return m_currentTechnique; }
+		void SetCurrentTechnique(const EffectTechnique& technique);
 
-		ID3D11InputLayout* const GetInputLayout(EffectPass* const pass) const;
+		ID3D11InputLayout* GetInputLayout(const EffectPass& pass) const;
 
-		virtual void Initialize(Effect* const effect);
+		virtual void Initialize();
 
 		virtual std::vector<ComPtr<ID3D11Buffer>> CreateVertexBuffers(ID3D11Device* const device, const Model& model) const;
 		virtual ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const = 0;
@@ -53,12 +54,18 @@ namespace library
 		);
 
 	private:
-		Effect* m_effect;
+		using EffectTechniqueRef = std::reference_wrapper<EffectTechnique>;
+		using EffectTechniqueCRef = std::reference_wrapper<const EffectTechnique>;
 
-		EffectTechnique* m_currentTechnique;
+		using EffectPassRef = std::reference_wrapper<EffectPass>;
+		using EffectPassCRef = std::reference_wrapper<const EffectPass>;
+
+		Effect& m_effect;
+		EffectTechniqueCRef m_currentTechnique;
+
 		std::string m_defaultTechniqueName;
 
-		std::map<EffectPass*, ComPtr<ID3D11InputLayout>> m_inputLayouts;
+		std::map<EffectPassCRef, ComPtr<ID3D11InputLayout>> m_inputLayouts;
 	};
 
 } // namespace library

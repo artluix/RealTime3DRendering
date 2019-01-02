@@ -62,4 +62,7 @@ namespace library
 			}
 		}
 	}
+
+	ModelMaterial::~ModelMaterial() = default;
+
 } // namespace library

@@ -1,19 +1,18 @@
 #pragma once
+#include "effects/BasicMaterial.h"
+
 #include <library/components/SceneComponent.h>
 #include <library/DirectXForwardDeclarations.h>
 
-#include <memory>
+#include <library/effects/Effect.h>
 
 namespace library
 {
 	class KeyboardComponent;
-	class Effect;
 } // namespace library
 
 namespace demo
 {
-	class BasicMaterial;
-
 	class MaterialComponent : public library::rtti::Class<MaterialComponent, library::SceneComponent>
 	{
 	public:
@@ -28,8 +27,8 @@ namespace demo
 		void Draw(const library::Time& time) override;
 
 	private:
-		std::unique_ptr<BasicMaterial> m_material;
-		std::unique_ptr<library::Effect> m_effect;
+		BasicMaterial m_material;
+		library::Effect m_effect;
 
 		ComPtr<ID3D11Buffer> m_indexBuffer;
 		ComPtr<ID3D11Buffer> m_vertexBuffer;

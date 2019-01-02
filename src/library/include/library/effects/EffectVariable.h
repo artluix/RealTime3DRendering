@@ -20,10 +20,10 @@ namespace library
 		Effect& GetEffect() { return m_effect; }
 		const std::string& GetName() const { return m_name; }
 
-		ID3DX11EffectVariable* const GetVariable() const { return m_variable.Get(); }
+		ID3DX11EffectVariable* GetVariable() const { return m_variable.Get(); }
 		const D3DX11_EFFECT_VARIABLE_DESC& GetVariableDesc() const { return m_variableDesc; }
 
-		ID3DX11EffectType* const GetType() const { return m_type.Get(); }
+		ID3DX11EffectType* GetType() const { return m_type.Get(); }
 		const D3DX11_EFFECT_TYPE_DESC& GetTypeDesc() const { return m_typeDesc; }
 
 		EffectVariable& operator << (const float value);
@@ -51,8 +51,6 @@ namespace library
 		ComPtr<ID3DX11EffectType> m_type;
 		D3DX11_EFFECT_TYPE_DESC m_typeDesc;
 	};
-
-	using VariablePtr = std::shared_ptr<EffectVariable>;
 
 	// ----------------------------------------------------------------------------------------------------------
 
