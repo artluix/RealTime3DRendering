@@ -27,6 +27,9 @@ echo %STEP%. Compile Effects
 set EFFECTS_DEST_PATH=%DEST_PATH%\effects
 mkdir %EFFECTS_DEST_PATH%
 
+:: copy shaders sources
+xcopy %SRC_PATH%\effects\*.fx %EFFECTS_DEST_PATH% /f
+
 for %%f in (%SRC_PATH%\effects\*.fx) do (
     :: debug shader
     %FXC_TOOL% %%f /T fx_5_0 /Zi /Od /Fo %EFFECTS_DEST_PATH%\%%~nf_d.fxc /nologo

@@ -16,7 +16,18 @@ namespace library
 	{
 	}
 
-	Effect::~Effect() = default;
+	Effect::~Effect()
+	{
+		// variables
+		std::for_each(m_variables.begin(), m_variables.end(), std::default_delete<EffectVariable>());
+		m_variables.clear();
+		m_variablesMap.clear();
+
+		// techniques
+		std::for_each(m_techniques.begin(), m_techniques.end(), std::default_delete<EffectTechnique>());
+		m_techniques.clear();
+		m_techniquesMap.clear();
+	}
 
 	ComPtr<ID3DX11Effect> Effect::CompileFromFile(ID3D11Device* const device, const fs::Path& path)
 	{
@@ -115,7 +126,7 @@ namespace library
 
 	EffectTechnique& Effect::GetTechnique(const std::string& techniqueName) const
 	{
-		return m_techniquesMap.at(techniqueName);
+		return *m_techniquesMap.at(techniqueName);
 	}
 
 	EffectTechnique& Effect::GetTechnique(const unsigned techniqueIdx) const
@@ -132,7 +143,7 @@ namespace library
 
 	EffectVariable& Effect::GetVariable(const std::string& variableName) const
 	{
-		return m_variablesMap.at(variableName);
+		return *m_variablesMap.at(variableName);
 	}
 
 	EffectVariable& Effect::GetVariable(const unsigned variableIdx) const
@@ -152,9 +163,16 @@ namespace library
 
 		for (unsigned i = 0; i < m_effectDesc.Techniques; i++)
 		{
-			auto technique = std::make_unique<EffectTechnique>(m_app, *this, m_effect->GetTechniqueByIndex(i));
+			auto technique = new EffectTechnique(m_app, *this, m_effect->GetTechniqueByIndex(i));
 			m_techniques.push_back(technique);
-			m_techniquesMap.emplace(technique->GetName(), *technique);
+			m_techniquesMap.emplace(technique->GetName(), technique);
+		}
+
+		for (unsigned i = 0; i < m_effectDesc.GlobalVariables; i++)
+		{
+			auto variable = new EffectVariable(*this, m_effect->GetVariableByIndex(i));
+			m_variables.push_back(variable);
+			m_variablesMap.emplace(variable->GetName(), variable);
 		}
 	}
 

@@ -61,16 +61,16 @@ namespace library
 	public:
 		~ModelMaterial();
 
-		Model& GetModel() { return m_model; }
+		const Model& GetModel() const { return m_model; }
 		const std::string& GetName() const { return m_name; }
 		const std::map<TextureType, TextureNamesVector>& GetAllTextureNames() const { return m_textures; }
 
 		const TextureNamesVector& GetTextureNames(const TextureType textureType) const;
 
 	private:
-		explicit ModelMaterial(Model& model, aiMaterial& material);
+		explicit ModelMaterial(const Model& model, const aiMaterial& material);
 
-		Model& m_model;
+		const Model& m_model;
 		std::string m_name;
 		std::map<TextureType, TextureNamesVector> m_textures;
 	};

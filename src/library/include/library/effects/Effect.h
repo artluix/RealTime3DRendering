@@ -5,7 +5,6 @@
 #include <d3dx11effect.h>
 #include <vector>
 #include <map>
-#include <functional>
 #include <string>
 
 interface ID3D11Device;
@@ -53,12 +52,6 @@ namespace library
 		std::size_t GetVariablesCount() const { return m_variables.size(); }
 
 	private:
-		using EffectTechniquePtr = std::unique_ptr<EffectTechnique>;
-		using EffectTechniqueRef = std::reference_wrapper<EffectTechnique>;
-
-		using EffectVariablePtr = std::unique_ptr<EffectVariable>;
-		using EffectVariableRef = std::reference_wrapper<EffectVariable>;
-
 		void Initialize();
 
 		const Application& m_app;
@@ -66,11 +59,11 @@ namespace library
 		ComPtr<ID3DX11Effect> m_effect;
 		D3DX11_EFFECT_DESC m_effectDesc;
 
-		std::vector<EffectTechniquePtr> m_techniques;
-		std::map<std::string, EffectTechniqueRef> m_techniquesMap;
+		std::vector<EffectTechnique*> m_techniques;
+		std::map<std::string, EffectTechnique*> m_techniquesMap;
 
-		std::vector<EffectVariablePtr> m_variables;
-		std::map<std::string, EffectVariableRef> m_variablesMap;
+		std::vector<EffectVariable*> m_variables;
+		std::map<std::string, EffectVariable*> m_variablesMap;
 	};
 
 } // namespace library

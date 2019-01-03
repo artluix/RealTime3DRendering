@@ -25,9 +25,9 @@ namespace demo
 
 		//-------------------------------------------------------------------------
 
-		explicit BasicMaterial(library::Effect& effect);
+		explicit BasicMaterial(const library::Effect& effect);
 
-		library::EffectVariable& GetWorldViewProjection() const { return m_worldViewProjection; }
+		library::EffectVariable& GetWorldViewProjection() const { return *m_worldViewProjection; }
 
 		void Initialize() override;
 
@@ -37,7 +37,7 @@ namespace demo
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }
 
 	private:
-		library::EffectVariable& m_worldViewProjection;
+		library::EffectVariable* m_worldViewProjection;
 	};
 
 } // namespace demo

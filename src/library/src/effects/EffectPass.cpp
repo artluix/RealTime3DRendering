@@ -7,7 +7,7 @@
 
 namespace library
 {
-	EffectPass::EffectPass(const Application& app, EffectTechnique& technique, ID3DX11EffectPass* const pass)
+	EffectPass::EffectPass(const Application& app, const EffectTechnique& technique, ID3DX11EffectPass* const pass)
 		: m_app(app)
 		, m_technique(technique)
 		, m_pass(pass)
@@ -15,8 +15,6 @@ namespace library
 		m_pass->GetDesc(&m_passDesc);
 		m_name = m_passDesc.Name;
 	}
-
-	EffectPass::~EffectPass() = default;
 
 	ComPtr<ID3D11InputLayout> EffectPass::CreateInputLayout(const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions) const
 	{

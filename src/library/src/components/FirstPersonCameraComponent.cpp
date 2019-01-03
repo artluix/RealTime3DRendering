@@ -51,6 +51,22 @@ namespace library
 	{
 	}
 
+	void FirstPersonCameraComponent::SetKeyboard(const KeyboardComponent& keyboard)
+	{
+		if (&m_keyboard.get() != &keyboard)
+		{
+			m_keyboard = keyboard;
+		}
+	}
+
+	void FirstPersonCameraComponent::SetMouse(const MouseComponent& mouse)
+	{
+		if (&m_mouse.get() != &mouse)
+		{
+			m_mouse = mouse;
+		}
+	}
+
 	void FirstPersonCameraComponent::Initialize()
 	{
 		CameraComponent::Initialize();

@@ -19,6 +19,7 @@ if(APPLICATION)
         include/library/Components/KeyboardComponent.h
         include/library/Components/MouseComponent.h
         include/library/Components/SceneComponent.h
+        include/library/Components/SkyboxComponent.h
         include/library/Components/TextComponent.h
         include/library/Components/UIComponent.h
 
@@ -29,6 +30,8 @@ if(APPLICATION)
         include/library/effects/EffectPass.h
         include/library/effects/EffectTechnique.h
         include/library/effects/EffectVariable.h
+
+        include/library/effects/SkyboxMaterial.h
 
         include/library/Exception.h
         include/library/Key.h
@@ -62,6 +65,7 @@ if(APPLICATION)
         src/Components/KeyboardComponent.cpp
         src/Components/MouseComponent.cpp
         src/Components/SceneComponent.cpp
+        src/Components/SkyboxComponent.cpp
         src/Components/TextComponent.cpp
         src/Components/UIComponent.cpp
 
@@ -70,6 +74,8 @@ if(APPLICATION)
         src/effects/EffectPass.cpp
         src/effects/EffectTechnique.cpp
         src/effects/EffectVariable.cpp
+
+        src/effects/SkyboxMaterial.cpp
 
         src/Exception.cpp
         src/Logger.cpp

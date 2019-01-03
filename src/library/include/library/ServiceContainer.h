@@ -14,7 +14,7 @@ namespace library
 
 		void AddService(const rtti::TypeId typeId, void* const service);
 		void RemoveService(const rtti::TypeId typeId);
-		void* const GetService(const rtti::TypeId typeId) const;
+		void* GetService(const rtti::TypeId typeId) const;
 
 	private:
 		std::map<rtti::TypeId, void*> m_services;

@@ -1,7 +1,6 @@
 #pragma once
 #include "library/NonCopyable.hpp"
 
-#include<memory>
 #include<string>
 #include<vector>
 
@@ -35,13 +34,10 @@ namespace library
 		ModelMaterial& GetMaterial(const unsigned materialIdx) const;
 
 	private:
-		using MeshPtr = std::unique_ptr<Mesh>;
-		using ModelMaterialPtr = std::unique_ptr<ModelMaterial>;
-
 		const Application& m_app;
 
-		std::vector<MeshPtr> m_meshes;
-		std::vector<ModelMaterialPtr> m_materials;
+		std::vector<Mesh*> m_meshes;
+		std::vector<ModelMaterial*> m_materials;
 	};
 
 } // namespace library

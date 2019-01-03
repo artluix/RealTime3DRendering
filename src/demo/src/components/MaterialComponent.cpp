@@ -26,7 +26,11 @@ namespace demo
 		constexpr float k_movementRate = 0.01f;
 
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-			fs::Path("../data/effects/BasicEffect.fx")
+#if defined(DEBUG) || defined(DEBUG)
+			fs::Path("../data/effects/BasicEffect_d.fxc")
+#else
+			fs::Path("../data/effects/BasicEffect.fxc")
+#endif
 		);
 		const auto k_modelPath = utils::GetExecutableDirectory().Join(
 			fs::Path("../data/models/Sphere.obj")

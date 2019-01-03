@@ -29,10 +29,10 @@ namespace library
 		~FirstPersonCameraComponent() = default;
 
 		const KeyboardComponent& GetKeyboard() const { return m_keyboard; }
-		void SetKeyboard(const KeyboardComponent& keyboard) { m_keyboard = keyboard; }
+		void SetKeyboard(const KeyboardComponent& keyboard);
 
 		const MouseComponent& GetMouse() const { return m_mouse; }
-		void SetMouse(const MouseComponent& mouse) { m_mouse = mouse; }
+		void SetMouse(const MouseComponent& mouse);
 
 		float GetMouseSensitivity() const { return m_mouseSensitivity; }
 		void SetMouseSensitivity(const float sensitivity) { m_mouseSensitivity = sensitivity; }

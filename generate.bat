@@ -10,10 +10,10 @@ set TARGET=APPLICATION
 if /i "%1" == "tools" (
     set TARGET=TOOLS
 
-    if /i "%2" == "Win64" (
+    if /i "%2" == "x64" (
         set "GENERATOR=!GENERATOR! Win64"
     )
-) else if /i "%1" == "Win64" (
+) else if /i "%1" == "x64" (
     set "GENERATOR=!GENERATOR! Win64"
 
     if /i "%2" == "tools" (

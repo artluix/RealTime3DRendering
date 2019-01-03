@@ -5,10 +5,16 @@
 
 namespace library
 {
-	EffectVariable::EffectVariable(Effect& effect, const ComPtr<ID3DX11EffectVariable>& variable)
+	EffectVariable::EffectVariable(const Effect& effect, const ComPtr<ID3DX11EffectVariable>& variable)
 		: m_effect(effect)
 		, m_variable(variable)
+		, m_type(nullptr)
 	{
+		m_variable->GetDesc(&m_variableDesc);
+		m_name = m_variableDesc.Name;
+		
+		m_type = m_variable->GetType();
+		m_type->GetDesc(&m_typeDesc);
 	}
 
 	EffectVariable& EffectVariable::operator<<(const float value)

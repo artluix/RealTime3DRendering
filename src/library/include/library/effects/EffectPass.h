@@ -18,10 +18,10 @@ namespace library
 	class EffectPass : public NonCopyable<EffectPass>
 	{
 	public:
-		explicit EffectPass(const Application& app, EffectTechnique& technique, ID3DX11EffectPass* const pass);
-		~EffectPass();
+		explicit EffectPass(const Application& app, const EffectTechnique& technique, ID3DX11EffectPass* const pass);
+		~EffectPass() = default;
 
-		EffectTechnique& GetTechnique() { return m_technique; }
+		const EffectTechnique& GetTechnique() { return m_technique; }
 		const std::string& GetName() const { return m_name; }
 
 		ID3DX11EffectPass* GetPass() const { return m_pass; }
@@ -36,23 +36,8 @@ namespace library
 		ID3DX11EffectPass* m_pass;
 		D3DX11_PASS_DESC m_passDesc;
 
-		EffectTechnique& m_technique;
+		const EffectTechnique& m_technique;
 		std::string m_name;
 	};
 
-	using EffectPassRef = std::reference_wrapper<EffectPass>;
-	using EffectPassCRef = std::reference_wrapper<const EffectPass>;
-
 } // namespace library
-
-namespace std
-{
-	template<>
-	struct less<library::EffectPassCRef>
-	{
-		bool operator()(const library::EffectPassCRef& lhs, const library::EffectPassCRef& rhs) const
-		{
-			return &lhs.get() < &rhs.get();
-		}
-	};
-};

@@ -14,8 +14,13 @@ namespace library
 
 	void SceneComponent::SetCamera(const CameraComponent& camera)
 	{
-		m_camera = camera;
+		if (&m_camera.get() != &camera)
+		{
+			m_camera = camera;
+		}
 	}
+
+	//-------------------------------------------------------------------------
 
 	void SceneComponent::SetPosition(const math::Vector3& position)
 	{
@@ -34,6 +39,8 @@ namespace library
 		SetPosition(m_position + translation);
 	}
 
+	//-------------------------------------------------------------------------
+
 	void SceneComponent::SetRotation(const math::Vector3& rotation)
 	{
 		if (m_rotation != rotation)
@@ -51,12 +58,34 @@ namespace library
 		SetRotation(m_rotation + rotation);
 	}
 
+	//-------------------------------------------------------------------------
+
+	void SceneComponent::SetScaling(const math::Vector3& scale)
+	{
+		if (m_scale != scale)
+		{
+			m_scale = scale;
+			UpdateWorldMatrix();
+		}
+	}
+
+	void SceneComponent::Scale(const math::Vector3& scale)
+	{
+		if (!scale)
+			return;
+
+		SetScaling(m_scale + scale);
+	}
+
+	//-------------------------------------------------------------------------
+
 	void SceneComponent::UpdateWorldMatrix()
 	{
 		const auto translationMatrix = math::Matrix4::Translation(m_position);
 		const auto rotationMatrix = math::Matrix4::RotationRollPitchYaw(m_rotation);
+		const auto scaleMatrix = math::Matrix4::Scaling(m_scale);
 
-		m_worldMatrix = rotationMatrix * translationMatrix;
+		m_worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;
 	}
 
 } // namespace library

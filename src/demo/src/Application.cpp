@@ -6,10 +6,10 @@
 #include <library/components/GridComponent.h>
 #include <library/components/FirstPersonCameraComponent.h>
 
-//#include "components/TriangleComponent.h"
-//#include "components/CubeComponent.h"
-//#include "components/ModelComponent.h"
-//#include "components/TextureModelComponent.h"
+#include "components/TriangleComponent.h"
+#include "components/CubeComponent.h"
+#include "components/ModelComponent.h"
+#include "components/TextureModelComponent.h"
 #include "components/MaterialComponent.h"
 
 #include <library/Exception.h>
@@ -72,8 +72,8 @@ namespace demo
 		auto gridComponent = std::make_shared<GridComponent>(*this, *cameraComponent);
 		m_components.push_back(gridComponent);
 
-		//auto triangleComponent = std::make_shared<TriangleComponent>(*this, *cameraComponent);
-		//m_components.push_back(triangleComponent);
+		auto triangleComponent = std::make_shared<TriangleComponent>(*this, *cameraComponent);
+		m_components.push_back(triangleComponent);
 
 		//auto cubeComponent = std::make_shared<CubeComponent>(*this, *cameraComponent, *m_keyboardComponent);
 		//m_components.push_back(cubeComponent);
@@ -84,8 +84,8 @@ namespace demo
 		//auto textureModelComponent = std::make_shared<TextureModelComponent>(*this, *cameraComponent, *m_keyboardComponent);
 		//m_components.push_back(textureModelComponent);
 
-		auto materialComponent = std::make_shared<MaterialComponent>(*this, *cameraComponent, *m_keyboardComponent);
-		m_components.push_back(materialComponent);
+		//auto materialComponent = std::make_shared<MaterialComponent>(*this, *cameraComponent, *m_keyboardComponent);
+		//m_components.push_back(materialComponent);
 
 		// mouse text component
 		auto mouseTextComponent = std::make_shared<TextComponent>(*this);

@@ -32,7 +32,7 @@ namespace library
 		return it->second;
 	}
 
-	ModelMaterial::ModelMaterial(Model& model, aiMaterial& material)
+	ModelMaterial::ModelMaterial(const Model& model, const aiMaterial& material)
 		: m_model(model)
 	{
 		aiString name;

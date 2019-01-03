@@ -13,17 +13,12 @@
 
 namespace library
 {
-	EffectMaterial::EffectMaterial(Effect& effect, const std::string& defaultTechniqueName /* = ""*/)
+	EffectMaterial::EffectMaterial(const Effect& effect, const std::string& defaultTechniqueName /* = ""*/)
 		: m_effect(effect)
 		, m_defaultTechniqueName(defaultTechniqueName)
-		, m_currentTechnique(m_defaultTechniqueName.empty() ?
-			m_effect.GetTechnique(0) :
-			m_effect.GetTechnique(m_defaultTechniqueName)
-		)
+		, m_currentTechnique(nullptr)
 	{
 	}
-
-	EffectMaterial::~EffectMaterial() = default;
 
 	EffectVariable& EffectMaterial::operator[](const std::string& variableName) const
 	{
@@ -32,12 +27,15 @@ namespace library
 
 	void EffectMaterial::SetCurrentTechnique(const EffectTechnique& technique)
 	{
-		m_currentTechnique = technique;
+		if (m_currentTechnique != &technique)
+		{
+			m_currentTechnique = &technique;
+		}
 	}
 
 	ID3D11InputLayout* EffectMaterial::GetInputLayout(const EffectPass& pass) const
 	{
-		const auto it = m_inputLayouts.find(pass);
+		const auto it = m_inputLayouts.find(&pass);
 		if (it != m_inputLayouts.cend())
 			return it->second.Get();
 
@@ -46,6 +44,11 @@ namespace library
 
 	void EffectMaterial::Initialize()
 	{
+		const auto& technique = m_defaultTechniqueName.empty() ?
+			m_effect.GetTechnique(0) :
+			m_effect.GetTechnique(m_defaultTechniqueName);
+
+		SetCurrentTechnique(technique);
 	}
 
 	void EffectMaterial::CreateInputLayout(
@@ -58,7 +61,7 @@ namespace library
 		const auto& pass = technique.GetPass(passName);
 		auto inputLayout = pass.CreateInputLayout(inputElementDescriptions);
 
-		m_inputLayouts.emplace(pass, inputLayout);
+		m_inputLayouts.emplace(&pass, inputLayout);
 	}
 
 	std::vector<ComPtr<ID3D11Buffer>> EffectMaterial::CreateVertexBuffers(ID3D11Device* const device, const Model& model) const

@@ -176,7 +176,7 @@ namespace demo
 			);
 			if (FAILED(hr))
 			{
-				throw Exception("CreateWICTextureFromFile() failed.", hr);
+				throw Exception("CreateDDSTextureFromMemory() failed.", hr);
 			}
 		}
 	}

@@ -28,13 +28,13 @@ namespace library
 		, public NonCopyable<EffectMaterial>
 	{
 	public:
-		explicit EffectMaterial(Effect& effect, const std::string& defaultTechniqueName="");
-		virtual ~EffectMaterial();
+		explicit EffectMaterial(const Effect& effect, const std::string& defaultTechniqueName="");
+		virtual ~EffectMaterial() = default;
 
 		EffectVariable& operator[](const std::string& variableName) const;
-		Effect& GetEffect() const { return m_effect; }
+		const Effect& GetEffect() const { return m_effect; }
 
-		const EffectTechnique& GetCurrentTechnique() const { return m_currentTechnique; }
+		const EffectTechnique& GetCurrentTechnique() const { return *m_currentTechnique; }
 		void SetCurrentTechnique(const EffectTechnique& technique);
 
 		ID3D11InputLayout* GetInputLayout(const EffectPass& pass) const;
@@ -54,18 +54,12 @@ namespace library
 		);
 
 	private:
-		using EffectTechniqueRef = std::reference_wrapper<EffectTechnique>;
-		using EffectTechniqueCRef = std::reference_wrapper<const EffectTechnique>;
+		const Effect& m_effect;
 
-		using EffectPassRef = std::reference_wrapper<EffectPass>;
-		using EffectPassCRef = std::reference_wrapper<const EffectPass>;
-
-		Effect& m_effect;
-		EffectTechniqueCRef m_currentTechnique;
-
+		const EffectTechnique* m_currentTechnique;
 		std::string m_defaultTechniqueName;
 
-		std::map<EffectPassCRef, ComPtr<ID3D11InputLayout>> m_inputLayouts;
+		std::map<const EffectPass*, ComPtr<ID3D11InputLayout>> m_inputLayouts;
 	};
 
 } // namespace library

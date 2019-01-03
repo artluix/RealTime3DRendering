@@ -28,9 +28,9 @@ namespace library
 		{
 			std::ostringstream oss;
 			oss << std::setprecision(4) <<
-				'/' << _11 << ", " << _12 << ", " << _13 << '\\' << std::endl <<
-				'|' << _21 << ", " << _22 << ", " << _23 << '|' << std::endl <<
-				'\\' << _11 << ", " << _12 << ", " << _13 << '/' << std::endl;
+				'/' << _11 << ", " << _12 << ", " << _13 << '\\\n' <<
+				'|' << _21 << ", " << _22 << ", " << _23 << '|\n' <<
+				'\\' << _11 << ", " << _12 << ", " << _13 << '/\n';
 			return oss.str();
 		}
 
@@ -151,7 +151,7 @@ namespace library
 			return Store(DirectX::XMMatrixRotationRollPitchYaw(roll, pitch, yaw));
 		}
 
-		Matrix<4> Matrix<4>::RotationRollPitchYaw(const Vector3 & vector)
+		Matrix<4> Matrix<4>::RotationRollPitchYaw(const Vector3& vector)
 		{
 			return Store(DirectX::XMMatrixRotationRollPitchYawFromVector(vector.Load()));
 		}
@@ -171,16 +171,33 @@ namespace library
 			return Store(DirectX::XMMatrixRotationZ(angle));
 		}
 
+		//Matrix<4> Matrix<4>::Scaling(const float scale)
+		//{
+		//	return Scaling(scale, scale, scale);
+		//}
+
+		//-------------------------------------------------------------------------
+
+		Matrix<4> Matrix<4>::Scaling(const float x, const float y, const float z)
+		{
+			return Store(DirectX::XMMatrixScaling(x, y, z));
+		}
+
+		Matrix<4> Matrix<4>::Scaling(const Vector3& vector)
+		{
+			return Store(DirectX::XMMatrixScalingFromVector(vector.Load()));
+		}
+
 		//-------------------------------------------------------------------------
 
 		std::string Matrix<4>::ToString() const
 		{
 			std::ostringstream oss;
 			oss << std::setprecision(4) <<
-				'/' << _11 << ", " << _12 << ", " << _13 << ", " << _14 << '\\' << std::endl <<
-				'|' << _21 << ", " << _22 << ", " << _23 << ", " << _24 << '|' << std::endl <<
-				'|' << _31 << ", " << _32 << ", " << _33 << ", " << _34 << '|' << std::endl <<
-				'\\' << _11 << ", " << _12 << ", " << _13 << ", " << _14 << '/' << std::endl;
+				'/' << _11 << ", " << _12 << ", " << _13 << ", " << _14 << '\\\n' <<
+				'|' << _21 << ", " << _22 << ", " << _23 << ", " << _24 << '|\n' <<
+				'|' << _31 << ", " << _32 << ", " << _33 << ", " << _34 << '|\n' <<
+				'\\' << _11 << ", " << _12 << ", " << _13 << ", " << _14 << '/\n';
 			return oss.str();
 		}
 

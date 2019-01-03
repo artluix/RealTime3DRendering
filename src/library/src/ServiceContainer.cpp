@@ -19,7 +19,7 @@ namespace library
 		}
 	}
 
-	void* const ServiceContainer::GetService(const rtti::TypeId typeId) const
+	void* ServiceContainer::GetService(const rtti::TypeId typeId) const
 	{
 		if (m_services.empty())
 			return nullptr;

@@ -6,7 +6,6 @@
 #include <vector>
 #include <map>
 #include <string>
-#include <functional>
 
 namespace library
 {
@@ -17,13 +16,13 @@ namespace library
 	class EffectTechnique : public NonCopyable<EffectTechnique>
 	{
 	public:
-		explicit EffectTechnique(const Application& app, Effect& effect, const ComPtr<ID3DX11EffectTechnique>& technique);
-		~EffectTechnique() = default;
+		explicit EffectTechnique(const Application& app, const Effect& effect, const ComPtr<ID3DX11EffectTechnique>& technique);
+		~EffectTechnique();
 
-		Effect& GetEffect() { return m_effect; }
+		const Effect& GetEffect() const { return m_effect; }
 		const std::string& GetName() const { return m_name; }
 
-		ID3DX11EffectTechnique* const GetTechnique() const { return m_technique.Get(); }
+		ID3DX11EffectTechnique* GetTechnique() const { return m_technique.Get(); }
 		const D3DX11_TECHNIQUE_DESC& GetTechniqueDesc() const { return m_techniqueDesc; }
 
 		bool HasPass(const std::string& passName) const;
@@ -32,20 +31,14 @@ namespace library
 		std::size_t GetPassesCount() const { return m_passes.size(); }
 
 	private:
-		using EffectPassPtr = std::unique_ptr<EffectPass>;
-		using EffectPassRef = std::reference_wrapper<EffectPass>;
-
 		ComPtr<ID3DX11EffectTechnique> m_technique;
 		D3DX11_TECHNIQUE_DESC m_techniqueDesc;
 
-		Effect& m_effect;
+		const Effect& m_effect;
 		std::string m_name;
 
-		std::vector<EffectPassPtr> m_passes;
-		std::map<std::string, EffectPassRef> m_passesMap;
+		std::vector<EffectPass*> m_passes;
+		std::map<std::string, EffectPass*> m_passesMap;
 	};
-
-	using EffectTechniqueRef = std::reference_wrapper<EffectTechnique>;
-	using EffectTechniqueCRef = std::reference_wrapper<const EffectTechnique>;
 
 } // namespace library

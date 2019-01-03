@@ -188,6 +188,12 @@ namespace library
 			static Matrix RotationZ(const float angle);
 
 			//-------------------------------------------------------------------------
+			
+			//static Matrix Scaling(const float scale);
+			static Matrix Scaling(const float x, const float y, const float z);
+			static Matrix Scaling(const Vector3& vector);
+			
+			//-------------------------------------------------------------------------
 
 			std::string ToString() const;
 

@@ -15,9 +15,9 @@ namespace library
 	class EffectVariable : public NonCopyable<EffectVariable>
 	{
 	public:
-		explicit EffectVariable(Effect& effect, const ComPtr<ID3DX11EffectVariable>& variable);
+		explicit EffectVariable(const Effect& effect, const ComPtr<ID3DX11EffectVariable>& variable);
 
-		Effect& GetEffect() { return m_effect; }
+		const Effect& GetEffect() const { return m_effect; }
 		const std::string& GetName() const { return m_name; }
 
 		ID3DX11EffectVariable* GetVariable() const { return m_variable.Get(); }
@@ -42,7 +42,7 @@ namespace library
 		EffectVariable& operator << (const math::Matrix<Size>& value);
 
 	private:
-		Effect& m_effect;
+		const Effect& m_effect;
 		std::string m_name;
 
 		ComPtr<ID3DX11EffectVariable> m_variable;
