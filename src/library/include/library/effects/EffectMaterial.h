@@ -34,7 +34,7 @@ namespace library
 		EffectVariable& operator[](const std::string& variableName) const;
 		const Effect& GetEffect() const { return m_effect; }
 
-		const EffectTechnique& GetCurrentTechnique() const { return *m_currentTechnique; }
+		const EffectTechnique& GetCurrentTechnique() const { return m_currentTechnique; }
 		void SetCurrentTechnique(const EffectTechnique& technique);
 
 		ID3D11InputLayout* GetInputLayout(const EffectPass& pass) const;
@@ -56,7 +56,7 @@ namespace library
 	private:
 		const Effect& m_effect;
 
-		const EffectTechnique* m_currentTechnique;
+		std::reference_wrapper<const EffectTechnique> m_currentTechnique;
 		std::string m_defaultTechniqueName;
 
 		std::map<const EffectPass*, ComPtr<ID3D11InputLayout>> m_inputLayouts;

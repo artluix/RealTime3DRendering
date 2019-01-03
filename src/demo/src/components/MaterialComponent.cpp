@@ -1,8 +1,11 @@
 #include "components/MaterialComponent.h"
 
+#include "effects/BasicMaterial.h"
+
 #include <library/components/CameraComponent.h>
 #include <library/components/KeyboardComponent.h>
 
+#include <library/effects/Effect.h>
 #include <library/effects/EffectPass.h>
 #include <library/effects/EffectTechnique.h>
 #include <library/effects/EffectVariable.h>
@@ -43,8 +46,6 @@ namespace demo
 		const KeyboardComponent& keyboard
 	) 
 		: Class(app, camera)
-		, m_effect(app)
-		, m_material(m_effect)
 		, m_keyboard(keyboard)
 		, m_indicesCount(0)
 	{
@@ -52,20 +53,20 @@ namespace demo
 
 	void MaterialComponent::Initialize()
 	{
-		const Application& app = m_app;
-
 		// Load the model
-		Model model(app, k_modelPath, true);
+		Model model(m_app, k_modelPath, true);
 
-		// Load effect
-		m_effect.LoadCompiledEffect(k_effectPath);
+		// create effect
+		m_effect = std::make_unique<library::Effect>(m_app);
+		m_effect->LoadCompiledEffect(k_effectPath);
 
-		// Initialize material
-		m_material.Initialize();
+		// create material
+		m_material = std::make_unique<BasicMaterial>(*m_effect);
+		m_material->Initialize();
 
 		// Create the vertex and index buffers
 		const auto& mesh = model.GetMesh(0);
-		m_material.CreateVertexBuffer(app.GetD3DDevice(), mesh);
+		m_vertexBuffer = m_material->CreateVertexBuffer(m_app.GetD3DDevice(), mesh);
 		m_indexBuffer = mesh.CreateIndexBuffer();
 		m_indicesCount = mesh.GetIndicesCount();
 	}
@@ -117,18 +118,18 @@ namespace demo
 		d3dDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		
 		// input layout
-		auto& pass = m_material.GetCurrentTechnique().GetPass(0);
-		auto inputLayout = m_material.GetInputLayout(pass);
+		auto& pass = m_material->GetCurrentTechnique().GetPass(0);
+		auto inputLayout = m_material->GetInputLayout(pass);
 		d3dDeviceContext->IASetInputLayout(inputLayout);
 
 		// vertex & index buffers
-		unsigned stride = m_material.GetVertexSize();
+		unsigned stride = m_material->GetVertexSize();
 		unsigned offset = 0;
 		d3dDeviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 		d3dDeviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 		const auto wvp = m_worldMatrix * GetCamera().GetViewProjectionMatrix();
-		m_material.GetWorldViewProjection() << wvp;
+		m_material->GetWorldViewProjection() << wvp;
 
 		pass.Apply(0, d3dDeviceContext);
 

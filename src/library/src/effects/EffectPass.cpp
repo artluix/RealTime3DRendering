@@ -16,6 +16,8 @@ namespace library
 		m_name = m_passDesc.Name;
 	}
 
+	EffectPass::~EffectPass() = default;
+
 	ComPtr<ID3D11InputLayout> EffectPass::CreateInputLayout(const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions) const
 	{
 		ComPtr<ID3D11InputLayout> inputLayout;

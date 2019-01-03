@@ -81,8 +81,6 @@ namespace library
 
 	void GridComponent::Initialize()
 	{
-		const Application& app = m_app;
-
 		// shader
 		{
 			std::vector<library::byte> effectData;
@@ -96,7 +94,7 @@ namespace library
 				//shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
 				effectData.data(), effectData.size(),
 				0,
-				app.GetD3DDevice(),
+				m_app.GetD3DDevice(),
 				m_effect.GetAddressOf()
 			);
 			if (FAILED(hr))
@@ -141,7 +139,7 @@ namespace library
 				{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			};
 
-			auto hr = app.GetD3DDevice()->CreateInputLayout(
+			auto hr = m_app.GetD3DDevice()->CreateInputLayout(
 				inputElementDescriptions.data(), inputElementDescriptions.size(),
 				passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
 				m_inputLayout.GetAddressOf()

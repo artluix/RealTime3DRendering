@@ -6,6 +6,7 @@ namespace library
 {
 	class Mesh;
 	class KeyboardComponent;
+	class MouseComponent;
 } // namespace library
 
 namespace demo
@@ -16,7 +17,8 @@ namespace demo
 		explicit TextureModelComponent(
 			const library::Application& app,
 			const library::CameraComponent& camera,
-			const library::KeyboardComponent& keyboard
+			const library::KeyboardComponent& keyboard,
+			const library::MouseComponent& mouse
 		);
 
 		void Initialize() override;
@@ -41,7 +43,10 @@ namespace demo
 
 		unsigned m_indicesCount;
 
+		long m_wheel;
+
 		std::reference_wrapper<const library::KeyboardComponent> m_keyboard;
+		std::reference_wrapper<const library::MouseComponent> m_mouse;
 	};
 
 } // namespace demo

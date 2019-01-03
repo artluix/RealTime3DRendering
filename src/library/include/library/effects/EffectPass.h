@@ -19,7 +19,7 @@ namespace library
 	{
 	public:
 		explicit EffectPass(const Application& app, const EffectTechnique& technique, ID3DX11EffectPass* const pass);
-		~EffectPass() = default;
+		~EffectPass();
 
 		const EffectTechnique& GetTechnique() { return m_technique; }
 		const std::string& GetName() const { return m_name; }

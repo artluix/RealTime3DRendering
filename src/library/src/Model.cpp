@@ -56,14 +56,7 @@ namespace library
 		}
 	}
 
-	Model::~Model()
-	{
-		std::for_each(m_meshes.begin(), m_meshes.end(), std::default_delete<Mesh>());
-		m_meshes.clear();
-
-		std::for_each(m_materials.begin(), m_materials.end(), std::default_delete<ModelMaterial>());
-		m_materials.clear();
-	}
+	Model::~Model() = default;
 
 	Mesh& Model::GetMesh(const unsigned meshIdx) const
 	{

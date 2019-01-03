@@ -3,6 +3,7 @@
 
 #include<string>
 #include<vector>
+#include<memory>
 
 namespace library
 {
@@ -34,10 +35,13 @@ namespace library
 		ModelMaterial& GetMaterial(const unsigned materialIdx) const;
 
 	private:
+		using MaterialPtr = std::unique_ptr<ModelMaterial>;
+		using MeshPtr = std::unique_ptr<Mesh>;
+
 		const Application& m_app;
 
-		std::vector<Mesh*> m_meshes;
-		std::vector<ModelMaterial*> m_materials;
+		std::vector<MeshPtr> m_meshes;
+		std::vector<MaterialPtr> m_materials;
 	};
 
 } // namespace library

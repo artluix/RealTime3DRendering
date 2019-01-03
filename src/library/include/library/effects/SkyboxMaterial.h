@@ -24,6 +24,7 @@ namespace library
 		//-------------------------------------------------------------------------
 
 		explicit SkyboxMaterial(const library::Effect& effect);
+		~SkyboxMaterial();
 
 		EffectVariable& GetWorldViewProjection() const { return *m_worldViewProjection; }
 		EffectVariable& GetSkyboxTexture() const { return *m_skyboxTexture; }

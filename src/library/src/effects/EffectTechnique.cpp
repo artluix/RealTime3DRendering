@@ -16,18 +16,13 @@ namespace library
 
 		for (unsigned i = 0; i < m_techniqueDesc.Passes; i++)
 		{
-			auto pass = new EffectPass(app, *this, m_technique->GetPassByIndex(i));
-			m_passes.push_back(pass);
-			m_passesMap.emplace(pass->GetName(), pass);
+			auto pass = std::make_unique<EffectPass>(app, *this, m_technique->GetPassByIndex(i));
+			m_passesMap.emplace(pass->GetName(), pass.get());
+			m_passes.push_back(std::move(pass));
 		}
 	}
 
-	EffectTechnique::~EffectTechnique()
-	{
-		std::for_each(m_passes.begin(), m_passes.end(), std::default_delete<EffectPass>());
-		m_passes.clear();
-		m_passesMap.clear();
-	}
+	EffectTechnique::~EffectTechnique() = default;
 
 	bool EffectTechnique::HasPass(const std::string& passName) const
 	{

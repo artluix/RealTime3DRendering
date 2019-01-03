@@ -7,6 +7,8 @@
 #include "library/Utils.h"
 #include "library/Exception.h"
 
+#include "library/effects/Effect.h"
+#include "library/effects/SkyboxMaterial.h"
 #include "library/effects/EffectPass.h"
 #include "library/effects/EffectTechnique.h"
 #include "library/effects/EffectVariable.h"
@@ -40,8 +42,6 @@ namespace library
 	)
 		: Class(app, camera)
 		, m_cubeMapPath(cubeMapPath)
-		, m_effect(app)
-		, m_material(m_effect)
 	{
 		SetScaling(math::Vector3(scale));
 	}
@@ -50,12 +50,16 @@ namespace library
 	{
 		Model model(m_app, k_modelPath, true);
 
-		m_effect.LoadCompiledEffect(k_effectPath);
+		// create effect
+		m_effect = std::make_unique<library::Effect>(m_app);
+		m_effect->LoadCompiledEffect(k_effectPath);
 
-		m_material.Initialize();
+		// create material
+		m_material = std::make_unique<SkyboxMaterial>(*m_effect);
+		m_material->Initialize();
 
 		const auto& mesh = model.GetMesh(0);
-		m_material.CreateVertexBuffer(m_app.GetD3DDevice(), mesh);
+		m_vertexBuffer = m_material->CreateVertexBuffer(m_app.GetD3DDevice(), mesh);
 		m_indexBuffer = mesh.CreateIndexBuffer();
 		m_indicesCount = mesh.GetIndicesCount();
 
@@ -96,19 +100,19 @@ namespace library
 		d3dDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
 		// input layout
-		auto& pass = m_material.GetCurrentTechnique().GetPass(0);
-		auto inputLayout = m_material.GetInputLayout(pass);
+		auto& pass = m_material->GetCurrentTechnique().GetPass(0);
+		auto inputLayout = m_material->GetInputLayout(pass);
 		d3dDeviceContext->IASetInputLayout(inputLayout);
 
 		// vertex & index buffers
-		unsigned stride = m_material.GetVertexSize();
+		unsigned stride = m_material->GetVertexSize();
 		unsigned offset = 0;
 		d3dDeviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 		d3dDeviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 		const auto wvp = m_worldMatrix * GetCamera().GetViewProjectionMatrix();
-		m_material.GetWorldViewProjection() << wvp;
-		m_material.GetSkyboxTexture() << m_cubeMapShaderResourceView.Get();
+		m_material->GetWorldViewProjection() << wvp;
+		m_material->GetSkyboxTexture() << m_cubeMapShaderResourceView.Get();
 
 		pass.Apply(0, d3dDeviceContext);
 

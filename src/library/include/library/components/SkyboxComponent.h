@@ -3,13 +3,14 @@
 
 #include "library/Path.h"
 #include "library/Math.h"
-#include "library/effects/Effect.h"
-#include "library/effects/SkyboxMaterial.h"
 
 #include "library/DirectXForwardDeclarations.h"
 
 namespace library
 {
+	class Effect;
+	class SkyboxMaterial;
+
 	class SkyboxComponent : public rtti::Class<SkyboxComponent, SceneComponent>
 	{
 	public:
@@ -29,13 +30,12 @@ namespace library
 	private:
 		fs::Path m_cubeMapPath;
 
-		Effect m_effect;
-		SkyboxMaterial m_material;
+		std::unique_ptr<Effect> m_effect;
+		std::unique_ptr<SkyboxMaterial> m_material;
 
 		ComPtr<ID3D11ShaderResourceView> m_cubeMapShaderResourceView;
 		ComPtr<ID3D11Buffer> m_vertexBuffer;
 		ComPtr<ID3D11Buffer> m_indexBuffer;
 		unsigned m_indicesCount;
-
 	};
 } // namespace library

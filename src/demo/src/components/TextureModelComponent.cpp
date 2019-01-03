@@ -2,6 +2,7 @@
 
 #include <library/components/CameraComponent.h>
 #include <library/components/KeyboardComponent.h>
+#include <library/components/MouseComponent.h>
 
 #include <library/VertexTypes.h>
 #include <library/Application.h>
@@ -24,6 +25,8 @@ namespace demo
 	{
 		constexpr float k_rotationAngle = math::constants::Pi_Div_2;
 		constexpr float k_movementRate = 0.01f;
+
+		constexpr float k_scaleRate = 0.01f;
 
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
 #if defined(DEBUG) || defined(DEBUG)
@@ -49,18 +52,19 @@ namespace demo
 	TextureModelComponent::TextureModelComponent(
 		const Application& app,
 		const CameraComponent& camera,
-		const KeyboardComponent& keyboard
+		const KeyboardComponent& keyboard,
+		const library::MouseComponent& mouse
 	)
 		: Class(app, camera)
 		, m_keyboard(keyboard)
+		, m_mouse(mouse)
 		, m_indicesCount(0)
+		, m_wheel(0)
 	{
 	}
 
 	void TextureModelComponent::Initialize()
 	{
-		const Application& app = m_app;
-
 		// shader
 		{
 			std::vector<library::byte> effectData;
@@ -74,7 +78,7 @@ namespace demo
 				//shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
 				effectData.data(), effectData.size(),
 				0,
-				app.GetD3DDevice(),
+				m_app.GetD3DDevice(),
 				m_effect.GetAddressOf()
 			);
 			if (FAILED(hr))
@@ -138,7 +142,7 @@ namespace demo
 				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			};
 
-			auto hr = app.GetD3DDevice()->CreateInputLayout(
+			auto hr = m_app.GetD3DDevice()->CreateInputLayout(
 				inputElementDescriptions.data(), inputElementDescriptions.size(),
 				passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
 				m_inputLayout.GetAddressOf()
@@ -150,11 +154,11 @@ namespace demo
 		}
 
 		// Load the model
-		Model model(app, k_modelPath, true);
+		Model model(m_app, k_modelPath, true);
 
 		// Create the vertex and index buffers
 		const auto& mesh = model.GetMesh(0);
-		CreateVertexBuffer(app.GetD3DDevice(), mesh);
+		CreateVertexBuffer(m_app.GetD3DDevice(), mesh);
 		m_indexBuffer = mesh.CreateIndexBuffer();
 		m_indicesCount = mesh.GetIndicesCount();
 
@@ -168,7 +172,7 @@ namespace demo
 			}
 
 			auto hr = DirectX::CreateDDSTextureFromMemory(
-				app.GetD3DDevice(),
+				m_app.GetD3DDevice(),
 				reinterpret_cast<const std::uint8_t*>(textureData.data()),
 				textureData.size(),
 				nullptr,
@@ -184,6 +188,7 @@ namespace demo
 	void TextureModelComponent::Update(const Time& time)
 	{
 		const KeyboardComponent& keyboard = m_keyboard;
+		const MouseComponent& mouse = m_mouse;
 
 		// rotation
 		if (keyboard.IsKeyDown(Key::R))
@@ -218,6 +223,21 @@ namespace demo
 			if (movementAmount)
 			{
 				Translate(math::Vector3(movementAmount * k_movementRate));
+			}
+		}
+
+		// scaling
+		{
+			const auto wheel = mouse.GetWheel();
+			if (m_wheel != wheel)
+			{
+				if (keyboard.IsKeyDown(Key::Alt_Left))
+				{
+					const float delta = float(wheel - m_wheel) * k_scaleRate;
+					Scale(math::Vector3(delta));
+				}
+
+				m_wheel = wheel;
 			}
 		}
 	}

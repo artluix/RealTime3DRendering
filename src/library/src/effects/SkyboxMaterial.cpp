@@ -15,6 +15,8 @@ namespace library
 	{
 	}
 
+	SkyboxMaterial::~SkyboxMaterial() = default;
+
 	void SkyboxMaterial::Initialize()
 	{
 		EffectMaterial::Initialize();

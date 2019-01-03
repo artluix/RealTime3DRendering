@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <memory>
 
 interface ID3D11Device;
 
@@ -28,7 +29,7 @@ namespace library
 		explicit Effect(const Application& app);
 		~Effect();
 
-		static ComPtr<ID3DX11Effect> CompileFromFile(ID3D11Device* const device, const fs::Path& path);
+		static ComPtr<ID3DX11Effect> CompileEffectFromFile(ID3D11Device* const device, const fs::Path& path);
 		static ComPtr<ID3DX11Effect> LoadCompiledEffect(ID3D11Device* const device, const fs::Path& path);
 
 		void CompileFromFile(const fs::Path& path);
@@ -52,6 +53,9 @@ namespace library
 		std::size_t GetVariablesCount() const { return m_variables.size(); }
 
 	private:
+		using EffectTechniquePtr = std::unique_ptr<EffectTechnique>;
+		using EffectVariablePtr = std::unique_ptr<EffectVariable>;
+
 		void Initialize();
 
 		const Application& m_app;
@@ -59,10 +63,10 @@ namespace library
 		ComPtr<ID3DX11Effect> m_effect;
 		D3DX11_EFFECT_DESC m_effectDesc;
 
-		std::vector<EffectTechnique*> m_techniques;
+		std::vector<EffectTechniquePtr> m_techniques;
 		std::map<std::string, EffectTechnique*> m_techniquesMap;
 
-		std::vector<EffectVariable*> m_variables;
+		std::vector<EffectVariablePtr> m_variables;
 		std::map<std::string, EffectVariable*> m_variablesMap;
 	};
 

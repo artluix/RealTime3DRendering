@@ -17,6 +17,8 @@ namespace library
 		m_type->GetDesc(&m_typeDesc);
 	}
 
+	EffectVariable::~EffectVariable() = default;
+
 	EffectVariable& EffectVariable::operator<<(const float value)
 	{
 		auto variable = m_variable->AsScalar();

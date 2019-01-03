@@ -40,7 +40,7 @@ namespace library
 		friend class Model;
 
 	public:
-		~Mesh() = default;
+		~Mesh();
 
 		Model& GetModel() { return m_model; }
 		ModelMaterial& GetMaterial() const { return m_material; }

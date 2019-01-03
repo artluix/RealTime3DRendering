@@ -6,6 +6,7 @@
 #include <vector>
 #include <map>
 #include <string>
+#include <memory>
 
 namespace library
 {
@@ -31,13 +32,15 @@ namespace library
 		std::size_t GetPassesCount() const { return m_passes.size(); }
 
 	private:
+		using EffectPassPtr = std::unique_ptr<EffectPass>;
+
 		ComPtr<ID3DX11EffectTechnique> m_technique;
 		D3DX11_TECHNIQUE_DESC m_techniqueDesc;
 
 		const Effect& m_effect;
 		std::string m_name;
 
-		std::vector<EffectPass*> m_passes;
+		std::vector<EffectPassPtr> m_passes;
 		std::map<std::string, EffectPass*> m_passesMap;
 	};
 

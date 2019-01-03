@@ -16,6 +16,7 @@ namespace library
 	{
 	public:
 		explicit EffectVariable(const Effect& effect, const ComPtr<ID3DX11EffectVariable>& variable);
+		~EffectVariable();
 
 		const Effect& GetEffect() const { return m_effect; }
 		const std::string& GetName() const { return m_name; }

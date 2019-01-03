@@ -16,7 +16,10 @@ namespace library
 	EffectMaterial::EffectMaterial(const Effect& effect, const std::string& defaultTechniqueName /* = ""*/)
 		: m_effect(effect)
 		, m_defaultTechniqueName(defaultTechniqueName)
-		, m_currentTechnique(nullptr)
+		, m_currentTechnique(defaultTechniqueName.empty() ?
+			effect.GetTechnique(0) :
+			effect.GetTechnique(defaultTechniqueName)
+		)
 	{
 	}
 
@@ -27,9 +30,9 @@ namespace library
 
 	void EffectMaterial::SetCurrentTechnique(const EffectTechnique& technique)
 	{
-		if (m_currentTechnique != &technique)
+		if (&m_currentTechnique.get() != &technique)
 		{
-			m_currentTechnique = &technique;
+			m_currentTechnique = technique;
 		}
 	}
 
@@ -44,11 +47,6 @@ namespace library
 
 	void EffectMaterial::Initialize()
 	{
-		const auto& technique = m_defaultTechniqueName.empty() ?
-			m_effect.GetTechnique(0) :
-			m_effect.GetTechnique(m_defaultTechniqueName);
-
-		SetCurrentTechnique(technique);
 	}
 
 	void EffectMaterial::CreateInputLayout(

@@ -11,15 +11,13 @@ namespace demo
 
 	BasicMaterial::BasicMaterial(const library::Effect& effect)
 		: Class(effect, "main11")
-		, m_worldViewProjection(nullptr)
+		, m_worldViewProjection(effect.GetVariable("WorldViewProjection"))
 	{
 	}
 
 	void BasicMaterial::Initialize()
 	{
 		EffectMaterial::Initialize();
-
-		m_worldViewProjection = &GetEffect().GetVariable("WorldViewProjection");
 
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{

@@ -8,6 +8,7 @@ namespace library
 	SceneComponent::SceneComponent(const Application& app, const CameraComponent& camera)
 		: Class(app)
 		, m_camera(camera)
+		, m_scaling(math::constants::Vector3::One)
 	{
 		UpdateWorldMatrix();
 	}
@@ -60,21 +61,24 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void SceneComponent::SetScaling(const math::Vector3& scale)
+	void SceneComponent::SetScaling(const math::Vector3& scaling)
 	{
-		if (m_scale != scale)
+		if (scaling < math::constants::Vector3::Zero)
+			return;
+
+		if (m_scaling != scaling)
 		{
-			m_scale = scale;
+			m_scaling = scaling;
 			UpdateWorldMatrix();
 		}
 	}
 
-	void SceneComponent::Scale(const math::Vector3& scale)
+	void SceneComponent::Scale(const math::Vector3& scaling)
 	{
-		if (!scale)
+		if (!scaling)
 			return;
 
-		SetScaling(m_scale + scale);
+		SetScaling(m_scaling + scaling);
 	}
 
 	//-------------------------------------------------------------------------
@@ -83,9 +87,9 @@ namespace library
 	{
 		const auto translationMatrix = math::Matrix4::Translation(m_position);
 		const auto rotationMatrix = math::Matrix4::RotationRollPitchYaw(m_rotation);
-		const auto scaleMatrix = math::Matrix4::Scaling(m_scale);
+		const auto scalingMatrix = math::Matrix4::Scaling(m_scaling);
 
-		m_worldMatrix = scaleMatrix * rotationMatrix * translationMatrix;
+		m_worldMatrix = scalingMatrix * rotationMatrix * translationMatrix;
 	}
 
 } // namespace library

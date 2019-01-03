@@ -38,8 +38,6 @@ namespace demo
 
 	void CubeComponent::Initialize()
 	{
-		const Application& app = m_app;
-
 		// shader
 		{
 			ComPtr<ID3DBlob> errorBlob;
@@ -70,7 +68,7 @@ namespace demo
 			hr = D3DX11CreateEffectFromMemory(
 				shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
 				0,
-				app.GetD3DDevice(),
+				m_app.GetD3DDevice(),
 				m_effect.GetAddressOf()
 			);
 			if (FAILED(hr))
@@ -119,7 +117,7 @@ namespace demo
 				{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			};
 
-			auto hr = app.GetD3DDevice()->CreateInputLayout(
+			auto hr = m_app.GetD3DDevice()->CreateInputLayout(
 				inputElementDescriptions.data(), inputElementDescriptions.size(),
 				passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
 				m_inputLayout.GetAddressOf()

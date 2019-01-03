@@ -107,6 +107,8 @@ namespace library
 		}
 	}
 
+	Mesh::~Mesh() = default;
+
 	const DirectX::XMFLOAT3Vector& Mesh::GetTextureCoordinates(const unsigned textureIdx) const
 	{
 		return m_texturesCoordinates[textureIdx];
