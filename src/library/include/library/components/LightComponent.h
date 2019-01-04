@@ -1,20 +1,45 @@
 #pragma once
 #include "library/components/BaseComponent.h"
-#include "library/Color.h"
+#include "library/lights/Light.h"
 
 namespace library
 {
-	class LightComponent : public rtti::Class<LightComponent, BaseComponent>
+	template<class LightType>
+	class ConcreteLightComponent;
+	
+	// ----------------------------------------------------------------------------------------------------------
+
+	template<>
+	class ConcreteLightComponent<Light>
+		: public rtti::Class<ConcreteLightComponent<Light>, BaseComponent>
+		, public Light
 	{
-	public:
-		explicit LightComponent(const Application& app);
-		~LightComponent() = default;
+		explicit ConcreteLightComponent(const Application& app)
+			: Class(app)
+		{
+		}
 
-		const Color& GetColor() const { return m_color; }
-		void SetColor(const Color& color);
+		~ConcreteLightComponent() = default;
+	};
 
-	protected:
-		Color m_color;
+	using LightComponent = ConcreteLightComponent<Light>;
+
+	// ----------------------------------------------------------------------------------------------------------
+	// we inherited from LightComponent for other types of light
+	// in order to know whether it's LightComponent or not :)
+	// ----------------------------------------------------------------------------------------------------------
+
+	template<class LightType>
+	class ConcreteLightComponent
+		: public rtti::Class<ConcreteLightComponent<LightType>, LightComponent>
+		, public LightType
+	{
+		explicit ConcreteLightComponent(const Application& app)
+			: Class(app)
+		{
+		}
+
+		~ConcreteLightComponent() = default;
 	};
 
 } // namespace library

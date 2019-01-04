@@ -7,6 +7,8 @@
 
 #include <assimp/scene.h>
 
+#include <cassert>
+
 namespace library
 {
 	Mesh::Mesh(Model& model, aiMesh& mesh)

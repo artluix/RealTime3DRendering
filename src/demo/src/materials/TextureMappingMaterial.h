@@ -14,7 +14,7 @@ namespace demo
 		explicit TextureMappingMaterial(const library::Effect& effect);
 		~TextureMappingMaterial();
 
-		library::EffectVariable& GetWorldViewProjection() const { return m_worldViewProjection; }
+		library::EffectVariable& GetWVP() const { return m_wvp; }
 		library::EffectVariable& GetColorTexture() const { return m_colorTexture; }
 
 		void Initialize() override;
@@ -25,7 +25,7 @@ namespace demo
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }
 
 	private:
-		library::EffectVariable& m_worldViewProjection;
+		library::EffectVariable& m_wvp;
 		library::EffectVariable& m_colorTexture;
 	};
 

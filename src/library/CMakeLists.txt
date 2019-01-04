@@ -39,8 +39,15 @@ if(APPLICATION)
         include/library/effect/EffectTechnique.h
         include/library/effect/EffectVariable.h
 
+        # lights
+        include/library/lights/Light.h
+        include/library/lights/DirectionalLight.h
+        include/library/lights/PointLight.h
+        include/library/lights/SpotLight.h
+
         # materials
         include/library/materials/SkyboxMaterial.h
+        include/library/materials/DiffuseLightingMaterial.h
 
         include/library/Exception.h
         include/library/Key.h
@@ -79,12 +86,6 @@ if(APPLICATION)
         src/Components/TextComponent.cpp
         src/Components/UIComponent.cpp
 
-        # light components
-        src/components/LightComponent.cpp
-        src/components/DirectionalLightComponent.cpp
-        src/components/PointLightComponent.cpp
-        src/components/SpotLightComponent.cpp
-
         # effect
         src/effect/Effect.cpp
         src/effect/EffectMaterial.cpp
@@ -92,8 +93,15 @@ if(APPLICATION)
         src/effect/EffectTechnique.cpp
         src/effect/EffectVariable.cpp
 
+        # lights
+        src/lights/Light.cpp
+        src/lights/DirectionalLight.cpp
+        src/lights/PointLight.cpp
+        src/lights/SpotLight.cpp
+
         # materials
         src/materials/SkyboxMaterial.cpp
+        src/materials/DiffuseLightingMaterial.cpp
 
         src/Exception.cpp
         src/Logger.cpp

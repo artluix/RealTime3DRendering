@@ -152,7 +152,7 @@ namespace demo
 		d3dDeviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 		const auto wvp = m_worldMatrix * GetCamera().GetViewProjectionMatrix();
-		m_material->GetWorldViewProjection() << wvp;
+		m_material->GetWVP() << wvp;
 		m_material->GetColorTexture() << m_textureShaderResourceView.Get();
 
 		pass.Apply(0, d3dDeviceContext);

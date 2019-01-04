@@ -8,7 +8,7 @@ namespace demo
 {
 	TextureMappingMaterial::TextureMappingMaterial(const library::Effect& effect)
 		: Class(effect, "main10")
-		, m_worldViewProjection(effect.GetVariable("wvp"))
+		, m_wvp(effect.GetVariable("wvp"))
 		, m_colorTexture(effect.GetVariable("ColorTexture"))
 	{
 	}
