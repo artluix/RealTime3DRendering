@@ -24,6 +24,12 @@ if(APPLICATION)
         include/library/Components/TextComponent.h
         include/library/Components/UIComponent.h
 
+        # light components
+        include/library/components/LightComponent.h
+        include/library/components/DirectionalLightComponent.h
+        include/library/components/PointLightComponent.h
+        include/library/components/SpotLightComponent.h
+
         include/library/DirectXForwardDeclarations.h
 
         # effect
@@ -72,6 +78,12 @@ if(APPLICATION)
         src/Components/SkyboxComponent.cpp
         src/Components/TextComponent.cpp
         src/Components/UIComponent.cpp
+
+        # light components
+        src/components/LightComponent.cpp
+        src/components/DirectionalLightComponent.cpp
+        src/components/PointLightComponent.cpp
+        src/components/SpotLightComponent.cpp
 
         # effect
         src/effect/Effect.cpp

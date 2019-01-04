@@ -19,6 +19,8 @@ namespace library
 		bool IsEnabled() const { return m_enabled; }
 		void SetEnabled(const bool enabled);
 
+		const Application& GetApp() const { return m_app; }
+
 		virtual void Initialize();
 		virtual void Update(const Time& time);
 
