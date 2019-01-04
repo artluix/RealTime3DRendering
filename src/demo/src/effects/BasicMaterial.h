@@ -1,31 +1,18 @@
 #pragma once
 #include <library/RTTI.hpp>
 #include <library/effects/EffectMaterial.h>
-
-#include <DirectXMath.h>
+#include <library/VertexTypes.h>
 
 namespace demo
 {
 	class BasicMaterial : public library::rtti::Class<BasicMaterial, library::EffectMaterial>
 	{
 	public:
-		struct Vertex
-		{
-			DirectX::XMFLOAT4 position;
-			DirectX::XMFLOAT4 color;
-
-			explicit Vertex(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& color)
-				: position(position)
-				, color(color)
-			{
-			}
-		};
-
+		using Vertex = library::VertexPositionColor;
 		using Vertices = std::vector<Vertex>;
 
-		//-------------------------------------------------------------------------
-
 		explicit BasicMaterial(const library::Effect& effect);
+		~BasicMaterial();
 
 		library::EffectVariable& GetWorldViewProjection() const { return m_worldViewProjection; }
 

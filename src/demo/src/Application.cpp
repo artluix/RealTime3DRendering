@@ -11,7 +11,9 @@
 #include "components/CubeComponent.h"
 #include "components/ModelComponent.h"
 #include "components/TextureModelComponent.h"
-#include "components/MaterialComponent.h"
+
+#include "components/BasicMaterialComponent.h"
+#include "components/TextureMappingMaterialComponent.h"
 
 #include <library/Path.h>
 #include <library/Utils.h>
@@ -91,10 +93,13 @@ namespace demo
 		//auto textureModelComponent = std::make_shared<TextureModelComponent>(*this, *cameraComponent, *m_keyboardComponent, * m_mouseComponent);
 		//m_components.push_back(textureModelComponent);
 
-		auto materialComponent = std::make_shared<MaterialComponent>(*this, *cameraComponent, *m_keyboardComponent);
-		m_components.push_back(materialComponent);
+		//auto basicMaterialComponent = std::make_shared<BasicMaterialComponent>(*this, *cameraComponent, *m_keyboardComponent);
+		//m_components.push_back(basicMaterialComponent);
 
-		auto skyboxComponent = std::make_shared<SkyboxComponent>(*this, *cameraComponent, k_skyboxCubeMapPath, 500.f);
+		auto textureMappingMaterialComponent = std::make_shared<TextureMappingMaterialComponent>(*this, *cameraComponent, *m_keyboardComponent);
+		m_components.push_back(textureMappingMaterialComponent);
+
+		auto skyboxComponent = std::make_shared<SkyboxComponent>(*this, *cameraComponent, k_skyboxCubeMapPath, 100.f);
 		m_components.push_back(skyboxComponent);
 
 		// mouse text component

@@ -1,9 +1,6 @@
 #pragma once
 #include "library/components/SceneComponent.h"
-
 #include "library/Path.h"
-#include "library/Math.h"
-
 #include "library/DirectXForwardDeclarations.h"
 
 namespace library

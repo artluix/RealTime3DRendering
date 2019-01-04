@@ -10,8 +10,8 @@ namespace library
 {
 	SkyboxMaterial::SkyboxMaterial(const Effect& effect)
 		: Class(effect, "main11")
-		, m_worldViewProjection(nullptr)
-		, m_skyboxTexture(nullptr)
+		, m_worldViewProjection(effect.GetVariable("WorldViewProjection"))
+		, m_skyboxTexture(effect.GetVariable("SkyboxTexture"))
 	{
 	}
 
@@ -20,9 +20,6 @@ namespace library
 	void SkyboxMaterial::Initialize()
 	{
 		EffectMaterial::Initialize();
-
-		m_worldViewProjection = &GetEffect().GetVariable("WorldViewProjection");
-		m_skyboxTexture = &GetEffect().GetVariable("SkyboxTexture");
 
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{

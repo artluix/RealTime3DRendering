@@ -15,6 +15,8 @@ namespace demo
 	{
 	}
 
+	BasicMaterial::~BasicMaterial() = default;
+
 	void BasicMaterial::Initialize()
 	{
 		EffectMaterial::Initialize();

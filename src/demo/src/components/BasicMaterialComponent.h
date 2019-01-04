@@ -12,10 +12,10 @@ namespace demo
 {
 	class BasicMaterial;
 
-	class MaterialComponent : public library::rtti::Class<MaterialComponent, library::SceneComponent>
+	class BasicMaterialComponent : public library::rtti::Class<BasicMaterialComponent, library::SceneComponent>
 	{
 	public:
-		explicit MaterialComponent(
+		explicit BasicMaterialComponent(
 			const library::Application& app,
 			const library::CameraComponent& camera,
 			const library::KeyboardComponent& keyboard
