@@ -13,7 +13,7 @@ namespace library
 		const Color& GetColor() const { return m_color; }
 		void SetColor(const Color& color);
 
-	private:
+	protected:
 		Color m_color;
 	};
 
