@@ -1,6 +1,6 @@
 #include "components/TextureMappingMaterialComponent.h"
 
-#include "effects/TextureMappingMaterial.h"
+#include "materials/TextureMappingMaterial.h"
 
 #include <library/components/CameraComponent.h>
 #include <library/components/KeyboardComponent.h>
@@ -10,10 +10,10 @@
 #include <library/Path.h>
 #include <library/Exception.h>
 
-#include <library/effects/Effect.h>
-#include <library/effects/EffectPass.h>
-#include <library/effects/EffectTechnique.h>
-#include <library/effects/EffectVariable.h>
+#include <library/effect/Effect.h>
+#include <library/effect/EffectPass.h>
+#include <library/effect/EffectTechnique.h>
+#include <library/effect/EffectVariable.h>
 
 #include <library/Model.h>
 #include <library/Mesh.h>

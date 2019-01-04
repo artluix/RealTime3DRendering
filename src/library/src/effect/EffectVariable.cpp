@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "library/effects/EffectVariable.h"
+#include "library/effect/EffectVariable.h"
 
 #include "library/Exception.h"
 

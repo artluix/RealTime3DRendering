@@ -1,13 +1,13 @@
 #include "StdAfx.h"
-#include "library/effects/Effect.h"
+#include "library/effect/Effect.h"
 
 #include "library/Application.h"
 #include "library/Path.h"
 #include "library/Utils.h"
 #include "library/Exception.h"
 
-#include "library/effects/EffectTechnique.h"
-#include "library/effects/EffectVariable.h"
+#include "library/effect/EffectTechnique.h"
+#include "library/effect/EffectVariable.h"
 
 namespace library
 {

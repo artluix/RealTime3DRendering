@@ -1,6 +1,6 @@
-#include "effects/TextureMappingMaterial.h"
+#include "materials/TextureMappingMaterial.h"
 
-#include <library/effects/Effect.h>
+#include <library/effect/Effect.h>
 #include <library/Mesh.h>
 #include <library/Exception.h>
 

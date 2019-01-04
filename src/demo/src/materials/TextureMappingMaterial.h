@@ -1,6 +1,6 @@
 #pragma once
 #include <library/RTTI.hpp>
-#include <library/effects/EffectMaterial.h>
+#include <library/effect/EffectMaterial.h>
 #include <library/VertexTypes.h>
 
 namespace demo

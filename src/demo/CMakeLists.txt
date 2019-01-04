@@ -10,7 +10,7 @@ if(APPLICATION)
         src/Application.cpp
 
         # components
-        # without effects
+        # without materials
         src/components/CubeComponent.h
         src/components/CubeComponent.cpp
 
@@ -23,19 +23,19 @@ if(APPLICATION)
         src/components/TextureModelComponent.h
         src/components/TextureModelComponent.cpp
 
-        # with effects
+        # with materials
         src/components/BasicMaterialComponent.h
         src/components/BasicMaterialComponent.cpp
 
         src/components/TextureMappingMaterialComponent.h
         src/components/TextureMappingMaterialComponent.cpp
 
-        # effects
-        src/effects/BasicMaterial.h
-        src/effects/BasicMaterial.cpp
+        # materials
+        src/materials/BasicMaterial.h
+        src/materials/BasicMaterial.cpp
 
-        src/effects/TextureMappingMaterial.h
-        src/effects/TextureMappingMaterial.cpp
+        src/materials/TextureMappingMaterial.h
+        src/materials/TextureMappingMaterial.cpp
     )
 
     add_executable(demo WIN32 ${DEMO_SOURCES})

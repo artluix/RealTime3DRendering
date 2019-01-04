@@ -1,9 +1,9 @@
 #include "StdAfx.h"
-#include "library/effects/EffectPass.h"
+#include "library/effect/EffectPass.h"
 
 #include "library/Application.h"
 #include "library/Exception.h"
-#include "library/effects/EffectTechnique.h"
+#include "library/effect/EffectTechnique.h"
 
 namespace library
 {

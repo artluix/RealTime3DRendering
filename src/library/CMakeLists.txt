@@ -10,6 +10,7 @@ if(APPLICATION)
         include/library/Color.h
         include/library/Common.h
 
+        # components
         include/library/Components/BaseComponent.h
         include/library/Components/CameraComponent.h
         include/library/Components/DrawableComponent.h
@@ -25,13 +26,15 @@ if(APPLICATION)
 
         include/library/DirectXForwardDeclarations.h
 
-        include/library/effects/Effect.h
-        include/library/effects/EffectMaterial.h
-        include/library/effects/EffectPass.h
-        include/library/effects/EffectTechnique.h
-        include/library/effects/EffectVariable.h
+        # effect
+        include/library/effect/Effect.h
+        include/library/effect/EffectMaterial.h
+        include/library/effect/EffectPass.h
+        include/library/effect/EffectTechnique.h
+        include/library/effect/EffectVariable.h
 
-        include/library/effects/SkyboxMaterial.h
+        # materials
+        include/library/materials/SkyboxMaterial.h
 
         include/library/Exception.h
         include/library/Key.h
@@ -56,6 +59,7 @@ if(APPLICATION)
         src/Application.cpp
         src/Color.cpp
 
+        # components
         src/Components/BaseComponent.cpp
         src/Components/CameraComponent.cpp
         src/Components/DrawableComponent.cpp
@@ -69,13 +73,15 @@ if(APPLICATION)
         src/Components/TextComponent.cpp
         src/Components/UIComponent.cpp
 
-        src/effects/Effect.cpp
-        src/effects/EffectMaterial.cpp
-        src/effects/EffectPass.cpp
-        src/effects/EffectTechnique.cpp
-        src/effects/EffectVariable.cpp
+        # effect
+        src/effect/Effect.cpp
+        src/effect/EffectMaterial.cpp
+        src/effect/EffectPass.cpp
+        src/effect/EffectTechnique.cpp
+        src/effect/EffectVariable.cpp
 
-        src/effects/SkyboxMaterial.cpp
+        # materials
+        src/materials/SkyboxMaterial.cpp
 
         src/Exception.cpp
         src/Logger.cpp

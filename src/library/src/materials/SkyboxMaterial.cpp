@@ -1,7 +1,7 @@
 #include "StdAfx.h"
-#include "library/effects/SkyboxMaterial.h"
+#include "library/materials/SkyboxMaterial.h"
 
-#include "library/effects/Effect.h"
+#include "library/effect/Effect.h"
 #include "library/Mesh.h"
 #include "library/Color.h"
 #include "library/Exception.h"
