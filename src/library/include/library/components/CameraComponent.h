@@ -1,12 +1,13 @@
 #pragma once
-#include "library/components/BaseComponent.h"
-#include "library/RTTI.hpp"
+#include "library/components/Component.h"
 #include "library/Math.h"
 
 namespace library
 {
-	class CameraComponent : public rtti::Class<CameraComponent, BaseComponent>
+	class CameraComponent : public Component
 	{
+		RTTI_CLASS(CameraComponent, Component)
+
 	public:
 		explicit CameraComponent(const Application& app);
 		explicit CameraComponent(

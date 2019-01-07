@@ -1,5 +1,5 @@
 #pragma once
-#include "library/components/BaseComponent.h"
+#include "library/components/Component.h"
 #include "library/Key.h"
 
 #include <dinput.h>
@@ -7,8 +7,10 @@
 
 namespace library
 {
-	class KeyboardComponent : public rtti::Class<KeyboardComponent, BaseComponent>
+	class KeyboardComponent : public Component
 	{
+		RTTI_CLASS(KeyboardComponent, Component)
+
 	public:
 		explicit KeyboardComponent(const Application& app, const ComPtr<IDirectInput8>& directInput);
 		~KeyboardComponent();

@@ -14,8 +14,10 @@ namespace DirectX
 
 namespace library
 {
-	class TextComponent : public rtti::Class<TextComponent, UIComponent>
+	class TextComponent : public UIComponent
 	{
+		RTTI_CLASS(TextComponent, UIComponent)
+
 	public:
 		using TextGeneratorFunction = std::function<std::wstring(void)>;
 

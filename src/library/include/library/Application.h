@@ -12,8 +12,8 @@
 
 namespace library
 {
-	class BaseComponent;
-	using BaseComponentPtr = std::shared_ptr<BaseComponent>;
+	class Component;
+	using BaseComponentPtr = std::shared_ptr<Component>;
 
 	class Application : public NonCopyable<Application>
 	{
@@ -44,7 +44,9 @@ namespace library
 		const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
 
 		const std::vector<BaseComponentPtr>& GetComponents() const { return m_components; }
+		
 		const ServiceContainer& GetServices() const { return m_services; }
+		//ServiceContainer& GetServices() { return m_services; }
 
 		virtual void Initialize();
 		virtual void Run();

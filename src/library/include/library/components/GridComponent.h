@@ -1,13 +1,15 @@
 #pragma once
-#include "library/DirectXForwardDeclarations.h"
 #include "library/components/SceneComponent.h"
 #include "library/Color.h"
 #include "library/Math.h"
+#include "library/DirectXForwardDeclarations.h"
 
 namespace library
 {
-	class GridComponent : public rtti::Class<GridComponent, SceneComponent>
+	class GridComponent : public SceneComponent
 	{
+		RTTI_CLASS(GridComponent, SceneComponent)
+
 	public:
 		explicit GridComponent(const Application& app, const CameraComponent& camera);
 		explicit GridComponent(
@@ -23,7 +25,6 @@ namespace library
 		unsigned GetSize() const { return m_size; }
 		unsigned GetScale() const { return m_scale; }
 		const Color& GetColor() const { return m_color; }
-		const math::Vector3& GetPosition() const { return m_position; }
 
 		void SetSize(const unsigned size);
 		void SetScale(const unsigned scale);

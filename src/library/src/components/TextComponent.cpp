@@ -15,7 +15,7 @@ namespace library
 	}
 
 	TextComponent::TextComponent(const Application& app)
-		: Class(app)
+		: UIComponent(app)
 		, m_color(k_defaultColor)
 		, m_fontPath(k_defaultFontPath)
 	{
@@ -49,7 +49,7 @@ namespace library
 		if (!m_spriteFont || m_fontPath != fontPath)
 		{
 			m_fontPath = fontPath;
-			m_spriteFont = std::make_unique<DirectX::SpriteFont>(m_app.GetD3DDevice(), m_fontPath.GetWideCString());
+			m_spriteFont = std::make_unique<DirectX::SpriteFont>(m_app->GetD3DDevice(), m_fontPath.GetWideCString());
 		}
 	}
 
@@ -60,7 +60,7 @@ namespace library
 
 	void TextComponent::Initialize()
 	{
-		m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(m_app.GetD3DDeviceContext());
+		m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(m_app->GetD3DDeviceContext());
 		SetFontPath(m_fontPath);
 	}
 

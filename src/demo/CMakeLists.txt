@@ -27,15 +27,11 @@ if(APPLICATION)
         src/components/BasicMaterialComponent.h
         src/components/BasicMaterialComponent.cpp
 
+        src/components/DiffuseLightingMaterialComponent.h
+        src/components/DiffuseLightingMaterialComponent.cpp
+
         src/components/TextureMappingMaterialComponent.h
         src/components/TextureMappingMaterialComponent.cpp
-
-        # materials
-        src/materials/BasicMaterial.h
-        src/materials/BasicMaterial.cpp
-
-        src/materials/TextureMappingMaterial.h
-        src/materials/TextureMappingMaterial.cpp
     )
 
     add_executable(demo WIN32 ${DEMO_SOURCES})

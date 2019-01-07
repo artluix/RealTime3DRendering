@@ -17,7 +17,7 @@ namespace library
 	class EffectTechnique : public NonCopyable<EffectTechnique>
 	{
 	public:
-		explicit EffectTechnique(const Application& app, const Effect& effect, const ComPtr<ID3DX11EffectTechnique>& technique);
+		explicit EffectTechnique(const Application& app, const Effect& effect, ID3DX11EffectTechnique* const technique);
 		~EffectTechnique();
 
 		const Effect& GetEffect() const { return m_effect; }
@@ -26,9 +26,8 @@ namespace library
 		ID3DX11EffectTechnique* GetTechnique() const { return m_technique.Get(); }
 		const D3DX11_TECHNIQUE_DESC& GetTechniqueDesc() const { return m_techniqueDesc; }
 
-		bool HasPass(const std::string& passName) const;
-		EffectPass& GetPass(const std::string& passName) const;
-		EffectPass& GetPass(const unsigned passIdx) const;
+		EffectPass* GetPass(const std::string& passName) const;
+		EffectPass* GetPass(const unsigned passIdx) const;
 		std::size_t GetPassesCount() const { return m_passes.size(); }
 
 	private:

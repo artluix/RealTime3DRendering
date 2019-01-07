@@ -10,8 +10,10 @@ namespace library
 
 namespace demo
 {
-	class ModelComponent : public library::rtti::Class<ModelComponent, library::SceneComponent>
+	class ModelComponent : public library::SceneComponent
 	{
+		RTTI_CLASS(ModelComponent,library::SceneComponent)
+
 	public:
 		explicit ModelComponent(
 			const library::Application& app,

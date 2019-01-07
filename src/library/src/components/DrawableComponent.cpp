@@ -4,8 +4,13 @@
 namespace library
 {
 	DrawableComponent::DrawableComponent(const Application& app)
-		: Class(app)
-		, m_visible(true)
+		: Component(app)
+	{
+	}
+
+	DrawableComponent::DrawableComponent(const Application& app, const CameraComponent& camera)
+		: Component(app)
+		, m_camera(&camera)
 	{
 	}
 
@@ -14,8 +19,12 @@ namespace library
 		m_visible = visible;
 	}
 
-	void DrawableComponent::Draw(const Time& time)
+	void DrawableComponent::SetCamera(const CameraComponent& camera)
 	{
+		if (m_camera != &camera)
+		{
+			m_camera = &camera;
+		}
 	}
 
 } // namespace library

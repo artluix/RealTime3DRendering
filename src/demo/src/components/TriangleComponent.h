@@ -4,8 +4,10 @@
 
 namespace demo
 {
-	class TriangleComponent : public library::rtti::Class<TriangleComponent, library::SceneComponent>
+	class TriangleComponent : public library::SceneComponent
 	{
+		RTTI_CLASS(TriangleComponent, library::SceneComponent)
+
 	public:
 		explicit TriangleComponent(const library::Application& app, const library::CameraComponent& camera);
 

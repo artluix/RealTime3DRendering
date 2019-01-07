@@ -11,6 +11,12 @@ namespace library
 
 	std::string Exception::GetWhatString() const
 	{
-		return std::string(what()) + " Error: " + std::to_string(m_hr);
+		std::string msg = what();
+
+		if (m_hr != S_OK)
+			msg += " Error: " + std::to_string(m_hr);
+
+		return msg;
 	}
+
 } // namespace library

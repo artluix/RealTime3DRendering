@@ -2,7 +2,6 @@
 #include "library/effect/Effect.h"
 
 #include "library/Application.h"
-#include "library/Path.h"
 #include "library/Utils.h"
 #include "library/Exception.h"
 
@@ -11,22 +10,24 @@
 
 namespace library
 {
-	Effect::Effect(const Application& app)
+	Effect::Effect(const Application& app, const fs::Path& path)
 		: m_app(app)
+		, m_path(path)
+		//, m_name(path.GetBaseName().SplitExt()[0].GetString())
 	{
 	}
 
 	Effect::~Effect() = default;
 
-	ComPtr<ID3DX11Effect> Effect::CompileEffectFromFile(ID3D11Device* const device, const fs::Path& path)
-	{
-		ComPtr<ID3DX11Effect> effect;
+	//-------------------------------------------------------------------------
 
+	void Effect::Compile()
+	{
 		ComPtr<ID3DBlob> errorBlob;
 		ComPtr<ID3DBlob> shaderBlob;
 
 		auto hr = D3DCompileFromFile(
-			path.GetWideCString(),
+			m_path.GetWideCString(),
 			nullptr,
 			nullptr,
 			nullptr,
@@ -50,57 +51,41 @@ namespace library
 		hr = D3DX11CreateEffectFromMemory(
 			shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
 			0,
-			device,
-			effect.GetAddressOf()
+			m_app.GetD3DDevice(),
+			m_effect.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
 			throw Exception("D3DX11CreateEffectFromMemory() failed.", hr);
 		}
-
-		return effect;
 	}
 
-	ComPtr<ID3DX11Effect> Effect::LoadCompiledEffect(ID3D11Device* const device, const fs::Path& path)
+	void Effect::LoadCompiled()
 	{
 		std::vector<library::byte> effectData;
-		utils::LoadBinaryFile(path, effectData);
+		utils::LoadBinaryFile(m_path, effectData);
 		if (effectData.empty())
 		{
 			throw Exception("Load compiled effect failed.");
 		}
 
-		ComPtr<ID3DX11Effect> effect;
-
 		auto hr = D3DX11CreateEffectFromMemory(
 			effectData.data(), effectData.size(),
 			0,
-			device,
-			effect.GetAddressOf()
+			m_app.GetD3DDevice(),
+			m_effect.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
 			throw Exception("D3DX11CreateEffectFromMemory() failed.", hr);
 		}
-
-		return effect;
 	}
 
-	void Effect::CompileFromFile(const fs::Path& path)
-	{
-		m_effect = CompileEffectFromFile(m_app.GetD3DDevice(), path);
-		Initialize();
-	}
+	//-------------------------------------------------------------------------
 
-	void Effect::LoadCompiledEffect(const fs::Path& path)
+	void Effect::SetEffect(ID3DX11Effect* const effect)
 	{
-		m_effect = LoadCompiledEffect(m_app.GetD3DDevice(), path);
-		Initialize();
-	}
-
-	void Effect::SetEffect(const ComPtr<ID3DX11Effect>& effect)
-	{
-		if (m_effect != effect)
+		if (m_effect.Get() != effect)
 		{
 			m_effect = effect;
 		}
@@ -108,36 +93,40 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	bool Effect::HasTechnique(const std::string& techniqueName) const
+	EffectTechnique* Effect::GetTechnique(const std::string& techniqueName) const
 	{
-		return m_techniquesMap.find(techniqueName) != m_techniquesMap.cend();
+		auto it = m_techniquesMap.find(techniqueName);
+		if (it == m_techniquesMap.end())
+			return nullptr;
+
+		return it->second;
 	}
 
-	EffectTechnique& Effect::GetTechnique(const std::string& techniqueName) const
+	EffectTechnique* Effect::GetTechnique(const unsigned techniqueIdx) const
 	{
-		return *m_techniquesMap.at(techniqueName);
-	}
+		if (techniqueIdx >= m_techniques.size())
+			return nullptr;
 
-	EffectTechnique& Effect::GetTechnique(const unsigned techniqueIdx) const
-	{
-		return *m_techniques.at(techniqueIdx);
+		return m_techniques[techniqueIdx].get();
 	}
 
 	//-------------------------------------------------------------------------
 
-	bool Effect::HasVariable(const std::string& variableName) const
+	EffectVariable* Effect::GetVariable(const std::string& variableName) const
 	{
-		return m_variablesMap.find(variableName) != m_variablesMap.cend();
+		auto it = m_variablesMap.find(variableName);
+		if (it == m_variablesMap.end())
+			return nullptr;
+
+		return it->second;
 	}
 
-	EffectVariable& Effect::GetVariable(const std::string& variableName) const
+	EffectVariable* Effect::GetVariable(const unsigned variableIdx) const
 	{
-		return *m_variablesMap.at(variableName);
-	}
+		if (variableIdx >= m_variables.size())
+			return nullptr;
 
-	EffectVariable& Effect::GetVariable(const unsigned variableIdx) const
-	{
-		return *m_variables.at(variableIdx);
+		return m_variables[variableIdx].get();
 	}
 
 	//-------------------------------------------------------------------------

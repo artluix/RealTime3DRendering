@@ -6,14 +6,15 @@ namespace library
 {
 	class KeyboardComponent;
 	class Effect;
+	class BasicMaterial;
 } // namespace library
 
 namespace demo
 {
-	class BasicMaterial;
-
-	class BasicMaterialComponent : public library::rtti::Class<BasicMaterialComponent, library::SceneComponent>
+	class BasicMaterialComponent : public library::SceneComponent
 	{
+		RTTI_CLASS(BasicMaterialComponent, library::SceneComponent)
+
 	public:
 		explicit BasicMaterialComponent(
 			const library::Application& app,
@@ -27,7 +28,7 @@ namespace demo
 
 	private:
 		std::unique_ptr<library::Effect> m_effect;
-		std::unique_ptr<BasicMaterial> m_material;
+		std::unique_ptr<library::BasicMaterial> m_material;
 
 		ComPtr<ID3D11Buffer> m_indexBuffer;
 		ComPtr<ID3D11Buffer> m_vertexBuffer;

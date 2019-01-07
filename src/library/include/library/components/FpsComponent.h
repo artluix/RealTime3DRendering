@@ -10,8 +10,10 @@ namespace DirectX
 
 namespace library
 {
-	class FpsComponent : public rtti::Class<FpsComponent, TextComponent>
+	class FpsComponent : public TextComponent
 	{
+		RTTI_CLASS(FpsComponent, TextComponent)
+
 	public:
 		explicit FpsComponent(const Application& app);
 		~FpsComponent() = default;

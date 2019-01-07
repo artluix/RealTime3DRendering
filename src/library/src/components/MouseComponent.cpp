@@ -13,7 +13,7 @@ namespace library
 	}
 
 	MouseComponent::MouseComponent(const Application& app, ComPtr<IDirectInput8>& directInput)
-		: Class(app)
+		: Component(app)
 		, m_directInput(directInput)
 		, m_directInputDevice()
 		, m_currentState{}, m_previousState{}
@@ -44,7 +44,7 @@ namespace library
 			throw Exception("IDirectInputDevice::SetDataFormat() failed.", hr);
 		}
 
-		hr = m_directInputDevice->SetCooperativeLevel(m_app.GetWindowHandle(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+		hr = m_directInputDevice->SetCooperativeLevel(m_app->GetWindowHandle(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 		if (FAILED(hr))
 		{
 			throw Exception("IDirectInputDevice::SetCooperativeLevel() failed.", hr);

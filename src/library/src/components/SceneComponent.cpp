@@ -1,24 +1,12 @@
 #include "StdAfx.h"
 #include "library/components/SceneComponent.h"
 
-#include "library/components/CameraComponent.h"
-
 namespace library
 {
-	SceneComponent::SceneComponent(const Application& app, const CameraComponent& camera)
-		: Class(app)
-		, m_camera(camera)
-		, m_scaling(math::constants::Vector3::One)
+	SceneComponent::SceneComponent()
+		: m_scaling(math::constants::Vector3::One)
 	{
 		UpdateWorldMatrix();
-	}
-
-	void SceneComponent::SetCamera(const CameraComponent& camera)
-	{
-		if (&m_camera.get() != &camera)
-		{
-			m_camera = camera;
-		}
 	}
 
 	//-------------------------------------------------------------------------

@@ -1,9 +1,9 @@
 #include "components/BasicMaterialComponent.h"
 
-#include "materials/BasicMaterial.h"
-
 #include <library/components/CameraComponent.h>
 #include <library/components/KeyboardComponent.h>
+
+#include <library/materials/BasicMaterial.h>
 
 #include <library/effect/Effect.h>
 #include <library/effect/EffectPass.h>
@@ -45,7 +45,7 @@ namespace demo
 		const CameraComponent& camera,
 		const KeyboardComponent& keyboard
 	) 
-		: Class(app, camera)
+		: SceneComponent(app, camera)
 		, m_keyboard(keyboard)
 		, m_indicesCount(0)
 	{

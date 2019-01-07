@@ -5,7 +5,7 @@
 
 namespace library
 {
-	EffectVariable::EffectVariable(const Effect& effect, const ComPtr<ID3DX11EffectVariable>& variable)
+	EffectVariable::EffectVariable(const Effect& effect, ID3DX11EffectVariable* const variable)
 		: m_effect(effect)
 		, m_variable(variable)
 		, m_type(nullptr)

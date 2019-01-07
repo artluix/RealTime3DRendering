@@ -55,7 +55,7 @@ namespace demo
 		const KeyboardComponent& keyboard,
 		const library::MouseComponent& mouse
 	)
-		: Class(app, camera)
+		: SceneComponent(app, camera)
 		, m_keyboard(keyboard)
 		, m_mouse(mouse)
 		, m_indicesCount(0)

@@ -9,7 +9,7 @@ namespace library
 	}
 
 	FpsComponent::FpsComponent(const Application& app)
-		: Class(app)
+		: TextComponent(app)
 		, m_frameCount(0)
 		, m_frameRate(0)
 		, m_timeAccumulator(Duration::zero())

@@ -34,6 +34,8 @@ namespace library
 
 			bool operator != (const Path& other) const;
 			bool operator == (const Path& other) const;
+			bool operator < (const Path& other) const;
+			bool operator > (const Path& other) const;
 
 		private:
 			void FixSeparator();
@@ -54,6 +56,16 @@ namespace library
 		inline bool Path::operator == (const Path& other) const
 		{
 			return m_string == other.m_string;
+		}
+
+		bool Path::operator < (const Path& other) const
+		{
+			return m_string < other.m_string;
+		}
+
+		bool Path::operator > (const Path& other) const
+		{
+			return m_string > other.m_string;
 		}
 
 	} // namespace fs

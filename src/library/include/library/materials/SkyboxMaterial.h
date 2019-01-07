@@ -1,17 +1,17 @@
 #pragma once
-#include "library/RTTI.hpp"
-#include "library/effect/EffectMaterial.h"
+#include "library/materials/Material.h"
 #include "library/VertexTypes.h"
 
 namespace library
 {
-	class SkyboxMaterial : public library::rtti::Class<SkyboxMaterial, EffectMaterial>
+	class SkyboxMaterial : public Material
 	{
+		RTTI_CLASS(SkyboxMaterial, Material)
+
 	public:
 		using Vertex = VertexPosition;
-		using Vertices = std::vector<Vertex>;
 
-		explicit SkyboxMaterial(const library::Effect& effect);
+		explicit SkyboxMaterial(const Effect& effect);
 		~SkyboxMaterial();
 
 		EffectVariable& GetWorldViewProjection() const { return m_worldViewProjection; }
@@ -19,9 +19,7 @@ namespace library
 
 		void Initialize() override;
 
-		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const library::Mesh& mesh) const override;
-		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Vertices& vertices) const;
-
+		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }
 
 	private:

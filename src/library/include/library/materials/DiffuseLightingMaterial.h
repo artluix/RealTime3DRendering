@@ -1,17 +1,17 @@
 #pragma once
-#include "library/RTTI.hpp"
-#include "library/effect/EffectMaterial.h"
+#include "library/materials/Material.h"
 #include "library/VertexTypes.h"
 
 namespace library
 {
-	class DiffuseLightingMaterial : public library::rtti::Class<DiffuseLightingMaterial, EffectMaterial>
+	class DiffuseLightingMaterial : public Material
 	{
+		RTTI_CLASS(DiffuseLightingMaterial, Material)
+
 	public:
 		using Vertex = VertexPositionTextureNormal;
-		using Vertices = std::vector<Vertex>;
 
-		explicit DiffuseLightingMaterial(const library::Effect& effect);
+		explicit DiffuseLightingMaterial(const Effect& effect);
 		~DiffuseLightingMaterial();
 
 		EffectVariable& GetWVP() const { return m_wvp; }
@@ -23,9 +23,7 @@ namespace library
 
 		void Initialize() override;
 
-		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const library::Mesh& mesh) const override;
-		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Vertices& vertices) const;
-
+		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }
 
 	private:

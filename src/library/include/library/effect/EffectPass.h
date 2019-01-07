@@ -12,7 +12,6 @@ interface ID3D11DeviceContext;
 namespace library
 {
 	class Application;
-
 	class EffectTechnique;
 
 	class EffectPass : public NonCopyable<EffectPass>

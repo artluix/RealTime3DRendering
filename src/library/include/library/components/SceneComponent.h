@@ -1,21 +1,13 @@
 #pragma once
-#include "library/components/DrawableComponent.h"
 #include "library/Math.h"
-
-#include <functional>
 
 namespace library
 {
-	class CameraComponent;
-
-	class SceneComponent : public rtti::Class<SceneComponent, DrawableComponent>
+	class SceneComponent
 	{
 	public:
-		explicit SceneComponent(const Application& app, const CameraComponent& camera);
+		explicit SceneComponent();
 		~SceneComponent() = default;
-
-		const CameraComponent& GetCamera() { return m_camera; }
-		void SetCamera(const CameraComponent& camera);
 
 		const math::Vector3& GetPosition() const { return m_position; }
 		const math::Vector3& GetRotation() const { return m_rotation; }
@@ -39,8 +31,6 @@ namespace library
 		math::Vector3 m_scaling;
 
 		math::Matrix4 m_worldMatrix;
-
-		std::reference_wrapper<const CameraComponent> m_camera;
 	};
 
 } // namespace library

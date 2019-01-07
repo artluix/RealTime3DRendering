@@ -1,25 +1,19 @@
 #pragma once
 #include "library/components/CameraComponent.h"
 
-#include <functional>
-
 namespace library
 {
 	class MouseComponent;
 	class KeyboardComponent;
 
-	class FirstPersonCameraComponent : public rtti::Class<FirstPersonCameraComponent, CameraComponent>
+	class FirstPersonCameraComponent : public CameraComponent
 	{
+		RTTI_CLASS(FirstPersonCameraComponent, CameraComponent)
+
 	public:
+		explicit FirstPersonCameraComponent(const Application& app);
 		explicit FirstPersonCameraComponent(
 			const Application& app,
-			const KeyboardComponent& keyboard,
-			const MouseComponent& mouse
-		);
-		explicit FirstPersonCameraComponent(
-			const Application& app,
-			const KeyboardComponent& keyboard,
-			const MouseComponent& mouse,
 			const float fieldOfView,
 			const float aspectRatio,
 			const float nearPlaneDistance,
@@ -28,10 +22,10 @@ namespace library
 
 		~FirstPersonCameraComponent() = default;
 
-		const KeyboardComponent& GetKeyboard() const { return m_keyboard; }
+		const KeyboardComponent& GetKeyboard() const { return *m_keyboard; }
 		void SetKeyboard(const KeyboardComponent& keyboard);
 
-		const MouseComponent& GetMouse() const { return m_mouse; }
+		const MouseComponent& GetMouse() const { return *m_mouse; }
 		void SetMouse(const MouseComponent& mouse);
 
 		float GetMouseSensitivity() const { return m_mouseSensitivity; }
@@ -47,8 +41,8 @@ namespace library
 		void Update(const Time& time) override;
 
 	protected:
-		std::reference_wrapper<const KeyboardComponent> m_keyboard;
-		std::reference_wrapper<const MouseComponent> m_mouse;
+		const KeyboardComponent* m_keyboard = nullptr;
+		const MouseComponent* m_mouse = nullptr;
 
 		math::Vector2 m_rotationStartPoint;
 

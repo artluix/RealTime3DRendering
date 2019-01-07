@@ -1,5 +1,5 @@
 #pragma once
-#include "library/components/BaseComponent.h"
+#include "library/components/Component.h"
 
 #include <cstdint>
 #include <dinput.h>
@@ -16,8 +16,10 @@ namespace library
 		X1
 	};
 
-	class MouseComponent : public rtti::Class<MouseComponent, BaseComponent>
+	class MouseComponent : public Component
 	{
+		RTTI_CLASS(MouseComponent, Component)
+
 	public:
 		explicit MouseComponent(const Application& app, ComPtr<IDirectInput8>& directInput);
 		~MouseComponent();

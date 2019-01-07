@@ -3,13 +3,11 @@
 
 #include "library/effect/Effect.h"
 #include "library/Mesh.h"
-#include "library/Color.h"
-#include "library/Exception.h"
 
 namespace library
 {
 	DiffuseLightingMaterial::DiffuseLightingMaterial(const Effect& effect)
-		: Class(effect)
+		: Material(effect)
 		, m_wvp(effect.GetVariable("wvp"))
 		, m_world(effect.GetVariable("world"))
 		, m_ambientColor(effect.GetVariable("ambientColor"))
@@ -23,7 +21,7 @@ namespace library
 
 	void DiffuseLightingMaterial::Initialize()
 	{
-		EffectMaterial::Initialize();
+		Material::Initialize();
 
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{
@@ -40,7 +38,7 @@ namespace library
 		if (!mesh.HasVertices())
 			return ComPtr<ID3D11Buffer>();
 
-		Vertices vertices;
+		std::vector<Vertex> vertices;
 
 		const auto& meshVertices = mesh.GetVertices();
 		const auto& textureCoordinates = mesh.GetTextureCoordinates(0);
@@ -62,28 +60,7 @@ namespace library
 			);
 		}
 
-		return CreateVertexBuffer(device, vertices);
-	}
-
-	ComPtr<ID3D11Buffer> DiffuseLightingMaterial::CreateVertexBuffer(ID3D11Device* const device, const Vertices& vertices) const
-	{
-		ComPtr<ID3D11Buffer> vertexBuffer;
-
-		D3D11_BUFFER_DESC vertexBufferDesc{};
-		vertexBufferDesc.ByteWidth = sizeof(Vertex) * vertices.size();
-		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
-		vertexSubResourceData.pSysMem = vertices.data();
-
-		auto hr = device->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, vertexBuffer.GetAddressOf());
-		if (FAILED(hr))
-		{
-			throw library::Exception("ID3D11Device::CreateBuffer() failed.");
-		}
-
-		return vertexBuffer;
+		return Material::CreateVertexBuffer(device, vertices.data(), vertices.size() * sizeof(Vertex));
 	}
 
 } // namespace library

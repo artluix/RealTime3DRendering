@@ -1,7 +1,5 @@
 #include "components/TextureMappingMaterialComponent.h"
 
-#include "materials/TextureMappingMaterial.h"
-
 #include <library/components/CameraComponent.h>
 #include <library/components/KeyboardComponent.h>
 
@@ -9,6 +7,8 @@
 #include <library/Utils.h>
 #include <library/Path.h>
 #include <library/Exception.h>
+
+#include <library/materials/TextureMappingMaterial.h>
 
 #include <library/effect/Effect.h>
 #include <library/effect/EffectPass.h>
@@ -49,7 +49,7 @@ namespace demo
 		const CameraComponent& camera,
 		const KeyboardComponent& keyboard
 	)
-		: Class(app, camera)
+		: SceneComponent(app, camera)
 		, m_keyboard(keyboard)
 	{
 	}

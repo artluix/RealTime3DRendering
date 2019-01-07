@@ -4,14 +4,19 @@
 
 namespace library
 {
-	class UIComponent : public rtti::Class<UIComponent, DrawableComponent>
+	class UIComponent : public DrawableComponent
 	{
+		RTTI_CLASS(UIComponent, DrawableComponent)
+
 	public:
+		explicit UIComponent();
 		explicit UIComponent(const Application& app);
+		~UIComponent() = default;
 
 		void SetPosition(const math::Vector2& position);
 		const math::Vector2& GetPosition() const { return m_position; }
 
+	protected:
 		math::Vector2 m_position;
 	};
 

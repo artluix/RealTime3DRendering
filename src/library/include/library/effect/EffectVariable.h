@@ -15,7 +15,7 @@ namespace library
 	class EffectVariable : public NonCopyable<EffectVariable>
 	{
 	public:
-		explicit EffectVariable(const Effect& effect, const ComPtr<ID3DX11EffectVariable>& variable);
+		explicit EffectVariable(const Effect& effect, ID3DX11EffectVariable* const variable);
 		~EffectVariable();
 
 		const Effect& GetEffect() const { return m_effect; }

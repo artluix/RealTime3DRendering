@@ -6,6 +6,9 @@
 #include "library/components/SceneComponent.h"
 #include "library/components/UIComponent.h"
 
+#include "library/materials/MaterialFactory.hpp"
+#include "library/effect/EffectFactory.h"
+
 namespace library
 {
 	namespace
@@ -389,6 +392,9 @@ namespace library
 
 	void Application::Shutdown()
 	{
+		MaterialFactory::Clear();
+		EffectFactory::Clear();
+
 		m_components.clear();
 
 		m_renderTargetView.Reset();

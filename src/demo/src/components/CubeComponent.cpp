@@ -31,7 +31,7 @@ namespace demo
 		const CameraComponent& camera,
 		const KeyboardComponent& keyboard
 	)
-		: Class(app, camera)
+		: SceneComponent(app, camera)
 		, m_keyboard(keyboard)
 	{
 	}

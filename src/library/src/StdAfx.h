@@ -23,6 +23,7 @@
 #include <iomanip>
 #include <functional>
 #include <memory>
+#include <algorithm>
 
 #include <cassert>
 #include <cstdio>

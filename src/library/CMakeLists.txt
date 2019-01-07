@@ -18,6 +18,7 @@ if(APPLICATION)
         include/library/Components/FpsComponent.h
         include/library/Components/GridComponent.h
         include/library/Components/KeyboardComponent.h
+        include/library/Components/MaterialComponent.h
         include/library/Components/MouseComponent.h
         include/library/Components/SceneComponent.h
         include/library/Components/SkyboxComponent.h
@@ -34,7 +35,7 @@ if(APPLICATION)
 
         # effect
         include/library/effect/Effect.h
-        include/library/effect/EffectMaterial.h
+        include/library/effect/EffectFactory.h
         include/library/effect/EffectPass.h
         include/library/effect/EffectTechnique.h
         include/library/effect/EffectVariable.h
@@ -46,6 +47,10 @@ if(APPLICATION)
         include/library/lights/SpotLight.h
 
         # materials
+        include/library/materials/Material.h
+        include/library/materials/MaterialFactory.hpp
+        include/library/materials/BasicMaterial.h
+        include/library/materials/TextureMappingMaterial.h
         include/library/materials/SkyboxMaterial.h
         include/library/materials/DiffuseLightingMaterial.h
 
@@ -80,6 +85,7 @@ if(APPLICATION)
         src/Components/FpsComponent.cpp
         src/Components/GridComponent.cpp
         src/Components/KeyboardComponent.cpp
+        src/Components/MaterialComponent.cpp
         src/Components/MouseComponent.cpp
         src/Components/SceneComponent.cpp
         src/Components/SkyboxComponent.cpp
@@ -88,7 +94,7 @@ if(APPLICATION)
 
         # effect
         src/effect/Effect.cpp
-        src/effect/EffectMaterial.cpp
+        src/effect/EffectFactory.cpp
         src/effect/EffectPass.cpp
         src/effect/EffectTechnique.cpp
         src/effect/EffectVariable.cpp
@@ -100,6 +106,10 @@ if(APPLICATION)
         src/lights/SpotLight.cpp
 
         # materials
+        src/materials/Material.cpp
+        src/materials/MaterialFactory.cpp
+        src/materials/BasicMaterial.cpp
+        src/materials/TextureMappingMaterial.cpp
         src/materials/SkyboxMaterial.cpp
         src/materials/DiffuseLightingMaterial.cpp
 

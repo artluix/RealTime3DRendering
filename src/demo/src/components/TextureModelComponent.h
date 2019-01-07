@@ -11,8 +11,10 @@ namespace library
 
 namespace demo
 {
-	class TextureModelComponent : public library::rtti::Class<TextureModelComponent, library::SceneComponent>
+	class TextureModelComponent : public library::SceneComponent
 	{
+		RTTI_CLASS(TextureModelComponent, library::SceneComponent)
+
 	public:
 		explicit TextureModelComponent(
 			const library::Application& app,

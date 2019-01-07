@@ -17,14 +17,8 @@ namespace library
 		constexpr float k_defaultMovementRate = 0.1f;
 	}
 
-	FirstPersonCameraComponent::FirstPersonCameraComponent(
-		const Application& app,
-		const KeyboardComponent& keyboard,
-		const MouseComponent& mouse
-	)
-		: Class(app)
-		, m_keyboard(keyboard)
-		, m_mouse(mouse)
+	FirstPersonCameraComponent::FirstPersonCameraComponent(const Application& app)
+		: CameraComponent(app)
 		, m_rotationStartPoint(0.f, 0.f)
 		, m_mouseSensitivity(k_defaultMouseSensitivity)
 		, m_rotationRate(k_defaultRotationRate)
@@ -34,16 +28,12 @@ namespace library
 
 	FirstPersonCameraComponent::FirstPersonCameraComponent(
 		const Application& app,
-		const KeyboardComponent& keyboard,
-		const MouseComponent& mouse,
 		const float fieldOfView,
 		const float aspectRatio,
 		const float nearPlaneDistance,
 		const float farPlaneDistance
 	)
-		: Class(app, fieldOfView, aspectRatio, nearPlaneDistance, farPlaneDistance)
-		, m_keyboard(keyboard)
-		, m_mouse(mouse)
+		: CameraComponent(app, fieldOfView, aspectRatio, nearPlaneDistance, farPlaneDistance)
 		, m_mouseSensitivity(k_defaultMouseSensitivity)
 		, m_rotationRate(k_defaultRotationRate)
 		, m_movementRate(k_defaultMovementRate)
@@ -53,17 +43,17 @@ namespace library
 
 	void FirstPersonCameraComponent::SetKeyboard(const KeyboardComponent& keyboard)
 	{
-		if (&m_keyboard.get() != &keyboard)
+		if (m_keyboard != &keyboard)
 		{
-			m_keyboard = keyboard;
+			m_keyboard = &keyboard;
 		}
 	}
 
 	void FirstPersonCameraComponent::SetMouse(const MouseComponent& mouse)
 	{
-		if (&m_mouse.get() != &mouse)
+		if (m_mouse != &mouse)
 		{
-			m_mouse = mouse;
+			m_mouse = &mouse;
 		}
 	}
 
@@ -78,52 +68,50 @@ namespace library
 
 		// compute movement
 		math::Vector2 movementAmount;
+		if (!!m_keyboard)
 		{
-			const KeyboardComponent& keyboard = m_keyboard;
-
-			if (keyboard.IsKeyDown(Key::W))
+			if (m_keyboard->IsKeyDown(Key::W))
 			{
 				movementAmount.y += 1.0f;
 			}
 
-			if (keyboard.IsKeyDown(Key::S))
+			if (m_keyboard->IsKeyDown(Key::S))
 			{
 				movementAmount.y -= 1.0f;
 			}
 
-			if (keyboard.IsKeyDown(Key::A))
+			if (m_keyboard->IsKeyDown(Key::A))
 			{
 				movementAmount.x -= 1.0f;
 			}
 
-			if (keyboard.IsKeyDown(Key::D))
+			if (m_keyboard->IsKeyDown(Key::D))
 			{
 				movementAmount.x += 1.0f;
 			}
 		}
 
 		// compute rotation
+		if (!!m_mouse)
 		{
-			const MouseComponent& mouse = m_mouse;
-
-			if (mouse.WasButtonReleased(MouseButton::Left))
+			if (m_mouse->WasButtonReleased(MouseButton::Left))
 			{
 				m_rotationStartPoint.x = 0.f;
 				m_rotationStartPoint.y = 0.f;
 			}
 
-			if (mouse.WasButtonPressed(MouseButton::Left))
+			if (m_mouse->WasButtonPressed(MouseButton::Left))
 			{
-				m_rotationStartPoint.x = mouse.GetX() * m_mouseSensitivity;
-				m_rotationStartPoint.y = mouse.GetY() * m_mouseSensitivity;
+				m_rotationStartPoint.x = m_mouse->GetX() * m_mouseSensitivity;
+				m_rotationStartPoint.y = m_mouse->GetY() * m_mouseSensitivity;
 			}
 
-			if (mouse.IsButtonHeldDown(MouseButton::Left))
+			if (m_mouse->IsButtonHeldDown(MouseButton::Left))
 			{
 				auto prevPoint = m_rotationStartPoint;
 
-				m_rotationStartPoint.x = mouse.GetX() * m_mouseSensitivity;
-				m_rotationStartPoint.y = mouse.GetY() * m_mouseSensitivity;
+				m_rotationStartPoint.x = m_mouse->GetX() * m_mouseSensitivity;
+				m_rotationStartPoint.y = m_mouse->GetY() * m_mouseSensitivity;
 
 				const auto rotationDelta = m_rotationStartPoint - prevPoint;
 				Logger::Info("Rotation delta: %s", rotationDelta.ToString().c_str());

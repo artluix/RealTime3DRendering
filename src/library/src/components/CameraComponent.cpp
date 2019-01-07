@@ -17,7 +17,7 @@ namespace library
 	}
 
 	CameraComponent::CameraComponent(const Application& app)
-		: Class(app)
+		: Component(app)
 		, m_fieldOfView(k_defaultFieldOfView)
 		, m_aspectRatio(app.GetAspectRatio())
 		, m_nearPlaneDistance(k_defaultNearPlaneDistance)
@@ -33,7 +33,7 @@ namespace library
 		const float nearPlaneDistance,
 		const float farPlaneDistance
 	)
-		: Class(app)
+		: Component(app)
 		, m_fieldOfView(fieldOfView)
 		, m_nearPlaneDistance(nearPlaneDistance)
 		, m_farPlaneDistance(farPlaneDistance)

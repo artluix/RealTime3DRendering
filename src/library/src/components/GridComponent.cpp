@@ -27,7 +27,8 @@ namespace library
 	}
 
 	GridComponent::GridComponent(const Application& app, const CameraComponent& camera)
-		: Class(app, camera)
+		: DrawableComponent(app)
+		, SceneComponent(app, camera)
 		, m_size(k_defaultSize)
 		, m_scale(k_defaultScale)
 		, m_color(k_defaultColor)
@@ -41,7 +42,8 @@ namespace library
 		const unsigned scale,
 		const Color& color
 	)
-		: Class(app, camera)
+		: DrawableComponent(app)
+		, SceneComponent(app, camera)
 		, m_size(size)
 		, m_scale(scale)
 		, m_color(color)

@@ -7,7 +7,7 @@
 
 namespace library
 {
-	EffectTechnique::EffectTechnique(const Application& app, const Effect& effect, const ComPtr<ID3DX11EffectTechnique>& technique)
+	EffectTechnique::EffectTechnique(const Application& app, const Effect& effect, ID3DX11EffectTechnique* const technique)
 		: m_effect(effect)
 		, m_technique(technique)
 	{
@@ -24,19 +24,21 @@ namespace library
 
 	EffectTechnique::~EffectTechnique() = default;
 
-	bool EffectTechnique::HasPass(const std::string& passName) const
+	EffectPass* EffectTechnique::GetPass(const std::string& passName) const
 	{
-		return m_passesMap.find(passName) != m_passesMap.end();
+		auto it = m_passesMap.find(passName);
+		if (it != m_passesMap.end())
+			return nullptr;
+
+		return it->second;
 	}
 
-	EffectPass& EffectTechnique::GetPass(const std::string& passName) const
+	EffectPass* EffectTechnique::GetPass(const unsigned passIdx) const
 	{
-		return *m_passesMap.at(passName);
-	}
+		if (passIdx >= m_passes.size())
+			return nullptr;
 
-	EffectPass& EffectTechnique::GetPass(const unsigned passIdx) const
-	{
-		return *m_passes.at(passIdx);
+		return m_passes[passIdx].get();
 	}
 
 } // namespace library

@@ -6,14 +6,15 @@ namespace library
 {
 	class KeyboardComponent;
 	class Effect;
+	class TextureMappingMaterial;
 } // namespace library
 
 namespace demo
 {
-	class TextureMappingMaterial;
-
-	class TextureMappingMaterialComponent : public library::rtti::Class<TextureMappingMaterialComponent, library::SceneComponent>
+	class TextureMappingMaterialComponent : public library::SceneComponent
 	{
+		RTTI_CLASS(TextureMappingMaterialComponent, library::SceneComponent)
+
 	public:
 		explicit TextureMappingMaterialComponent(
 			const library::Application& app,
@@ -27,7 +28,7 @@ namespace demo
 
 	private:
 		std::unique_ptr<library::Effect> m_effect;
-		std::unique_ptr<TextureMappingMaterial> m_material;
+		std::unique_ptr<library::TextureMappingMaterial> m_material;
 
 		ComPtr<ID3D11ShaderResourceView> m_textureShaderResourceView;
 		ComPtr<ID3D11Buffer> m_indexBuffer;

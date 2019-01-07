@@ -10,7 +10,6 @@
 #include <d3dx11effect.h>
 #include <d3dcompiler.h>
 
-
 namespace demo
 {
 	using namespace library;
@@ -23,7 +22,7 @@ namespace demo
 	}
 
 	TriangleComponent::TriangleComponent(const Application& app, const CameraComponent& camera)
-		: Class(app, camera)
+		: SceneComponent(app, camera)
 		, m_effect()
 		, m_technique()
 		, m_pass()
