@@ -5,6 +5,7 @@
 
 #include <map>
 #include <type_traits>
+#include <memory>
 
 namespace library
 {
@@ -12,18 +13,17 @@ namespace library
 	{
 	public:
 		template<class T, typename = std::enable_if_t<std::is_base_of_v<Material, T>>>
-		static T& Create(const Effect& effect)
+		static std::shared_ptr<T> Create()
 		{
 			const auto typeId = rtti::GetTypeId<T>();
 
 			auto it = s_materials.find(typeId);
 			if (it != s_materials.end())
 			{
-				auto material = it->second;
-				return *material->As<T>();
+				return rtti::CastTo<T>(it->second);
 			}
 
-			auto material = new T(effect);
+			auto material = std::make_shared<T>();
 			s_materials.emplace(typeId, material);
 			return *material;
 		}
@@ -31,7 +31,7 @@ namespace library
 		static void Clear();
 
 	private:
-		static std::map<rtti::TypeId, Material*> s_materials;
+		static std::map<rtti::TypeId, MaterialPtr> s_materials;
 	};
 
 } // namespace library

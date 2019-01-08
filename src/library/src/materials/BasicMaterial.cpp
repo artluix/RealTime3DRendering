@@ -5,19 +5,23 @@
 #include "library/Mesh.h"
 #include "library/Color.h"
 
+#include <cassert>
+
 namespace library
 {
-	BasicMaterial::BasicMaterial(const Effect& effect)
-		: Material(effect, "main11")
-		, m_worldViewProjection(effect.GetVariable("WorldViewProjection"))
+	BasicMaterial::BasicMaterial()
+		: Material("main11")
 	{
 	}
 
 	BasicMaterial::~BasicMaterial() = default;
 
-	void BasicMaterial::Initialize()
+	void BasicMaterial::Initialize(const Effect& effect)
 	{
-		Material::Initialize();
+		Material::Initialize(effect);
+		
+		m_worldViewProjection = effect.GetVariable("WorldViewProjection");
+		assert(!!m_worldViewProjection);
 
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{

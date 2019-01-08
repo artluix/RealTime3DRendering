@@ -13,6 +13,8 @@
 #include "library/effect/EffectVariable.h"
 #include "library/effect/EffectFactory.h"
 
+#include "library/materials/MaterialFactory.hpp"
+
 #include "library/Model.h"
 #include "library/Mesh.h"
 
@@ -41,7 +43,7 @@ namespace library
 		const float scale
 	)
 		: SceneComponent()
-		, ConcreteMaterialComponent<SkyboxMaterial>(app, EffectFactory::Create(app, k_effectPath), k_modelPath)
+		, ConcreteMaterialComponent<SkyboxMaterial>(app, k_modelPath)
 		, m_cubeMapPath(cubeMapPath)
 	{
 		SetScaling(math::Vector3(scale));
@@ -49,6 +51,12 @@ namespace library
 
 	void SkyboxComponent::Initialize()
 	{
+		m_effect = EffectFactory::Create(m_app, k_effectPath);
+		m_effect->LoadCompiled();
+
+		m_material = MaterialFactory::Create<Material>();
+		m_material->Initialize(*m_effect);
+
 		MaterialComponent::Initialize();
 
 		// Load the texture
@@ -76,44 +84,23 @@ namespace library
 
 	void SkyboxComponent::Update(const Time& time)
 	{
-		const CameraComponent& camera = m_camera.get();
-		const auto& position = camera.GetPosition();
-
-		SetPosition(position);
+		if (!!m_camera)
+		{
+			const auto& position = m_camera->GetPosition();
+			SetPosition(position);
+		}
 	}
 
-	void SkyboxComponent::UpdateVariables()
+	void SkyboxComponent::SetEffectData()
 	{
-		const auto wvp = m_worldMatrix * GetCamera().GetViewProjectionMatrix();
-		m_material.GetWorldViewProjection() << wvp;
-		m_material.GetSkyboxTexture() << m_cubeMapShaderResourceView.Get();
+		if (!!m_camera)
+		{
+			const auto wvp = m_worldMatrix * m_camera->GetViewProjectionMatrix();
+			m_material->GetWorldViewProjection() << wvp;
+			m_material->GetSkyboxTexture() << m_cubeMapShaderResourceView.Get();
 
-		MaterialComponent::UpdateVariables();
+			MaterialComponent::SetEffectData();
+		}
 	}
-
-	//void SkyboxComponent::Draw(const Time& time)
-	//{
-	//	auto d3dDeviceContext = m_app.GetD3DDeviceContext();
-	//	d3dDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	//	// input layout
-	//	auto& pass = m_material->GetCurrentTechnique().GetPass(0);
-	//	auto inputLayout = m_material->GetInputLayout(pass);
-	//	d3dDeviceContext->IASetInputLayout(inputLayout);
-
-	//	// vertex & index buffers
-	//	unsigned stride = m_material->GetVertexSize();
-	//	unsigned offset = 0;
-	//	d3dDeviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
-	//	d3dDeviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-	//	const auto wvp = m_worldMatrix * GetCamera().GetViewProjectionMatrix();
-	//	m_material->GetWorldViewProjection() << wvp;
-	//	m_material->GetSkyboxTexture() << m_cubeMapShaderResourceView.Get();
-
-	//	pass.Apply(0, d3dDeviceContext);
-
-	//	d3dDeviceContext->DrawIndexed(m_indicesCount, 0, 0);
-	//}
 
 } // namespace library

@@ -5,20 +5,26 @@
 #include "library/Mesh.h"
 #include "library/Color.h"
 
+#include <cassert>
+
 namespace library
 {
-	SkyboxMaterial::SkyboxMaterial(const Effect& effect)
-		: Material(effect, "main11")
-		, m_worldViewProjection(effect.GetVariable("WorldViewProjection"))
-		, m_skyboxTexture(effect.GetVariable("SkyboxTexture"))
+	SkyboxMaterial::SkyboxMaterial()
+		: Material("main11")
 	{
 	}
 
 	SkyboxMaterial::~SkyboxMaterial() = default;
 
-	void SkyboxMaterial::Initialize()
+	void SkyboxMaterial::Initialize(const Effect& effect)
 	{
-		Material::Initialize();
+		Material::Initialize(effect);
+
+		m_worldViewProjection = effect.GetVariable("WorldViewProjection");
+		assert(!!m_worldViewProjection);
+
+		m_skyboxTexture = effect.GetVariable("SkyboxTexture");
+		assert(!!m_skyboxTexture);
 
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{

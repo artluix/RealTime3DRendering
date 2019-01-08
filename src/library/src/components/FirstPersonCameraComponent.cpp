@@ -66,31 +66,6 @@ namespace library
 	{
 		const auto elapsedTime = time.elapsed.GetMilliseconds<float>();
 
-		// compute movement
-		math::Vector2 movementAmount;
-		if (!!m_keyboard)
-		{
-			if (m_keyboard->IsKeyDown(Key::W))
-			{
-				movementAmount.y += 1.0f;
-			}
-
-			if (m_keyboard->IsKeyDown(Key::S))
-			{
-				movementAmount.y -= 1.0f;
-			}
-
-			if (m_keyboard->IsKeyDown(Key::A))
-			{
-				movementAmount.x -= 1.0f;
-			}
-
-			if (m_keyboard->IsKeyDown(Key::D))
-			{
-				movementAmount.x += 1.0f;
-			}
-		}
-
 		// compute rotation
 		if (!!m_mouse)
 		{
@@ -125,18 +100,45 @@ namespace library
 			}
 		}
 
-		if (movementAmount)
+
+		// compute movement
+		if (!!m_keyboard)
 		{
-			const auto movement = movementAmount * m_movementRate * elapsedTime;
-			auto position = m_position;
+			math::Vector2 movementAmount;
 
-			const auto strafe = m_right * movement.x;
-			position += strafe;
+			if (m_keyboard->IsKeyDown(Key::W))
+			{
+				movementAmount.y += 1.0f;
+			}
 
-			const auto forward = m_direction * movement.y;
-			position += forward;
+			if (m_keyboard->IsKeyDown(Key::S))
+			{
+				movementAmount.y -= 1.0f;
+			}
 
-			SetPosition(position);
+			if (m_keyboard->IsKeyDown(Key::A))
+			{
+				movementAmount.x -= 1.0f;
+			}
+
+			if (m_keyboard->IsKeyDown(Key::D))
+			{
+				movementAmount.x += 1.0f;
+			}
+
+			if (movementAmount)
+			{
+				const auto movement = movementAmount * m_movementRate * elapsedTime;
+				auto position = m_position;
+
+				const auto strafe = m_right * movement.x;
+				position += strafe;
+
+				const auto forward = m_direction * movement.y;
+				position += forward;
+
+				SetPosition(position);
+			}
 		}
 
 		CameraComponent::Update(time);

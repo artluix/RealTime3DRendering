@@ -10,7 +10,6 @@ namespace library
 
 	void MaterialFactory::Clear()
 	{
-		std::for_each(s_materials.begin(), s_materials.end(), std::default_delete<Material>());
 		s_materials.clear();
 	}
 

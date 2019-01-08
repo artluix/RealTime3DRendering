@@ -9,7 +9,6 @@ namespace library
 		RTTI_CLASS(UIComponent, DrawableComponent)
 
 	public:
-		explicit UIComponent();
 		explicit UIComponent(const Application& app);
 		~UIComponent() = default;
 

@@ -11,8 +11,9 @@ if(APPLICATION)
         include/library/Common.h
 
         # components
-        include/library/Components/BaseComponent.h
+        include/library/Components/Component.h
         include/library/Components/CameraComponent.h
+        include/library/Components/ConcreteMaterialComponent.hpp
         include/library/Components/DrawableComponent.h
         include/library/Components/FirstPersonCameraComponent.h
         include/library/Components/FpsComponent.h
@@ -26,10 +27,10 @@ if(APPLICATION)
         include/library/Components/UIComponent.h
 
         # light components
-        include/library/components/LightComponent.h
-        include/library/components/DirectionalLightComponent.h
-        include/library/components/PointLightComponent.h
-        include/library/components/SpotLightComponent.h
+        # include/library/components/LightComponent.h
+        # include/library/components/DirectionalLightComponent.h
+        # include/library/components/PointLightComponent.h
+        # include/library/components/SpotLightComponent.h
 
         include/library/DirectXForwardDeclarations.h
 
@@ -78,7 +79,7 @@ if(APPLICATION)
         src/Color.cpp
 
         # components
-        src/Components/BaseComponent.cpp
+        src/Components/Component.cpp
         src/Components/CameraComponent.cpp
         src/Components/DrawableComponent.cpp
         src/Components/FirstPersonCameraComponent.cpp

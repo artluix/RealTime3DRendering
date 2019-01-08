@@ -1,6 +1,8 @@
 #pragma once
 #include "library/components/MaterialComponent.h"
-#include "library/materials/MaterialFactory.hpp"
+#include "library/materials/Material.h"
+
+#include <type_traits>
 
 namespace library
 {
@@ -10,21 +12,13 @@ namespace library
 	class ConcreteMaterialComponent : public MaterialComponent
 	{
 	public:
-		const MaterialType& GetMaterial() const override { m_material; }
+		using Material = MaterialType;
 
 	protected:
-		explicit ConcreteMaterialComponent(const Application& app, const fs::Path& modelPath)
-			: DrawableComponent(app)
-			, MaterialComponent(app, modelPath)
-			, m_effect(effect)
-			, m_material(MaterialFactory::Create<MaterialType>(effect))
-		{
-		}
-
-		MaterialType& GetMaterial() override { m_material; }
-
-		const MaterialType* m_material = nullptr;
-		const Effect* m_effect = nullptr;
+		using MaterialComponent::MaterialComponent;
+		
+		std::shared_ptr<Material> m_material;
+		std::shared_ptr<Effect> m_effect;
 	};
 
 } // namespace library

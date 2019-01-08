@@ -22,13 +22,13 @@ namespace library
 	void MaterialComponent::Initialize()
 	{
 		auto& material = GetMaterial();
-		material.Initialize();
+		assert(!!material.GetEffect()); // effect must be set before
 
 		const auto& app = GetApp();
 		Model model(app, m_modelPath, true);
 
 		const auto& mesh = model.GetMesh(0);
-		m_vertexBuffer = material.CreateVertexBuffer(app.GetD3DDevice(), mesh);
+		m_vertexBuffer = GetMaterial().CreateVertexBuffer(app.GetD3DDevice(), mesh);
 		m_indexBuffer = mesh.CreateIndexBuffer();
 		m_indicesCount = mesh.GetIndicesCount();
 	}
@@ -36,19 +36,24 @@ namespace library
 	void MaterialComponent::Draw(const Time& time)
 	{
 		SetIA();
-		UpdateVariables();
+		SetEffectData();
 		Render();
 	}
 
 	void MaterialComponent::SetIA()
 	{
-		auto d3dDeviceContext = m_app->GetD3DDeviceContext();
+		const auto& material = GetMaterial();
+
+		auto d3dDeviceContext = m_app.GetD3DDeviceContext();
 		d3dDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		auto& material = GetMaterial();
+		auto currentTechnique = material.GetCurrentTechnique();
+		assert(!!currentTechnique);
 
-		auto& pass = material.GetCurrentTechnique().GetPass(0);
-		auto inputLayout = material.GetInputLayout(pass);
+		const auto pass = currentTechnique->GetPass(0);
+		assert(!!pass);
+
+		auto inputLayout = material.GetInputLayout(*pass);
 		d3dDeviceContext->IASetInputLayout(inputLayout);
 
 		unsigned stride = material.GetVertexSize();
@@ -57,15 +62,19 @@ namespace library
 		d3dDeviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 	}
 
-	void MaterialComponent::UpdateVariables()
+	void MaterialComponent::SetEffectData()
 	{
-		auto& pass = GetMaterial().GetCurrentTechnique().GetPass(0);
-		pass.Apply(0, m_app->GetD3DDeviceContext());
+		auto currentTechnique = GetMaterial().GetCurrentTechnique();
+		assert(!!currentTechnique);
+
+		auto pass = currentTechnique->GetPass(0);
+		assert(!!pass);
+		pass->Apply(0, m_app.GetD3DDeviceContext());
 	}
 
 	void MaterialComponent::Render()
 	{
-		m_app->GetD3DDeviceContext()->DrawIndexed(m_indicesCount, 0, 0);
+		m_app.GetD3DDeviceContext()->DrawIndexed(m_indicesCount, 0, 0);
 	}
 
 } // namespace library

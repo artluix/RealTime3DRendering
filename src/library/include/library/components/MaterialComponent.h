@@ -12,20 +12,19 @@ namespace library
 		RTTI_CLASS(MaterialComponent, DrawableComponent)
 
 	public:
-		explicit MaterialComponent(const Application& app, const fs::Path& modelPath);
-		~MaterialComponent() = default;
-
 		void Initialize() override;
 		void Draw(const Time& time) override;
 
 		virtual const Material& GetMaterial() const = 0;
 
 	protected:
+		explicit MaterialComponent(const Application& app, const fs::Path& modelPath);
+
 		virtual Material& GetMaterial() = 0;
 
 		// render stages
 		virtual void SetIA();
-		virtual void UpdateVariables();
+		virtual void SetEffectData();
 		virtual void Render();
 
 		fs::Path m_modelPath;

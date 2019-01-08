@@ -7,7 +7,7 @@
 #include <string>
 #include <map>
 #include <vector>
-#include <functional>
+#include <memory>
 
 struct D3D11_INPUT_ELEMENT_DESC;
 
@@ -39,7 +39,7 @@ namespace library
 
 		ID3D11InputLayout* GetInputLayout(const EffectPass& pass) const;
 
-		virtual void Initialize();
+		virtual void Initialize(const Effect& effect);
 
 		virtual std::vector<ComPtr<ID3D11Buffer>> CreateVertexBuffers(ID3D11Device* const device, const Model& model) const;
 		virtual ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const void* data, const std::size_t size) const;
@@ -62,5 +62,7 @@ namespace library
 
 		std::map<const EffectPass*, ComPtr<ID3D11InputLayout>> m_inputLayouts;
 	};
+
+	using MaterialPtr = std::shared_ptr<Material>;
 
 } // namespace library

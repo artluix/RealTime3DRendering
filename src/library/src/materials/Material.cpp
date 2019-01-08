@@ -14,10 +14,6 @@ namespace library
 {
 	Material::Material(const std::string& defaultTechniqueName /* = ""*/)
 		: m_defaultTechniqueName(defaultTechniqueName)
-		, m_currentTechnique(!defaultTechniqueName.empty() ?
-			effect.GetTechnique(m_defaultTechniqueName) :
-			effect.GetTechnique(0)
-		)
 	{
 	}
 
@@ -43,8 +39,22 @@ namespace library
 		return nullptr;
 	}
 
-	void Material::Initialize()
+	void Material::Initialize(const Effect& effect)
 	{
+		if (m_effect != &effect)
+		{
+			m_effect = &effect;
+
+			EffectTechnique* currentTechnique = nullptr;
+
+			if (!m_defaultTechniqueName.empty())
+				currentTechnique = effect.GetTechnique(m_defaultTechniqueName);
+			else
+				currentTechnique = effect.GetTechnique(0);
+
+			assert(!!currentTechnique);
+			SetCurrentTechnique(*currentTechnique);
+		}
 	}
 
 	void Material::CreateInputLayout(
@@ -53,9 +63,13 @@ namespace library
 		const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions
 	)
 	{
-		const auto& technique = m_effect->GetTechnique(techniqueName);
-		const auto& pass = technique.GetPass(passName);
-		auto inputLayout = pass.CreateInputLayout(inputElementDescriptions);
+		const auto technique = m_effect->GetTechnique(techniqueName);
+		assert(!!technique);
+
+		const auto pass = technique->GetPass(passName);
+		assert(!!pass);
+
+		auto inputLayout = pass->CreateInputLayout(inputElementDescriptions);
 
 		m_inputLayouts.emplace(&pass, inputLayout);
 	}

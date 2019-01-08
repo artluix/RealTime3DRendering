@@ -4,24 +4,38 @@
 #include "library/effect/Effect.h"
 #include "library/Mesh.h"
 
+#include <cassert>
+
 namespace library
 {
-	DiffuseLightingMaterial::DiffuseLightingMaterial(const Effect& effect)
-		: Material(effect)
-		, m_wvp(effect.GetVariable("wvp"))
-		, m_world(effect.GetVariable("world"))
-		, m_ambientColor(effect.GetVariable("ambientColor"))
-		, m_lightColor(effect.GetVariable("lightColor"))
-		, m_lightDirection(effect.GetVariable("lightDirection"))
-		, m_colorTexture(effect.GetVariable("ColorTexture"))
+	DiffuseLightingMaterial::DiffuseLightingMaterial()
+		: Material()
 	{
 	}
 
 	DiffuseLightingMaterial::~DiffuseLightingMaterial() = default;
 
-	void DiffuseLightingMaterial::Initialize()
+	void DiffuseLightingMaterial::Initialize(const Effect& effect)
 	{
-		Material::Initialize();
+		Material::Initialize(effect);
+
+		m_wvp = effect.GetVariable("wvp");
+		assert(!!m_wvp);
+
+		m_world = effect.GetVariable("world");
+		assert(!!m_world);
+
+		m_ambientColor = effect.GetVariable("ambientColor");
+		assert(!!m_ambientColor);
+
+		m_lightColor = effect.GetVariable("lightColor");
+		assert(!!m_lightColor);
+
+		m_lightDirection = effect.GetVariable("lightDirection");
+		assert(!!m_lightDirection);
+
+		m_colorTexture = effect.GetVariable("ColorTexture");
+		assert(!!m_colorTexture);
 
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{

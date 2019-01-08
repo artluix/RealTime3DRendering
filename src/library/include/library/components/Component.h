@@ -13,20 +13,19 @@ namespace library
 		RTTI_CLASS_BASE(Component)
 
 	public:
-		explicit Component() = default;
 		explicit Component(const Application& app);
-		virtual ~Component() = default;
+		virtual ~Component();
 
 		bool IsEnabled() const { return m_enabled; }
 		void SetEnabled(const bool enabled);
 
-		const Application& GetApp() const { return *m_app; }
+		const Application& GetApp() const { return m_app; }
 
 		virtual void Initialize() = 0;
 		virtual void Update(const Time& time) = 0;
 
 	protected:
-		const Application* m_app = nullptr;
+		const Application& m_app;
 		bool m_enabled = true;
 	};
 

@@ -2,11 +2,14 @@
 #include "library/NonConstructible.hpp"
 
 #include <map>
+#include <memory>
 
 namespace library
 {
 	class Application;
+	
 	class Effect;
+	using EffectPtr = std::shared_ptr<Effect>;
 
 	namespace fs
 	{
@@ -16,11 +19,11 @@ namespace library
 	class EffectFactory
 	{
 	public:
-		static Effect& Create(const Application& app, const fs::Path& path);
+		static EffectPtr Create(const Application& app, const fs::Path& path);
 		static void Clear();
 
 	private:
-		static std::map<std::string, Effect*> s_effects;
+		static std::map<std::string, EffectPtr> s_effects;
 	};
 
 } // namespace library

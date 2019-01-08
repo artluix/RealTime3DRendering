@@ -4,20 +4,26 @@
 #include "library/effect/Effect.h"
 #include "library/Mesh.h"
 
+#include <cassert>
+
 namespace library
 {
-	TextureMappingMaterial::TextureMappingMaterial(const Effect& effect)
-		: Material(effect, "main10")
-		, m_wvp(effect.GetVariable("wvp"))
-		, m_colorTexture(effect.GetVariable("ColorTexture"))
+	TextureMappingMaterial::TextureMappingMaterial()
+		: Material("main10")
 	{
 	}
 
 	TextureMappingMaterial::~TextureMappingMaterial() = default;
 
-	void TextureMappingMaterial::Initialize()
+	void TextureMappingMaterial::Initialize(const Effect& effect)
 	{
-		Material::Initialize();
+		Material::Initialize(effect);
+
+		m_wvp = effect.GetVariable("wvp");
+		assert(!!m_wvp);
+
+		m_colorTexture = effect.GetVariable("ColorTexture");
+		assert(!!m_colorTexture);
 
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{

@@ -13,7 +13,7 @@ namespace library
 		: public SceneComponent
 		, public ConcreteMaterialComponent<SkyboxMaterial>
 	{
-		RTTI_CLASS(SkyboxComponent, MaterialComponent)
+		RTTI_CLASS(SkyboxComponent,  MaterialComponent)
 
 	public:
 		explicit SkyboxComponent(
@@ -27,23 +27,14 @@ namespace library
 
 		void Initialize() override;
 		void Update(const Time& time) override;
-
-		using MaterialComponent::Render;
-
-		//void Draw(const Time& time) override;
+		using MaterialComponent::Draw;
 
 	protected:
-		void UpdateVariables() override;
+		void SetEffectData() override;
 
 	private:
 		fs::Path m_cubeMapPath;
-
-		//std::unique_ptr<Effect> m_effect;
-		//std::unique_ptr<SkyboxMaterial> m_material;
-
 		ComPtr<ID3D11ShaderResourceView> m_cubeMapShaderResourceView;
-		//ComPtr<ID3D11Buffer> m_vertexBuffer;
-		//ComPtr<ID3D11Buffer> m_indexBuffer;
-		unsigned m_indicesCount;
 	};
+
 } // namespace library

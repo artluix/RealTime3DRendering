@@ -3,12 +3,6 @@
 
 namespace library
 {
-	UIComponent::UIComponent()
-		: DrawableComponent()
-		, m_position(math::constants::Vector2::Zero)
-	{
-	}
-
 	UIComponent::UIComponent(const Application& app)
 		: DrawableComponent(app)
 		, m_position(math::constants::Vector2::Zero)

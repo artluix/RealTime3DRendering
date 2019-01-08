@@ -63,4 +63,6 @@ namespace library
 		std::map<std::string, EffectVariable*> m_variablesMap;
 	};
 
+	using EffectPtr = std::shared_ptr<Effect>;
+
 } // namespace library

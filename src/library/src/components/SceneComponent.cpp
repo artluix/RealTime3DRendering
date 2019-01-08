@@ -6,6 +6,13 @@ namespace library
 	SceneComponent::SceneComponent()
 		: m_scaling(math::constants::Vector3::One)
 	{
+
+		UpdateWorldMatrix();
+	}
+
+	SceneComponent::SceneComponent(const CameraComponent& camera)
+		: m_camera(&camera)
+	{
 		UpdateWorldMatrix();
 	}
 
@@ -67,6 +74,14 @@ namespace library
 			return;
 
 		SetScaling(m_scaling + scaling);
+	}
+
+	//-------------------------------------------------------------------------
+
+	void SceneComponent::SetCamera(const CameraComponent& camera)
+	{
+		if (m_camera != &camera)
+			m_camera = &camera;
 	}
 
 	//-------------------------------------------------------------------------
