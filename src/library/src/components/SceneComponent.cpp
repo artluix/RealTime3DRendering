@@ -10,11 +10,11 @@ namespace library
 		UpdateWorldMatrix();
 	}
 
-	SceneComponent::SceneComponent(const CameraComponent& camera)
-		: m_camera(&camera)
-	{
-		UpdateWorldMatrix();
-	}
+	//SceneComponent::SceneComponent(const CameraComponent& camera)
+	//	: m_camera(&camera)
+	//{
+	//	UpdateWorldMatrix();
+	//}
 
 	//-------------------------------------------------------------------------
 

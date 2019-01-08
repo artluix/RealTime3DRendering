@@ -18,6 +18,7 @@ if(APPLICATION)
         include/library/Components/FirstPersonCameraComponent.h
         include/library/Components/FpsComponent.h
         include/library/Components/GridComponent.h
+        include/library/Components/InputReceivableComponent.h
         include/library/Components/KeyboardComponent.h
         include/library/Components/MaterialComponent.h
         include/library/Components/MouseComponent.h
@@ -25,12 +26,6 @@ if(APPLICATION)
         include/library/Components/SkyboxComponent.h
         include/library/Components/TextComponent.h
         include/library/Components/UIComponent.h
-
-        # light components
-        # include/library/components/LightComponent.h
-        # include/library/components/DirectionalLightComponent.h
-        # include/library/components/PointLightComponent.h
-        # include/library/components/SpotLightComponent.h
 
         include/library/DirectXForwardDeclarations.h
 
@@ -49,7 +44,6 @@ if(APPLICATION)
 
         # materials
         include/library/materials/Material.h
-        include/library/materials/MaterialFactory.hpp
         include/library/materials/BasicMaterial.h
         include/library/materials/TextureMappingMaterial.h
         include/library/materials/SkyboxMaterial.h
@@ -85,6 +79,7 @@ if(APPLICATION)
         src/Components/FirstPersonCameraComponent.cpp
         src/Components/FpsComponent.cpp
         src/Components/GridComponent.cpp
+        src/Components/InputReceivableComponent.cpp
         src/Components/KeyboardComponent.cpp
         src/Components/MaterialComponent.cpp
         src/Components/MouseComponent.cpp
@@ -108,7 +103,6 @@ if(APPLICATION)
 
         # materials
         src/materials/Material.cpp
-        src/materials/MaterialFactory.cpp
         src/materials/BasicMaterial.cpp
         src/materials/TextureMappingMaterial.cpp
         src/materials/SkyboxMaterial.cpp

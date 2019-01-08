@@ -52,18 +52,17 @@ namespace library
 			return m_string != other.m_string;
 		}
 
-
 		inline bool Path::operator == (const Path& other) const
 		{
 			return m_string == other.m_string;
 		}
 
-		bool Path::operator < (const Path& other) const
+		inline bool Path::operator < (const Path& other) const
 		{
 			return m_string < other.m_string;
 		}
 
-		bool Path::operator > (const Path& other) const
+		inline bool Path::operator > (const Path& other) const
 		{
 			return m_string > other.m_string;
 		}

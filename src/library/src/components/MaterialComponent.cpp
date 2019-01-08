@@ -22,7 +22,7 @@ namespace library
 	void MaterialComponent::Initialize()
 	{
 		auto& material = GetMaterial();
-		assert(!!material.GetEffect()); // effect must be set before
+		assert(material.IsInitialized());
 
 		const auto& app = GetApp();
 		Model model(app, m_modelPath, true);
@@ -47,13 +47,10 @@ namespace library
 		auto d3dDeviceContext = m_app.GetD3DDeviceContext();
 		d3dDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 
-		auto currentTechnique = material.GetCurrentTechnique();
-		assert(!!currentTechnique);
+		auto& currentTechnique = material.GetCurrentTechnique();
+		const auto& pass = currentTechnique.GetPass(0);
 
-		const auto pass = currentTechnique->GetPass(0);
-		assert(!!pass);
-
-		auto inputLayout = material.GetInputLayout(*pass);
+		auto inputLayout = material.GetInputLayout(pass);
 		d3dDeviceContext->IASetInputLayout(inputLayout);
 
 		unsigned stride = material.GetVertexSize();
@@ -64,12 +61,9 @@ namespace library
 
 	void MaterialComponent::SetEffectData()
 	{
-		auto currentTechnique = GetMaterial().GetCurrentTechnique();
-		assert(!!currentTechnique);
-
-		auto pass = currentTechnique->GetPass(0);
-		assert(!!pass);
-		pass->Apply(0, m_app.GetD3DDeviceContext());
+		auto& currentTechnique = GetMaterial().GetCurrentTechnique();
+		auto& pass = currentTechnique.GetPass(0);
+		pass.Apply(0, m_app.GetD3DDeviceContext());
 	}
 
 	void MaterialComponent::Render()

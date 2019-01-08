@@ -5,24 +5,18 @@
 #include "library/Mesh.h"
 #include "library/Color.h"
 
-#include <cassert>
-
 namespace library
 {
-	BasicMaterial::BasicMaterial()
-		: Material("main11")
+	BasicMaterial::BasicMaterial(const Effect& effect)
+		: Material(effect, "main11")
+		, m_worldViewProjection(effect.GetVariable("WorldViewProjection"))
 	{
 	}
 
 	BasicMaterial::~BasicMaterial() = default;
 
-	void BasicMaterial::Initialize(const Effect& effect)
+	void BasicMaterial::InitializeInternal()
 	{
-		Material::Initialize(effect);
-		
-		m_worldViewProjection = effect.GetVariable("WorldViewProjection");
-		assert(!!m_worldViewProjection);
-
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{
 			{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },

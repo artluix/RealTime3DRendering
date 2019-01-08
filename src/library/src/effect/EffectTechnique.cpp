@@ -24,21 +24,23 @@ namespace library
 
 	EffectTechnique::~EffectTechnique() = default;
 
-	EffectPass* EffectTechnique::GetPass(const std::string& passName) const
-	{
-		auto it = m_passesMap.find(passName);
-		if (it != m_passesMap.end())
-			return nullptr;
+	//-------------------------------------------------------------------------
 
-		return it->second;
+	bool EffectTechnique::HasPass(const std::string& passName) const
+	{
+		return m_passesMap.find(passName) != m_passesMap.end();
 	}
 
-	EffectPass* EffectTechnique::GetPass(const unsigned passIdx) const
+	EffectPass& EffectTechnique::GetPass(const std::string& passName) const
 	{
-		if (passIdx >= m_passes.size())
-			return nullptr;
+		assert(HasPass(passName));
+		return *m_passesMap.at(passName);
+	}
 
-		return m_passes[passIdx].get();
+	EffectPass& EffectTechnique::GetPass(const unsigned passIdx) const
+	{
+		assert(passIdx < m_passes.size());
+		return *m_passes[passIdx];
 	}
 
 } // namespace library

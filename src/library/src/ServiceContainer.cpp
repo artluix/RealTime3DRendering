@@ -7,7 +7,7 @@ namespace library
 	{
 		if (m_services.find(typeId) == m_services.end())
 		{
-			m_services.emplace(std::make_pair(typeId, service));
+			m_services.emplace(typeId, service);
 		}
 	}
 

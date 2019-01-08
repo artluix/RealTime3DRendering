@@ -8,6 +8,7 @@
 #include <map>
 #include <vector>
 #include <memory>
+#include <functional>
 
 struct D3D11_INPUT_ELEMENT_DESC;
 
@@ -28,18 +29,19 @@ namespace library
 		RTTI_CLASS_BASE(Material)
 
 	public:
-		explicit Material(const std::string& defaultTechniqueName = "");
+		explicit Material(const Effect& effect, const std::string& defaultTechniqueName = "");
 		virtual ~Material() = default;
 
-		EffectVariable* operator[](const std::string& variableName) const;
-		const Effect* GetEffect() const { return m_effect; }
+		EffectVariable& operator[](const std::string& variableName) const;
+		const Effect& GetEffect() const { return m_effect; }
 
-		const EffectTechnique* GetCurrentTechnique() const { return m_currentTechnique; }
+		const EffectTechnique& GetCurrentTechnique() const { return m_currentTechnique; }
 		void SetCurrentTechnique(const EffectTechnique& technique);
 
 		ID3D11InputLayout* GetInputLayout(const EffectPass& pass) const;
 
-		virtual void Initialize(const Effect& effect);
+		void Initialize();
+		bool IsInitialized() const { return m_isInitialized; }
 
 		virtual std::vector<ComPtr<ID3D11Buffer>> CreateVertexBuffers(ID3D11Device* const device, const Model& model) const;
 		virtual ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const void* data, const std::size_t size) const;
@@ -54,15 +56,16 @@ namespace library
 			const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions
 		);
 
-	private:
-		const Effect* m_effect = nullptr;
+		virtual void InitializeInternal() = 0;
 
-		const EffectTechnique* m_currentTechnique = nullptr;
+		const Effect& m_effect;
+
+		std::reference_wrapper<const EffectTechnique> m_currentTechnique;
 		std::string m_defaultTechniqueName;
+
+		bool m_isInitialized = false;
 
 		std::map<const EffectPass*, ComPtr<ID3D11InputLayout>> m_inputLayouts;
 	};
-
-	using MaterialPtr = std::shared_ptr<Material>;
 
 } // namespace library

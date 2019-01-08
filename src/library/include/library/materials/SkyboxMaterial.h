@@ -11,20 +11,20 @@ namespace library
 	public:
 		using Vertex = VertexPosition;
 
-		explicit SkyboxMaterial();
+		explicit SkyboxMaterial(const Effect& effect);
 		~SkyboxMaterial();
 
-		EffectVariable& GetWorldViewProjection() const { return *m_worldViewProjection; }
-		EffectVariable& GetSkyboxTexture() const { return *m_skyboxTexture; }
-
-		void Initialize(const Effect& effect) override;
+		EffectVariable& GetWorldViewProjection() const { return m_worldViewProjection; }
+		EffectVariable& GetSkyboxTexture() const { return m_skyboxTexture; }
 
 		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }
 
 	private:
-		EffectVariable* m_worldViewProjection = nullptr;
-		EffectVariable* m_skyboxTexture = nullptr;
+		void InitializeInternal() override;
+
+		EffectVariable& m_worldViewProjection;
+		EffectVariable& m_skyboxTexture;
 	};
 
 } // namespace library

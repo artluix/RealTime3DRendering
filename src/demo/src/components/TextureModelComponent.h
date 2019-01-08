@@ -1,5 +1,7 @@
 #pragma once
 #include <library/components/SceneComponent.h>
+#include <library/components/DrawableComponent.h>
+#include <library/components/InputReceivableComponent.h>
 #include <library/DirectXForwardDeclarations.h>
 
 namespace library
@@ -11,17 +13,15 @@ namespace library
 
 namespace demo
 {
-	class TextureModelComponent : public library::SceneComponent
+	class TextureModelComponent
+		: public library::SceneComponent
+		, public library::DrawableComponent
+		, public library::InputReceivableComponent
 	{
-		RTTI_CLASS(TextureModelComponent, library::SceneComponent)
+		RTTI_CLASS(TextureModelComponent, library::SceneComponent, library::DrawableComponent, library::InputReceivableComponent)
 
 	public:
-		explicit TextureModelComponent(
-			const library::Application& app,
-			const library::CameraComponent& camera,
-			const library::KeyboardComponent& keyboard,
-			const library::MouseComponent& mouse
-		);
+		explicit TextureModelComponent(const library::Application& app);
 
 		void Initialize() override;
 		void Update(const library::Time& time) override;
@@ -46,9 +46,6 @@ namespace demo
 		unsigned m_indicesCount;
 
 		long m_wheel;
-
-		std::reference_wrapper<const library::KeyboardComponent> m_keyboard;
-		std::reference_wrapper<const library::MouseComponent> m_mouse;
 	};
 
 } // namespace demo

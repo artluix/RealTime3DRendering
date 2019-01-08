@@ -4,7 +4,7 @@ set "DEST_PATH=%~dp0bin\data"
 set "SRC_PATH=%~dp0data"
 
 set TEXCONV_TOOL="%~dp0tools\bin\texconv\x64\texconv.exe"
-set FXC_TOOL="C:\Program Files (x86)\Windows Kits\8.1\bin\x64\fxc.exe"
+set FXC_TOOL="C:\Program Files (x86)\Windows Kits\10\bin\10.0.17763.0\x64\fxc.exe"
 
 setlocal enabledelayedexpansion
 

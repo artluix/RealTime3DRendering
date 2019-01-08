@@ -1,41 +1,27 @@
 #pragma once
 #include <library/components/SceneComponent.h>
-#include <library/DirectXForwardDeclarations.h>
-
-namespace library
-{
-	class KeyboardComponent;
-	class Effect;
-	class BasicMaterial;
-} // namespace library
+#include <library/components/InputReceivableComponent.h>
+#include <library/materials/BasicMaterial.h>
+#include <library/components/ConcreteMaterialComponent.hpp>
 
 namespace demo
 {
-	class BasicMaterialComponent : public library::SceneComponent
+	class BasicMaterialComponent
+		: public library::SceneComponent
+		, public library::InputReceivableComponent
+		, public library::ConcreteMaterialComponent<library::BasicMaterial>
 	{
-		RTTI_CLASS(BasicMaterialComponent, library::SceneComponent)
+		RTTI_CLASS(BasicMaterialComponent, library::SceneComponent, library::InputReceivableComponent, library::MaterialComponent)
 
 	public:
-		explicit BasicMaterialComponent(
-			const library::Application& app,
-			const library::CameraComponent& camera,
-			const library::KeyboardComponent& keyboard
-		);
+		explicit BasicMaterialComponent(const library::Application& app);
 
 		void Initialize() override;
 		void Update(const library::Time& time) override;
-		void Draw(const library::Time& time) override;
+		using MaterialComponent::Draw;
 
-	private:
-		std::unique_ptr<library::Effect> m_effect;
-		std::unique_ptr<library::BasicMaterial> m_material;
-
-		ComPtr<ID3D11Buffer> m_indexBuffer;
-		ComPtr<ID3D11Buffer> m_vertexBuffer;
-
-		unsigned m_indicesCount;
-
-		std::reference_wrapper<const library::KeyboardComponent> m_keyboard;
+	protected:
+		void SetEffectData() override;
 	};
 
 } // namespace demo

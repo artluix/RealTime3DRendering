@@ -1,15 +1,18 @@
 #pragma once
 #include <library/components/SceneComponent.h>
+#include <library/components/DrawableComponent.h>
 #include <library/DirectXForwardDeclarations.h>
 
 namespace demo
 {
-	class TriangleComponent : public library::SceneComponent
+	class TriangleComponent
+		: public library::SceneComponent
+		, public library::DrawableComponent
 	{
-		RTTI_CLASS(TriangleComponent, library::SceneComponent)
+		RTTI_CLASS(TriangleComponent, library::SceneComponent, library::DrawableComponent)
 
 	public:
-		explicit TriangleComponent(const library::Application& app, const library::CameraComponent& camera);
+		explicit TriangleComponent(const library::Application& app);
 
 		void Initialize() override;
 		void Update(const library::Time& time) override;

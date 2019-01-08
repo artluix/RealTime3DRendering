@@ -3,11 +3,16 @@
 
 #include "library/Exception.h"
 #include "library/components/DrawableComponent.h"
+#include "library/components/MaterialComponent.h"
 #include "library/components/SceneComponent.h"
 #include "library/components/UIComponent.h"
 
-#include "library/materials/MaterialFactory.hpp"
+#include "library/materials/Material.h"
+
+#include "library/effect/Effect.h"
 #include "library/effect/EffectFactory.h"
+
+#include <algorithm>
 
 namespace library
 {
@@ -113,8 +118,8 @@ namespace library
 
 	void Application::Draw(const Time& time)
 	{
-		std::vector<SceneComponent*> sceneComponents;
-		std::vector<UIComponent*> uiComponents;
+		std::vector<DrawableComponent*> sceneComponents;
+		std::vector<DrawableComponent*> uiComponents;
 
 		for (const auto& component : m_components)
 		{
@@ -122,12 +127,28 @@ namespace library
 			if (!!drawableComponent && drawableComponent->IsVisible())
 			{
 				if (auto sceneComponent = drawableComponent->As<SceneComponent>())
-					sceneComponents.push_back(sceneComponent);
+					sceneComponents.push_back(drawableComponent);
 
 				if (auto uiComponent = drawableComponent->As<UIComponent>())
-					uiComponents.push_back(uiComponent);
+					uiComponents.push_back(drawableComponent);
 			}
 		}
+
+		// sort scene components by effects
+		auto effectPred = [](const DrawableComponent* lhs, const DrawableComponent* rhs)
+		{
+			auto lhsMat = lhs->As<MaterialComponent>();
+			if (!lhsMat)
+				return false;
+
+			auto rhsMat = rhs->As<MaterialComponent>();
+			if (!rhsMat)
+				return true;
+
+			return lhsMat->GetMaterial().GetEffect().GetName() < rhsMat->GetMaterial().GetEffect().GetName();
+		};
+
+		std::sort(sceneComponents.begin(), sceneComponents.end(), effectPred);
 
 		// render scene first
 		{
@@ -392,7 +413,6 @@ namespace library
 
 	void Application::Shutdown()
 	{
-		MaterialFactory::Clear();
 		EffectFactory::Clear();
 
 		m_components.clear();

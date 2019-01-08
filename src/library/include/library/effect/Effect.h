@@ -30,19 +30,24 @@ namespace library
 
 		const Application& GetApp() const { return m_app; }
 		const fs::Path& GetPath() const { return m_path; }
+		const std::string& GetName() const { return m_name; }
 
 		ID3DX11Effect* GetEffect() const { return m_effect.Get(); }
 		void SetEffect(ID3DX11Effect* const effect);
 
 		const D3DX11_EFFECT_DESC& GetEffectDesc() const { return m_effectDesc; }
 
-		EffectTechnique* GetTechnique(const std::string& techniqueName) const;
-		EffectTechnique* GetTechnique(const unsigned techniqueIdx) const;
+		bool HasTechnique(const std::string& techniqueName) const;
+		EffectTechnique& GetTechnique(const std::string& techniqueName) const;
+		EffectTechnique& GetTechnique(const unsigned techniqueIdx) const;
 		std::size_t GetTechniquesCount() const { return m_techniques.size(); }
 
-		EffectVariable* GetVariable(const std::string& variableName) const;
-		EffectVariable* GetVariable(const unsigned variableIdx) const;
+		bool HasVariable(const std::string& variableName) const;
+		EffectVariable& GetVariable(const std::string& variableName) const;
+		EffectVariable& GetVariable(const unsigned variableIdx) const;
 		std::size_t GetVariablesCount() const { return m_variables.size(); }
+
+		bool IsInitialized() const { return m_isInitialized; }
 
 	private:
 		using EffectTechniquePtr = std::unique_ptr<EffectTechnique>;
@@ -52,9 +57,12 @@ namespace library
 
 		const Application& m_app;
 		fs::Path m_path;
+		std::string m_name;
 
 		ComPtr<ID3DX11Effect> m_effect;
 		D3DX11_EFFECT_DESC m_effectDesc;
+
+		bool m_isInitialized = false;
 
 		std::vector<EffectTechniquePtr> m_techniques;
 		std::map<std::string, EffectTechnique*> m_techniquesMap;

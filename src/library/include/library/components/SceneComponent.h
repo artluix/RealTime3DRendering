@@ -11,8 +11,6 @@ namespace library
 		RTTI_CLASS_BASE(SceneComponent)
 
 	public:
-		explicit SceneComponent();
-		explicit SceneComponent(const CameraComponent& camera);
 		~SceneComponent() = default;
 
 		const math::Vector3& GetPosition() const { return m_position; }
@@ -33,6 +31,9 @@ namespace library
 		void SetCamera(const CameraComponent& camera);
 
 	protected:
+		explicit SceneComponent();
+		//explicit SceneComponent(const CameraComponent& camera);
+
 		void UpdateWorldMatrix();
 
 		math::Vector3 m_position;

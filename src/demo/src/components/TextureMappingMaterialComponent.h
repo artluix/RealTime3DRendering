@@ -1,42 +1,32 @@
 #pragma once
 #include <library/components/SceneComponent.h>
+#include <library/materials/TextureMappingMaterial.h>
+#include <library/components/ConcreteMaterialComponent.hpp>
+#include <library/components/InputReceivableComponent.h>
 #include <library/DirectXForwardDeclarations.h>
-
-namespace library
-{
-	class KeyboardComponent;
-	class Effect;
-	class TextureMappingMaterial;
-} // namespace library
 
 namespace demo
 {
-	class TextureMappingMaterialComponent : public library::SceneComponent
+	class TextureMappingMaterialComponent
+		: public library::SceneComponent
+		, public library::ConcreteMaterialComponent<library::TextureMappingMaterial>
+		, public library::InputReceivableComponent
 	{
-		RTTI_CLASS(TextureMappingMaterialComponent, library::SceneComponent)
+		RTTI_CLASS(TextureMappingMaterialComponent, library::SceneComponent, library::InputReceivableComponent, library::MaterialComponent)
 
 	public:
-		explicit TextureMappingMaterialComponent(
-			const library::Application& app,
-			const library::CameraComponent& camera,
-			const library::KeyboardComponent& keyboard
-		);
+		explicit TextureMappingMaterialComponent(const library::Application& app);
 
 		void Initialize() override;
 		void Update(const library::Time& time) override;
-		void Draw(const library::Time& time) override;
+
+		using MaterialComponent::Draw;
+
+	protected:
+		void SetEffectData() override;
 
 	private:
-		std::unique_ptr<library::Effect> m_effect;
-		std::unique_ptr<library::TextureMappingMaterial> m_material;
-
 		ComPtr<ID3D11ShaderResourceView> m_textureShaderResourceView;
-		ComPtr<ID3D11Buffer> m_indexBuffer;
-		ComPtr<ID3D11Buffer> m_vertexBuffer;
-
-		unsigned m_indicesCount;
-
-		std::reference_wrapper<const library::KeyboardComponent> m_keyboard;
 	};
 
 } // namespace demo

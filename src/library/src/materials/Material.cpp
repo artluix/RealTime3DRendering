@@ -12,21 +12,28 @@
 
 namespace library
 {
-	Material::Material(const std::string& defaultTechniqueName /* = ""*/)
-		: m_defaultTechniqueName(defaultTechniqueName)
+	Material::Material(const Effect& effect, const std::string& defaultTechniqueName /* = ""*/)
+		: m_effect(effect)
+		, m_defaultTechniqueName(defaultTechniqueName)
+		, m_currentTechnique(
+			!defaultTechniqueName.empty() ?
+				effect.GetTechnique(0) :
+				effect.GetTechnique(defaultTechniqueName)
+		)
 	{
+		assert(effect.IsInitialized());
 	}
 
-	EffectVariable* Material::operator[](const std::string& variableName) const
+	EffectVariable& Material::operator[](const std::string& variableName) const
 	{
-		return m_effect->GetVariable(variableName);
+		return m_effect.GetVariable(variableName);
 	}
 
 	void Material::SetCurrentTechnique(const EffectTechnique& technique)
 	{
-		if (m_currentTechnique != &technique)
+		if (&m_currentTechnique.get() != &technique)
 		{
-			m_currentTechnique = &technique;
+			m_currentTechnique = technique;
 		}
 	}
 
@@ -39,22 +46,14 @@ namespace library
 		return nullptr;
 	}
 
-	void Material::Initialize(const Effect& effect)
+	void Material::Initialize()
 	{
-		if (m_effect != &effect)
-		{
-			m_effect = &effect;
+		if (m_isInitialized)
+			return;
 
-			EffectTechnique* currentTechnique = nullptr;
+		InitializeInternal();
 
-			if (!m_defaultTechniqueName.empty())
-				currentTechnique = effect.GetTechnique(m_defaultTechniqueName);
-			else
-				currentTechnique = effect.GetTechnique(0);
-
-			assert(!!currentTechnique);
-			SetCurrentTechnique(*currentTechnique);
-		}
+		m_isInitialized = true;
 	}
 
 	void Material::CreateInputLayout(
@@ -63,13 +62,9 @@ namespace library
 		const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions
 	)
 	{
-		const auto technique = m_effect->GetTechnique(techniqueName);
-		assert(!!technique);
-
-		const auto pass = technique->GetPass(passName);
-		assert(!!pass);
-
-		auto inputLayout = pass->CreateInputLayout(inputElementDescriptions);
+		const auto& technique = m_effect.GetTechnique(techniqueName);
+		const auto& pass = technique.GetPass(passName);
+		auto inputLayout = pass.CreateInputLayout(inputElementDescriptions);
 
 		m_inputLayouts.emplace(&pass, inputLayout);
 	}

@@ -8,15 +8,10 @@
 #include <library/Path.h>
 #include <library/Exception.h>
 
-#include <library/materials/TextureMappingMaterial.h>
-
 #include <library/effect/Effect.h>
-#include <library/effect/EffectPass.h>
 #include <library/effect/EffectTechnique.h>
 #include <library/effect/EffectVariable.h>
-
-#include <library/Model.h>
-#include <library/Mesh.h>
+#include <library/effect/EffectFactory.h>
 
 #include <DDSTextureLoader.h>
 
@@ -36,40 +31,26 @@ namespace demo
 			fs::Path("../data/effects/TextureMapping.fxc")
 #endif
 		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(
-			fs::Path("../data/models/Sphere.obj")
-		);
-		const auto k_texturePath = utils::GetExecutableDirectory().Join(
-			fs::Path("../data/textures/EarthComposite.dds")
-		);
+		const auto k_modelPath = utils::GetExecutableDirectory().Join(fs::Path("../data/models/Sphere.obj"));
+		const auto k_texturePath = utils::GetExecutableDirectory().Join(fs::Path("../data/textures/EarthComposite.dds"));
 	}
 
-	TextureMappingMaterialComponent::TextureMappingMaterialComponent(
-		const Application& app,
-		const CameraComponent& camera,
-		const KeyboardComponent& keyboard
-	)
-		: SceneComponent(app, camera)
-		, m_keyboard(keyboard)
+	TextureMappingMaterialComponent::TextureMappingMaterialComponent(const Application& app)
+		: SceneComponent()
+		, ConcreteMaterialComponent<Material>(app, k_modelPath)
+		, InputReceivableComponent()
 	{
 	}
 
 	void TextureMappingMaterialComponent::Initialize()
 	{
-		Model model(m_app, k_modelPath, true);
+		m_effect = library::EffectFactory::Create(m_app, k_effectPath);
+		m_effect->LoadCompiled();
 
-		// create effect
-		m_effect = std::make_unique<library::Effect>(m_app);
-		m_effect->LoadCompiledEffect(k_effectPath);
-
-		// create material
-		m_material = std::make_unique<TextureMappingMaterial>(*m_effect);
+		m_material = std::make_unique<Material>(*m_effect);
 		m_material->Initialize();
 
-		const auto& mesh = model.GetMesh(0);
-		m_vertexBuffer = m_material->CreateVertexBuffer(m_app.GetD3DDevice(), mesh);
-		m_indexBuffer = mesh.CreateIndexBuffer();
-		m_indicesCount = mesh.GetIndicesCount();
+		MaterialComponent::Initialize();
 
 		// Load the texture
 		{
@@ -96,68 +77,56 @@ namespace demo
 
 	void TextureMappingMaterialComponent::Update(const Time& time)
 	{
-		const KeyboardComponent& keyboard = m_keyboard;
-
-		// rotation
-		if (keyboard.IsKeyDown(Key::R))
+		if (!!m_keyboard)
 		{
-			const auto rotationDelta = k_rotationAngle * time.elapsed.GetSeconds<float>();
-			Rotate(rotationDelta);
-		}
-
-		// movement
-		{
-			math::Vector2 movementAmount;
-			if (keyboard.IsKeyDown(Key::Up))
+			// rotation
+			if (m_keyboard->IsKeyDown(Key::R))
 			{
-				movementAmount.y += 1.0f;
+				const auto rotationDelta = k_rotationAngle * time.elapsed.GetSeconds<float>();
+				Rotate(rotationDelta);
 			}
 
-			if (keyboard.IsKeyDown(Key::Down))
+			// movement
 			{
-				movementAmount.y -= 1.0f;
-			}
+				math::Vector2 movementAmount;
+				if (m_keyboard->IsKeyDown(Key::Up))
+				{
+					movementAmount.y += 1.0f;
+				}
 
-			if (keyboard.IsKeyDown(Key::Left))
-			{
-				movementAmount.x -= 1.0f;
-			}
+				if (m_keyboard->IsKeyDown(Key::Down))
+				{
+					movementAmount.y -= 1.0f;
+				}
 
-			if (keyboard.IsKeyDown(Key::Right))
-			{
-				movementAmount.x += 1.0f;
-			}
+				if (m_keyboard->IsKeyDown(Key::Left))
+				{
+					movementAmount.x -= 1.0f;
+				}
 
-			if (movementAmount)
-			{
-				Translate(math::Vector3(movementAmount * k_movementRate));
+				if (m_keyboard->IsKeyDown(Key::Right))
+				{
+					movementAmount.x += 1.0f;
+				}
+
+				if (movementAmount)
+				{
+					Translate(math::Vector3(movementAmount * k_movementRate));
+				}
 			}
 		}
 	}
 
-	void TextureMappingMaterialComponent::Draw(const Time& time)
+	void TextureMappingMaterialComponent::SetEffectData()
 	{
-		auto d3dDeviceContext = m_app.GetD3DDeviceContext();
-		d3dDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-		// input layout
-		auto& pass = m_material->GetCurrentTechnique().GetPass(0);
-		auto inputLayout = m_material->GetInputLayout(pass);
-		d3dDeviceContext->IASetInputLayout(inputLayout);
-
-		// vertex & index buffers
-		unsigned stride = m_material->GetVertexSize();
-		unsigned offset = 0;
-		d3dDeviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
-		d3dDeviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-		const auto wvp = m_worldMatrix * GetCamera().GetViewProjectionMatrix();
+		auto wvp = math::constants::Matrix4::Identity;
+		if (!!m_camera)
+			wvp = m_worldMatrix * m_camera->GetViewProjectionMatrix();
 		m_material->GetWVP() << wvp;
+
 		m_material->GetColorTexture() << m_textureShaderResourceView.Get();
 
-		pass.Apply(0, d3dDeviceContext);
-
-		d3dDeviceContext->DrawIndexed(m_indicesCount, 0, 0);
+		MaterialComponent::SetEffectData();
 	}
 
 } // namespace demo

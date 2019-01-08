@@ -24,12 +24,8 @@ namespace demo
 		constexpr float k_rotationAngle = math::constants::Pi_Div_2;
 		constexpr float k_movementRate = 0.01f;
 
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-			fs::Path("../data/effects/BasicEffect.fx")
-		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(
-			fs::Path("../data/models/Sphere.obj")
-		);
+		const auto k_effectPath = utils::GetExecutableDirectory().Join(fs::Path("../data/effects/BasicEffect.fx"));
+		const auto k_modelPath = utils::GetExecutableDirectory().Join(fs::Path("../data/models/Sphere.obj"));
 	}
 
 	//-------------------------------------------------------------------------
@@ -38,13 +34,10 @@ namespace demo
 
 	//-------------------------------------------------------------------------
 
-	ModelComponent::ModelComponent(
-		const Application& app,
-		const CameraComponent& camera,
-		const KeyboardComponent& keyboard
-	)
-		: SceneComponent(app, camera)
-		, m_keyboard(keyboard)
+	ModelComponent::ModelComponent(const Application& app)
+		: SceneComponent()
+		, DrawableComponent(app)
+		, InputReceivableComponent()
 		, m_indicesCount(0)
 	{
 	}
@@ -154,41 +147,42 @@ namespace demo
 
 	void ModelComponent::Update(const Time& time)
 	{
-		const KeyboardComponent& keyboard = m_keyboard;
-
-		// rotation
-		if (keyboard.IsKeyDown(Key::R))
+		if (!!m_keyboard)
 		{
-			const auto rotationDelta = k_rotationAngle * time.elapsed.GetSeconds<float>();
-			Rotate(rotationDelta);
-		}
-
-		// movement
-		{
-			math::Vector2 movementAmount;
-			if (keyboard.IsKeyDown(Key::Up))
+			// rotation
+			if (m_keyboard->IsKeyDown(Key::R))
 			{
-				movementAmount.y += 1.0f;
+				const auto rotationDelta = k_rotationAngle * time.elapsed.GetSeconds<float>();
+				Rotate(rotationDelta);
 			}
 
-			if (keyboard.IsKeyDown(Key::Down))
+			// movement
 			{
-				movementAmount.y -= 1.0f;
-			}
+				math::Vector2 movementAmount;
+				if (m_keyboard->IsKeyDown(Key::Up))
+				{
+					movementAmount.y += 1.0f;
+				}
 
-			if (keyboard.IsKeyDown(Key::Left))
-			{
-				movementAmount.x -= 1.0f;
-			}
+				if (m_keyboard->IsKeyDown(Key::Down))
+				{
+					movementAmount.y -= 1.0f;
+				}
 
-			if (keyboard.IsKeyDown(Key::Right))
-			{
-				movementAmount.x += 1.0f;
-			}
+				if (m_keyboard->IsKeyDown(Key::Left))
+				{
+					movementAmount.x -= 1.0f;
+				}
 
-			if (movementAmount)
-			{
-				Translate(math::Vector3(movementAmount * k_movementRate));
+				if (m_keyboard->IsKeyDown(Key::Right))
+				{
+					movementAmount.x += 1.0f;
+				}
+
+				if (movementAmount)
+				{
+					Translate(math::Vector3(movementAmount * k_movementRate));
+				}
 			}
 		}
 	}
@@ -197,7 +191,9 @@ namespace demo
 	{
 		auto d3dDeviceContext = m_app.GetD3DDeviceContext();
 
-		const auto wvp = m_worldMatrix * GetCamera().GetViewProjectionMatrix();
+		auto wvp = math::constants::Matrix4::Identity;
+		if (!!m_camera)
+			wvp = m_worldMatrix * m_camera->GetViewProjectionMatrix();
 		m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
 		m_pass->Apply(0, d3dDeviceContext);

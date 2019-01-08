@@ -26,8 +26,9 @@ namespace library
 		ID3DX11EffectTechnique* GetTechnique() const { return m_technique.Get(); }
 		const D3DX11_TECHNIQUE_DESC& GetTechniqueDesc() const { return m_techniqueDesc; }
 
-		EffectPass* GetPass(const std::string& passName) const;
-		EffectPass* GetPass(const unsigned passIdx) const;
+		bool HasPass(const std::string& passName) const;
+		EffectPass& GetPass(const std::string& passName) const;
+		EffectPass& GetPass(const unsigned passIdx) const;
 		std::size_t GetPassesCount() const { return m_passes.size(); }
 
 	private:

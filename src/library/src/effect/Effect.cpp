@@ -13,7 +13,7 @@ namespace library
 	Effect::Effect(const Application& app, const fs::Path& path)
 		: m_app(app)
 		, m_path(path)
-		//, m_name(path.GetBaseName().SplitExt()[0].GetString())
+		, m_name(path.GetBaseName().SplitExt()[0].GetString())
 	{
 	}
 
@@ -58,6 +58,8 @@ namespace library
 		{
 			throw Exception("D3DX11CreateEffectFromMemory() failed.", hr);
 		}
+
+		Initialize();
 	}
 
 	void Effect::LoadCompiled()
@@ -79,6 +81,8 @@ namespace library
 		{
 			throw Exception("D3DX11CreateEffectFromMemory() failed.", hr);
 		}
+
+		Initialize();
 	}
 
 	//-------------------------------------------------------------------------
@@ -93,46 +97,49 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	EffectTechnique* Effect::GetTechnique(const std::string& techniqueName) const
+	bool Effect::HasTechnique(const std::string& techniqueName) const
 	{
-		auto it = m_techniquesMap.find(techniqueName);
-		if (it == m_techniquesMap.end())
-			return nullptr;
-
-		return it->second;
+		return m_techniquesMap.find(techniqueName) != m_techniquesMap.end();
 	}
 
-	EffectTechnique* Effect::GetTechnique(const unsigned techniqueIdx) const
+	EffectTechnique& Effect::GetTechnique(const std::string& techniqueName) const
 	{
-		if (techniqueIdx >= m_techniques.size())
-			return nullptr;
+		assert(HasTechnique(techniqueName));
+		return *m_techniquesMap.at(techniqueName);
+	}
 
-		return m_techniques[techniqueIdx].get();
+	EffectTechnique& Effect::GetTechnique(const unsigned techniqueIdx) const
+	{
+		assert(techniqueIdx < m_techniques.size());
+		return *m_techniques[techniqueIdx];
 	}
 
 	//-------------------------------------------------------------------------
 
-	EffectVariable* Effect::GetVariable(const std::string& variableName) const
+	bool Effect::HasVariable(const std::string& variableName) const
 	{
-		auto it = m_variablesMap.find(variableName);
-		if (it == m_variablesMap.end())
-			return nullptr;
-
-		return it->second;
+		return m_variablesMap.find(variableName) != m_variablesMap.end();
 	}
 
-	EffectVariable* Effect::GetVariable(const unsigned variableIdx) const
+	EffectVariable& Effect::GetVariable(const std::string& variableName) const
 	{
-		if (variableIdx >= m_variables.size())
-			return nullptr;
+		assert(HasVariable(variableName));
+		return *m_variablesMap.at(variableName);
+	}
 
-		return m_variables[variableIdx].get();
+	EffectVariable& Effect::GetVariable(const unsigned variableIdx) const
+	{
+		assert(variableIdx < m_variables.size());
+		return *m_variables[variableIdx];
 	}
 
 	//-------------------------------------------------------------------------
 
 	void Effect::Initialize()
 	{
+		if (m_isInitialized)
+			return;
+
 		auto hr = m_effect->GetDesc(&m_effectDesc);
 		if (FAILED(hr))
 		{
@@ -152,6 +159,8 @@ namespace library
 			m_variablesMap.emplace(variable->GetName(), variable.get());
 			m_variables.push_back(std::move(variable));
 		}
+
+		m_isInitialized = true;
 	}
 
 } // namespace library

@@ -3,6 +3,7 @@
 #include "library/materials/Material.h"
 
 #include <type_traits>
+#include <memory>
 
 namespace library
 {
@@ -14,10 +15,14 @@ namespace library
 	public:
 		using Material = MaterialType;
 
+		const Material& GetMaterial() const { return *m_material; }
+
 	protected:
 		using MaterialComponent::MaterialComponent;
+
+		Material& GetMaterial() { return *m_material; }
 		
-		std::shared_ptr<Material> m_material;
+		std::unique_ptr<Material> m_material;
 		std::shared_ptr<Effect> m_effect;
 	};
 

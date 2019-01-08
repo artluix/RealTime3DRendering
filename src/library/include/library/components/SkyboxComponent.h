@@ -13,12 +13,11 @@ namespace library
 		: public SceneComponent
 		, public ConcreteMaterialComponent<SkyboxMaterial>
 	{
-		RTTI_CLASS(SkyboxComponent,  MaterialComponent)
+		RTTI_CLASS(SkyboxComponent, SceneComponent, MaterialComponent)
 
 	public:
 		explicit SkyboxComponent(
 			const Application& app,
-			const CameraComponent& camera,
 			const fs::Path& cubeMapPath,
 			const float scale
 		);

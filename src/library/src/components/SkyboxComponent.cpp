@@ -13,11 +13,6 @@
 #include "library/effect/EffectVariable.h"
 #include "library/effect/EffectFactory.h"
 
-#include "library/materials/MaterialFactory.hpp"
-
-#include "library/Model.h"
-#include "library/Mesh.h"
-
 #include <DDSTextureLoader.h>
 
 namespace library
@@ -31,14 +26,11 @@ namespace library
 			fs::Path("../data/effects/Skybox.fxc")
 #endif
 		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(
-			fs::Path("../data/models/Sphere.obj")
-		);
+		const auto k_modelPath = utils::GetExecutableDirectory().Join(fs::Path("../data/models/Sphere.obj"));
 	}
 
 	SkyboxComponent::SkyboxComponent(
 		const Application& app,
-		const CameraComponent& camera,
 		const fs::Path& cubeMapPath,
 		const float scale
 	)
@@ -54,8 +46,8 @@ namespace library
 		m_effect = EffectFactory::Create(m_app, k_effectPath);
 		m_effect->LoadCompiled();
 
-		m_material = MaterialFactory::Create<Material>();
-		m_material->Initialize(*m_effect);
+		m_material = std::make_unique<Material>(*m_effect);
+		m_material->Initialize();
 
 		MaterialComponent::Initialize();
 
@@ -93,14 +85,14 @@ namespace library
 
 	void SkyboxComponent::SetEffectData()
 	{
+		auto wvp = math::constants::Matrix4::Identity;
 		if (!!m_camera)
-		{
-			const auto wvp = m_worldMatrix * m_camera->GetViewProjectionMatrix();
-			m_material->GetWorldViewProjection() << wvp;
-			m_material->GetSkyboxTexture() << m_cubeMapShaderResourceView.Get();
+			wvp = m_worldMatrix * m_camera->GetViewProjectionMatrix();
+			
+		m_material->GetWorldViewProjection() << wvp;
+		m_material->GetSkyboxTexture() << m_cubeMapShaderResourceView.Get();
 
-			MaterialComponent::SetEffectData();
-		}
+		MaterialComponent::SetEffectData();
 	}
 
 } // namespace library

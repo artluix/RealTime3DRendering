@@ -11,18 +11,19 @@ namespace library
 	public:
 		using Vertex = VertexPositionColor;
 
-		explicit BasicMaterial();
+		explicit BasicMaterial(const Effect& effect);
 		~BasicMaterial();
 
-		EffectVariable& GetWorldViewProjection() const { return *m_worldViewProjection; }
+		EffectVariable& GetWorldViewProjection() const { return m_worldViewProjection; }
 
-		void Initialize(const Effect& effect) override;
 
 		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }
 
 	private:
-		EffectVariable* m_worldViewProjection = nullptr;
+		void InitializeInternal() override;
+
+		EffectVariable& m_worldViewProjection;
 	};
 
 } // namespace library

@@ -1,5 +1,7 @@
 #pragma once
 #include <library/components/SceneComponent.h>
+#include <library/components/DrawableComponent.h>
+#include <library/components/InputReceivableComponent.h>
 #include <library/DirectXForwardDeclarations.h>
 
 namespace library
@@ -10,16 +12,15 @@ namespace library
 
 namespace demo
 {
-	class ModelComponent : public library::SceneComponent
+	class ModelComponent
+		: public library::SceneComponent
+		, public library::DrawableComponent
+		, public library::InputReceivableComponent
 	{
-		RTTI_CLASS(ModelComponent,library::SceneComponent)
+		RTTI_CLASS(ModelComponent, library::SceneComponent, library::DrawableComponent, library::InputReceivableComponent)
 
 	public:
-		explicit ModelComponent(
-			const library::Application& app,
-			const library::CameraComponent& camera,
-			const library::KeyboardComponent& keyboard
-		);
+		explicit ModelComponent(const library::Application& app);
 
 		void Initialize() override;
 		void Update(const library::Time& time) override;
@@ -38,8 +39,6 @@ namespace demo
 		ComPtr<ID3D11Buffer> m_vertexBuffer;
 
 		unsigned m_indicesCount;
-
-		std::reference_wrapper<const library::KeyboardComponent> m_keyboard;
 	};
 
 } // namespace demo

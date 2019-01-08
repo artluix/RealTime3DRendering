@@ -44,7 +44,7 @@ namespace library
 			throw Exception("IDirectInputDevice::SetDataFormat() failed.", hr);
 		}
 
-		hr = m_directInputDevice->SetCooperativeLevel(m_app->GetWindowHandle(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
+		hr = m_directInputDevice->SetCooperativeLevel(m_app.GetWindowHandle(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
 		if (FAILED(hr))
 		{
 			throw Exception("IDirectInputDevice::SetCooperativeLevel() failed.", hr);

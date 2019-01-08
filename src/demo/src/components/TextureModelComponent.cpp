@@ -35,12 +35,8 @@ namespace demo
 			fs::Path("../data/effects/TextureMapping.fxc")
 #endif
 		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(
-			fs::Path("../data/models/Sphere.obj")
-		);
-		const auto k_texturePath = utils::GetExecutableDirectory().Join(
-			fs::Path("../data/textures/EarthComposite.dds")
-		);
+		const auto k_modelPath = utils::GetExecutableDirectory().Join(fs::Path("../data/models/Sphere.obj"));
+		const auto k_texturePath = utils::GetExecutableDirectory().Join(fs::Path("../data/textures/EarthComposite.dds"));
 	}
 
 	//-------------------------------------------------------------------------
@@ -49,15 +45,10 @@ namespace demo
 
 	//-------------------------------------------------------------------------
 
-	TextureModelComponent::TextureModelComponent(
-		const Application& app,
-		const CameraComponent& camera,
-		const KeyboardComponent& keyboard,
-		const library::MouseComponent& mouse
-	)
-		: SceneComponent(app, camera)
-		, m_keyboard(keyboard)
-		, m_mouse(mouse)
+	TextureModelComponent::TextureModelComponent(const Application& app)
+		: SceneComponent()
+		, DrawableComponent(app)
+		, InputReceivableComponent()
 		, m_indicesCount(0)
 		, m_wheel(0)
 	{
@@ -187,57 +178,58 @@ namespace demo
 
 	void TextureModelComponent::Update(const Time& time)
 	{
-		const KeyboardComponent& keyboard = m_keyboard;
-		const MouseComponent& mouse = m_mouse;
-
-		// rotation
-		if (keyboard.IsKeyDown(Key::R))
+		if (!!m_keyboard)
 		{
-			const auto rotationDelta = k_rotationAngle * time.elapsed.GetSeconds<float>();
-			Rotate(rotationDelta);
-		}
-
-		// movement
-		{
-			math::Vector2 movementAmount;
-			if (keyboard.IsKeyDown(Key::Up))
+			// rotation
+			if (m_keyboard->IsKeyDown(Key::R))
 			{
-				movementAmount.y += 1.0f;
+				const auto rotationDelta = k_rotationAngle * time.elapsed.GetSeconds<float>();
+				Rotate(rotationDelta);
 			}
 
-			if (keyboard.IsKeyDown(Key::Down))
+			// movement
 			{
-				movementAmount.y -= 1.0f;
-			}
-
-			if (keyboard.IsKeyDown(Key::Left))
-			{
-				movementAmount.x -= 1.0f;
-			}
-
-			if (keyboard.IsKeyDown(Key::Right))
-			{
-				movementAmount.x += 1.0f;
-			}
-
-			if (movementAmount)
-			{
-				Translate(math::Vector3(movementAmount * k_movementRate));
-			}
-		}
-
-		// scaling
-		{
-			const auto wheel = mouse.GetWheel();
-			if (m_wheel != wheel)
-			{
-				if (keyboard.IsKeyDown(Key::Alt_Left))
+				math::Vector2 movementAmount;
+				if (m_keyboard->IsKeyDown(Key::Up))
 				{
-					const float delta = float(wheel - m_wheel) * k_scaleRate;
-					Scale(math::Vector3(delta));
+					movementAmount.y += 1.0f;
 				}
 
-				m_wheel = wheel;
+				if (m_keyboard->IsKeyDown(Key::Down))
+				{
+					movementAmount.y -= 1.0f;
+				}
+
+				if (m_keyboard->IsKeyDown(Key::Left))
+				{
+					movementAmount.x -= 1.0f;
+				}
+
+				if (m_keyboard->IsKeyDown(Key::Right))
+				{
+					movementAmount.x += 1.0f;
+				}
+
+				if (movementAmount)
+				{
+					Translate(math::Vector3(movementAmount * k_movementRate));
+				}
+			}
+
+			// scaling
+			if (!!m_mouse)
+			{
+				const auto wheel = m_mouse->GetWheel();
+				if (m_wheel != wheel)
+				{
+					if (m_keyboard->IsKeyDown(Key::Alt_Left))
+					{
+						const float delta = float(wheel - m_wheel) * k_scaleRate;
+						Scale(math::Vector3(delta));
+					}
+
+					m_wheel = wheel;
+				}
 			}
 		}
 	}
@@ -246,7 +238,10 @@ namespace demo
 	{
 		auto d3dDeviceContext = m_app.GetD3DDeviceContext();
 
-		const auto wvp = m_worldMatrix * GetCamera().GetViewProjectionMatrix();
+		auto wvp = math::constants::Matrix4::Identity;
+		if (!!m_camera)
+			wvp = m_worldMatrix * m_camera->GetViewProjectionMatrix();
+
 		m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
 		m_colorTextureVariable->SetResource(m_textureShaderResourceView.Get());

@@ -2,6 +2,7 @@
 #include "library/components/GridComponent.h"
 
 #include "library/components/CameraComponent.h"
+
 #include "library/Application.h"
 #include "library/Utils.h"
 #include "library/Exception.h"
@@ -26,9 +27,10 @@ namespace library
 		);
 	}
 
-	GridComponent::GridComponent(const Application& app, const CameraComponent& camera)
-		: DrawableComponent(app)
-		, SceneComponent(app, camera)
+	GridComponent::GridComponent(const Application& app)
+		: SceneComponent()
+		, DrawableComponent(app)
+		, InputReceivableComponent()
 		, m_size(k_defaultSize)
 		, m_scale(k_defaultScale)
 		, m_color(k_defaultColor)
@@ -37,13 +39,13 @@ namespace library
 
 	GridComponent::GridComponent(
 		const Application& app,
-		const CameraComponent& camera,
 		const unsigned size,
 		const unsigned scale,
 		const Color& color
 	)
-		: DrawableComponent(app)
-		, SceneComponent(app, camera)
+		: SceneComponent()
+		, DrawableComponent(app)
+		, InputReceivableComponent()
 		, m_size(size)
 		, m_scale(scale)
 		, m_color(color)
@@ -155,11 +157,17 @@ namespace library
 		Build();
 	}
 
+	void GridComponent::Update(const Time& time)
+	{
+	}
+
 	void GridComponent::Draw(const Time& time)
 	{
 		auto deviceContext = m_app.GetD3DDeviceContext();
 
-		const auto wvp = m_worldMatrix * GetCamera().GetViewProjectionMatrix();
+		auto wvp = math::constants::Matrix4::Identity;
+		if (!!m_camera)
+			wvp = m_worldMatrix * m_camera->GetViewProjectionMatrix();
 		m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
 		m_pass->Apply(0, deviceContext);

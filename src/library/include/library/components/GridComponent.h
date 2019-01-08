@@ -1,20 +1,23 @@
 #pragma once
 #include "library/components/SceneComponent.h"
+#include "library/components/DrawableComponent.h"
+#include "library/components/InputReceivableComponent.h"
 #include "library/Color.h"
-#include "library/Math.h"
 #include "library/DirectXForwardDeclarations.h"
 
 namespace library
 {
-	class GridComponent : public SceneComponent
+	class GridComponent
+		: public SceneComponent
+		, public DrawableComponent
+		, public InputReceivableComponent
 	{
-		RTTI_CLASS(GridComponent, SceneComponent)
+		RTTI_CLASS(GridComponent, SceneComponent, DrawableComponent, InputReceivableComponent)
 
 	public:
-		explicit GridComponent(const Application& app, const CameraComponent& camera);
+		explicit GridComponent(const Application& app);
 		explicit GridComponent(
 			const Application& app,
-			const CameraComponent& camera,
 			const unsigned size,
 			const unsigned scale,
 			const Color& color
@@ -31,6 +34,7 @@ namespace library
 		void SetColor(const Color& color);
 
 		void Initialize() override;
+		void Update(const Time& time) override;
 		void Draw(const Time& time) override;
 
 	private:

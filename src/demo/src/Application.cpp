@@ -28,9 +28,7 @@ namespace demo
 	{
 		constexpr auto k_backgroundColor = library::colors::Black;
 
-		const auto k_skyboxCubeMapPath = library::utils::GetExecutableDirectory().Join(
-			library::fs::Path("../data/textures/Maskonaive2_1024.dds")
-		);
+		const auto k_skyboxCubeMapPath = library::utils::GetExecutableDirectory().Join(library::fs::Path("../data/textures/Maskonaive2_1024.dds"));
 	}
 
 	Application::Application(
@@ -63,43 +61,61 @@ namespace demo
 			throw Exception("DirectInput8Create() failed", hr);
 		}
 
+		// keyboard
 		m_keyboardComponent = std::make_shared<KeyboardComponent>(*this, m_directInput);
 		m_components.push_back(m_keyboardComponent);
-		m_services.AddService(m_keyboardComponent->GetTypeId(), m_keyboardComponent.get());
+		//m_services.AddService(m_keyboardComponent->GetTypeId(), m_keyboardComponent.get());
 
+		// mouse
 		m_mouseComponent = std::make_shared<MouseComponent>(*this, m_directInput);
 		m_components.push_back(m_mouseComponent);
-		m_services.AddService(m_mouseComponent->GetTypeId(), m_mouseComponent.get());
+		//m_services.AddService(m_mouseComponent->GetTypeId(), m_mouseComponent.get());
 
-		auto cameraComponent = std::make_shared<FirstPersonCameraComponent>(*this, *m_keyboardComponent, *m_mouseComponent);
+		// camera
+		auto cameraComponent = std::make_shared<FirstPersonCameraComponent>(*this);
+		cameraComponent->SetMouse(*m_mouseComponent);
+		cameraComponent->SetKeyboard(*m_keyboardComponent);
 		m_components.push_back(cameraComponent);
-		m_services.AddService(cameraComponent->GetTypeId(), cameraComponent.get());
+		//m_services.AddService(cameraComponent->GetTypeId(), cameraComponent.get());
 
+		// fps
 		auto fpsComponent = std::make_shared<FpsComponent>(*this);
 		m_components.push_back(fpsComponent);
 
-		auto gridComponent = std::make_shared<GridComponent>(*this, *cameraComponent);
+		// grid
+		auto gridComponent = std::make_shared<GridComponent>(*this);
+		gridComponent->SetCamera(*cameraComponent);
 		m_components.push_back(gridComponent);
 
+		// triangle
 		//auto triangleComponent = std::make_shared<TriangleComponent>(*this, *cameraComponent);
 		//m_components.push_back(triangleComponent);
 
+		// cube
 		//auto cubeComponent = std::make_shared<CubeComponent>(*this, *cameraComponent, *m_keyboardComponent);
 		//m_components.push_back(cubeComponent);
 
+		// model
 		//auto modelComponent = std::make_shared<ModelComponent>(*this, *cameraComponent, *m_keyboardComponent);
 		//m_components.push_back(modelComponent);
 
+		// texture with model
 		//auto textureModelComponent = std::make_shared<TextureModelComponent>(*this, *cameraComponent, *m_keyboardComponent, * m_mouseComponent);
 		//m_components.push_back(textureModelComponent);
 
+		// basic material
 		//auto basicMaterialComponent = std::make_shared<BasicMaterialComponent>(*this, *cameraComponent, *m_keyboardComponent);
 		//m_components.push_back(basicMaterialComponent);
 
-		auto textureMappingMaterialComponent = std::make_shared<TextureMappingMaterialComponent>(*this, *cameraComponent, *m_keyboardComponent);
+		// texture mapping material
+		auto textureMappingMaterialComponent = std::make_shared<TextureMappingMaterialComponent>(*this);
+		textureMappingMaterialComponent->SetCamera(*cameraComponent);
+		textureMappingMaterialComponent->SetKeyboard(*m_keyboardComponent);
 		m_components.push_back(textureMappingMaterialComponent);
 
-		auto skyboxComponent = std::make_shared<SkyboxComponent>(*this, *cameraComponent, k_skyboxCubeMapPath, 100.f);
+		// skybox
+		auto skyboxComponent = std::make_shared<SkyboxComponent>(*this, k_skyboxCubeMapPath, 100.f);
+		skyboxComponent->SetCamera(*cameraComponent);
 		m_components.push_back(skyboxComponent);
 
 		// mouse text component

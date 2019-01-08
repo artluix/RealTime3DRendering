@@ -16,13 +16,12 @@ namespace demo
 
 	namespace
 	{
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-			fs::Path("../data/effects/BasicEffect.fx")
-		);
+		const auto k_effectPath = utils::GetExecutableDirectory().Join(fs::Path("../data/effects/BasicEffect.fx"));
 	}
 
-	TriangleComponent::TriangleComponent(const Application& app, const CameraComponent& camera)
-		: SceneComponent(app, camera)
+	TriangleComponent::TriangleComponent(const Application& app)
+		: SceneComponent()
+		, DrawableComponent(app)
 		, m_effect()
 		, m_technique()
 		, m_pass()
@@ -166,7 +165,10 @@ namespace demo
 	{
 		auto d3dDeviceContext = m_app.GetD3DDeviceContext();
 
-		const auto wvp = m_worldMatrix * GetCamera().GetViewProjectionMatrix();
+		auto wvp = math::constants::Matrix4::Identity;
+		if (!!m_camera)
+			wvp = m_worldMatrix * m_camera->GetViewProjectionMatrix();
+		
 		m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
 		m_pass->Apply(0, d3dDeviceContext);
