@@ -8,6 +8,10 @@ interface ID3D11Device;
 interface ID3D11InputLayout;
 interface ID3D11ShaderResourceView;
 
+interface ID3D11RasterizerState;
+interface ID3D11BlendState;
+interface ID3D11DepthStencilState;
+
 // effects
 interface ID3DX11Effect;
 interface ID3DX11EffectTechnique;

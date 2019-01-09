@@ -1,10 +1,7 @@
 #pragma once
 #include "library/Common.h"
-#include "library/NonCopyable.hpp"
-
-struct ID3D11RasterizerState;
-struct ID3D11BlendState;
-struct ID3D11DepthStencilState;
+#include "library/NonConstructible.hpp"
+#include "library/DirectXForwardDeclarations.h"
 
 namespace library
 {
@@ -18,32 +15,32 @@ namespace library
 		All
 	};
 
-	class Application;
-
-	class RenderStatesStorage : public NonCopyable<RenderStatesStorage>
+	class RenderStatesStorage : public NonConstructible<RenderStatesStorage>
 	{
 	public:
-		explicit RenderStatesStorage(const Application& app);
-		~RenderStatesStorage() = default;
+		static void SetDeviceContext(ID3D11DeviceContext* const deviceContext);
+		static ID3D11DeviceContext* GetDeviceContext() { return s_deviceContext; }
 
-		void Reset(const RenderState rs = RenderState::All);
+		static void ResetState(const RenderState rs = RenderState::All);
+		static void SaveState(const RenderState rs = RenderState::All);
+		static void RestoreState(const RenderState rs = RenderState::All);
 
-		void SaveState(const RenderState rs = RenderState::All);
-		void RestoreState(const RenderState rs = RenderState::All);
+		static ID3D11RasterizerState* GetRasterizerState() { return s_rasterizerState.Get(); }
+		static ID3D11BlendState* GetBlendState() { return s_blendState.Get(); }
+		static ID3D11DepthStencilState* GetDepthStencilState() { return s_depthStencilState.Get(); }
 
-		ID3D11RasterizerState* GetRasterizerState() { return m_rasterizerState.Get(); }
-		ID3D11BlendState* GetBlendState() { return m_blendState.Get(); }
-		ID3D11DepthStencilState* GetDepthStencilState() { return m_depthStencilState.Get(); }
+		static void Reset();
 
 	private:
-		const Application& m_app;
+		static ID3D11DeviceContext* s_deviceContext;
 
-		ComPtr<ID3D11RasterizerState> m_rasterizerState;
-		ComPtr<ID3D11BlendState> m_blendState;
-		ComPtr<ID3D11DepthStencilState> m_depthStencilState;
+		static ComPtr<ID3D11RasterizerState> s_rasterizerState;
+		static ComPtr<ID3D11BlendState> s_blendState;
+		static ComPtr<ID3D11DepthStencilState> s_depthStencilState;
 
-		std::array<float, 4> m_blendFactor;
-		unsigned m_sampleMask;
-		unsigned m_stencilRef;
+		static std::array<float, 4> s_blendFactor;
+		static unsigned s_sampleMask;
+		static unsigned s_stencilRef;
 	};
+
 } // namespace library

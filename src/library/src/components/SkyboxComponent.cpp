@@ -35,7 +35,7 @@ namespace library
 		const float scale
 	)
 		: SceneComponent()
-		, ConcreteMaterialComponent<SkyboxMaterial>(app, k_modelPath)
+		, ConcreteMaterialComponent(app, k_modelPath)
 		, m_cubeMapPath(cubeMapPath)
 	{
 		SetScaling(math::Vector3(scale));
@@ -85,11 +85,11 @@ namespace library
 
 	void SkyboxComponent::SetEffectData()
 	{
-		auto wvp = math::constants::Matrix4::Identity;
+		auto wvp = m_worldMatrix;
 		if (!!m_camera)
-			wvp = m_worldMatrix * m_camera->GetViewProjectionMatrix();
-			
+			wvp *= m_camera->GetViewProjectionMatrix();
 		m_material->GetWorldViewProjection() << wvp;
+			
 		m_material->GetSkyboxTexture() << m_cubeMapShaderResourceView.Get();
 
 		MaterialComponent::SetEffectData();

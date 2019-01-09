@@ -88,23 +88,33 @@ namespace demo
 		m_components.push_back(gridComponent);
 
 		// triangle
-		//auto triangleComponent = std::make_shared<TriangleComponent>(*this, *cameraComponent);
+		auto triangleComponent = std::make_shared<TriangleComponent>(*this);
+		triangleComponent->SetCamera(*cameraComponent);
 		//m_components.push_back(triangleComponent);
 
 		// cube
-		//auto cubeComponent = std::make_shared<CubeComponent>(*this, *cameraComponent, *m_keyboardComponent);
+		auto cubeComponent = std::make_shared<CubeComponent>(*this);
+		cubeComponent->SetCamera(*cameraComponent);
+		cubeComponent->SetKeyboard(*m_keyboardComponent);
 		//m_components.push_back(cubeComponent);
 
 		// model
-		//auto modelComponent = std::make_shared<ModelComponent>(*this, *cameraComponent, *m_keyboardComponent);
+		auto modelComponent = std::make_shared<ModelComponent>(*this);
+		modelComponent->SetCamera(*cameraComponent);
+		modelComponent->SetKeyboard(*m_keyboardComponent);
 		//m_components.push_back(modelComponent);
 
 		// texture with model
-		//auto textureModelComponent = std::make_shared<TextureModelComponent>(*this, *cameraComponent, *m_keyboardComponent, * m_mouseComponent);
+		auto textureModelComponent = std::make_shared<TextureModelComponent>(*this);
+		textureModelComponent->SetCamera(*cameraComponent);
+		textureModelComponent->SetKeyboard(*m_keyboardComponent);
+		textureModelComponent->SetMouse(*m_mouseComponent);
 		//m_components.push_back(textureModelComponent);
 
 		// basic material
-		//auto basicMaterialComponent = std::make_shared<BasicMaterialComponent>(*this, *cameraComponent, *m_keyboardComponent);
+		auto basicMaterialComponent = std::make_shared<BasicMaterialComponent>(*this);
+		basicMaterialComponent->SetCamera(*cameraComponent);
+		basicMaterialComponent->SetKeyboard(*m_keyboardComponent);
 		//m_components.push_back(basicMaterialComponent);
 
 		// texture mapping material

@@ -37,7 +37,7 @@ namespace demo
 
 	TextureMappingMaterialComponent::TextureMappingMaterialComponent(const Application& app)
 		: SceneComponent()
-		, ConcreteMaterialComponent<Material>(app, k_modelPath)
+		, ConcreteMaterialComponent(app, k_modelPath)
 		, InputReceivableComponent()
 	{
 	}
@@ -119,9 +119,9 @@ namespace demo
 
 	void TextureMappingMaterialComponent::SetEffectData()
 	{
-		auto wvp = math::constants::Matrix4::Identity;
+		auto wvp = m_worldMatrix;
 		if (!!m_camera)
-			wvp = m_worldMatrix * m_camera->GetViewProjectionMatrix();
+			wvp *= m_camera->GetViewProjectionMatrix();
 		m_material->GetWVP() << wvp;
 
 		m_material->GetColorTexture() << m_textureShaderResourceView.Get();

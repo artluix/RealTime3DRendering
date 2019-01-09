@@ -2,8 +2,6 @@
 #include "library/NonCopyable.hpp"
 #include "library/Stopwatch.h"
 #include "library/Common.h"
-#include "library/ServiceContainer.h"
-#include "library/RenderStatesStorage.h"
 
 #include <Windows.h>
 #include <d3d11_1.h>
@@ -13,7 +11,7 @@
 namespace library
 {
 	class Component;
-	using BaseComponentPtr = std::shared_ptr<Component>;
+	using ComponentPtr = std::shared_ptr<Component>;
 
 	class Application : public NonCopyable<Application>
 	{
@@ -43,11 +41,8 @@ namespace library
 		const D3D11_TEXTURE2D_DESC& GetBackBufferDesc() const { return m_backBufferDesc; }
 		const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
 
-		const std::vector<BaseComponentPtr>& GetComponents() const { return m_components; }
+		const std::vector<ComponentPtr>& GetComponents() const { return m_components; }
 		
-		const ServiceContainer& GetServices() const { return m_services; }
-		//ServiceContainer& GetServices() { return m_services; }
-
 		virtual void Initialize();
 		virtual void Run();
 		virtual void Exit();
@@ -74,9 +69,7 @@ namespace library
 		Stopwatch m_stopwatch;
 		Time m_time;
 
-		std::vector<BaseComponentPtr> m_components;
-		ServiceContainer m_services;
-		RenderStatesStorage m_renderStatesStorage;
+		std::vector<ComponentPtr> m_components;
 
 		// DirectX
 		D3D_FEATURE_LEVEL m_featureLevel;

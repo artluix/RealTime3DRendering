@@ -238,10 +238,9 @@ namespace demo
 	{
 		auto d3dDeviceContext = m_app.GetD3DDeviceContext();
 
-		auto wvp = math::constants::Matrix4::Identity;
+		auto wvp = m_worldMatrix;
 		if (!!m_camera)
-			wvp = m_worldMatrix * m_camera->GetViewProjectionMatrix();
-
+			wvp *= m_camera->GetViewProjectionMatrix();
 		m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
 		m_colorTextureVariable->SetResource(m_textureShaderResourceView.Get());

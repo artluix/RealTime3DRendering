@@ -22,6 +22,7 @@ if(APPLICATION)
         include/library/Components/KeyboardComponent.h
         include/library/Components/MaterialComponent.h
         include/library/Components/MouseComponent.h
+        include/library/Components/ProxyModelComponent.h
         include/library/Components/SceneComponent.h
         include/library/Components/SkyboxComponent.h
         include/library/Components/TextComponent.h
@@ -62,6 +63,7 @@ if(APPLICATION)
         include/library/Path.h
         include/library/RTTI.hpp
         include/library/RenderStatesStorage.h
+        include/library/RasterizerStatesStorage.h
         include/library/ServiceContainer.h
         include/library/Time.h
         include/library/Utils.h
@@ -83,6 +85,7 @@ if(APPLICATION)
         src/Components/KeyboardComponent.cpp
         src/Components/MaterialComponent.cpp
         src/Components/MouseComponent.cpp
+        src/Components/ProxyModelComponent.cpp
         src/Components/SceneComponent.cpp
         src/Components/SkyboxComponent.cpp
         src/Components/TextComponent.cpp
@@ -115,6 +118,7 @@ if(APPLICATION)
         src/Mesh.cpp
         src/Model.cpp
         src/Path.cpp
+        src/RasterizerStatesStorage.cpp
         src/RenderStatesStorage.cpp
         src/ServiceContainer.cpp
         src/Stopwatch.cpp

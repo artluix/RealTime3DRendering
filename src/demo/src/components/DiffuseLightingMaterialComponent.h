@@ -3,6 +3,9 @@
 #include <library/materials/DiffuseLightingMaterial.h>
 #include <library/components/ConcreteMaterialComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
+
+#include <library/lights/DirectionalLight.h>
+
 #include <library/DirectXForwardDeclarations.h>
 
 namespace demo
@@ -26,5 +29,10 @@ namespace demo
 		void UpdateDirectionalLight(const library::Time& time);
 
 		ComPtr<ID3D11ShaderResourceView> m_textureShaderResourceView;
+
+		library::Color m_ambientColor;
+		DirectionalLight m_directionalLight;
+
+		ProxyModelCom
 	};
 } // namespace demo

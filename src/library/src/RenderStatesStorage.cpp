@@ -1,7 +1,8 @@
 #include "StdAfx.h"
 #include "library/RenderStatesStorage.h"
 
-#include "library/Application.h"
+#include <cassert>
+#include <d3d11.h>
 
 namespace library
 {
@@ -11,38 +12,55 @@ namespace library
 		constexpr unsigned k_defaultStencilRef = -1;
 	}
 
-	RenderStatesStorage::RenderStatesStorage(const Application& app)
-		: m_app(app)
-		, m_sampleMask(k_defaultSampleMask)
-		, m_stencilRef(k_defaultStencilRef)
+	//-------------------------------------------------------------------------
+
+	ID3D11DeviceContext* RenderStatesStorage::s_deviceContext = nullptr;
+
+	ComPtr<ID3D11RasterizerState> RenderStatesStorage::s_rasterizerState;
+	ComPtr<ID3D11BlendState> RenderStatesStorage::s_blendState;
+	ComPtr<ID3D11DepthStencilState> RenderStatesStorage::s_depthStencilState;
+
+	std::array<float, 4> RenderStatesStorage::s_blendFactor;
+	unsigned RenderStatesStorage::s_sampleMask = k_defaultSampleMask;
+	unsigned RenderStatesStorage::s_stencilRef = k_defaultStencilRef;
+
+	//-------------------------------------------------------------------------
+
+	void RenderStatesStorage::SetDeviceContext(ID3D11DeviceContext* const deviceContext)
 	{
+		if (s_deviceContext != deviceContext)
+		{
+			Reset();
+
+			s_deviceContext = deviceContext;
+		}
 	}
 
-	void RenderStatesStorage::Reset(const RenderState rs /*= RenderState::All*/)
+	void RenderStatesStorage::ResetState(const RenderState rs /*= RenderState::All*/)
 	{
-		auto deviceContext = m_app.GetD3DDeviceContext();
+		assert(!!s_deviceContext);
 
 		switch (rs)
 		{
 		case RenderState::Rasterizer:
-			deviceContext->RSSetState(nullptr);
-			m_rasterizerState.Reset();
+			s_deviceContext->RSSetState(nullptr);
+			s_rasterizerState.Reset();
 			break;
 
 		case RenderState::Blend:
-			deviceContext->OMSetBlendState(nullptr, nullptr, k_defaultSampleMask);
-			m_blendState.Reset();
+			s_deviceContext->OMSetBlendState(nullptr, nullptr, k_defaultSampleMask);
+			s_blendState.Reset();
 			break;
 
 		case RenderState::DepthStencil:
-			deviceContext->OMSetDepthStencilState(nullptr, k_defaultStencilRef);
-			m_depthStencilState.Reset();
+			s_deviceContext->OMSetDepthStencilState(nullptr, k_defaultStencilRef);
+			s_depthStencilState.Reset();
 			break;
 
 		case RenderState::All:
-			Reset(RenderState::Rasterizer);
-			Reset(RenderState::Blend);
-			Reset(RenderState::DepthStencil);
+			ResetState(RenderState::Rasterizer);
+			ResetState(RenderState::Blend);
+			ResetState(RenderState::DepthStencil);
 			break;
 
 		default:
@@ -52,23 +70,23 @@ namespace library
 
 	void RenderStatesStorage::SaveState(const RenderState rs /*= RenderState::All*/)
 	{
-		auto deviceContext = m_app.GetD3DDeviceContext();
+		assert(!!s_deviceContext);
 
 		switch (rs)
 		{
 		case RenderState::Rasterizer:
-			m_rasterizerState.Reset();
-			deviceContext->RSGetState(m_rasterizerState.GetAddressOf());
+			s_rasterizerState.Reset();
+			s_deviceContext->RSGetState(s_rasterizerState.GetAddressOf());
 			break;
 
 		case RenderState::Blend:
-			m_blendState.Reset();
-			deviceContext->OMGetBlendState(m_blendState.GetAddressOf(), m_blendFactor.data(), &m_sampleMask);
+			s_blendState.Reset();
+			s_deviceContext->OMGetBlendState(s_blendState.GetAddressOf(), s_blendFactor.data(), &s_sampleMask);
 			break;
 
 		case RenderState::DepthStencil:
-			m_depthStencilState.Reset();
-			deviceContext->OMGetDepthStencilState(m_depthStencilState.GetAddressOf(), &m_stencilRef);
+			s_depthStencilState.Reset();
+			s_deviceContext->OMGetDepthStencilState(s_depthStencilState.GetAddressOf(), &s_stencilRef);
 			break;
 
 		case RenderState::All:
@@ -84,20 +102,20 @@ namespace library
 
 	void RenderStatesStorage::RestoreState(const RenderState rs /*= RenderState::All*/)
 	{
-		auto deviceContext = m_app.GetD3DDeviceContext();
+		assert(!!s_deviceContext);
 
 		switch (rs)
 		{
 		case RenderState::Rasterizer:
-			deviceContext->RSSetState(m_rasterizerState.Get());
+			s_deviceContext->RSSetState(s_rasterizerState.Get());
 			break;
 
 		case RenderState::Blend:
-			deviceContext->OMSetBlendState(m_blendState.Get(), m_blendFactor.data(), m_sampleMask);
+			s_deviceContext->OMSetBlendState(s_blendState.Get(), s_blendFactor.data(), s_sampleMask);
 			break;
 
 		case RenderState::DepthStencil:
-			deviceContext->OMSetDepthStencilState(m_depthStencilState.Get(), m_stencilRef);
+			s_deviceContext->OMSetDepthStencilState(s_depthStencilState.Get(), s_stencilRef);
 			break;
 
 		case RenderState::All:
@@ -110,4 +128,19 @@ namespace library
 			break;
 		}
 	}
+
+	void RenderStatesStorage::Reset()
+	{
+		s_deviceContext = nullptr;
+
+		s_rasterizerState.Reset();
+		s_blendState.Reset();
+		s_depthStencilState.Reset();
+
+		s_sampleMask = k_defaultSampleMask;
+		s_stencilRef = k_defaultStencilRef;
+
+		s_blendFactor.fill(0.f);
+	}
+
 } // namespace library

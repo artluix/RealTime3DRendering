@@ -20,7 +20,7 @@ namespace library
 	{
 	public:
 		static EffectPtr Create(const Application& app, const fs::Path& path);
-		static void Clear();
+		static void Reset();
 
 	private:
 		static std::map<std::string, EffectPtr> s_effects;

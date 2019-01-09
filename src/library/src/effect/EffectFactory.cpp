@@ -24,7 +24,7 @@ namespace library
 		return effect;
 	}
 
-	void EffectFactory::Clear()
+	void EffectFactory::Reset()
 	{
 		s_effects.clear();
 	}

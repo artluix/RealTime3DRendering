@@ -1,6 +1,8 @@
 #pragma once
 #include "library/components/SceneComponent.h"
-#include "library/Path.h"
+#include "library/materials/BasicMaterial.h"
+#include "library/components/ConcreteMaterialComponent.hpp"
+
 #include "library/DirectXForwardDeclarations.h"
 
 #include <memory>
@@ -10,12 +12,19 @@ namespace library
 	class Effect;
 	class BasicMaterial;
 
-	class ProxyModelComponent : public SceneComponent
+	namespace fs
 	{
-		RTTI_CLASS(ProxyModelComponent, SceneComponent)
+		class Path;
+	} // namespace
+
+	class ProxyModelComponent
+		: public SceneComponent
+		, public ConcreteMaterialComponent<BasicMaterial>
+	{
+		RTTI_CLASS(ProxyModelComponent, SceneComponent, MaterialComponent)
 
 	public:
-		explicit ProxyModelComponent(const Application& app, const CameraComponent& camera, const fs::Path& modelPath, const float scale);
+		explicit ProxyModelComponent(const Application& app, const fs::Path& modelPath, const float scale);
 		~ProxyModelComponent();
 
 		bool IsWireframeVisible() const { return m_isWireframeVisible; }
@@ -27,20 +36,15 @@ namespace library
 
 		void Initialize() override;
 		void Update(const Time& time) override;
-		void Draw(const Time& time) override;
+
+		using MaterialComponent::Draw;
+
+	protected:
+		void SetEffectData() override;
+		void Render() override;
 
 	private:
-		fs::Path m_modelPath;
-
-		std::unique_ptr<Effect> m_effect;
-		std::unique_ptr<BasicMaterial> m_material;
-
-		ComPtr<ID3D11Buffer> m_vertexBuffer;
-		ComPtr<ID3D11Buffer> m_indexBuffer;
-
-		unsigned m_indicesCount;
-
-		bool m_isWireframeVisible;
+		bool m_isWireframeVisible = true;
 
 		math::Vector3 m_direction;
 		math::Vector3 m_up;

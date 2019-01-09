@@ -33,7 +33,7 @@ namespace demo
 	BasicMaterialComponent::BasicMaterialComponent(const Application& app) 
 		: SceneComponent()
 		, InputReceivableComponent()
-		, ConcreteMaterialComponent<Material>(app, k_modelPath)
+		, ConcreteMaterialComponent(app, k_modelPath)
 	{
 	}
 
@@ -92,13 +92,12 @@ namespace demo
 
 	void BasicMaterialComponent::SetEffectData()
 	{
+		auto wvp = m_worldMatrix;
 		if (!!m_camera)
-		{
-			const auto wvp = m_worldMatrix * m_camera->GetViewProjectionMatrix();
-			m_material->GetWorldViewProjection() << wvp;
+			wvp *= m_camera->GetViewProjectionMatrix();
 
-			MaterialComponent::SetEffectData();
-		}
+		m_material->GetWorldViewProjection() << wvp;
+		MaterialComponent::SetEffectData();
 	}
 
 } // namespace demo

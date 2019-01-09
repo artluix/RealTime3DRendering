@@ -27,9 +27,7 @@ namespace library
 
 	const TextureNamesVector& ModelMaterial::GetTextureNames(const TextureType textureType) const
 	{
-		auto it = m_textures.find(textureType);
-		assert(it != m_textures.end());
-		return it->second;
+		return m_textures.at(textureType);
 	}
 
 	ModelMaterial::ModelMaterial(const Model& model, const aiMaterial& material)

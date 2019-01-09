@@ -12,6 +12,9 @@
 #include "library/effect/Effect.h"
 #include "library/effect/EffectFactory.h"
 
+#include "library/RenderStatesStorage.h"
+#include "library/RasterizerStatesStorage.h"
+
 #include <algorithm>
 
 namespace library
@@ -46,7 +49,6 @@ namespace library
 		, m_multiSamplingEnabled(false)
 		, m_multiSamplingCount(k_defaultMultiSamplingCount)
 		, m_multiSamplingQualityLevels(0)
-		, m_renderStatesStorage(*this)
 		, m_viewport{}
 	{
 	}
@@ -160,14 +162,14 @@ namespace library
 
 		// render UI after
 		{
-			m_renderStatesStorage.SaveState(RenderState::All);
+			RenderStatesStorage::SaveState(RenderState::All);
 
 			for (auto uiComponent : uiComponents)
 			{
 				uiComponent->Draw(time);
 			}
 
-			m_renderStatesStorage.RestoreState(RenderState::All);
+			RenderStatesStorage::RestoreState(RenderState::All);
 		}
 	}
 
@@ -409,11 +411,17 @@ namespace library
 
 			m_deviceContext->RSSetViewports(1, &m_viewport);
 		}
+
+		// initialize states storages
+		RenderStatesStorage::SetDeviceContext(m_deviceContext.Get());
+		RasterizerStatesStorage::Initialize(m_device.Get());
 	}
 
 	void Application::Shutdown()
 	{
-		EffectFactory::Clear();
+		RenderStatesStorage::Reset();
+		RasterizerStatesStorage::Reset();
+		EffectFactory::Reset();
 
 		m_components.clear();
 
