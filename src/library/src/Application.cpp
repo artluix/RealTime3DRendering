@@ -3,19 +3,11 @@
 
 #include "library/Exception.h"
 #include "library/components/DrawableComponent.h"
-#include "library/components/MaterialComponent.h"
-#include "library/components/SceneComponent.h"
-#include "library/components/UIComponent.h"
 
-#include "library/materials/Material.h"
-
-#include "library/effect/Effect.h"
 #include "library/effect/EffectFactory.h"
 
-#include "library/RenderStatesStorage.h"
-#include "library/RasterizerStatesStorage.h"
-
-#include <algorithm>
+#include "library/containers/RenderStateContainer.h"
+#include "library/containers/RasterizerStateContainer.h"
 
 namespace library
 {
@@ -120,56 +112,13 @@ namespace library
 
 	void Application::Draw(const Time& time)
 	{
-		std::vector<DrawableComponent*> sceneComponents;
-		std::vector<DrawableComponent*> uiComponents;
-
 		for (const auto& component : m_components)
 		{
 			auto drawableComponent = component->As<DrawableComponent>();
 			if (!!drawableComponent && drawableComponent->IsVisible())
 			{
-				if (auto sceneComponent = drawableComponent->As<SceneComponent>())
-					sceneComponents.push_back(drawableComponent);
-
-				if (auto uiComponent = drawableComponent->As<UIComponent>())
-					uiComponents.push_back(drawableComponent);
+				drawableComponent->Draw(time);
 			}
-		}
-
-		// sort scene components by effects
-		auto effectPred = [](const DrawableComponent* lhs, const DrawableComponent* rhs)
-		{
-			auto lhsMat = lhs->As<MaterialComponent>();
-			if (!lhsMat)
-				return false;
-
-			auto rhsMat = rhs->As<MaterialComponent>();
-			if (!rhsMat)
-				return true;
-
-			return lhsMat->GetMaterial().GetEffect().GetName() < rhsMat->GetMaterial().GetEffect().GetName();
-		};
-
-		std::sort(sceneComponents.begin(), sceneComponents.end(), effectPred);
-
-		// render scene first
-		{
-			for (auto sceneComponent : sceneComponents)
-			{
-				sceneComponent->Draw(time);
-			}
-		}
-
-		// render UI after
-		{
-			RenderStatesStorage::SaveState(RenderState::All);
-
-			for (auto uiComponent : uiComponents)
-			{
-				uiComponent->Draw(time);
-			}
-
-			RenderStatesStorage::RestoreState(RenderState::All);
 		}
 	}
 
@@ -413,15 +362,15 @@ namespace library
 		}
 
 		// initialize states storages
-		RenderStatesStorage::SetDeviceContext(m_deviceContext.Get());
-		RasterizerStatesStorage::Initialize(m_device.Get());
+		RenderStateContainer::SetDeviceContext(m_deviceContext.Get());
+		RasterizerStateContainer::Initialize(m_device.Get());
 	}
 
 	void Application::Shutdown()
 	{
-		RenderStatesStorage::Reset();
-		RasterizerStatesStorage::Reset();
-		EffectFactory::Reset();
+		RenderStateContainer::Reset();
+		RasterizerStateContainer::Reset();
+		effect::Factory::Reset();
 
 		m_components.clear();
 

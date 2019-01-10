@@ -11,37 +11,41 @@
 namespace library
 {
 	class Application;
-	class Effect;
-	class EffectPass;
 
-	class EffectTechnique : public NonCopyable<EffectTechnique>
+	namespace effect
 	{
-	public:
-		explicit EffectTechnique(const Application& app, const Effect& effect, ID3DX11EffectTechnique* const technique);
-		~EffectTechnique();
+		class Effect;
+		class Pass;
 
-		const Effect& GetEffect() const { return m_effect; }
-		const std::string& GetName() const { return m_name; }
+		class Technique : public NonCopyable<Technique>
+		{
+		public:
+			explicit Technique(const Application& app, const Effect& effect, ID3DX11EffectTechnique* const technique);
+			~Technique();
 
-		ID3DX11EffectTechnique* GetTechnique() const { return m_technique.Get(); }
-		const D3DX11_TECHNIQUE_DESC& GetTechniqueDesc() const { return m_techniqueDesc; }
+			const Effect& GetEffect() const { return m_effect; }
+			const std::string& GetName() const { return m_name; }
 
-		bool HasPass(const std::string& passName) const;
-		EffectPass& GetPass(const std::string& passName) const;
-		EffectPass& GetPass(const unsigned passIdx) const;
-		std::size_t GetPassesCount() const { return m_passes.size(); }
+			ID3DX11EffectTechnique* GetTechnique() const { return m_technique.Get(); }
+			const D3DX11_TECHNIQUE_DESC& GetTechniqueDesc() const { return m_techniqueDesc; }
 
-	private:
-		using EffectPassPtr = std::unique_ptr<EffectPass>;
+			bool HasPass(const std::string& passName) const;
+			Pass& GetPass(const std::string& passName) const;
+			Pass& GetPass(const unsigned passIdx) const;
+			std::size_t GetPassesCount() const { return m_passes.size(); }
 
-		ComPtr<ID3DX11EffectTechnique> m_technique;
-		D3DX11_TECHNIQUE_DESC m_techniqueDesc;
+		private:
+			using EffectPassPtr = std::unique_ptr<Pass>;
 
-		const Effect& m_effect;
-		std::string m_name;
+			ComPtr<ID3DX11EffectTechnique> m_technique;
+			D3DX11_TECHNIQUE_DESC m_techniqueDesc;
 
-		std::vector<EffectPassPtr> m_passes;
-		std::map<std::string, EffectPass*> m_passesMap;
-	};
+			const Effect& m_effect;
+			std::string m_name;
 
+			std::vector<EffectPassPtr> m_passes;
+			std::map<std::string, Pass*> m_passesMap;
+		};
+
+	} // namespace effect
 } // namespace library

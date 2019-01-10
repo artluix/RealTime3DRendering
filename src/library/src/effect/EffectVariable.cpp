@@ -5,66 +5,69 @@
 
 namespace library
 {
-	EffectVariable::EffectVariable(const Effect& effect, ID3DX11EffectVariable* const variable)
-		: m_effect(effect)
-		, m_variable(variable)
-		, m_type(nullptr)
+	namespace effect
 	{
-		m_variable->GetDesc(&m_variableDesc);
-		m_name = m_variableDesc.Name;
-		
-		m_type = m_variable->GetType();
-		m_type->GetDesc(&m_typeDesc);
-	}
-
-	EffectVariable::~EffectVariable() = default;
-
-	EffectVariable& EffectVariable::operator<<(const float value)
-	{
-		auto variable = m_variable->AsScalar();
-		if (!variable->IsValid())
+		Variable::Variable(const Effect& effect, ID3DX11EffectVariable* const variable)
+			: m_effect(effect)
+			, m_variable(variable)
+			, m_type(nullptr)
 		{
-			throw Exception("Invalid effect variable cast.");
+			m_variable->GetDesc(&m_variableDesc);
+			m_name = m_variableDesc.Name;
+
+			m_type = m_variable->GetType();
+			m_type->GetDesc(&m_typeDesc);
 		}
 
-		variable->SetFloat(value);
-		return *this;
-	}
+		Variable::~Variable() = default;
 
-	EffectVariable& EffectVariable::operator<<(ID3D11ShaderResourceView* const value)
-	{
-		auto variable = m_variable->AsShaderResource();
-		if (!variable->IsValid())
+		Variable& Variable::operator<<(const float value)
 		{
-			throw Exception("Invalid effect variable cast.");
+			auto variable = m_variable->AsScalar();
+			if (!variable->IsValid())
+			{
+				throw Exception("Invalid effect variable cast.");
+			}
+
+			variable->SetFloat(value);
+			return *this;
 		}
 
-		variable->SetResource(value);
-		return *this;
-	}
-
-	EffectVariable& EffectVariable::operator<<(const math::XMVector& value)
-	{
-		auto variable = m_variable->AsVector();
-		if (!variable->IsValid())
+		Variable& Variable::operator<<(ID3D11ShaderResourceView* const value)
 		{
-			throw Exception("Invalid effect variable cast.");
+			auto variable = m_variable->AsShaderResource();
+			if (!variable->IsValid())
+			{
+				throw Exception("Invalid effect variable cast.");
+			}
+
+			variable->SetResource(value);
+			return *this;
 		}
 
-		variable->SetFloatVector(reinterpret_cast<const float*>(&value));
-		return *this;
-	}
-
-	EffectVariable& EffectVariable::operator<<(const math::XMMatrix& value)
-	{
-		auto variable = m_variable->AsMatrix();
-		if (!variable->IsValid())
+		Variable& Variable::operator<<(const math::XMVector& value)
 		{
-			throw Exception("Invalid effect variable cast.");
+			auto variable = m_variable->AsVector();
+			if (!variable->IsValid())
+			{
+				throw Exception("Invalid effect variable cast.");
+			}
+
+			variable->SetFloatVector(reinterpret_cast<const float*>(&value));
+			return *this;
 		}
 
-		variable->SetMatrix(reinterpret_cast<const float*>(&value));
-		return *this;
-	}
+		Variable& Variable::operator<<(const math::XMMatrix& value)
+		{
+			auto variable = m_variable->AsMatrix();
+			if (!variable->IsValid())
+			{
+				throw Exception("Invalid effect variable cast.");
+			}
 
+			variable->SetMatrix(reinterpret_cast<const float*>(&value));
+			return *this;
+		}
+
+	} // namespace effect
 } // namespace library

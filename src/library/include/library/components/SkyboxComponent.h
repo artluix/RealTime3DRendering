@@ -11,7 +11,7 @@ namespace library
 {
 	class SkyboxComponent
 		: public SceneComponent
-		, public ConcreteMaterialComponent<SkyboxMaterial>
+		, public ConcreteMaterialComponent<Skybox>
 	{
 		RTTI_CLASS(SkyboxComponent, SceneComponent, MaterialComponent)
 

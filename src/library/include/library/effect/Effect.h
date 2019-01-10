@@ -1,7 +1,7 @@
 #pragma once
 #include "library/Common.h"
 #include "library/NonCopyable.hpp"
-#include "library/Path.h"
+#include "library/fs/Path.h"
 
 #include <d3dx11effect.h>
 #include <vector>
@@ -14,63 +14,65 @@ interface ID3D11Device;
 namespace library
 {
 	class Application;
-	class EffectTechnique;
-	class EffectVariable;
 
-	// ----------------------------------------------------------------------------------------------------------
-
-	class Effect : public NonCopyable<Effect>
+	namespace effect
 	{
-	public:
-		explicit Effect(const Application& app, const fs::Path& path);
-		~Effect();
+		class Technique;
+		class Variable;
 
-		void Compile();
-		void LoadCompiled();
+		class Effect : public NonCopyable<Effect>
+		{
+		public:
+			explicit Effect(const Application& app, const fs::Path& path);
+			~Effect();
 
-		const Application& GetApp() const { return m_app; }
-		const fs::Path& GetPath() const { return m_path; }
-		const std::string& GetName() const { return m_name; }
+			void Compile();
+			void LoadCompiled();
 
-		ID3DX11Effect* GetEffect() const { return m_effect.Get(); }
-		void SetEffect(ID3DX11Effect* const effect);
+			const Application& GetApp() const { return m_app; }
+			const fs::Path& GetPath() const { return m_path; }
+			const std::string& GetName() const { return m_name; }
 
-		const D3DX11_EFFECT_DESC& GetEffectDesc() const { return m_effectDesc; }
+			ID3DX11Effect* GetEffect() const { return m_effect.Get(); }
+			void SetEffect(ID3DX11Effect* const effect);
 
-		bool HasTechnique(const std::string& techniqueName) const;
-		EffectTechnique& GetTechnique(const std::string& techniqueName) const;
-		EffectTechnique& GetTechnique(const unsigned techniqueIdx) const;
-		std::size_t GetTechniquesCount() const { return m_techniques.size(); }
+			const D3DX11_EFFECT_DESC& GetEffectDesc() const { return m_effectDesc; }
 
-		bool HasVariable(const std::string& variableName) const;
-		EffectVariable& GetVariable(const std::string& variableName) const;
-		EffectVariable& GetVariable(const unsigned variableIdx) const;
-		std::size_t GetVariablesCount() const { return m_variables.size(); }
+			bool HasTechnique(const std::string& techniqueName) const;
+			Technique& GetTechnique(const std::string& techniqueName) const;
+			Technique& GetTechnique(const unsigned techniqueIdx) const;
+			std::size_t GetTechniquesCount() const { return m_techniques.size(); }
 
-		bool IsInitialized() const { return m_isInitialized; }
+			bool HasVariable(const std::string& variableName) const;
+			Variable& GetVariable(const std::string& variableName) const;
+			Variable& GetVariable(const unsigned variableIdx) const;
+			std::size_t GetVariablesCount() const { return m_variables.size(); }
 
-	private:
-		using EffectTechniquePtr = std::unique_ptr<EffectTechnique>;
-		using EffectVariablePtr = std::unique_ptr<EffectVariable>;
+			bool IsInitialized() const { return m_isInitialized; }
 
-		void Initialize();
+		private:
+			using EffectTechniquePtr = std::unique_ptr<Technique>;
+			using EffectVariablePtr = std::unique_ptr<Variable>;
 
-		const Application& m_app;
-		fs::Path m_path;
-		std::string m_name;
+			void Initialize();
 
-		ComPtr<ID3DX11Effect> m_effect;
-		D3DX11_EFFECT_DESC m_effectDesc;
+			const Application& m_app;
+			fs::Path m_path;
+			std::string m_name;
 
-		bool m_isInitialized = false;
+			ComPtr<ID3DX11Effect> m_effect;
+			D3DX11_EFFECT_DESC m_effectDesc;
 
-		std::vector<EffectTechniquePtr> m_techniques;
-		std::map<std::string, EffectTechnique*> m_techniquesMap;
+			bool m_isInitialized = false;
 
-		std::vector<EffectVariablePtr> m_variables;
-		std::map<std::string, EffectVariable*> m_variablesMap;
-	};
+			std::vector<EffectTechniquePtr> m_techniques;
+			std::map<std::string, Technique*> m_techniquesMap;
 
-	using EffectPtr = std::shared_ptr<Effect>;
+			std::vector<EffectVariablePtr> m_variables;
+			std::map<std::string, Variable*> m_variablesMap;
+		};
 
+		using EffectPtr = std::shared_ptr<Effect>;
+
+	} // namespace effect
 } // namespace library

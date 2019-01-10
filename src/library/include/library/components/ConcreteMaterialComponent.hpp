@@ -1,6 +1,6 @@
 #pragma once
 #include "library/components/MaterialComponent.h"
-#include "library/materials/Material.h"
+#include "library/materials/EffectMaterial.h"
 
 #include <type_traits>
 #include <memory>

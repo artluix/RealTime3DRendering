@@ -5,129 +5,141 @@ if(APPLICATION)
 
     set(LIBRARY_SOURCES
         # include
-        include/library/Application.h
-        include/library/Stopwatch.h
-        include/library/Color.h
-        include/library/Common.h
+            # components
+                include/library/components/Component.h
+                include/library/components/CameraComponent.h
+                include/library/components/ConcreteMaterialComponent.hpp
+                include/library/components/DirectionalLightComponent.h
+                include/library/components/DrawableComponent.h
+                include/library/components/FirstPersonCameraComponent.h
+                include/library/components/FpsComponent.h
+                include/library/components/GridComponent.h
+                include/library/components/InputReceivableComponent.h
+                include/library/components/KeyboardComponent.h
+                include/library/components/LightComponent.h
+                include/library/components/MaterialComponent.h
+                include/library/components/MouseComponent.h
+                include/library/components/PointLightComponent.h
+                include/library/components/ProxyModelComponent.h
+                include/library/components/SceneComponent.h
+                include/library/components/SkyboxComponent.h
+                include/library/components/SpotLightComponent.h
+                include/library/components/TextComponent.h
+                include/library/components/UIComponent.h
 
-        # components
-        include/library/Components/Component.h
-        include/library/Components/CameraComponent.h
-        include/library/Components/ConcreteMaterialComponent.hpp
-        include/library/Components/DrawableComponent.h
-        include/library/Components/FirstPersonCameraComponent.h
-        include/library/Components/FpsComponent.h
-        include/library/Components/GridComponent.h
-        include/library/Components/InputReceivableComponent.h
-        include/library/Components/KeyboardComponent.h
-        include/library/Components/MaterialComponent.h
-        include/library/Components/MouseComponent.h
-        include/library/Components/ProxyModelComponent.h
-        include/library/Components/SceneComponent.h
-        include/library/Components/SkyboxComponent.h
-        include/library/Components/TextComponent.h
-        include/library/Components/UIComponent.h
+            # containers
+                include/library/containers/RenderStateContainer.h
+                include/library/containers/RasterizerStateContainer.h
+                include/library/containers/ServiceContainer.h
 
-        include/library/DirectXForwardDeclarations.h
+            # effect
+                # materials
+                    include/library/effect/materials/BasicEffectMaterial.h
+                    include/library/effect/materials/DiffuseLightingEffectMaterial.h
+                    include/library/effect/materials/TextureMappingEffectMaterial.h
+                    include/library/effect/materials/SkyboxEffectMaterial.h
 
-        # effect
-        include/library/effect/Effect.h
-        include/library/effect/EffectFactory.h
-        include/library/effect/EffectPass.h
-        include/library/effect/EffectTechnique.h
-        include/library/effect/EffectVariable.h
+                include/library/effect/Effect.h
+                include/library/effect/EffectFactory.h
+                include/library/effect/EffectMaterial.h
+                include/library/effect/EffectPass.h
+                include/library/effect/EffectTechnique.h
+                include/library/effect/EffectVariable.h
 
-        # lights
-        include/library/lights/Light.h
-        include/library/lights/DirectionalLight.h
-        include/library/lights/PointLight.h
-        include/library/lights/SpotLight.h
+            # fs
+                include/library/fs/Path.h
 
-        # materials
-        include/library/materials/Material.h
-        include/library/materials/BasicMaterial.h
-        include/library/materials/TextureMappingMaterial.h
-        include/library/materials/SkyboxMaterial.h
-        include/library/materials/DiffuseLightingMaterial.h
+            # math
+                include/library/math/Math.h
+                include/library/math/Matrix.h
+                include/library/math/Vector.h
 
-        include/library/Exception.h
-        include/library/Key.h
-        include/library/Logger.h
-        include/library/Math.h
-        include/library/Matrix.h
-        include/library/Mesh.h
-        include/library/Model.h
-        include/library/ModelMaterial.h
-        include/library/NonCopyable.hpp
-        include/library/NonConstructible.hpp
-        include/library/Path.h
-        include/library/RTTI.hpp
-        include/library/RenderStatesStorage.h
-        include/library/RasterizerStatesStorage.h
-        include/library/ServiceContainer.h
-        include/library/Time.h
-        include/library/Utils.h
-        include/library/Vector.h
-        include/library/VertexTypes.h
+            # model
+                include/library/model/Mesh.h
+                include/library/model/Model.h
+                include/library/model/ModelMaterial.h
+
+            # time
+                include/library/time/Time.h
+                include/library/time/Stopwatch.h
+
+            include/library/Application.h
+            include/library/Color.h
+            include/library/Common.h
+            include/library/DirectXForwardDeclarations.h
+            include/library/Exception.h
+            include/library/Key.h
+            include/library/Logger.h
+            include/library/NonCopyable.hpp
+            include/library/NonConstructible.hpp
+            include/library/RTTI.hpp
+            include/library/VertexTypes.h
+            include/library/Utils.h
 
         # src
-        src/Application.cpp
-        src/Color.cpp
+            # components
+                src/components/Component.cpp
+                src/components/CameraComponent.cpp
+                src/components/DirectionalLightComponent.cpp
+                src/components/DrawableComponent.cpp
+                src/components/FirstPersonCameraComponent.cpp
+                src/components/FpsComponent.cpp
+                src/components/GridComponent.cpp
+                src/components/InputReceivableComponent.cpp
+                src/components/KeyboardComponent.cpp
+                src/components/LightComponent.cpp
+                src/components/MaterialComponent.cpp
+                src/components/MouseComponent.cpp
+                src/components/PointLightComponent.cpp
+                src/components/ProxyModelComponent.cpp
+                src/components/SceneComponent.cpp
+                src/components/SkyboxComponent.cpp
+                src/components/SpotLightComponent.cpp
+                src/components/TextComponent.cpp
+                src/components/UIComponent.cpp
 
-        # components
-        src/Components/Component.cpp
-        src/Components/CameraComponent.cpp
-        src/Components/DrawableComponent.cpp
-        src/Components/FirstPersonCameraComponent.cpp
-        src/Components/FpsComponent.cpp
-        src/Components/GridComponent.cpp
-        src/Components/InputReceivableComponent.cpp
-        src/Components/KeyboardComponent.cpp
-        src/Components/MaterialComponent.cpp
-        src/Components/MouseComponent.cpp
-        src/Components/ProxyModelComponent.cpp
-        src/Components/SceneComponent.cpp
-        src/Components/SkyboxComponent.cpp
-        src/Components/TextComponent.cpp
-        src/Components/UIComponent.cpp
+            # containers
+                src/containers/RasterizerStateContainer.cpp
+                src/containers/RenderStateContainer.cpp
+                src/containers/ServiceContainer.cpp
 
-        # effect
-        src/effect/Effect.cpp
-        src/effect/EffectFactory.cpp
-        src/effect/EffectPass.cpp
-        src/effect/EffectTechnique.cpp
-        src/effect/EffectVariable.cpp
+            # effect
+                # materials
+                    src/effect/materials/BasicEffectMaterial.cpp
+                    src/effect/materials/DiffuseLightingEffectMaterial.cpp
+                    src/effect/materials/TextureMappingEffectMaterial.cpp
+                    src/effect/materials/SkyboxEffectMaterial.cpp
 
-        # lights
-        src/lights/Light.cpp
-        src/lights/DirectionalLight.cpp
-        src/lights/PointLight.cpp
-        src/lights/SpotLight.cpp
+                src/effect/Effect.cpp
+                src/effect/EffectFactory.cpp
+                src/effect/EffectMaterial.cpp
+                src/effect/EffectPass.cpp
+                src/effect/EffectTechnique.cpp
+                src/effect/EffectVariable.cpp
 
-        # materials
-        src/materials/Material.cpp
-        src/materials/BasicMaterial.cpp
-        src/materials/TextureMappingMaterial.cpp
-        src/materials/SkyboxMaterial.cpp
-        src/materials/DiffuseLightingMaterial.cpp
+            # fs
+                src/fs/Path.cpp
 
-        src/Exception.cpp
-        src/Logger.cpp
-        src/Matrix.cpp
-        src/ModelMaterial.cpp
-        src/Mesh.cpp
-        src/Model.cpp
-        src/Path.cpp
-        src/RasterizerStatesStorage.cpp
-        src/RenderStatesStorage.cpp
-        src/ServiceContainer.cpp
-        src/Stopwatch.cpp
-        src/Utils.cpp
-        src/Vector.cpp
+            # math
+                src/math/Matrix.cpp
+                src/math/Vector.cpp
 
-        # precompiled header
-        src/StdAfx.h
-        src/StdAfx.cpp
+            # model
+                src/model/Mesh.cpp
+                src/model/Model.cpp
+                src/model/ModelMaterial.cpp
+
+            # time
+                src/time/Stopwatch.cpp
+
+            src/Application.cpp
+            src/Color.cpp
+            src/Exception.cpp
+            src/Logger.cpp
+            src/Utils.cpp
+
+            src/StdAfx.h
+            src/StdAfx.cpp
     )
 
     add_library(library STATIC ${LIBRARY_SOURCES})

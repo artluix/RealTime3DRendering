@@ -1,5 +1,5 @@
 #pragma once
-#include "library/Math.h"
+#include "library/math/Math.h"
 
 namespace library
 {

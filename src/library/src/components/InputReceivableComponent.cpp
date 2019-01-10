@@ -15,20 +15,4 @@ namespace library
 			m_mouse = &mouse;
 	}
 
-	//InputControllableComponent::InputControllableComponent(const KeyboardComponent& keyboard)
-	//	: m_keyboard(&keyboard)
-	//{
-	//}
-
-	//InputControllableComponent::InputControllableComponent(const MouseComponent& mouse)
-	//	: m_mouse(&mouse)
-	//{
-	//}
-
-	//InputControllableComponent::InputControllableComponent(const KeyboardComponent& keyboard, const MouseComponent& mouse)
-	//	: m_keyboard(&keyboard)
-	//	, m_mouse(&mouse)
-	//{
-	//}
-
 } // namespace library

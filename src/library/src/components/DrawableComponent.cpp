@@ -4,7 +4,8 @@
 namespace library
 {
 	DrawableComponent::DrawableComponent(const Application& app)
-		: Component(app)
+		: Component()
+		, m_app(app)
 	{
 	}
 

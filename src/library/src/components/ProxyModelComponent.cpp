@@ -72,7 +72,7 @@ namespace library
 
 		if (m_isWireframeVisible)
 		{
-			deviceContext->RSSetState(RasterizerStatesStorage::GetState(RasterizerState::Wireframe));
+			deviceContext->RSSetState(RasterizerStateContainer::GetRasterizerState(RasterizerState::Wireframe));
 			deviceContext->DrawIndexed(m_indicesCount, 0, 0);
 			deviceContext->RSSetState(nullptr);
 		}

@@ -19,9 +19,6 @@ namespace library
 
 	protected:
 		explicit InputReceivableComponent() = default;
-		//explicit InputControllableComponent(const KeyboardComponent& keyboard);
-		//explicit InputControllableComponent(const MouseComponent& mouse);
-		//explicit InputControllableComponent(const KeyboardComponent& keyboard, const MouseComponent& mouse);
 
 		const KeyboardComponent* m_keyboard = nullptr;
 		const MouseComponent* m_mouse = nullptr;

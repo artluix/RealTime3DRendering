@@ -8,22 +8,25 @@ namespace library
 {
 	class Application;
 	
-	class Effect;
-	using EffectPtr = std::shared_ptr<Effect>;
-
 	namespace fs
 	{
 		class Path;
 	} // namespace fs
 
-	class EffectFactory
+		namespace effect
 	{
-	public:
-		static EffectPtr Create(const Application& app, const fs::Path& path);
-		static void Reset();
+		class Effect;
+		using EffectPtr = std::shared_ptr<Effect>;
 
-	private:
-		static std::map<std::string, EffectPtr> s_effects;
-	};
+		class Factory : public NonConstructible<Factory>
+		{
+		public:
+			static EffectPtr Create(const Application& app, const fs::Path& path);
+			static void Reset();
 
+		private:
+			static std::map<std::string, EffectPtr> s_effects;
+		};
+
+	} // namespace effect
 } // namespace library

@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "library/components/MaterialComponent.h"
 
-#include "library/materials/Material.h"
+#include "library/materials/EffectMaterial.h"
 
 #include "library/effect/EffectPass.h"
 #include "library/effect/EffectTechnique.h"

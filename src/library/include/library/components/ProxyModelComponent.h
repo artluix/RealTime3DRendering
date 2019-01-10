@@ -2,16 +2,10 @@
 #include "library/components/SceneComponent.h"
 #include "library/materials/BasicMaterial.h"
 #include "library/components/ConcreteMaterialComponent.hpp"
-
 #include "library/DirectXForwardDeclarations.h"
-
-#include <memory>
 
 namespace library
 {
-	class Effect;
-	class BasicMaterial;
-
 	namespace fs
 	{
 		class Path;

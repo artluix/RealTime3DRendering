@@ -34,11 +34,7 @@ namespace library
 		math::Matrix4 GetProjectionMatrix() const { return m_projectionMatrix; }
 		math::Matrix4 GetViewProjectionMatrix() const;
 
-		// types begins with XM - default ones
-		// types begins with {C}XM - aliases, check them before passing
-
 		virtual void SetPosition(const math::Vector3& position);
-
 		virtual void Reset();
 
 		void Initialize() override;

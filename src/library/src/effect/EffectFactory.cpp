@@ -2,31 +2,34 @@
 #include "library/effect/EffectFactory.h"
 
 #include "library/effect/Effect.h"
-#include "library/Path.h"
+#include "library/fs/Path.h"
 
 #include <algorithm>
 #include <memory>
 
 namespace library
 {
-	std::map<std::string, EffectPtr> EffectFactory::s_effects;
-
-	EffectPtr EffectFactory::Create(const Application& app, const fs::Path& path)
+	namespace effect
 	{
-		const auto effectName = path.GetBaseName().SplitExt()[0].GetString();
+		std::map<std::string, EffectPtr> Factory::s_effects;
 
-		auto it = s_effects.find(effectName);
-		if (it != s_effects.end())
-			return it->second;
+		EffectPtr Factory::Create(const Application& app, const fs::Path& path)
+		{
+			const auto effectName = path.GetBaseName().SplitExt()[0].GetString();
 
-		auto effect = std::make_shared<Effect>(app, path);
-		s_effects.emplace(effectName, effect);
-		return effect;
-	}
+			auto it = s_effects.find(effectName);
+			if (it != s_effects.end())
+				return it->second;
 
-	void EffectFactory::Reset()
-	{
-		s_effects.clear();
-	}
+			auto effect = std::make_shared<Effect>(app, path);
+			s_effects.emplace(effectName, effect);
+			return effect;
+		}
 
+		void Factory::Reset()
+		{
+			s_effects.clear();
+		}
+
+	} // namespace effect
 } // namespace library
