@@ -2,7 +2,7 @@
 #include "library/components/CameraComponent.h"
 
 #include "library/Application.h"
-#include "library/Utils.h"
+#include "library/util/Utils.h"
 
 namespace library
 {
@@ -11,12 +11,12 @@ namespace library
 		constexpr auto k_defaultFieldOfView = math::constants::Pi_Div_4;
 		constexpr auto k_defaultNearPlaneDistance = 0.01f;
 		constexpr auto k_defaultFarPlaneDistance = 1000.f;
-		const auto k_defaultFontPath = utils::GetExecutableDirectory().Join(
+		const auto k_defaultFontPath = util::GetExecutableDirectory().Join(
 			fs::Path("data/fonts/Arial_14_Regular.spritefont")
 		);
 	}
 
-	CameraComponent::CameraComponent(const Application& app)
+	Camera::Camera(const Application& app)
 		: Component(app)
 		, m_fieldOfView(k_defaultFieldOfView)
 		, m_aspectRatio(app.GetAspectRatio())
@@ -26,7 +26,7 @@ namespace library
 	{
 	}
 
-	CameraComponent::CameraComponent(
+	Camera::Camera(
 		const Application& app,
 		const float fieldOfView,
 		const float aspectRatio,
@@ -40,20 +40,20 @@ namespace library
 	{
 	}
 
-	CameraComponent::~CameraComponent()
+	Camera::~Camera()
 	{
 	}
 
 	//-------------------------------------------------------------------------
 
-	math::Matrix4 CameraComponent::GetViewProjectionMatrix() const
+	math::Matrix4 Camera::GetViewProjectionMatrix() const
 	{
 		return m_viewMatrix * m_projectionMatrix;
 	}
 
 	//-------------------------------------------------------------------------
 
-	void CameraComponent::SetPosition(const math::Vector3& position)
+	void Camera::SetPosition(const math::Vector3& position)
 	{
 		if (m_position != position)
 		{
@@ -64,7 +64,7 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void CameraComponent::Reset()
+	void Camera::Reset()
 	{
 		m_position = math::constants::Vector3::Zero;
 		m_direction = math::constants::Vector3::Forward;
@@ -76,13 +76,13 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void CameraComponent::Initialize()
+	void Camera::Initialize()
 	{
 		UpdateProjectionMatrix();
 		Reset();
 	}
 
-	void CameraComponent::Update(const Time& time)
+	void Camera::Update(const Time& time)
 	{
 		if (m_isViewMatrixDirty)
 		{
@@ -93,12 +93,12 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void CameraComponent::UpdateViewMatrix()
+	void Camera::UpdateViewMatrix()
 	{
 		m_viewMatrix = math::Matrix4::LookToRH(m_position, m_direction, m_up);
 	}
 
-	void CameraComponent::UpdateProjectionMatrix()
+	void Camera::UpdateProjectionMatrix()
 	{
 		m_projectionMatrix = math::Matrix4::PerspectiveFovRH(
 			m_fieldOfView,
@@ -110,7 +110,7 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void CameraComponent::ApplyRotation(const math::Matrix4& transform)
+	void Camera::ApplyRotation(const math::Matrix4& transform)
 	{
 		const auto direction = m_direction.TransformNormal(transform);
 		auto up = m_up.TransformNormal(transform);

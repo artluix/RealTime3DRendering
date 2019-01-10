@@ -13,7 +13,7 @@ namespace library
 		class Path;
 	} // namespace fs
 
-		namespace effect
+	namespace effect
 	{
 		class Effect;
 		using EffectPtr = std::shared_ptr<Effect>;

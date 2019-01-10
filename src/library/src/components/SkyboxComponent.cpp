@@ -34,7 +34,7 @@ namespace library
 		const fs::Path& cubeMapPath,
 		const float scale
 	)
-		: SceneComponent()
+		: Scene()
 		, ConcreteMaterialComponent(app, k_modelPath)
 		, m_cubeMapPath(cubeMapPath)
 	{

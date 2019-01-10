@@ -1,0 +1,23 @@
+#pragma once
+#include "library/NonConstructible.hpp"
+#include "library/RTTI.hpp"
+
+#include <map>
+
+namespace library
+{
+	namespace util
+	{
+		class ServiceContainer : public NonConstructible<ServiceContainer>
+		{
+		public:
+			static void AddService(const rtti::TypeId typeId, void* const service);
+			static void RemoveService(const rtti::TypeId typeId);
+			static void* GetService(const rtti::TypeId typeId);
+
+		private:
+			static std::map<rtti::TypeId, void*> s_services;
+		};
+
+	} // namespace util
+} // namespace library

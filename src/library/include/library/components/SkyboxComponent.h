@@ -10,10 +10,10 @@
 namespace library
 {
 	class SkyboxComponent
-		: public SceneComponent
+		: public Scene
 		, public ConcreteMaterialComponent<Skybox>
 	{
-		RTTI_CLASS(SkyboxComponent, SceneComponent, MaterialComponent)
+		RTTI_CLASS(SkyboxComponent, Scene, MaterialComponent)
 
 	public:
 		explicit SkyboxComponent(

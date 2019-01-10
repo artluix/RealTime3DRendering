@@ -28,4 +28,5 @@ namespace library
 	private:
 		static void Log(const Level level, const char* fmt, const va_list ap);
 	};
+
 } // namespace library

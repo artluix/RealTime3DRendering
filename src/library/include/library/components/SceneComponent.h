@@ -1,17 +1,17 @@
 #pragma once
-#include "library/RTTI.hpp"
-#include "library/Math.h"
+#include "library/Component.h"
+#include "library/math/Math.h"
 
 namespace library
 {
-	class CameraComponent;
+	class Camera;
 
-	class SceneComponent
+	class Scene : virtual public Component
 	{
-		RTTI_CLASS_BASE(SceneComponent)
+		RTTI_CLASS(Scene, Component)
 
 	public:
-		~SceneComponent() = default;
+		~Scene() = default;
 
 		const math::Vector3& GetPosition() const { return m_position; }
 		const math::Vector3& GetRotation() const { return m_rotation; }
@@ -27,12 +27,11 @@ namespace library
 		void SetScaling(const math::Vector3& scaling);
 		void Scale(const math::Vector3& scaling);
 
-		const CameraComponent* GetCamera() { return m_camera; }
-		void SetCamera(const CameraComponent& camera);
+		const Camera* GetCamera() { return m_camera; }
+		void SetCamera(const Camera& camera);
 
 	protected:
-		explicit SceneComponent();
-		//explicit SceneComponent(const CameraComponent& camera);
+		explicit Scene(const Application& app);
 
 		void UpdateWorldMatrix();
 
@@ -42,7 +41,7 @@ namespace library
 
 		math::Matrix4 m_worldMatrix;
 
-		const CameraComponent* m_camera = nullptr;
+		const Camera* m_camera = nullptr;
 	};
 
 } // namespace library

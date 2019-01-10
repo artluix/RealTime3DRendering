@@ -28,7 +28,7 @@ namespace library
 	}
 
 	GridComponent::GridComponent(const Application& app)
-		: SceneComponent()
+		: Scene()
 		, DrawableComponent(app)
 		, InputReceivableComponent()
 		, m_size(k_defaultSize)
@@ -43,7 +43,7 @@ namespace library
 		const unsigned scale,
 		const Color& color
 	)
-		: SceneComponent()
+		: Scene()
 		, DrawableComponent(app)
 		, InputReceivableComponent()
 		, m_size(size)

@@ -1,7 +1,7 @@
 #pragma once
 #include <library/components/SceneComponent.h>
 #include <library/components/InputReceivableComponent.h>
-#include <library/materials/BasicMaterial.h>
+#include <library/effect/materials/BasicMaterial.h>
 #include <library/components/ConcreteMaterialComponent.hpp>
 
 namespace demo

@@ -1,8 +1,13 @@
 #include "StdAfx.h"
-#include "library/components/Component.h"
+#include "library/Component.h"
 
 namespace library
 {
+	Component::Component(const Application& app)
+		: m_app(app)
+	{
+	}
+
 	Component::~Component() = default;
 
 	void Component::SetEnabled(const bool enabled)

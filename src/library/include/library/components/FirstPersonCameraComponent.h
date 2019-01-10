@@ -6,9 +6,9 @@ namespace library
 	class MouseComponent;
 	class KeyboardComponent;
 
-	class FirstPersonCameraComponent : public CameraComponent
+	class FirstPersonCameraComponent : public Camera
 	{
-		RTTI_CLASS(FirstPersonCameraComponent, CameraComponent)
+		RTTI_CLASS(FirstPersonCameraComponent, Camera)
 
 	public:
 		explicit FirstPersonCameraComponent(const Application& app);

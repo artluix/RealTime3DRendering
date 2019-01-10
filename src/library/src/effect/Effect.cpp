@@ -2,7 +2,7 @@
 #include "library/effect/Effect.h"
 
 #include "library/Application.h"
-#include "library/Utils.h"
+#include "library/util/Utils.h"
 #include "library/Exception.h"
 
 #include "library/effect/EffectTechnique.h"
@@ -67,7 +67,7 @@ namespace library
 		void Effect::LoadCompiled()
 		{
 			std::vector<library::byte> effectData;
-			utils::LoadBinaryFile(m_path, effectData);
+			util::LoadBinaryFile(m_path, effectData);
 			if (effectData.empty())
 			{
 				throw Exception("Load compiled effect failed.");

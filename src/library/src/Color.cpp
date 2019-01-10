@@ -5,6 +5,15 @@
 
 namespace library
 {
+	constexpr Color Color::White = Color(1.f, 1.f, 1.f, 1.f);
+	constexpr Color Color::Black = Color(0.f, 0.f, 0.f, 1.f);
+	constexpr Color Color::Red = Color(1.f, 0.f, 0.f, 1.f);
+	constexpr Color Color::Green = Color(0.f, 1.f, 0.f, 1.f);
+	constexpr Color Color::Blue = Color(0.f, 0.f, 1.f, 1.f);
+	constexpr Color Color::Cyan = Color(0.f, 1.f, 1.f, 1.f);
+	constexpr Color Color::Magenta = Color(1.f, 0.f, 1.f, 1.f);
+	constexpr Color Color::Yellow = Color(1.f, 1.f, 0.f, 1.f);
+
 	Color Color::Random()
 	{
 		static std::random_device s_device;

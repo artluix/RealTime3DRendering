@@ -1,16 +1,13 @@
 #pragma once
-#include "library/Path.h"
+#include "library/fs/Path.h"
 
-namespace library
+namespace library::util
 {
-	namespace utils
-	{
-		std::wstring ToWideString(const std::string& str);
+	std::wstring ToWideString(const std::string& str);
 
-		fs::Path GetCurrentDirectory();
-		fs::Path GetExecutableDirectory();
+	fs::Path GetCurrentDirectory();
+	fs::Path GetExecutableDirectory();
 
-		void LoadBinaryFile(const fs::Path& path, std::vector<byte>& data);
-	}; // namespace utils
+	void LoadBinaryFile(const fs::Path& path, std::vector<byte>& data);
 
-} // namespace library
+} // namespace library::util

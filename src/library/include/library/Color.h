@@ -1,31 +1,27 @@
 #pragma once
-#include "library/math/Math.h"
+#include "library/math/Vector.h"
 
 namespace library
 {
-	class Color : public math::Vector4
+	class Color : public Vector4
 	{
 	public:
 		Color() = default;
-		constexpr Color(const float r, const float g, const float b, const float a) : math::Vector4(r, g, b, a) {}
-		Color(const DirectX::XMFLOAT4& xmFloat4) : math::Vector4(xmFloat4) {}
+		constexpr Color(const float r, const float g, const float b, const float a) : Vector4(r, g, b, a) {}
+		Color(const DirectX::XMFLOAT4& xmFloat4) : Vector4(xmFloat4) {}
 
-		void Transform(const math::Matrix4&) = delete;
-		math::Vector4 Cross(const math::Vector4&) = delete;
+		void Transform(const Matrix4&) = delete;
+		Vector4 Cross(const Vector4&) = delete;
+
+		static const Color White;
+		static const Color Black;
+		static const Color Red;
+		static const Color Green;
+		static const Color Blue;
+		static const Color Cyan;
+		static const Color Magenta;
+		static const Color Yellow;
 
 		static Color Random();
 	};
-
-	namespace colors
-	{
-		inline constexpr Color White = Color(1.f, 1.f, 1.f, 1.f);
-		inline constexpr Color Black = Color(0.f, 0.f, 0.f, 1.f);
-		inline constexpr Color Red = Color(1.f, 0.f, 0.f, 1.f);
-		inline constexpr Color Green = Color(0.f, 1.f, 0.f, 1.f);
-		inline constexpr Color Blue = Color(0.f, 0.f, 1.f, 1.f);
-		inline constexpr Color Cyan = Color(0.f, 1.f, 1.f, 1.f);
-		inline constexpr Color Magenta = Color(1.f, 0.f, 1.f, 1.f);
-		inline constexpr Color Yellow = Color(1.f, 1.f, 0.f, 1.f);
-
-	} // namespace colors
 } // namespace library

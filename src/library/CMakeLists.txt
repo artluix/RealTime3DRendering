@@ -6,18 +6,18 @@ if(APPLICATION)
     set(LIBRARY_SOURCES
         # include
             # components
-                include/library/components/Component.h
                 include/library/components/CameraComponent.h
-                include/library/components/ConcreteMaterialComponent.hpp
+                include/library/components/Component.h
+                include/library/components/ConcreteEffectMaterialComponent.hpp
                 include/library/components/DirectionalLightComponent.h
                 include/library/components/DrawableComponent.h
+                include/library/components/EffectMaterialComponent.h
                 include/library/components/FirstPersonCameraComponent.h
                 include/library/components/FpsComponent.h
                 include/library/components/GridComponent.h
                 include/library/components/InputReceivableComponent.h
                 include/library/components/KeyboardComponent.h
                 include/library/components/LightComponent.h
-                include/library/components/MaterialComponent.h
                 include/library/components/MouseComponent.h
                 include/library/components/PointLightComponent.h
                 include/library/components/ProxyModelComponent.h
@@ -26,11 +26,6 @@ if(APPLICATION)
                 include/library/components/SpotLightComponent.h
                 include/library/components/TextComponent.h
                 include/library/components/UIComponent.h
-
-            # containers
-                include/library/containers/RenderStateContainer.h
-                include/library/containers/RasterizerStateContainer.h
-                include/library/containers/ServiceContainer.h
 
             # effect
                 # materials
@@ -46,49 +41,46 @@ if(APPLICATION)
                 include/library/effect/EffectTechnique.h
                 include/library/effect/EffectVariable.h
 
-            # fs
-                include/library/fs/Path.h
-
             # math
                 include/library/math/Math.h
                 include/library/math/Matrix.h
                 include/library/math/Vector.h
 
-            # model
-                include/library/model/Mesh.h
-                include/library/model/Model.h
-                include/library/model/ModelMaterial.h
-
-            # time
-                include/library/time/Time.h
-                include/library/time/Stopwatch.h
-
             include/library/Application.h
             include/library/Color.h
-            include/library/Common.h
+            include/library/CommonTypes.h
             include/library/DirectXForwardDeclarations.h
             include/library/Exception.h
             include/library/Key.h
             include/library/Logger.h
+            include/library/Mesh.h
+            include/library/Model.h
+            include/library/ModelMaterial.h
             include/library/NonCopyable.hpp
             include/library/NonConstructible.hpp
+            include/library/Path.h
+            include/library/RasterizerStateHolder.h
+            include/library/RenderStateHelper.h
             include/library/RTTI.hpp
-            include/library/VertexTypes.h
+            include/library/ServiceContainer.h
+            include/library/Stopwatch.h
+            include/library/Time.h
             include/library/Utils.h
+            include/library/VertexTypes.h
 
         # src
             # components
-                src/components/Component.cpp
                 src/components/CameraComponent.cpp
+                src/components/Component.cpp
                 src/components/DirectionalLightComponent.cpp
                 src/components/DrawableComponent.cpp
+                src/components/EffectMaterialComponent.cpp
                 src/components/FirstPersonCameraComponent.cpp
                 src/components/FpsComponent.cpp
                 src/components/GridComponent.cpp
                 src/components/InputReceivableComponent.cpp
                 src/components/KeyboardComponent.cpp
                 src/components/LightComponent.cpp
-                src/components/MaterialComponent.cpp
                 src/components/MouseComponent.cpp
                 src/components/PointLightComponent.cpp
                 src/components/ProxyModelComponent.cpp
@@ -98,10 +90,6 @@ if(APPLICATION)
                 src/components/TextComponent.cpp
                 src/components/UIComponent.cpp
 
-            # containers
-                src/containers/RasterizerStateContainer.cpp
-                src/containers/RenderStateContainer.cpp
-                src/containers/ServiceContainer.cpp
 
             # effect
                 # materials
@@ -117,25 +105,22 @@ if(APPLICATION)
                 src/effect/EffectTechnique.cpp
                 src/effect/EffectVariable.cpp
 
-            # fs
-                src/fs/Path.cpp
-
             # math
-                src/math/Matrix.cpp
-                src/math/Vector.cpp
-
-            # model
-                src/model/Mesh.cpp
-                src/model/Model.cpp
-                src/model/ModelMaterial.cpp
-
-            # time
-                src/time/Stopwatch.cpp
+            src/math/Matrix.cpp
+            src/math/Vector.cpp
 
             src/Application.cpp
             src/Color.cpp
             src/Exception.cpp
             src/Logger.cpp
+            src/Mesh.cpp
+            src/Model.cpp
+            src/ModelMaterial.cpp
+            src/Path.cpp
+            src/RasterizerStateHolder.cpp
+            src/RenderStateHelper.cpp
+            src/ServiceContainer.cpp
+            src/Stopwatch.cpp
             src/Utils.cpp
 
             src/StdAfx.h

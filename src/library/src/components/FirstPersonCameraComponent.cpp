@@ -18,7 +18,7 @@ namespace library
 	}
 
 	FirstPersonCameraComponent::FirstPersonCameraComponent(const Application& app)
-		: CameraComponent(app)
+		: Camera(app)
 		, m_rotationStartPoint(0.f, 0.f)
 		, m_mouseSensitivity(k_defaultMouseSensitivity)
 		, m_rotationRate(k_defaultRotationRate)
@@ -33,7 +33,7 @@ namespace library
 		const float nearPlaneDistance,
 		const float farPlaneDistance
 	)
-		: CameraComponent(app, fieldOfView, aspectRatio, nearPlaneDistance, farPlaneDistance)
+		: Camera(app, fieldOfView, aspectRatio, nearPlaneDistance, farPlaneDistance)
 		, m_mouseSensitivity(k_defaultMouseSensitivity)
 		, m_rotationRate(k_defaultRotationRate)
 		, m_movementRate(k_defaultMovementRate)
@@ -59,7 +59,7 @@ namespace library
 
 	void FirstPersonCameraComponent::Initialize()
 	{
-		CameraComponent::Initialize();
+		Camera::Initialize();
 	}
 
 	void FirstPersonCameraComponent::Update(const Time& time)
@@ -141,7 +141,7 @@ namespace library
 			}
 		}
 
-		CameraComponent::Update(time);
+		Camera::Update(time);
 	}
 
 } // namespace library

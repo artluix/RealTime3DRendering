@@ -8,11 +8,11 @@
 namespace library
 {
 	class GridComponent
-		: public SceneComponent
+		: public Scene
 		, public DrawableComponent
 		, public InputReceivableComponent
 	{
-		RTTI_CLASS(GridComponent, SceneComponent, DrawableComponent, InputReceivableComponent)
+		RTTI_CLASS(GridComponent, Scene, DrawableComponent, InputReceivableComponent)
 
 	public:
 		explicit GridComponent(const Application& app);

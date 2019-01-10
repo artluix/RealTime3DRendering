@@ -362,14 +362,14 @@ namespace library
 		}
 
 		// initialize states storages
-		RenderStateContainer::SetDeviceContext(m_deviceContext.Get());
-		RasterizerStateContainer::Initialize(m_device.Get());
+		RenderStateHelper::SetDeviceContext(m_deviceContext.Get());
+		RasterizerStateHolder::Initialize(m_device.Get());
 	}
 
 	void Application::Shutdown()
 	{
-		RenderStateContainer::Reset();
-		RasterizerStateContainer::Reset();
+		RenderStateHelper::Reset();
+		RasterizerStateHolder::Reset();
 		effect::Factory::Reset();
 
 		m_components.clear();

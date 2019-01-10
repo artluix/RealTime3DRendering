@@ -26,7 +26,7 @@ namespace library
 	}
 
 	ProxyModelComponent::ProxyModelComponent(const Application& app, const fs::Path& modelPath, const float scale)
-		: SceneComponent()
+		: Scene()
 		, ConcreteMaterialComponent(app, modelPath)
 		, m_direction(math::constants::Vector3::Forward)
 		, m_up(math::constants::Vector3::Up)
@@ -72,7 +72,7 @@ namespace library
 
 		if (m_isWireframeVisible)
 		{
-			deviceContext->RSSetState(RasterizerStateContainer::GetRasterizerState(RasterizerState::Wireframe));
+			deviceContext->RSSetState(RasterizerStateHolder::GetRasterizerState(RasterizerState::Wireframe));
 			deviceContext->DrawIndexed(m_indicesCount, 0, 0);
 			deviceContext->RSSetState(nullptr);
 		}

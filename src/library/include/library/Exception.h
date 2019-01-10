@@ -16,4 +16,5 @@ namespace library
 	private:
 		HRESULT m_hr;
 	};
+
 } // namespace library

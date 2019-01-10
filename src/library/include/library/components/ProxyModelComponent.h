@@ -12,10 +12,10 @@ namespace library
 	} // namespace
 
 	class ProxyModelComponent
-		: public SceneComponent
+		: public Scene
 		, public ConcreteMaterialComponent<BasicMaterial>
 	{
-		RTTI_CLASS(ProxyModelComponent, SceneComponent, MaterialComponent)
+		RTTI_CLASS(ProxyModelComponent, Scene, MaterialComponent)
 
 	public:
 		explicit ProxyModelComponent(const Application& app, const fs::Path& modelPath, const float scale);

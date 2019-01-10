@@ -87,4 +87,5 @@ namespace library
 
 		OutputDebugStringA(msg.c_str());
 	}
+
 } // namespace library

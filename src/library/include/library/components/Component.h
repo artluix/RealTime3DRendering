@@ -1,7 +1,6 @@
 #pragma once
 #include "library/NonCopyable.hpp"
 #include "library/RTTI.hpp"
-#include "library/Common.h"
 
 namespace library
 {
@@ -18,12 +17,13 @@ namespace library
 		bool IsEnabled() const { return m_enabled; }
 		void SetEnabled(const bool enabled);
 
-		virtual void Initialize() = 0;
-		virtual void Update(const Time& time) = 0;
+		virtual void Initialize() {}
+		virtual void Update(const Time& time) {}
 
 	protected:
-		explicit Component() = default;
+		explicit Component(const Application& app);
 
+		const Application& m_app;
 		bool m_enabled = true;
 	};
 

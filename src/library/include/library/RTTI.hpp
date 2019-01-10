@@ -2,91 +2,88 @@
 #include <cstdint>
 #include <memory>
 
-namespace library
+namespace library::rtti
 {
-	namespace rtti
+	using TypeId = std::uintptr_t;
+
+	template <class T>
+	TypeId GetTypeId()
 	{
-		using TypeId = std::uintptr_t;
+		static constexpr int generator = 0;
+		const auto typeId = reinterpret_cast<TypeId>(&generator);
+		return typeId;
+	}
 
-		template <class T>
-		TypeId GetTypeId()
+	namespace detail
+	{
+		template <class Class, class Parent>
+		void* ParentCastImpl(Class* const self, const TypeId typeId)
 		{
-			static constexpr int generator = 0;
-			const auto typeId = reinterpret_cast<TypeId>(&generator);
-			return typeId;
+			if (GetTypeId<Parent>() == typeId)
+				return static_cast<Parent*>(self);
+
+			return self->Parent::CastTo(typeId);
 		}
-
-		namespace detail
-		{
-			template <class Class, class Parent>
-			void* ParentCastImpl(Class* const self, const TypeId typeId)
-			{
-				if (GetTypeId<Parent>() == typeId)
-					return static_cast<Parent*>(self);
-
-				return self->Parent::CastTo(typeId);
-			}
-
-			//-------------------------------------------------------------------------
-
-			template <class, class...>
-			struct ParentCast;
-
-			template <class Class>
-			struct ParentCast<Class>
-			{
-				void* operator()(Class* const, const TypeId) const
-				{
-					return nullptr;
-				}
-			};
-
-			template <class Class, class FirstParent, class... RestParents>
-			struct ParentCast<Class, FirstParent, RestParents...>
-			{
-				void* operator()(Class* const self, const TypeId typeId) const
-				{
-					if (auto instance = ParentCastImpl<Class, FirstParent>(self, typeId))
-						return instance;
-
-					return ParentCast<Class, RestParents...>()(self, typeId);
-				}
-			};
-		} // namespace detail
 
 		//-------------------------------------------------------------------------
 
-		template <class To, class From>
-		To* CastTo(From* self)
+		template <class, class...>
+		struct ParentCast;
+
+		template <class Class>
+		struct ParentCast<Class>
 		{
-			if (!!self)
-				return self->As<To>();
-
-			return nullptr;
-		}
-
-		template <class To, class From>
-		const To* CastTo(const From* self)
-		{
-			if (!!self)
-				return self->As<To>();
-
-			return nullptr;
-		}
-
-		template <class To, class From>
-		std::shared_ptr<To> CastTo(std::shared_ptr<From> self)
-		{
-			if (!!self && self->Is(detail::GetTypeIdImpl<To>()))
+			void* operator()(Class* const, const TypeId) const
 			{
-				return std::static_pointer_cast<To>(self);
+				return nullptr;
 			}
+		};
 
-			return std::shared_ptr<To>();
+		template <class Class, class FirstParent, class... RestParents>
+		struct ParentCast<Class, FirstParent, RestParents...>
+		{
+			void* operator()(Class* const self, const TypeId typeId) const
+			{
+				if (auto instance = ParentCastImpl<Class, FirstParent>(self, typeId))
+					return instance;
+
+				return ParentCast<Class, RestParents...>()(self, typeId);
+			}
+		};
+	} // namespace detail
+
+	//-------------------------------------------------------------------------
+
+	template <class To, class From>
+	To* CastTo(From* self)
+	{
+		if (!!self)
+			return self->As<To>();
+
+		return nullptr;
+	}
+
+	template <class To, class From>
+	const To* CastTo(const From* self)
+	{
+		if (!!self)
+			return self->As<To>();
+
+		return nullptr;
+	}
+
+	template <class To, class From>
+	std::shared_ptr<To> CastTo(std::shared_ptr<From> self)
+	{
+		if (!!self && self->Is(detail::GetTypeIdImpl<To>()))
+		{
+			return std::static_pointer_cast<To>(self);
 		}
 
-	} // namespace rtti
-} // namespace library
+		return std::shared_ptr<To>();
+	}
+
+} // namespace library::rtti
 
 //-------------------------------------------------------------------------
 
