@@ -34,7 +34,6 @@ if(APPLICATION)
                     include/library/effect/materials/SkyboxEffectMaterial.h
 
                 include/library/effect/Effect.h
-                include/library/effect/EffectFactory.h
                 include/library/effect/EffectMaterial.h
                 include/library/effect/EffectPass.h
                 include/library/effect/EffectTechnique.h
@@ -58,8 +57,8 @@ if(APPLICATION)
             include/library/NonCopyable.hpp
             include/library/NonConstructible.hpp
             include/library/Path.h
+            include/library/Renderer.h
             include/library/RasterizerStateHolder.h
-            include/library/RenderStateHelper.h
             include/library/RTTI.hpp
             include/library/ServiceContainer.h
             include/library/Stopwatch.h
@@ -98,7 +97,6 @@ if(APPLICATION)
                     src/effect/materials/SkyboxEffectMaterial.cpp
 
                 src/effect/Effect.cpp
-                src/effect/EffectFactory.cpp
                 src/effect/EffectMaterial.cpp
                 src/effect/EffectPass.cpp
                 src/effect/EffectTechnique.cpp
@@ -117,7 +115,7 @@ if(APPLICATION)
             src/ModelMaterial.cpp
             src/Path.cpp
             src/RasterizerStateHolder.cpp
-            src/RenderStateHelper.cpp
+            src/Renderer.cpp
             src/ServiceContainer.cpp
             src/Stopwatch.cpp
             src/Utils.cpp

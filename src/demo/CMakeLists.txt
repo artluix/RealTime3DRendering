@@ -24,14 +24,14 @@ if(APPLICATION)
         src/components/TextureModelComponent.cpp
 
         # with materials
-        src/components/BasicMaterialComponent.h
-        src/components/BasicMaterialComponent.cpp
+        src/components/BasicEffectMaterialComponent.h
+        src/components/BasicEffectMaterialComponent.cpp
 
-        src/components/DiffuseLightingMaterialComponent.h
-        src/components/DiffuseLightingMaterialComponent.cpp
+        src/components/DiffuseLightingEffectMaterialComponent.h
+        src/components/DiffuseLightingEffectMaterialComponent.cpp
 
-        src/components/TextureMappingMaterialComponent.h
-        src/components/TextureMappingMaterialComponent.cpp
+        src/components/TextureMappingEffectMaterialComponent.h
+        src/components/TextureMappingEffectMaterialComponent.cpp
     )
 
     add_executable(demo WIN32 ${DEMO_SOURCES})

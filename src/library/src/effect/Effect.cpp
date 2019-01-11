@@ -10,6 +10,8 @@
 
 namespace library
 {
+	std::map<std::string, EffectPtr> Effect::s_effects;
+
 	Effect::Effect(const Application& app, const Path& path)
 		: m_app(app)
 		, m_path(path)
@@ -17,7 +19,25 @@ namespace library
 	{
 	}
 
+	EffectPtr Effect::Create(const Application& app, const Path& path)
+	{
+		const auto effectName = path.GetBaseName().SplitExt()[0].GetString();
+
+		auto it = s_effects.find(effectName);
+		if (it != s_effects.end())
+			return it->second;
+
+		auto effect = std::make_shared<Effect>(app, path);
+		s_effects.emplace(effectName, effect);
+		return effect;
+	}
+
 	Effect::~Effect() = default;
+
+	void Effect::ClearAll()
+	{
+		s_effects.clear();
+	}
 
 	//-------------------------------------------------------------------------
 

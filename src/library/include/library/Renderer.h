@@ -1,13 +1,26 @@
 #pragma once
+#include "library/CommonTypes.h"
 #include "library/NonCopyable.hpp"
+#include "library/DirectXForwardDeclarations.h"
 
 #include <vector>
 
-// simple renderer to correct render order of components
-
 namespace library
 {
+	enum class RenderState
+	{
+		Rasterizer,
+		Blend,
+		DepthStencil,
+
+		//#All
+		All
+	};
+
+	//-------------------------------------------------------------------------
+
 	class DrawableComponent;
+	class Application;
 	struct Time;
 
 	class Renderer : public NonCopyable<Renderer>
@@ -15,18 +28,34 @@ namespace library
 	public:
 		using Drawable = DrawableComponent;
 
-		explicit Renderer() = default;
+		explicit Renderer(const Application& app);
 
 		void RegisterForRender(Drawable* const drawable);
 		void UnregisterForRender(Drawable* const drawable);
 
 		void Render(const Time& time);
 
+		void ResetRenderState(const RenderState rs = RenderState::All);
+		void SaveRenderState(const RenderState rs = RenderState::All);
+		void RestoreRenderState(const RenderState rs = RenderState::All);
+
+		ID3D11RasterizerState* GetRasterizerState() { return m_rasterizerState.Get(); }
+		ID3D11BlendState* GetBlendState() { return m_blendState.Get(); }
+		ID3D11DepthStencilState* GetDepthStencilState() { return m_depthStencilState.Get(); }
+
 	private:
 		using Drawables = std::vector<Drawable*>;
 
-		void RenderByEffect(Drawables& drawables);
-
 		Drawables m_drawables;
+
+		const Application& m_app;
+
+		ComPtr<ID3D11RasterizerState> m_rasterizerState;
+		ComPtr<ID3D11BlendState> m_blendState;
+		ComPtr<ID3D11DepthStencilState> m_depthStencilState;
+
+		std::array<float, 4> m_blendFactor;
+		unsigned m_sampleMask;
+		unsigned m_stencilRef;
 	};
 } // namespace library

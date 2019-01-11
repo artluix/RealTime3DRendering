@@ -58,6 +58,8 @@ namespace library
 
 	void TextComponent::Initialize()
 	{
+		DrawableComponent::Initialize();
+
 		m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(m_app.GetD3DDeviceContext());
 		SetFontPath(m_fontPath);
 	}

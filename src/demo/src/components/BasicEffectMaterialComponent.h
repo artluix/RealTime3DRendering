@@ -12,14 +12,14 @@ namespace library
 
 namespace demo
 {
-	class BasicMaterialComponent
+	class BasicEffectMaterialComponent
 		: public library::SceneComponent
 		, public library::InputReceivableComponent
 	{
-		RTTI_CLASS(BasicMaterialComponent, library::SceneComponent, library::InputReceivableComponent)
+		RTTI_CLASS(BasicEffectMaterialComponent, library::SceneComponent, library::InputReceivableComponent)
 
 	public:
-		explicit BasicMaterialComponent(const library::Application& app);
+		explicit BasicEffectMaterialComponent(const library::Application& app);
 
 		void Initialize() override;
 		void Update(const library::Time& time) override;

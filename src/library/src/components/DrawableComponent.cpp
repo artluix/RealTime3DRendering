@@ -35,6 +35,8 @@ namespace library
 				m_indicesCount = mesh.GetIndicesCount();
 			}
 		}
+
+		m_app.GetRenderer()->RegisterForRender(this);
 	}
 
 	void DrawableComponent::Draw(const Time& time)

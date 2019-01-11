@@ -83,6 +83,8 @@ namespace library
 
 	void GridComponent::Initialize()
 	{
+		DrawableComponent::Initialize();
+
 		// shader
 		{
 			std::vector<library::byte> effectData;
@@ -153,8 +155,6 @@ namespace library
 		}
 
 		Build();
-
-		m_app.GetRenderer()->RegisterForRender(this);
 	}
 
 	void GridComponent::Update(const Time& time)

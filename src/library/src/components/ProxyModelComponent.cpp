@@ -5,7 +5,6 @@
 
 #include "library/effect/Effect.h"
 #include "library/effect/EffectVariable.h"
-#include "library/effect/EffectFactory.h"
 
 #include "library/Path.h"
 #include "library/Utils.h"
@@ -42,7 +41,7 @@ namespace library
 
 	void ProxyModelComponent::Initialize()
 	{
-		m_effect = EffectFactory::Create(m_app, k_effectPath);
+		m_effect = Effect::Create(m_app, k_effectPath);
 		m_effect->LoadCompiled();
 
 		m_material = std::make_unique<BasicEffectMaterial>(*m_effect);

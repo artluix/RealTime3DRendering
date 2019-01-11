@@ -1,4 +1,4 @@
-#include "ModelComponent.h"
+#include "components/ModelComponent.h"
 
 #include <library/components/CameraComponent.h>
 #include <library/components/KeyboardComponent.h>

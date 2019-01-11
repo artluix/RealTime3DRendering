@@ -1,4 +1,4 @@
-#include "TriangleComponent.h"
+#include "components/TriangleComponent.h"
 
 #include <library/components/CameraComponent.h>
 

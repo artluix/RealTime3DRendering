@@ -13,14 +13,14 @@ namespace library
 
 namespace demo
 {
-	class TextureMappingMaterialComponent
+	class TextureMappingEffectMaterialComponent
 		: public library::SceneComponent
 		, public library::InputReceivableComponent
 	{
-		RTTI_CLASS(TextureMappingMaterialComponent, library::SceneComponent, library::InputReceivableComponent)
+		RTTI_CLASS(TextureMappingEffectMaterialComponent, library::SceneComponent, library::InputReceivableComponent)
 
 	public:
-		explicit TextureMappingMaterialComponent(const library::Application& app);
+		explicit TextureMappingEffectMaterialComponent(const library::Application& app);
 
 		void Initialize() override;
 		void Update(const library::Time& time) override;

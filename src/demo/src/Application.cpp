@@ -12,8 +12,8 @@
 #include "components/ModelComponent.h"
 #include "components/TextureModelComponent.h"
 
-#include "components/BasicMaterialComponent.h"
-#include "components/TextureMappingMaterialComponent.h"
+#include "components/BasicEffectMaterialComponent.h"
+#include "components/TextureMappingEffectMaterialComponent.h"
 
 #include <library/Path.h>
 #include <library/Utils.h>
@@ -85,7 +85,7 @@ namespace demo
 		// grid
 		auto gridComponent = std::make_shared<GridComponent>(*this);
 		gridComponent->SetCamera(*cameraComponent);
-		m_components.push_back(gridComponent);
+		//m_components.push_back(gridComponent);
 
 		// triangle
 		auto triangleComponent = std::make_shared<TriangleComponent>(*this);
@@ -112,13 +112,13 @@ namespace demo
 		//m_components.push_back(textureModelComponent);
 
 		// basic material
-		auto basicMaterialComponent = std::make_shared<BasicMaterialComponent>(*this);
+		auto basicMaterialComponent = std::make_shared<BasicEffectMaterialComponent>(*this);
 		basicMaterialComponent->SetCamera(*cameraComponent);
 		basicMaterialComponent->SetKeyboard(*m_keyboardComponent);
 		//m_components.push_back(basicMaterialComponent);
 
 		// texture mapping material
-		auto textureMappingMaterialComponent = std::make_shared<TextureMappingMaterialComponent>(*this);
+		auto textureMappingMaterialComponent = std::make_shared<TextureMappingEffectMaterialComponent>(*this);
 		textureMappingMaterialComponent->SetCamera(*cameraComponent);
 		textureMappingMaterialComponent->SetKeyboard(*m_keyboardComponent);
 		m_components.push_back(textureMappingMaterialComponent);

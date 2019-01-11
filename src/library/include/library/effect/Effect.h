@@ -17,11 +17,17 @@ namespace library
 	class EffectTechnique;
 	class EffectVariable;
 
+	class Effect;
+	using EffectPtr = std::shared_ptr<Effect>;
+
 	class Effect : public NonCopyable<Effect>
 	{
 	public:
 		explicit Effect(const Application& app, const Path& path);
 		~Effect();
+
+		static EffectPtr Create(const Application& app, const Path& path);
+		static void ClearAll();
 
 		void Compile();
 		void LoadCompiled();
@@ -67,5 +73,7 @@ namespace library
 
 		std::vector<EffectVariablePtr> m_variables;
 		std::map<std::string, EffectVariable*> m_variablesMap;
+
+		static std::map<std::string, EffectPtr> s_effects;
 	};
 } // namespace library

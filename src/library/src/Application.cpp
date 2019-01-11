@@ -4,10 +4,10 @@
 #include "library/Exception.h"
 #include "library/components/DrawableComponent.h"
 
-#include "library/effect/EffectFactory.h"
-
-#include "library/RenderStateHelper.h"
+#include "library/effect/Effect.h"
 #include "library/RasterizerStateHolder.h"
+
+#include <thread>
 
 namespace library
 {
@@ -56,7 +56,7 @@ namespace library
 
 	void Application::Initialize()
 	{
-		m_renderer = std::make_unique<Renderer>();
+		m_renderer = std::make_unique<Renderer>(*this);
 
 		for (const auto& component : m_components)
 		{
@@ -66,6 +66,8 @@ namespace library
 
 	void Application::Run()
 	{
+		using namespace std::chrono_literals;
+
 		InitializeWindow();
 		InitializeDirectX();
 		Initialize();
@@ -87,6 +89,8 @@ namespace library
 
 				Update(m_time);
 				Draw(m_time);
+
+				std::this_thread::sleep_for(1ms);
 			}
 		}
 
@@ -114,15 +118,6 @@ namespace library
 	void Application::Draw(const Time& time)
 	{
 		m_renderer->Render(time);
-
-		/*for (const auto& component : m_components)
-		{
-			auto drawableComponent = component->As<DrawableComponent>();
-			if (!!drawableComponent && drawableComponent->IsVisible())
-			{
-				drawableComponent->Draw(time);
-			}
-		}*/
 	}
 
 	//-------------------------------------------------------------------------
@@ -364,16 +359,13 @@ namespace library
 			m_deviceContext->RSSetViewports(1, &m_viewport);
 		}
 
-		// initialize states storages
-		RenderStateHelper::SetDeviceContext(m_deviceContext.Get());
 		RasterizerStateHolder::Initialize(m_device.Get());
 	}
 
 	void Application::Shutdown()
 	{
-		RenderStateHelper::Reset();
 		RasterizerStateHolder::Reset();
-		EffectFactory::Reset();
+		Effect::ClearAll();
 
 		m_components.clear();
 		m_renderer.reset();

@@ -1,20 +1,23 @@
-#include "components/BasicMaterialComponent.h"
+#include "components/TextureMappingEffectMaterialComponent.h"
 
 #include <library/components/CameraComponent.h>
 #include <library/components/KeyboardComponent.h>
 
-#include <library/effect/Effect.h>
-#include <library/effect/EffectVariable.h>
-#include <library/effect/EffectFactory.h>
-
 #include <library/Application.h>
 #include <library/Utils.h>
+#include <library/Path.h>
 #include <library/Exception.h>
+
+#include <library/effect/Effect.h>
+#include <library/effect/EffectTechnique.h>
+#include <library/effect/EffectVariable.h>
+
+#include <DDSTextureLoader.h>
 
 namespace demo
 {
 	using namespace library;
-	
+
 	namespace
 	{
 		constexpr float k_rotationAngle = math::Pi_Div_2;
@@ -22,33 +25,56 @@ namespace demo
 
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
 #if defined(DEBUG) || defined(DEBUG)
-			Path("../data/effects/Basic_d.fxc")
+			Path("../data/effects/TextureMapping_d.fxc")
 #else
-			Path("../data/effects/Basic.fxc")
+			Path("../data/effects/TextureMapping.fxc")
 #endif
 		);
 		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
+		const auto k_texturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/EarthComposite.dds"));
 	}
 
-	BasicMaterialComponent::BasicMaterialComponent(const Application& app) 
+	TextureMappingEffectMaterialComponent::TextureMappingEffectMaterialComponent(const Application& app)
 		: SceneComponent(app)
 		, InputReceivableComponent()
 	{
 		SetModelPath(k_modelPath);
 	}
 
-	void BasicMaterialComponent::Initialize()
+	void TextureMappingEffectMaterialComponent::Initialize()
 	{
-		m_effect = EffectFactory::Create(m_app, k_effectPath);
+		m_effect = Effect::Create(m_app, k_effectPath);
 		m_effect->LoadCompiled();
 
-		m_material = std::make_unique<BasicEffectMaterial>(*m_effect);
+		m_material = std::make_unique<TextureMappingEffectMaterial>(*m_effect);
 		m_material->Initialize();
 
 		DrawableComponent::Initialize();
+
+		// Load the texture
+		{
+			std::vector<library::byte> textureData;
+			utils::LoadBinaryFile(k_texturePath, textureData);
+			if (textureData.empty())
+			{
+				throw Exception("Load texture failed.");
+			}
+
+			auto hr = DirectX::CreateDDSTextureFromMemory(
+				m_app.GetD3DDevice(),
+				reinterpret_cast<const std::uint8_t*>(textureData.data()),
+				textureData.size(),
+				nullptr,
+				m_textureShaderResourceView.GetAddressOf()
+			);
+			if (FAILED(hr))
+			{
+				throw Exception("CreateDDSTextureFromMemory() failed.", hr);
+			}
+		}
 	}
 
-	void BasicMaterialComponent::Update(const Time& time)
+	void TextureMappingEffectMaterialComponent::Update(const Time& time)
 	{
 		if (!!m_keyboard)
 		{
@@ -90,13 +116,15 @@ namespace demo
 		}
 	}
 
-	void BasicMaterialComponent::SetEffectData()
+	void TextureMappingEffectMaterialComponent::SetEffectData()
 	{
 		auto wvp = m_worldMatrix;
 		if (!!m_camera)
 			wvp *= m_camera->GetViewProjectionMatrix();
+		m_material->GetWVP() << wvp;
 
-		m_material->GetWorldViewProjection() << wvp;
+		m_material->GetColorTexture() << m_textureShaderResourceView.Get();
+
 		DrawableComponent::SetEffectData();
 	}
 } // namespace demo
