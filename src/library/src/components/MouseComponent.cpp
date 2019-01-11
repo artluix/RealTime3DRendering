@@ -1,10 +1,6 @@
 #include "StdAfx.h"
 #include "library/components/MouseComponent.h"
 
-#include "library/Application.h"
-#include "library/Exception.h"
-#include "library/Math.h"
-
 namespace library
 {
 	namespace
@@ -13,48 +9,10 @@ namespace library
 	}
 
 	MouseComponent::MouseComponent(const Application& app, ComPtr<IDirectInput8>& directInput)
-		: Component(app)
-		, m_directInput(directInput)
-		, m_directInputDevice()
+		: InputComponent(app, directInput, c_dfDIMouse, GUID_SysMouse, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE)
 		, m_currentState{}, m_previousState{}
 		, m_x(0), m_y(0), m_wheel(0)
 	{
-	}
-
-	MouseComponent::~MouseComponent()
-	{
-		if (!!m_directInputDevice)
-		{
-			m_directInputDevice->Unacquire();
-			m_directInputDevice.Reset();
-		}
-	}
-
-	void MouseComponent::Initialize()
-	{
-		auto hr = m_directInput->CreateDevice(GUID_SysMouse, m_directInputDevice.GetAddressOf(), nullptr);
-		if (FAILED(hr))
-		{
-			throw Exception("IDirectInput8::CreateDevice() failed.", hr);
-		}
-
-		hr = m_directInputDevice->SetDataFormat(&c_dfDIMouse);
-		if (FAILED(hr))
-		{
-			throw Exception("IDirectInputDevice::SetDataFormat() failed.", hr);
-		}
-
-		hr = m_directInputDevice->SetCooperativeLevel(m_app.GetWindowHandle(), DISCL_FOREGROUND | DISCL_NONEXCLUSIVE);
-		if (FAILED(hr))
-		{
-			throw Exception("IDirectInputDevice::SetCooperativeLevel() failed.", hr);
-		}
-
-		hr = m_directInputDevice->Acquire();
-		if (FAILED(hr))
-		{
-			throw Exception("IDirectInputDevice8::Acquire() failed.", hr);
-		}
 	}
 
 	void MouseComponent::Update(const Time& time)
@@ -63,17 +21,7 @@ namespace library
 			return;
 
 		m_previousState = m_currentState;
-
-		auto hr = m_directInputDevice->GetDeviceState(sizeof(m_currentState), &m_currentState);
-		if (FAILED(hr))
-		{
-			// try to reacquire the device
-			hr = m_directInputDevice->Acquire();
-			if (SUCCEEDED(hr))
-			{
-				m_directInputDevice->GetDeviceState(sizeof(m_currentState), &m_currentState);
-			}
-		}
+		GetState(sizeof(m_currentState), &m_currentState);
 
 		// accumulate position
 		m_x += m_currentState.lX;
@@ -118,5 +66,4 @@ namespace library
 	{
 		return IsButtonDown(mb) && WasButtonDown(mb);
 	}
-
 } // namespace library

@@ -4,18 +4,18 @@
 #include "library/effect/Effect.h"
 #include "library/Mesh.h"
 
-namespace library::effect::materials
+namespace library
 {
-	TextureMapping::TextureMapping(const Effect& effect)
-		: Material(effect, "main10")
+	TextureMappingEffectMaterial::TextureMappingEffectMaterial(const Effect& effect)
+		: EffectMaterial(effect, "main10")
 		, m_wvp(effect.GetVariable("wvp"))
 		, m_colorTexture(effect.GetVariable("ColorTexture"))
 	{
 	}
 
-	TextureMapping::~TextureMapping() = default;
+	TextureMappingEffectMaterial::~TextureMappingEffectMaterial() = default;
 
-	void TextureMapping::InitializeInternal()
+	void TextureMappingEffectMaterial::InitializeInternal()
 	{
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{
@@ -26,7 +26,7 @@ namespace library::effect::materials
 		CreateInputLayout("main10", "p0", inputElementDescriptions);
 	}
 
-	ComPtr<ID3D11Buffer> TextureMapping::CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const
+	ComPtr<ID3D11Buffer> TextureMappingEffectMaterial::CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const
 	{
 		if (!mesh.HasVertices())
 			return ComPtr<ID3D11Buffer>();
@@ -50,7 +50,6 @@ namespace library::effect::materials
 			);
 		}
 
-		return Material::CreateVertexBuffer(device, vertices.data(), vertices.size() * sizeof(Vertex));
+		return EffectMaterial::CreateVertexBuffer(device, vertices.data(), vertices.size() * sizeof(Vertex));
 	}
-
-} // namespace library::effect::materials
+} // namespace library

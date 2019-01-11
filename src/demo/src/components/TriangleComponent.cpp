@@ -16,12 +16,11 @@ namespace demo
 
 	namespace
 	{
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(fs::Path("../data/effects/BasicEffect.fx"));
+		const auto k_effectPath = utils::GetExecutableDirectory().Join(Path("../data/effects/BasicEffect.fx"));
 	}
 
 	TriangleComponent::TriangleComponent(const Application& app)
-		: SceneComponent()
-		, DrawableComponent(app)
+		: SceneComponent(app)
 		, m_effect()
 		, m_technique()
 		, m_pass()
@@ -157,7 +156,7 @@ namespace demo
 	void TriangleComponent::Update(const Time& time)
 	{
 		auto rotation = m_rotation;
-		rotation.z += math::constants::Pi_Div_2 * time.elapsed.GetSeconds<float>();
+		rotation.z += math::Pi_Div_2 * time.elapsed.GetSeconds<float>();
 		SetRotation(rotation);
 	}
 
@@ -180,5 +179,4 @@ namespace demo
 
 		d3dDeviceContext->Draw(3, 0);
 	}
-
 } // namespace demo

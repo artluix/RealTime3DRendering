@@ -5,9 +5,9 @@
 #include "library/Application.h"
 #include "library/Exception.h"
 
-namespace library::effect
+namespace library
 {
-	Pass::Pass(const Application& app, const Technique& technique, ID3DX11EffectPass* const pass)
+	EffectPass::EffectPass(const Application& app, const EffectTechnique& technique, ID3DX11EffectPass* const pass)
 		: m_app(app)
 		, m_technique(technique)
 		, m_pass(pass)
@@ -16,9 +16,9 @@ namespace library::effect
 		m_name = m_passDesc.Name;
 	}
 
-	Pass::~Pass() = default;
+	EffectPass::~EffectPass() = default;
 
-	ComPtr<ID3D11InputLayout> Pass::CreateInputLayout(const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions) const
+	ComPtr<ID3D11InputLayout> EffectPass::CreateInputLayout(const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions) const
 	{
 		ComPtr<ID3D11InputLayout> inputLayout;
 
@@ -37,7 +37,7 @@ namespace library::effect
 		return inputLayout;
 	}
 
-	void Pass::Apply(const unsigned flags, ID3D11DeviceContext* const deviceContext)
+	void EffectPass::Apply(const unsigned flags, ID3D11DeviceContext* const deviceContext)
 	{
 		m_pass->Apply(flags, deviceContext);
 	}

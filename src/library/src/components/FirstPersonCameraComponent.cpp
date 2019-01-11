@@ -3,7 +3,7 @@
 
 #include "library/Application.h"
 #include "library/Logger.h"
-#include "library/Math.h"
+#include "library/math/Math.h"
 
 #include "library/components/KeyboardComponent.h"
 #include "library/components/MouseComponent.h"
@@ -18,7 +18,7 @@ namespace library
 	}
 
 	FirstPersonCameraComponent::FirstPersonCameraComponent(const Application& app)
-		: Camera(app)
+		: CameraComponent(app)
 		, m_rotationStartPoint(0.f, 0.f)
 		, m_mouseSensitivity(k_defaultMouseSensitivity)
 		, m_rotationRate(k_defaultRotationRate)
@@ -33,7 +33,7 @@ namespace library
 		const float nearPlaneDistance,
 		const float farPlaneDistance
 	)
-		: Camera(app, fieldOfView, aspectRatio, nearPlaneDistance, farPlaneDistance)
+		: CameraComponent(app, fieldOfView, aspectRatio, nearPlaneDistance, farPlaneDistance)
 		, m_mouseSensitivity(k_defaultMouseSensitivity)
 		, m_rotationRate(k_defaultRotationRate)
 		, m_movementRate(k_defaultMovementRate)
@@ -41,25 +41,9 @@ namespace library
 	{
 	}
 
-	void FirstPersonCameraComponent::SetKeyboard(const KeyboardComponent& keyboard)
-	{
-		if (m_keyboard != &keyboard)
-		{
-			m_keyboard = &keyboard;
-		}
-	}
-
-	void FirstPersonCameraComponent::SetMouse(const MouseComponent& mouse)
-	{
-		if (m_mouse != &mouse)
-		{
-			m_mouse = &mouse;
-		}
-	}
-
 	void FirstPersonCameraComponent::Initialize()
 	{
-		Camera::Initialize();
+		CameraComponent::Initialize();
 	}
 
 	void FirstPersonCameraComponent::Update(const Time& time)
@@ -141,7 +125,6 @@ namespace library
 			}
 		}
 
-		Camera::Update(time);
+		CameraComponent::Update(time);
 	}
-
 } // namespace library

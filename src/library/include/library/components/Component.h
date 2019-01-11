@@ -26,5 +26,4 @@ namespace library
 		const Application& m_app;
 		bool m_enabled = true;
 	};
-
 } // namespace library

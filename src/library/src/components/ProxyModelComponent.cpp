@@ -10,7 +10,7 @@
 #include "library/Path.h"
 #include "library/Utils.h"
 #include "library/Application.h"
-#include "library/RasterizerStatesStorage.h"
+#include "library/RasterizerStateHolder.h"
 
 namespace library
 {
@@ -18,24 +18,22 @@ namespace library
 	{
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
 #if defined(DEBUG) || defined(DEBUG)
-			fs::Path("../data/effects/BasicEffect_d.fxc")
+			Path("../data/effects/BasicEffect_d.fxc")
 #else
-			fs::Path("../data/effects/BasicEffect.fxc")
+			Path("../data/effects/BasicEffect.fxc")
 #endif
 		);
 	}
 
-	ProxyModelComponent::ProxyModelComponent(const Application& app, const fs::Path& modelPath, const float scale)
-		: Scene()
-		, ConcreteMaterialComponent(app, modelPath)
-		, m_direction(math::constants::Vector3::Forward)
-		, m_up(math::constants::Vector3::Up)
-		, m_right(math::constants::Vector3::Right)
+	ProxyModelComponent::ProxyModelComponent(const Application& app, const Path& modelPath, const float scale)
+		: SceneComponent(app)
+		, m_direction(math::Vector3::Forward)
+		, m_up(math::Vector3::Up)
+		, m_right(math::Vector3::Right)
 	{
+		SetModelPath(modelPath);
 		SetScaling(math::Vector3(scale));
 	}
-
-	ProxyModelComponent::~ProxyModelComponent() = default;
 
 	void ProxyModelComponent::SetWireframeVisible(const bool visible)
 	{
@@ -47,10 +45,10 @@ namespace library
 		m_effect = EffectFactory::Create(m_app, k_effectPath);
 		m_effect->LoadCompiled();
 
-		m_material = std::make_unique<BasicMaterial>(*m_effect);
+		m_material = std::make_unique<BasicEffectMaterial>(*m_effect);
 		m_material->Initialize();
 
-		MaterialComponent::Initialize();
+		DrawableComponent::Initialize();
 	}
 
 	void ProxyModelComponent::Update(const Time& time)
@@ -63,7 +61,7 @@ namespace library
 		if (!!m_camera)
 			wvp *= m_camera->GetViewProjectionMatrix();
 
-		MaterialComponent::SetEffectData();
+		DrawableComponent::SetEffectData();
 	}
 
 	void ProxyModelComponent::Render()
@@ -81,5 +79,4 @@ namespace library
 			deviceContext->DrawIndexed(m_indicesCount, 0, 0);
 		}
 	}
-
 } // namespace library

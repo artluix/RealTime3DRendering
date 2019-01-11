@@ -1,15 +1,12 @@
 #pragma once
 #include <library/components/SceneComponent.h>
-#include <library/components/DrawableComponent.h>
 #include <library/DirectXForwardDeclarations.h>
 
 namespace demo
 {
-	class TriangleComponent
-		: public library::SceneComponent
-		, public library::DrawableComponent
+	class TriangleComponent : public library::SceneComponent
 	{
-		RTTI_CLASS(TriangleComponent, library::SceneComponent, library::DrawableComponent)
+		RTTI_CLASS(TriangleComponent, library::SceneComponent)
 
 	public:
 		explicit TriangleComponent(const library::Application& app);
@@ -27,5 +24,4 @@ namespace demo
 		ComPtr<ID3D11InputLayout> m_inputLayout;
 		ComPtr<ID3D11Buffer> m_vertexBuffer;
 	};
-
 } // namespace demo

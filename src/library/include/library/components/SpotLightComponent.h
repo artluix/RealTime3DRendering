@@ -4,24 +4,20 @@
 
 namespace library
 {
-	namespace components
+	class SpotLightComponent
+		: public DirectionalLightComponent
+		, public PointLightComponent
 	{
-		class SpotLight
-			: public DirectionalLight
-			, public PointLight
-		{
-		public:
-			explicit SpotLight();
+	public:
+		explicit SpotLightComponent();
 
-			float GetInnerAngle() const { return m_innerAngle; }
-			void SetInnerAngle(const float innerAngle);
+		float GetInnerAngle() const { return m_innerAngle; }
+		void SetInnerAngle(const float innerAngle);
 
-			float GetOuterAngle() const { return m_outerAngle; }
-			void SetOuterAngle(const float outerAngle);
+		float GetOuterAngle() const { return m_outerAngle; }
+		void SetOuterAngle(const float outerAngle);
 
-		protected:
-			float m_innerAngle, m_outerAngle;
-		};
-
-	} // namespace components
+	protected:
+		float m_innerAngle, m_outerAngle;
+	};
 } // namespace library

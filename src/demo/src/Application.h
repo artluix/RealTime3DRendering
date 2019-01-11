@@ -1,6 +1,6 @@
 #pragma once
 #include <library/Application.h>
-#include <library/Common.h>
+#include <library/CommonTypes.h>
 #include <library/Color.h>
 
 #include <dinput.h>

@@ -1,6 +1,6 @@
 #pragma once
 #include "library/NonCopyable.hpp"
-#include "library/Common.h"
+#include "library/CommonTypes.h"
 
 #include <DirectXMath.h>
 #include <string>
@@ -103,5 +103,4 @@ namespace library
 
 		std::vector<unsigned> m_indices;
 	};
-
 } // namespace library

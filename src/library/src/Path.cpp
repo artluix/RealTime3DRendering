@@ -1,9 +1,9 @@
 #include "StdAfx.h"
-#include "library/fs/Path.h"
+#include "library/Path.h"
 
-#include "library/util/Utils.h"
+#include "library/Utils.h"
 
-namespace library::fs
+namespace library
 {
 	namespace
 	{
@@ -126,7 +126,7 @@ namespace library::fs
 
 	void Path::UpdateCached()
 	{
-		m_wstring = util::ToWideString(m_string);
+		m_wstring = utils::ToWideString(m_string);
 	}
 
-} // namespace library::fs
+} // namespace library

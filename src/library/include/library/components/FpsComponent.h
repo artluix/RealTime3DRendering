@@ -28,5 +28,4 @@ namespace library
 
 		Duration m_timeAccumulator;
 	};
-
 } // namespace library

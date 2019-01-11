@@ -6,8 +6,8 @@
 
 #include "library/effect/EffectFactory.h"
 
-#include "library/containers/RenderStateContainer.h"
-#include "library/containers/RasterizerStateContainer.h"
+#include "library/RenderStateHelper.h"
+#include "library/RasterizerStateHolder.h"
 
 namespace library
 {
@@ -45,8 +45,7 @@ namespace library
 	{
 	}
 
-	Application::~Application()
-	{}
+	Application::~Application() = default;
 
 	float Application::GetAspectRatio() const
 	{
@@ -370,7 +369,7 @@ namespace library
 	{
 		RenderStateHelper::Reset();
 		RasterizerStateHolder::Reset();
-		effect::Factory::Reset();
+		EffectFactory::Reset();
 
 		m_components.clear();
 

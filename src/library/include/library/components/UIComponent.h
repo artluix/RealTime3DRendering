@@ -1,6 +1,6 @@
 #pragma once
 #include "library/components/DrawableComponent.h"
-#include "library/Math.h"
+#include "library/math/Math.h"
 
 namespace library
 {
@@ -18,5 +18,4 @@ namespace library
 	protected:
 		math::Vector2 m_position;
 	};
-
 } // namespace library

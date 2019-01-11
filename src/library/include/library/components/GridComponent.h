@@ -1,18 +1,17 @@
 #pragma once
 #include "library/components/SceneComponent.h"
-#include "library/components/DrawableComponent.h"
 #include "library/components/InputReceivableComponent.h"
+
 #include "library/Color.h"
 #include "library/DirectXForwardDeclarations.h"
 
 namespace library
 {
 	class GridComponent
-		: public Scene
-		, public DrawableComponent
+		: public SceneComponent
 		, public InputReceivableComponent
 	{
-		RTTI_CLASS(GridComponent, Scene, DrawableComponent, InputReceivableComponent)
+		RTTI_CLASS(GridComponent, SceneComponent, InputReceivableComponent)
 
 	public:
 		explicit GridComponent(const Application& app);
@@ -52,5 +51,4 @@ namespace library
 		ComPtr<ID3D11InputLayout> m_inputLayout;
 		ComPtr<ID3D11Buffer> m_vertexBuffer;
 	};
-
 } // namespace library

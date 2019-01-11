@@ -2,20 +2,20 @@
 #include "library/effect/EffectMaterial.h"
 #include "library/VertexTypes.h"
 
-namespace library::effect::materials
+namespace library
 {
-	class TextureMapping : public Material
+	class TextureMappingEffectMaterial : public EffectMaterial
 	{
-		RTTI_CLASS(TextureMapping, Material)
+		RTTI_CLASS(TextureMappingEffectMaterial, EffectMaterial)
 
 	public:
 		using Vertex = VertexPositionTexture;
 
-		explicit TextureMapping(const Effect& effect);
-		~TextureMapping();
+		explicit TextureMappingEffectMaterial(const Effect& effect);
+		~TextureMappingEffectMaterial();
 
-		Variable& GetWVP() const { return m_wvp; }
-		Variable& GetColorTexture() const { return m_colorTexture; }
+		EffectVariable& GetWVP() const { return m_wvp; }
+		EffectVariable& GetColorTexture() const { return m_colorTexture; }
 
 		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }
@@ -23,8 +23,7 @@ namespace library::effect::materials
 	private:
 		void InitializeInternal() override;
 
-		Variable& m_wvp;
-		Variable& m_colorTexture;
+		EffectVariable& m_wvp;
+		EffectVariable& m_colorTexture;
 	};
-
-} // namespace library::effect::materials
+} // namespace library

@@ -3,9 +3,9 @@
 
 #include "library/Exception.h"
 
-namespace library::effect
+namespace library
 {
-	Variable::Variable(const Effect& effect, ID3DX11EffectVariable* const variable)
+	EffectVariable::EffectVariable(const Effect& effect, ID3DX11EffectVariable* const variable)
 		: m_effect(effect)
 		, m_variable(variable)
 		, m_type(nullptr)
@@ -17,9 +17,9 @@ namespace library::effect
 		m_type->GetDesc(&m_typeDesc);
 	}
 
-	Variable::~Variable() = default;
+	EffectVariable::~EffectVariable() = default;
 
-	Variable& Variable::operator<<(const float value)
+	EffectVariable& EffectVariable::operator<<(const float value)
 	{
 		auto variable = m_variable->AsScalar();
 		if (!variable->IsValid())
@@ -31,7 +31,7 @@ namespace library::effect
 		return *this;
 	}
 
-	Variable& Variable::operator<<(ID3D11ShaderResourceView* const value)
+	EffectVariable& EffectVariable::operator<<(ID3D11ShaderResourceView* const value)
 	{
 		auto variable = m_variable->AsShaderResource();
 		if (!variable->IsValid())
@@ -43,7 +43,7 @@ namespace library::effect
 		return *this;
 	}
 
-	Variable& Variable::operator<<(const math::XMVector& value)
+	EffectVariable& EffectVariable::operator<<(const math::XMVector& value)
 	{
 		auto variable = m_variable->AsVector();
 		if (!variable->IsValid())
@@ -55,7 +55,7 @@ namespace library::effect
 		return *this;
 	}
 
-	Variable& Variable::operator<<(const math::XMMatrix& value)
+	EffectVariable& EffectVariable::operator<<(const math::XMMatrix& value)
 	{
 		auto variable = m_variable->AsMatrix();
 		if (!variable->IsValid())
@@ -67,4 +67,4 @@ namespace library::effect
 		return *this;
 	}
 
-} // namespace library::effect
+} // namespace library

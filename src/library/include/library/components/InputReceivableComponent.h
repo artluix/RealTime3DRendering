@@ -11,6 +11,8 @@ namespace library
 		RTTI_CLASS_BASE(InputReceivableComponent)
 
 	public:
+		virtual ~InputReceivableComponent() = default;
+
 		const KeyboardComponent* GetKeyboard() const { return m_keyboard; }
 		void SetKeyboard(const KeyboardComponent& keyboard);
 
@@ -23,5 +25,4 @@ namespace library
 		const KeyboardComponent* m_keyboard = nullptr;
 		const MouseComponent* m_mouse = nullptr;
 	};
-
 } // namespace library

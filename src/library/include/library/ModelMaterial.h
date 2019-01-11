@@ -52,7 +52,7 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	using TextureNamesVector = std::vector<std::wstring>;
+	using TextureNameVector = std::vector<std::wstring>;
 
 	class ModelMaterial : public NonCopyable<ModelMaterial>
 	{
@@ -63,16 +63,15 @@ namespace library
 
 		const Model& GetModel() const { return m_model; }
 		const std::string& GetName() const { return m_name; }
-		const std::map<TextureType, TextureNamesVector>& GetAllTextureNames() const { return m_textures; }
+		const std::map<TextureType, TextureNameVector>& GetAllTextureNames() const { return m_textures; }
 
-		const TextureNamesVector& GetTextureNames(const TextureType textureType) const;
+		const TextureNameVector& GetTextureNames(const TextureType textureType) const;
 
 	private:
 		explicit ModelMaterial(const Model& model, const aiMaterial& material);
 
 		const Model& m_model;
 		std::string m_name;
-		std::map<TextureType, TextureNamesVector> m_textures;
+		std::map<TextureType, TextureNameVector> m_textures;
 	};
-
 } // namespace library

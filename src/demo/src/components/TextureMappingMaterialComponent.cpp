@@ -21,25 +21,25 @@ namespace demo
 
 	namespace
 	{
-		constexpr float k_rotationAngle = math::constants::Pi_Div_2;
+		constexpr float k_rotationAngle = math::Pi_Div_2;
 		constexpr float k_movementRate = 0.01f;
 
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
 #if defined(DEBUG) || defined(DEBUG)
-			fs::Path("../data/effects/TextureMapping_d.fxc")
+			Path("../data/effects/TextureMapping_d.fxc")
 #else
-			fs::Path("../data/effects/TextureMapping.fxc")
+			Path("../data/effects/TextureMapping.fxc")
 #endif
 		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(fs::Path("../data/models/Sphere.obj"));
-		const auto k_texturePath = utils::GetExecutableDirectory().Join(fs::Path("../data/textures/EarthComposite.dds"));
+		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
+		const auto k_texturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/EarthComposite.dds"));
 	}
 
 	TextureMappingMaterialComponent::TextureMappingMaterialComponent(const Application& app)
-		: SceneComponent()
-		, ConcreteMaterialComponent(app, k_modelPath)
+		: SceneComponent(app)
 		, InputReceivableComponent()
 	{
+		SetModelPath(k_modelPath);
 	}
 
 	void TextureMappingMaterialComponent::Initialize()
@@ -47,10 +47,10 @@ namespace demo
 		m_effect = library::EffectFactory::Create(m_app, k_effectPath);
 		m_effect->LoadCompiled();
 
-		m_material = std::make_unique<Material>(*m_effect);
+		m_material = std::make_unique<TextureMappingEffectMaterial>(*m_effect);
 		m_material->Initialize();
 
-		MaterialComponent::Initialize();
+		DrawableComponent::Initialize();
 
 		// Load the texture
 		{
@@ -126,7 +126,6 @@ namespace demo
 
 		m_material->GetColorTexture() << m_textureShaderResourceView.Get();
 
-		MaterialComponent::SetEffectData();
+		DrawableComponent::SetEffectData();
 	}
-
 } // namespace demo

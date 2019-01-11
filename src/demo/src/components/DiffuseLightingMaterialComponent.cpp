@@ -2,6 +2,8 @@
 
 #include <library/components/CameraComponent.h>
 #include <library/components/KeyboardComponent.h>
+#include <library/components/DirectionalLightComponent.h>
+#include <library/components/ProxyModelComponent.h>
 
 #include <library/Application.h>
 #include <library/Utils.h>
@@ -19,15 +21,16 @@ namespace demo
 
 	namespace
 	{
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(fs::Path("../data/models/Sphere.obj"));
+		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
 	}
 
 	DiffuseLightingMaterialComponent::DiffuseLightingMaterialComponent(const Application& app)
-		: SceneComponent()
+		: SceneComponent(app)
 		, InputReceivableComponent()
-		, ConcreteMaterialComponent(app, k_modelPath)
 	{
 	}
+
+	DiffuseLightingMaterialComponent::~DiffuseLightingMaterialComponent() = default;
 
 	void DiffuseLightingMaterialComponent::Initialize()
 	{
@@ -53,5 +56,4 @@ namespace demo
 	{
 
 	}
-
 } // namespace demo

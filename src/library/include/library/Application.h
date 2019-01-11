@@ -1,7 +1,7 @@
 #pragma once
 #include "library/NonCopyable.hpp"
 #include "library/Stopwatch.h"
-#include "library/Common.h"
+#include "library/CommonTypes.h"
 
 #include <Windows.h>
 #include <d3d11_1.h>
@@ -96,5 +96,4 @@ namespace library
 
 		static LRESULT WINAPI WndProc(HWND windowHandle, UINT message, WPARAM wParam, LPARAM lParam);
 	};
-
 } // namespace library

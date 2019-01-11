@@ -2,19 +2,19 @@
 #include "library/effect/EffectMaterial.h"
 #include "library/VertexTypes.h"
 
-namespace library::effect::materials
+namespace library
 {
-	class Basic : public Material
+	class BasicEffectMaterial : public EffectMaterial
 	{
-		RTTI_CLASS(Basic, Material)
+		RTTI_CLASS(BasicEffectMaterial, EffectMaterial)
 
 	public:
 		using Vertex = VertexPositionColor;
 
-		explicit Basic(const Effect& effect);
-		~Basic();
+		explicit BasicEffectMaterial(const Effect& effect);
+		~BasicEffectMaterial();
 
-		Variable& GetWorldViewProjection() const { return m_worldViewProjection; }
+		EffectVariable& GetWorldViewProjection() const { return m_worldViewProjection; }
 
 		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }
@@ -22,7 +22,6 @@ namespace library::effect::materials
 	private:
 		void InitializeInternal() override;
 
-		Variable& m_worldViewProjection;
+		EffectVariable& m_worldViewProjection;
 	};
-
-} // namespace library::effect::materials
+} // namespace library

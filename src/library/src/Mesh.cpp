@@ -145,5 +145,4 @@ namespace library
 
 		return indexBuffer;
 	}
-
 } // namespace library

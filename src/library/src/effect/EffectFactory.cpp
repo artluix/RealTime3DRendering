@@ -2,16 +2,16 @@
 #include "library/effect/EffectFactory.h"
 
 #include "library/effect/Effect.h"
-#include "library/fs/Path.h"
+#include "library/Path.h"
 
 #include <algorithm>
 #include <memory>
 
-namespace library::effect
+namespace library
 {
-	std::map<std::string, EffectPtr> Factory::s_effects;
+	std::map<std::string, EffectPtr> EffectFactory::s_effects;
 
-	EffectPtr Factory::Create(const Application& app, const fs::Path& path)
+	EffectPtr EffectFactory::Create(const Application& app, const Path& path)
 	{
 		const auto effectName = path.GetBaseName().SplitExt()[0].GetString();
 
@@ -24,9 +24,8 @@ namespace library::effect
 		return effect;
 	}
 
-	void Factory::Reset()
+	void EffectFactory::Reset()
 	{
 		s_effects.clear();
 	}
-
-} // namespace library::effect
+} // namespace library

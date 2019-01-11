@@ -6,7 +6,7 @@
 
 #include "library/Application.h"
 #include "library/Exception.h"
-#include "library/fs/Path.h"
+#include "library/Path.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -14,7 +14,7 @@
 
 namespace library
 {
-	Model::Model(const Application& app, const fs::Path& filePath, const bool flipUVs /*= false*/)
+	Model::Model(const Application& app, const Path& filePath, const bool flipUVs /*= false*/)
 		: m_app(app)
 	{
 		Assimp::Importer importer;

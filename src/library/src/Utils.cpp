@@ -1,10 +1,10 @@
 #include "StdAfx.h"
-#include "library/util/Utils.h"
+#include "library/Utils.h"
 
 #include <Shlwapi.h>
 #include <fstream>
 
-namespace library::util
+namespace library::utils
 {
 	std::wstring ToWideString(const std::string& str)
 	{
@@ -12,21 +12,21 @@ namespace library::util
 		return result;
 	}
 
-	fs::Path GetCurrentDirectory()
+	Path GetCurrentDirectory()
 	{
 		std::array<char, MAX_PATH> buffer;
 		::GetCurrentDirectoryA(MAX_PATH, buffer.data());
-		return fs::Path(buffer.data());
+		return Path(buffer.data());
 	}
 
-	fs::Path GetExecutableDirectory()
+	Path GetExecutableDirectory()
 	{
 		std::array<char, MAX_PATH> buffer;
 		::GetModuleFileNameA(nullptr, buffer.data(), MAX_PATH);
-		return fs::Path(buffer.data()).GetDirName();
+		return Path(buffer.data()).GetDirName();
 	}
 
-	void LoadBinaryFile(const fs::Path& path, std::vector<byte>& data)
+	void LoadBinaryFile(const Path& path, std::vector<byte>& data)
 	{
 		std::ifstream file(path.GetWideString(), std::ios::binary);
 		if (file.bad())
@@ -47,4 +47,4 @@ namespace library::util
 		file.close();
 	}
 
-} // namespace library
+} // namespace library::utils

@@ -1,25 +1,20 @@
 #pragma once
 #include "library/components/SceneComponent.h"
-#include "library/materials/BasicMaterial.h"
-#include "library/components/ConcreteMaterialComponent.hpp"
+#include "library/effect/materials/BasicEffectMaterial.h"
 #include "library/DirectXForwardDeclarations.h"
 
 namespace library
 {
-	namespace fs
-	{
-		class Path;
-	} // namespace
+	class Path;
+	class Effect;
 
-	class ProxyModelComponent
-		: public Scene
-		, public ConcreteMaterialComponent<BasicMaterial>
+	class ProxyModelComponent : public SceneComponent
 	{
-		RTTI_CLASS(ProxyModelComponent, Scene, MaterialComponent)
+		RTTI_CLASS(ProxyModelComponent, SceneComponent)
 
 	public:
-		explicit ProxyModelComponent(const Application& app, const fs::Path& modelPath, const float scale);
-		~ProxyModelComponent();
+		explicit ProxyModelComponent(const Application& app, const Path& modelPath, const float scale);
+		~ProxyModelComponent() = default;
 
 		bool IsWireframeVisible() const { return m_isWireframeVisible; }
 		void SetWireframeVisible(const bool visible);
@@ -30,19 +25,20 @@ namespace library
 
 		void Initialize() override;
 		void Update(const Time& time) override;
-
-		using MaterialComponent::Draw;
+		using DrawableComponent::Draw;
 
 	protected:
 		void SetEffectData() override;
 		void Render() override;
 
 	private:
+		std::shared_ptr<Effect> m_effect;
+		std::unique_ptr<BasicEffectMaterial> m_material;
+
 		bool m_isWireframeVisible = true;
 
 		math::Vector3 m_direction;
 		math::Vector3 m_up;
 		math::Vector3 m_right;
 	};
-
 } // namespace library

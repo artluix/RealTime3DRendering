@@ -14,5 +14,4 @@ namespace library
 		if (m_mouse != &mouse)
 			m_mouse = &mouse;
 	}
-
 } // namespace library

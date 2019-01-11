@@ -3,20 +3,16 @@
 
 namespace library
 {
-	namespace components
+	LightComponent::LightComponent(const Color& color /* = Color::White*/)
+		: m_color(color)
 	{
-		Light::Light(const Color& color /* = colors::White*/)
-			: m_color(color)
-		{
-		}
+	}
 
-		void Light::SetColor(const Color& color)
+	void LightComponent::SetColor(const Color& color)
+	{
+		if (m_color != color)
 		{
-			if (m_color != color)
-			{
-				m_color = color;
-			}
+			m_color = color;
 		}
-
-	} // namespace components
+	}
 } // namespace library

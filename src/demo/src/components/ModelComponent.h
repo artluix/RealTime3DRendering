@@ -1,6 +1,5 @@
 #pragma once
 #include <library/components/SceneComponent.h>
-#include <library/components/DrawableComponent.h>
 #include <library/components/InputReceivableComponent.h>
 #include <library/DirectXForwardDeclarations.h>
 
@@ -14,10 +13,9 @@ namespace demo
 {
 	class ModelComponent
 		: public library::SceneComponent
-		, public library::DrawableComponent
 		, public library::InputReceivableComponent
 	{
-		RTTI_CLASS(ModelComponent, library::SceneComponent, library::DrawableComponent, library::InputReceivableComponent)
+		RTTI_CLASS(ModelComponent, library::SceneComponent, library::InputReceivableComponent)
 
 	public:
 		explicit ModelComponent(const library::Application& app);
@@ -40,5 +38,4 @@ namespace demo
 
 		unsigned m_indicesCount;
 	};
-
 } // namespace demo

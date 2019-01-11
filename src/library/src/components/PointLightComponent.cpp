@@ -3,32 +3,28 @@
 
 namespace library
 {
-	namespace components
+	namespace
 	{
-		namespace
-		{
-			constexpr float k_defaultRadius = 10.f;
-		}
+		constexpr float k_defaultRadius = 10.f;
+	}
 
-		PointLight::PointLight()
-			: Light()
-			, m_position(math::constants::Vector3::Zero)
-			, m_radius(k_defaultRadius)
-		{
-		}
+	PointLightComponent::PointLightComponent()
+		: LightComponent()
+		, m_position(math::Vector3::Zero)
+		, m_radius(k_defaultRadius)
+	{
+	}
 
-		void PointLight::SetPosition(const math::Vector3& position)
+	void PointLightComponent::SetPosition(const math::Vector3& position)
+	{
+		if (m_position != position)
 		{
-			if (m_position != position)
-			{
-				m_position = position;
-			}
+			m_position = position;
 		}
+	}
 
-		void PointLight::SetRadius(const float radius)
-		{
-			m_radius = radius;
-		}
-
-	} // namespace components
+	void PointLightComponent::SetRadius(const float radius)
+	{
+		m_radius = radius;
+	}
 } // namespace library

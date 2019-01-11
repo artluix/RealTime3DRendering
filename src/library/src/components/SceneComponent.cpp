@@ -3,16 +3,18 @@
 
 namespace library
 {
-	Scene::Scene(const Application& app)
-		: Component(app)
-		, m_scaling(math::constants::Vector3::One)
+	SceneComponent::SceneComponent(const Application& app)
+		: DrawableComponent(app)
+		, m_scaling(math::Vector3::One)
 	{
 		UpdateWorldMatrix();
 	}
 
+	SceneComponent::~SceneComponent() = default;
+
 	//-------------------------------------------------------------------------
 
-	void Scene::SetPosition(const math::Vector3& position)
+	void SceneComponent::SetPosition(const math::Vector3& position)
 	{
 		if (m_position != position)
 		{
@@ -21,7 +23,7 @@ namespace library
 		}
 	}
 
-	void Scene::Translate(const math::Vector3& translation)
+	void SceneComponent::Translate(const math::Vector3& translation)
 	{
 		if (!translation)
 			return;
@@ -31,7 +33,7 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void Scene::SetRotation(const math::Vector3& rotation)
+	void SceneComponent::SetRotation(const math::Vector3& rotation)
 	{
 		if (m_rotation != rotation)
 		{
@@ -40,7 +42,7 @@ namespace library
 		}
 	}
 
-	void Scene::Rotate(const math::Vector3& rotation)
+	void SceneComponent::Rotate(const math::Vector3& rotation)
 	{
 		if (!rotation)
 			return;
@@ -50,9 +52,9 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void Scene::SetScaling(const math::Vector3& scaling)
+	void SceneComponent::SetScaling(const math::Vector3& scaling)
 	{
-		if (scaling < math::constants::Vector3::Zero)
+		if (scaling < math::Vector3::Zero)
 			return;
 
 		if (m_scaling != scaling)
@@ -62,7 +64,7 @@ namespace library
 		}
 	}
 
-	void Scene::Scale(const math::Vector3& scaling)
+	void SceneComponent::Scale(const math::Vector3& scaling)
 	{
 		if (!scaling)
 			return;
@@ -72,15 +74,7 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void Scene::SetCamera(const Camera& camera)
-	{
-		if (m_camera != &camera)
-			m_camera = &camera;
-	}
-
-	//-------------------------------------------------------------------------
-
-	void Scene::UpdateWorldMatrix()
+	void SceneComponent::UpdateWorldMatrix()
 	{
 		const auto translationMatrix = math::Matrix4::Translation(m_position);
 		const auto rotationMatrix = math::Matrix4::RotationRollPitchYaw(m_rotation);
@@ -88,5 +82,4 @@ namespace library
 
 		m_worldMatrix = scalingMatrix * rotationMatrix * translationMatrix;
 	}
-
 } // namespace library

@@ -7,19 +7,15 @@
 
 namespace library
 {
-	namespace fs
-	{
-		class Path;
-	} // namespace fs
-
 	class Application;
+	class Path;
 	class Mesh;
 	class ModelMaterial;
 
 	class Model : public NonCopyable<Model>
 	{
 	public:
-		explicit Model(const Application& app, const fs::Path& filePath, const bool flipUVs = false);
+		explicit Model(const Application& app, const Path& filePath, const bool flipUVs = false);
 		~Model();
 
 		const Application& GetApplication() const { return m_app; }
@@ -43,6 +39,5 @@ namespace library
 		std::vector<MeshPtr> m_meshes;
 		std::vector<MaterialPtr> m_materials;
 	};
-
 } // namespace library
 

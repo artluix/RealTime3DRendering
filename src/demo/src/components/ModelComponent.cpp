@@ -21,11 +21,11 @@ namespace demo
 	
 	namespace
 	{
-		constexpr float k_rotationAngle = math::constants::Pi_Div_2;
+		constexpr float k_rotationAngle = math::Pi_Div_2;
 		constexpr float k_movementRate = 0.01f;
 
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(fs::Path("../data/effects/BasicEffect.fx"));
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(fs::Path("../data/models/Sphere.obj"));
+		const auto k_effectPath = utils::GetExecutableDirectory().Join(Path("../data/effects/BasicEffect.fx"));
+		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
 	}
 
 	//-------------------------------------------------------------------------
@@ -35,8 +35,7 @@ namespace demo
 	//-------------------------------------------------------------------------
 
 	ModelComponent::ModelComponent(const Application& app)
-		: SceneComponent()
-		, DrawableComponent(app)
+		: SceneComponent(app)
 		, InputReceivableComponent()
 		, m_indicesCount(0)
 	{
@@ -257,5 +256,4 @@ namespace demo
 			}
 		}
 	}
-
 } // namespace demo

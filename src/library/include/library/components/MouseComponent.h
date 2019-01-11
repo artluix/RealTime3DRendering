@@ -1,13 +1,10 @@
 #pragma once
-#include "library/components/Component.h"
+#include "library/components/InputComponent.h"
 
 #include <cstdint>
-#include <dinput.h>
 
 namespace library
 {
-	struct Time;
-
 	enum class MouseButton : std::uint8_t
 	{
 		Left = 0,
@@ -16,15 +13,13 @@ namespace library
 		X1
 	};
 
-	class MouseComponent : public Component
+	class MouseComponent : public InputComponent
 	{
-		RTTI_CLASS(MouseComponent, Component)
+		RTTI_CLASS(MouseComponent, InputComponent)
 
 	public:
 		explicit MouseComponent(const Application& app, ComPtr<IDirectInput8>& directInput);
-		~MouseComponent();
 
-		void Initialize() override;
 		void Update(const Time& time) override;
 
 		long GetX() const { return m_x; }
@@ -43,13 +38,9 @@ namespace library
 		bool IsButtonHeldDown(const MouseButton mb) const;
 
 	private:
-		ComPtr<IDirectInput8> m_directInput;
-		ComPtr<IDirectInputDevice8> m_directInputDevice;
-
 		DIMOUSESTATE m_currentState;
 		DIMOUSESTATE m_previousState;
 
 		long m_x, m_y, m_wheel;
 	};
-
 } // namespace library

@@ -19,14 +19,13 @@ namespace demo
 	{
 		constexpr unsigned k_indicesCount = 6 * 2 * 3;
 		constexpr unsigned k_verticesCount = 8;
-		constexpr float k_rotationAngle = math::constants::Pi_Div_2;
+		constexpr float k_rotationAngle = math::Pi_Div_2;
 		constexpr float k_movementRate = 0.01f;
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(fs::Path("../data/effects/BasicEffect.fx"));
+		const auto k_effectPath = utils::GetExecutableDirectory().Join(Path("../data/effects/BasicEffect.fx"));
 	}
 
 	CubeComponent::CubeComponent(const Application& app)
-		: SceneComponent()
-		, DrawableComponent(app)
+		: SceneComponent(app)
 		, InputReceivableComponent()
 	{
 	}
@@ -258,5 +257,4 @@ namespace demo
 
 		d3dDeviceContext->DrawIndexed(k_indicesCount, 0, 0);
 	}
-
 } // namespace demo

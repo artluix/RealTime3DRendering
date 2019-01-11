@@ -2,20 +2,20 @@
 #include "library/effect/EffectMaterial.h"
 #include "library/VertexTypes.h"
 
-namespace library::effect::materials
+namespace library
 {
-	class Skybox : public Material
+	class SkyboxEffectMaterial : public EffectMaterial
 	{
-		RTTI_CLASS(Skybox, Material)
+		RTTI_CLASS(SkyboxEffectMaterial, EffectMaterial)
 
 	public:
 		using Vertex = VertexPosition;
 
-		explicit Skybox(const Effect& effect);
-		~Skybox();
+		explicit SkyboxEffectMaterial(const Effect& effect);
+		~SkyboxEffectMaterial();
 
-		Variable& GetWorldViewProjection() const { return m_worldViewProjection; }
-		Variable& GetSkyboxTexture() const { return m_skyboxTexture; }
+		EffectVariable& GetWorldViewProjection() const { return m_worldViewProjection; }
+		EffectVariable& GetSkyboxTexture() const { return m_skyboxTexture; }
 
 		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }
@@ -23,8 +23,7 @@ namespace library::effect::materials
 	private:
 		void InitializeInternal() override;
 
-		Variable& m_worldViewProjection;
-		Variable& m_skyboxTexture;
+		EffectVariable& m_worldViewProjection;
+		EffectVariable& m_skyboxTexture;
 	};
-
-} // namespace library::effect::materials
+} // namespace library

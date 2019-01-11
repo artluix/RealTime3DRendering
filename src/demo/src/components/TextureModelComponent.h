@@ -1,6 +1,5 @@
 #pragma once
 #include <library/components/SceneComponent.h>
-#include <library/components/DrawableComponent.h>
 #include <library/components/InputReceivableComponent.h>
 #include <library/DirectXForwardDeclarations.h>
 
@@ -15,7 +14,6 @@ namespace demo
 {
 	class TextureModelComponent
 		: public library::SceneComponent
-		, public library::DrawableComponent
 		, public library::InputReceivableComponent
 	{
 		RTTI_CLASS(TextureModelComponent, library::SceneComponent, library::DrawableComponent, library::InputReceivableComponent)
@@ -47,5 +45,4 @@ namespace demo
 
 		long m_wheel;
 	};
-
 } // namespace demo

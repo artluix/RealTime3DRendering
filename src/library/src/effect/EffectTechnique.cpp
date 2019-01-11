@@ -8,9 +8,9 @@
 
 #include <cassert>
 
-namespace library::effect
+namespace library
 {
-	Technique::Technique(const Application& app, const Effect& effect, ID3DX11EffectTechnique* const technique)
+	EffectTechnique::EffectTechnique(const Application& app, const Effect& effect, ID3DX11EffectTechnique* const technique)
 		: m_effect(effect)
 		, m_technique(technique)
 	{
@@ -19,31 +19,31 @@ namespace library::effect
 
 		for (unsigned i = 0; i < m_techniqueDesc.Passes; i++)
 		{
-			auto pass = std::make_unique<Pass>(app, *this, m_technique->GetPassByIndex(i));
+			auto pass = std::make_unique<EffectPass>(app, *this, m_technique->GetPassByIndex(i));
 			m_passesMap.emplace(pass->GetName(), pass.get());
 			m_passes.push_back(std::move(pass));
 		}
 	}
 
-	Technique::~Technique() = default;
+	EffectTechnique::~EffectTechnique() = default;
 
 	//-------------------------------------------------------------------------
 
-	bool Technique::HasPass(const std::string& passName) const
+	bool EffectTechnique::HasPass(const std::string& passName) const
 	{
 		return m_passesMap.find(passName) != m_passesMap.end();
 	}
 
-	Pass& Technique::GetPass(const std::string& passName) const
+	EffectPass& EffectTechnique::GetPass(const std::string& passName) const
 	{
 		assert(HasPass(passName));
 		return *m_passesMap.at(passName);
 	}
 
-	Pass& Technique::GetPass(const unsigned passIdx) const
+	EffectPass& EffectTechnique::GetPass(const unsigned passIdx) const
 	{
 		assert(passIdx < m_passes.size());
 		return *m_passes[passIdx];
 	}
 
-} // namespace library::effect
+} // namespace library

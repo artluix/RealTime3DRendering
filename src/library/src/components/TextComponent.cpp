@@ -8,10 +8,8 @@ namespace library
 {
 	namespace
 	{
-		constexpr auto k_defaultColor = colors::White;
-		const auto k_defaultFontPath = utils::GetExecutableDirectory().Join(
-			fs::Path("../data/fonts/Arial_14_Regular.spritefont")
-		);
+		const auto k_defaultColor = Color::White;
+		const auto k_defaultFontPath = utils::GetExecutableDirectory().Join(Path("../data/fonts/Arial_14_Regular.spritefont"));
 	}
 
 	TextComponent::TextComponent(const Application& app)
@@ -44,7 +42,7 @@ namespace library
 		}
 	}
 
-	void TextComponent::SetFontPath(const fs::Path& fontPath)
+	void TextComponent::SetFontPath(const Path& fontPath)
 	{
 		if (!m_spriteFont || m_fontPath != fontPath)
 		{
@@ -78,5 +76,4 @@ namespace library
 		m_spriteFont->DrawString(m_spriteBatch.get(), m_text.c_str(), DirectX::XMFLOAT2(m_position), m_color.Load());
 		m_spriteBatch->End();
 	}
-
 } // namespace library

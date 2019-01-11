@@ -1,7 +1,7 @@
 #include "StdAfx.h"
-#include "library/util/ServiceContainer.h"
+#include "library/ServiceContainer.h"
 
-namespace library::util
+namespace library
 {
 	std::map<library::rtti::TypeId, void*> ServiceContainer::s_services;
 
@@ -33,4 +33,4 @@ namespace library::util
 		return nullptr;
 	}
 
-} // namespace library::util
+} // namespace library

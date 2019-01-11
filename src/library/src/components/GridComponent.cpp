@@ -17,19 +17,18 @@ namespace library
 	{
 		constexpr unsigned k_defaultSize = 16;
 		constexpr unsigned k_defaultScale = 16;
-		constexpr auto k_defaultColor = colors::White;
+		const auto k_defaultColor = Color::White;
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
 #if defined(DEBUG) || defined(DEBUG)
-			fs::Path("../data/effects/BasicEffect_d.fxc")
+			Path("../data/effects/BasicEffect_d.fxc")
 #else
-			fs::Path("../data/effects/BasicEffect.fxc")
+			Path("../data/effects/BasicEffect.fxc")
 #endif
 		);
 	}
 
 	GridComponent::GridComponent(const Application& app)
-		: Scene()
-		, DrawableComponent(app)
+		: SceneComponent(app)
 		, InputReceivableComponent()
 		, m_size(k_defaultSize)
 		, m_scale(k_defaultScale)
@@ -43,8 +42,7 @@ namespace library
 		const unsigned scale,
 		const Color& color
 	)
-		: Scene()
-		, DrawableComponent(app)
+		: SceneComponent(app)
 		, InputReceivableComponent()
 		, m_size(size)
 		, m_scale(scale)
@@ -226,5 +224,4 @@ namespace library
 			throw Exception("ID3D11Device::CreateBuffer() failed.", hr);
 		}
 	}
-
 } // namespace library

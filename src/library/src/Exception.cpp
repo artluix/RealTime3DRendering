@@ -18,5 +18,4 @@ namespace library
 
 		return msg;
 	}
-
 } // namespace library

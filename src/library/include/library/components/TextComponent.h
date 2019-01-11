@@ -31,8 +31,8 @@ namespace library
 		void SetColor(const Color& color);
 		const Color& GetColor() const { return m_color; }
 
-		void SetFontPath(const fs::Path& fontPath);
-		const fs::Path& GetPath() const { return m_fontPath; }
+		void SetFontPath(const Path& fontPath);
+		const Path& GetPath() const { return m_fontPath; }
 
 		void SetGeneratorFunction(const TextGeneratorFunction& generatorFunction);
 
@@ -43,12 +43,11 @@ namespace library
 	private:
 		std::wstring m_text;
 		Color m_color;
-		fs::Path m_fontPath;
+		Path m_fontPath;
 
 		TextGeneratorFunction m_generatorFunction;
 
 		std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
 		std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
 	};
-
 } // namespace library

@@ -40,5 +40,4 @@ namespace library
 
 		SetText(woss.str());
 	}
-
 } // namespace library

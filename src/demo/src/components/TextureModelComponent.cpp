@@ -23,20 +23,20 @@ namespace demo
 
 	namespace
 	{
-		constexpr float k_rotationAngle = math::constants::Pi_Div_2;
+		constexpr float k_rotationAngle = math::Pi_Div_2;
 		constexpr float k_movementRate = 0.01f;
 
 		constexpr float k_scaleRate = 0.01f;
 
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
 #if defined(DEBUG) || defined(DEBUG)
-			fs::Path("../data/effects/TextureMapping_d.fxc")
+			Path("../data/effects/TextureMapping_d.fxc")
 #else
-			fs::Path("../data/effects/TextureMapping.fxc")
+			Path("../data/effects/TextureMapping.fxc")
 #endif
 		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(fs::Path("../data/models/Sphere.obj"));
-		const auto k_texturePath = utils::GetExecutableDirectory().Join(fs::Path("../data/textures/EarthComposite.dds"));
+		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
+		const auto k_texturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/EarthComposite.dds"));
 	}
 
 	//-------------------------------------------------------------------------
@@ -46,8 +46,7 @@ namespace demo
 	//-------------------------------------------------------------------------
 
 	TextureModelComponent::TextureModelComponent(const Application& app)
-		: SceneComponent()
-		, DrawableComponent(app)
+		: SceneComponent(app)
 		, InputReceivableComponent()
 		, m_indicesCount(0)
 		, m_wheel(0)

@@ -1,10 +1,10 @@
 #pragma once
-#include "library/Common.h"
+#include "library/CommonTypes.h"
 
 #include <string>
 #include <vector>
 
-namespace library::fs
+namespace library
 {
 	class Path
 	{
@@ -12,7 +12,7 @@ namespace library::fs
 		explicit Path() = default;
 		explicit Path(const std::string& s);
 		explicit Path(std::string&& s);
-
+		
 		const std::string& GetString() const { return m_string; }
 		const char* GetCString() const { return m_string.c_str(); }
 
@@ -29,6 +29,8 @@ namespace library::fs
 
 		Tuple2<Path> SplitExt() const;
 		Path GetExt() const;
+
+		explicit operator bool() const { return !m_string.empty(); }
 
 		bool operator != (const Path& other) const;
 		bool operator == (const Path& other) const;
@@ -65,4 +67,4 @@ namespace library::fs
 		return m_string > other.m_string;
 	}
 
-} // namespace library::fs
+} // namespace library

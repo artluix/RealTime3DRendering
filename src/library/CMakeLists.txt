@@ -8,13 +8,12 @@ if(APPLICATION)
             # components
                 include/library/components/CameraComponent.h
                 include/library/components/Component.h
-                include/library/components/ConcreteEffectMaterialComponent.hpp
                 include/library/components/DirectionalLightComponent.h
                 include/library/components/DrawableComponent.h
-                include/library/components/EffectMaterialComponent.h
                 include/library/components/FirstPersonCameraComponent.h
                 include/library/components/FpsComponent.h
                 include/library/components/GridComponent.h
+                include/library/components/InputComponent.h
                 include/library/components/InputReceivableComponent.h
                 include/library/components/KeyboardComponent.h
                 include/library/components/LightComponent.h
@@ -74,10 +73,10 @@ if(APPLICATION)
                 src/components/Component.cpp
                 src/components/DirectionalLightComponent.cpp
                 src/components/DrawableComponent.cpp
-                src/components/EffectMaterialComponent.cpp
                 src/components/FirstPersonCameraComponent.cpp
                 src/components/FpsComponent.cpp
                 src/components/GridComponent.cpp
+                src/components/InputComponent.cpp
                 src/components/InputReceivableComponent.cpp
                 src/components/KeyboardComponent.cpp
                 src/components/LightComponent.cpp

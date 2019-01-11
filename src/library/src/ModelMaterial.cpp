@@ -25,7 +25,7 @@ namespace library
 		};
 	}
 
-	const TextureNamesVector& ModelMaterial::GetTextureNames(const TextureType textureType) const
+	const TextureNameVector& ModelMaterial::GetTextureNames(const TextureType textureType) const
 	{
 		return m_textures.at(textureType);
 	}
@@ -44,7 +44,7 @@ namespace library
 			const auto texturesCount = material.GetTextureCount(aiTextureType);
 			if (texturesCount > 0)
 			{
-				TextureNamesVector textureNames;
+				TextureNameVector textureNames;
 				textureNames.reserve(texturesCount);
 
 				for (unsigned i = 0; i < texturesCount; i++)

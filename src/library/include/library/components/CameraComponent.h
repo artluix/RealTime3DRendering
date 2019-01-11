@@ -1,6 +1,6 @@
 #pragma once
 #include "library/components/Component.h"
-#include "library/Math.h"
+#include "library/math/Math.h"
 
 namespace library
 {
@@ -62,6 +62,5 @@ namespace library
 
 		math::Matrix4 m_projectionMatrix;
 	};
-
 } // namespace library
 

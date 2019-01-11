@@ -17,24 +17,24 @@ namespace demo
 	
 	namespace
 	{
-		constexpr float k_rotationAngle = math::constants::Pi_Div_2;
+		constexpr float k_rotationAngle = math::Pi_Div_2;
 		constexpr float k_movementRate = 0.01f;
 
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
 #if defined(DEBUG) || defined(DEBUG)
-			fs::Path("../data/effects/BasicEffect_d.fxc")
+			Path("../data/effects/BasicEffect_d.fxc")
 #else
-			fs::Path("../data/effects/BasicEffect.fxc")
+			Path("../data/effects/BasicEffect.fxc")
 #endif
 		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(fs::Path("../data/models/Sphere.obj"));
+		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
 	}
 
 	BasicMaterialComponent::BasicMaterialComponent(const Application& app) 
-		: SceneComponent()
+		: SceneComponent(app)
 		, InputReceivableComponent()
-		, ConcreteMaterialComponent(app, k_modelPath)
 	{
+		SetModelPath(k_modelPath);
 	}
 
 	void BasicMaterialComponent::Initialize()
@@ -42,10 +42,10 @@ namespace demo
 		m_effect = EffectFactory::Create(m_app, k_effectPath);
 		m_effect->LoadCompiled();
 
-		m_material = std::make_unique<Material>(*m_effect);
+		m_material = std::make_unique<BasicEffectMaterial>(*m_effect);
 		m_material->Initialize();
 
-		MaterialComponent::Initialize();
+		DrawableComponent::Initialize();
 	}
 
 	void BasicMaterialComponent::Update(const Time& time)
@@ -97,7 +97,6 @@ namespace demo
 			wvp *= m_camera->GetViewProjectionMatrix();
 
 		m_material->GetWorldViewProjection() << wvp;
-		MaterialComponent::SetEffectData();
+		DrawableComponent::SetEffectData();
 	}
-
 } // namespace demo

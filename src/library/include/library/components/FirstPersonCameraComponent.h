@@ -1,14 +1,14 @@
 #pragma once
 #include "library/components/CameraComponent.h"
+#include "library/components/InputReceivableComponent.h"
 
 namespace library
 {
-	class MouseComponent;
-	class KeyboardComponent;
-
-	class FirstPersonCameraComponent : public Camera
+	class FirstPersonCameraComponent
+		: public CameraComponent
+		, public InputReceivableComponent
 	{
-		RTTI_CLASS(FirstPersonCameraComponent, Camera)
+		RTTI_CLASS(FirstPersonCameraComponent, CameraComponent, InputReceivableComponent)
 
 	public:
 		explicit FirstPersonCameraComponent(const Application& app);
@@ -21,12 +21,6 @@ namespace library
 		);
 
 		~FirstPersonCameraComponent() = default;
-
-		const KeyboardComponent* GetKeyboard() const { return m_keyboard; }
-		void SetKeyboard(const KeyboardComponent& keyboard);
-
-		const MouseComponent* GetMouse() const { return m_mouse; }
-		void SetMouse(const MouseComponent& mouse);
 
 		float GetMouseSensitivity() const { return m_mouseSensitivity; }
 		void SetMouseSensitivity(const float sensitivity) { m_mouseSensitivity = sensitivity; }
@@ -41,14 +35,10 @@ namespace library
 		void Update(const Time& time) override;
 
 	protected:
-		const KeyboardComponent* m_keyboard = nullptr;
-		const MouseComponent* m_mouse = nullptr;
-
 		math::Vector2 m_rotationStartPoint;
 
 		float m_mouseSensitivity;
 		float m_rotationRate;
 		float m_movementRate;
 	};
-
 } // namespace library

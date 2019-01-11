@@ -1,39 +1,38 @@
 #pragma once
 #include "library/components/SceneComponent.h"
-
-#include "library/materials/SkyboxMaterial.h"
-#include "library/components/ConcreteMaterialComponent.hpp"
-
+#include "library/effect/materials/SkyboxEffectMaterial.h"
 #include "library/Path.h"
 #include "library/DirectXForwardDeclarations.h"
 
+#include <memory>
+
 namespace library
 {
-	class SkyboxComponent
-		: public Scene
-		, public ConcreteMaterialComponent<Skybox>
+	class Effect;
+
+	class SkyboxComponent : public SceneComponent
 	{
-		RTTI_CLASS(SkyboxComponent, Scene, MaterialComponent)
+		RTTI_CLASS(SkyboxComponent, SceneComponent)
 
 	public:
-		explicit SkyboxComponent(
-			const Application& app,
-			const fs::Path& cubeMapPath,
-			const float scale
-		);
-
+		explicit SkyboxComponent(const Application& app, const Path& cubeMapPath, const float scale);
 		~SkyboxComponent() = default;
 
 		void Initialize() override;
 		void Update(const Time& time) override;
-		using MaterialComponent::Draw;
+		using DrawableComponent::Draw;
+
+		const EffectMaterial* GetEffectMaterial() const override { return m_material.get(); }
 
 	protected:
+		EffectMaterial* GetEffectMaterial() override { return m_material.get(); }
 		void SetEffectData() override;
 
 	private:
-		fs::Path m_cubeMapPath;
+		std::shared_ptr<Effect> m_effect;
+		std::unique_ptr<SkyboxEffectMaterial> m_material;
+
+		Path m_cubeMapPath;
 		ComPtr<ID3D11ShaderResourceView> m_cubeMapShaderResourceView;
 	};
-
 } // namespace library

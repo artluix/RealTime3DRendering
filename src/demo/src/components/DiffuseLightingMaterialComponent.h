@@ -1,24 +1,29 @@
 #pragma once
 #include <library/components/SceneComponent.h>
-#include <library/materials/DiffuseLightingMaterial.h>
-#include <library/components/ConcreteMaterialComponent.hpp>
+#include <library/effect/materials/DiffuseLightingEffectMaterial.h>
 #include <library/components/InputReceivableComponent.h>
-
-#include <library/lights/DirectionalLight.h>
-
+#include <library/Color.h>
 #include <library/DirectXForwardDeclarations.h>
+
+#include <memory>
+
+namespace library
+{
+	class DirectionalLightComponent;
+	class ProxyModelComponent;
+} // namespace library
 
 namespace demo
 {
 	class DiffuseLightingMaterialComponent
 		: public library::SceneComponent
 		, public library::InputReceivableComponent
-		, public library::ConcreteMaterialComponent<library::DiffuseLightingMaterial>
 	{
-		RTTI_CLASS(DiffuseLightingMaterialComponent, library::SceneComponent, library::InputReceivableComponent, library::MaterialComponent)
+		RTTI_CLASS(DiffuseLightingMaterialComponent, library::SceneComponent, library::InputReceivableComponent)
 
 	public:
 		explicit DiffuseLightingMaterialComponent(const library::Application& app);
+		~DiffuseLightingMaterialComponent();
 
 		void Initialize() override;
 		void Update(const library::Time& time) override;
@@ -31,8 +36,8 @@ namespace demo
 		ComPtr<ID3D11ShaderResourceView> m_textureShaderResourceView;
 
 		library::Color m_ambientColor;
-		DirectionalLight m_directionalLight;
-
-		ProxyModelCom
+		
+		std::unique_ptr<library::DirectionalLightComponent> m_directionalLight;
+		std::unique_ptr<library::ProxyModelComponent> m_proxyModel;
 	};
 } // namespace demo

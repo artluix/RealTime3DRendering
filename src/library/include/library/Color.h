@@ -3,15 +3,15 @@
 
 namespace library
 {
-	class Color : public Vector4
+	class Color : public math::Vector4
 	{
 	public:
 		Color() = default;
-		constexpr Color(const float r, const float g, const float b, const float a) : Vector4(r, g, b, a) {}
-		Color(const DirectX::XMFLOAT4& xmFloat4) : Vector4(xmFloat4) {}
+		constexpr Color(const float r, const float g, const float b, const float a) : math::Vector4(r, g, b, a) {}
+		Color(const DirectX::XMFLOAT4& xmFloat4) : math::Vector4(xmFloat4) {}
 
-		void Transform(const Matrix4&) = delete;
-		Vector4 Cross(const Vector4&) = delete;
+		void Transform(const math::Matrix4&) = delete;
+		math::Vector4 Cross(const math::Vector4&) = delete;
 
 		static const Color White;
 		static const Color Black;

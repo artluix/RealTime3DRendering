@@ -6,10 +6,10 @@
 
 #include <cassert>
 
-namespace library::effect::materials
+namespace library
 {
-	DiffuseLighting::DiffuseLighting(const Effect& effect)
-		: Material(effect, "main10")
+	DiffuseLightingEffectMaterial::DiffuseLightingEffectMaterial(const Effect& effect)
+		: EffectMaterial(effect, "main10")
 		, m_wvp(effect.GetVariable("wvp"))
 		, m_world(effect.GetVariable("world"))
 		, m_ambientColor(effect.GetVariable("ambientColor"))
@@ -19,9 +19,9 @@ namespace library::effect::materials
 	{
 	}
 
-	DiffuseLighting::~DiffuseLighting() = default;
+	DiffuseLightingEffectMaterial::~DiffuseLightingEffectMaterial() = default;
 
-	void DiffuseLighting::InitializeInternal()
+	void DiffuseLightingEffectMaterial::InitializeInternal()
 	{
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{
@@ -33,7 +33,7 @@ namespace library::effect::materials
 		CreateInputLayout("main10", "p0", inputElementDescriptions);
 	}
 
-	ComPtr<ID3D11Buffer> DiffuseLighting::CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const
+	ComPtr<ID3D11Buffer> DiffuseLightingEffectMaterial::CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const
 	{
 		if (!mesh.HasVertices())
 			return ComPtr<ID3D11Buffer>();
@@ -60,7 +60,7 @@ namespace library::effect::materials
 			);
 		}
 
-		return Material::CreateVertexBuffer(device, vertices.data(), vertices.size() * sizeof(Vertex));
+		return EffectMaterial::CreateVertexBuffer(device, vertices.data(), vertices.size() * sizeof(Vertex));
 	}
 
-} // namespace library::effect::materials
+} // namespace library

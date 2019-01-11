@@ -1,23 +1,22 @@
 #pragma once
+#include "library/RTTI.hpp"
 #include "library/Color.h"
 
 namespace library
 {
-	namespace components
+	class LightComponent
 	{
-		class Light
-		{
-		public:
-			virtual ~Light() = default;
+		RTTI_CLASS_BASE(LightComponent)
 
-			const Color& GetColor() const { return m_color; }
-			void SetColor(const Color& color);
+	public:
+		virtual ~LightComponent() = default;
 
-		protected:
-			explicit Light(const Color& color = colors::White);
+		const Color& GetColor() const { return m_color; }
+		void SetColor(const Color& color);
 
-			Color m_color;
-		};
+	protected:
+		explicit LightComponent(const Color& color = Color::White);
 
-	} // namespace components
+		Color m_color;
+	};
 } // namespace library

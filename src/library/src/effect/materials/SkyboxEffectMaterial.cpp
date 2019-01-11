@@ -5,18 +5,18 @@
 #include "library/Mesh.h"
 #include "library/Color.h"
 
-namespace library::effect::materials
+namespace library
 {
-	Skybox::Skybox(const Effect& effect)
-		: Material(effect, "main11")
+	SkyboxEffectMaterial::SkyboxEffectMaterial(const Effect& effect)
+		: EffectMaterial(effect, "main11")
 		, m_worldViewProjection(effect.GetVariable("WorldViewProjection"))
 		, m_skyboxTexture(effect.GetVariable("SkyboxTexture"))
 	{
 	}
 
-	Skybox::~Skybox() = default;
+	SkyboxEffectMaterial::~SkyboxEffectMaterial() = default;
 
-	void Skybox::InitializeInternal()
+	void SkyboxEffectMaterial::InitializeInternal()
 	{
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{
@@ -26,7 +26,7 @@ namespace library::effect::materials
 		CreateInputLayout("main11", "p0", inputElementDescriptions);
 	}
 
-	ComPtr<ID3D11Buffer> Skybox::CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const
+	ComPtr<ID3D11Buffer> SkyboxEffectMaterial::CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const
 	{
 		if (!mesh.HasVertices())
 			return ComPtr<ID3D11Buffer>();
@@ -44,7 +44,6 @@ namespace library::effect::materials
 			vertices.emplace_back(DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f));
 		}
 
-		return Material::CreateVertexBuffer(device, vertices.data(), vertices.size() * sizeof(Vertex));
+		return EffectMaterial::CreateVertexBuffer(device, vertices.data(), vertices.size() * sizeof(Vertex));
 	}
-
-} // namespace library::effect::materials
+} // namespace library

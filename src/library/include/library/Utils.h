@@ -1,13 +1,13 @@
 #pragma once
-#include "library/fs/Path.h"
+#include "library/CommonTypes.h"
+#include "library/Path.h"
 
-namespace library::util
+namespace library::utils
 {
 	std::wstring ToWideString(const std::string& str);
 
-	fs::Path GetCurrentDirectory();
-	fs::Path GetExecutableDirectory();
+	Path GetCurrentDirectory();
+	Path GetExecutableDirectory();
 
-	void LoadBinaryFile(const fs::Path& path, std::vector<byte>& data);
-
-} // namespace library::util
+	void LoadBinaryFile(const Path& path, std::vector<byte>& data);
+} // namespace library::utils

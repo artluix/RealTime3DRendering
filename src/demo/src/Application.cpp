@@ -26,9 +26,9 @@ namespace demo
 {
 	namespace
 	{
-		constexpr auto k_backgroundColor = library::colors::Black;
+		const auto k_backgroundColor = library::Color::Black;
 
-		const auto k_skyboxCubeMapPath = library::utils::GetExecutableDirectory().Join(library::fs::Path("../data/textures/Maskonaive2_1024.dds"));
+		const auto k_skyboxCubeMapPath = library::utils::GetExecutableDirectory().Join(library::Path("../data/textures/Maskonaive2_1024.dds"));
 	}
 
 	Application::Application(

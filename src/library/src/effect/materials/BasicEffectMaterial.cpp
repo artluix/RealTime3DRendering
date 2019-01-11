@@ -5,17 +5,17 @@
 #include "library/Mesh.h"
 #include "library/Color.h"
 
-namespace library::effect::materials
+namespace library
 {
-	Basic::Basic(const Effect& effect)
-		: Material(effect, "main11")
+	BasicEffectMaterial::BasicEffectMaterial(const Effect& effect)
+		: EffectMaterial(effect, "main11")
 		, m_worldViewProjection(effect.GetVariable("WorldViewProjection"))
 	{
 	}
 
-	Basic::~Basic() = default;
+	BasicEffectMaterial::~BasicEffectMaterial() = default;
 
-	void Basic::InitializeInternal()
+	void BasicEffectMaterial::InitializeInternal()
 	{
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{
@@ -26,7 +26,7 @@ namespace library::effect::materials
 		CreateInputLayout("main11", "p0", inputElementDescriptions);
 	}
 
-	ComPtr<ID3D11Buffer> Basic::CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const
+	ComPtr<ID3D11Buffer> BasicEffectMaterial::CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const
 	{
 		if (!mesh.HasVertices())
 			return ComPtr<ID3D11Buffer>();
@@ -54,12 +54,11 @@ namespace library::effect::materials
 			for (unsigned i = 0; i < verticesCount; i++)
 			{
 				const auto& position = meshVertices[i];
-				const auto& color = DirectX::XMFLOAT4(colors::White);
+				const auto& color = DirectX::XMFLOAT4(Color::White);
 				vertices.emplace_back(DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f), color);
 			}
 		}
 
-		return Material::CreateVertexBuffer(device, vertices.data(), vertices.size() * sizeof(Vertex));
+		return EffectMaterial::CreateVertexBuffer(device, vertices.data(), vertices.size() * sizeof(Vertex));
 	}
-
-} // namespace library::effect::materials
+} // namespace library

@@ -1,10 +1,10 @@
 #include "StdAfx.h"
-#include "library/util/RenderStateHelper.h"
+#include "library/RenderStateHelper.h"
 
 #include <cassert>
 #include <d3d11.h>
 
-namespace library::util
+namespace library
 {
 	namespace
 	{
@@ -143,4 +143,4 @@ namespace library::util
 		s_blendFactor.fill(0.f);
 	}
 
-} // namespace library::util
+} // namespace library

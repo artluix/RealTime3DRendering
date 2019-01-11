@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "library/Component.h"
+#include "library/components/Component.h"
 
 namespace library
 {
@@ -14,5 +14,4 @@ namespace library
 	{
 		m_enabled = enabled;
 	}
-
 } // namespace library

@@ -11,9 +11,9 @@
 
 #include "library/Exception.h"
 
-namespace library::effect
+namespace library
 {
-	Material::Material(const Effect& effect, const std::string& defaultTechniqueName /* = ""*/)
+	EffectMaterial::EffectMaterial(const Effect& effect, const std::string& defaultTechniqueName /* = ""*/)
 		: m_effect(effect)
 		, m_defaultTechniqueName(defaultTechniqueName)
 		, m_currentTechnique(
@@ -25,12 +25,12 @@ namespace library::effect
 		assert(effect.IsInitialized());
 	}
 
-	Variable& Material::operator[](const std::string& variableName) const
+	EffectVariable& EffectMaterial::operator[](const std::string& variableName) const
 	{
 		return m_effect.GetVariable(variableName);
 	}
 
-	void Material::SetCurrentTechnique(const Technique& technique)
+	void EffectMaterial::SetCurrentTechnique(const EffectTechnique& technique)
 	{
 		if (&m_currentTechnique.get() != &technique)
 		{
@@ -38,7 +38,7 @@ namespace library::effect
 		}
 	}
 
-	ID3D11InputLayout* Material::GetInputLayout(const Pass& pass) const
+	ID3D11InputLayout* EffectMaterial::GetInputLayout(const EffectPass& pass) const
 	{
 		const auto it = m_inputLayouts.find(&pass);
 		if (it != m_inputLayouts.cend())
@@ -47,7 +47,7 @@ namespace library::effect
 		return nullptr;
 	}
 
-	void Material::Initialize()
+	void EffectMaterial::Initialize()
 	{
 		if (m_isInitialized)
 			return;
@@ -57,7 +57,7 @@ namespace library::effect
 		m_isInitialized = true;
 	}
 
-	void Material::CreateInputLayout(
+	void EffectMaterial::CreateInputLayout(
 		const std::string& techniqueName,
 		const std::string& passName,
 		const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions
@@ -70,7 +70,7 @@ namespace library::effect
 		m_inputLayouts.emplace(&pass, inputLayout);
 	}
 
-	std::vector<ComPtr<ID3D11Buffer>> Material::CreateVertexBuffers(ID3D11Device* const device, const Model& model) const
+	std::vector<ComPtr<ID3D11Buffer>> EffectMaterial::CreateVertexBuffers(ID3D11Device* const device, const Model& model) const
 	{
 		std::vector<ComPtr<ID3D11Buffer>> vertexBuffers;
 
@@ -86,7 +86,7 @@ namespace library::effect
 		return vertexBuffers;
 	}
 
-	ComPtr<ID3D11Buffer> Material::CreateVertexBuffer(ID3D11Device* const device, const void* data, const std::size_t size) const
+	ComPtr<ID3D11Buffer> EffectMaterial::CreateVertexBuffer(ID3D11Device* const device, const void* data, const std::size_t size) const
 	{
 		ComPtr<ID3D11Buffer> vertexBuffer;
 
@@ -107,4 +107,4 @@ namespace library::effect
 		return vertexBuffer;
 	}
 
-} // namespace library::effect
+} // namespace library

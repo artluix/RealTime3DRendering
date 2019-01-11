@@ -1,5 +1,5 @@
 #pragma once
-#include "library/Common.h"
+#include "library/CommonTypes.h"
 #include "library/NonCopyable.hpp"
 #include "library/math/Math.h"
 
@@ -8,15 +8,15 @@
 
 interface ID3D11ShaderResourceView;
 
-namespace library::effect
+namespace library
 {
 	class Effect;
 
-	class Variable : public NonCopyable<Variable>
+	class EffectVariable : public NonCopyable<EffectVariable>
 	{
 	public:
-		explicit Variable(const Effect& effect, ID3DX11EffectVariable* const variable);
-		~Variable();
+		explicit EffectVariable(const Effect& effect, ID3DX11EffectVariable* const variable);
+		~EffectVariable();
 
 		const Effect& GetEffect() const { return m_effect; }
 		const std::string& GetName() const { return m_name; }
@@ -27,20 +27,20 @@ namespace library::effect
 		ID3DX11EffectType* GetType() const { return m_type.Get(); }
 		const D3DX11_EFFECT_TYPE_DESC& GetTypeDesc() const { return m_typeDesc; }
 
-		Variable& operator << (const float value);
-		Variable& operator << (ID3D11ShaderResourceView* const value);
+		EffectVariable& operator << (const float value);
+		EffectVariable& operator << (ID3D11ShaderResourceView* const value);
 
 		// vector
-		Variable& operator << (const math::XMVector& value);
+		EffectVariable& operator << (const math::XMVector& value);
 
 		template<std::size_t Size>
-		Variable& operator << (const math::Vector<Size>& value);
+		EffectVariable& operator << (const math::Vector<Size>& value);
 
 		// matrix
-		Variable& operator << (const math::XMMatrix& value);
+		EffectVariable& operator << (const math::XMMatrix& value);
 
 		template<std::size_t Size>
-		Variable& operator << (const math::Matrix<Size>& value);
+		EffectVariable& operator << (const math::Matrix<Size>& value);
 
 	private:
 		const Effect& m_effect;
@@ -56,7 +56,7 @@ namespace library::effect
 	// ----------------------------------------------------------------------------------------------------------
 
 	template<std::size_t Size>
-	inline Variable& Variable::operator << (const math::Matrix<Size>& value)
+	inline EffectVariable& EffectVariable::operator << (const math::Matrix<Size>& value)
 	{
 		auto& thisRef = *this;
 		thisRef << value.Load();
@@ -64,11 +64,11 @@ namespace library::effect
 	}
 
 	template<std::size_t Size>
-	inline Variable& Variable::operator<<(const math::Vector<Size>& value)
+	inline EffectVariable& EffectVariable::operator<<(const math::Vector<Size>& value)
 	{
 		auto& thisRef = *this;
 		thisRef << value.Load();
 		return thisRef;
 	}
 
-} // namespace library::effect
+} // namespace library

@@ -1,5 +1,5 @@
 #pragma once
-#include "library/Common.h"
+#include "library/CommonTypes.h"
 #include "library/DirectXForwardDeclarations.h"
 #include "library/RTTI.hpp"
 #include "library/NonCopyable.hpp"
@@ -16,59 +16,52 @@ namespace library
 {
 	class Model;
 	class Mesh;
+	class Effect;
+	class EffectVariable;
+	class EffectTechnique;
+	class EffectPass;
 
-	namespace effect
+	class EffectMaterial : public NonCopyable<EffectMaterial>
 	{
-		class Effect;
-		class Variable;
-		class Technique;
-		class Pass;
+		RTTI_CLASS_BASE(EffectMaterial)
 
-		// ----------------------------------------------------------------------------------------------------------
+	public:
+		explicit EffectMaterial(const Effect& effect, const std::string& defaultTechniqueName = "");
+		virtual ~EffectMaterial() = default;
 
-		class Material : public NonCopyable<Material>
-		{
-			RTTI_CLASS_BASE(Material)
+		EffectVariable& operator[](const std::string& variableName) const;
+		const Effect& GetEffect() const { return m_effect; }
 
-		public:
-			explicit Material(const Effect& effect, const std::string& defaultTechniqueName = "");
-			virtual ~Material() = default;
+		const EffectTechnique& GetCurrentTechnique() const { return m_currentTechnique; }
+		void SetCurrentTechnique(const EffectTechnique& technique);
 
-			Variable& operator[](const std::string& variableName) const;
-			const Effect& GetEffect() const { return m_effect; }
+		ID3D11InputLayout* GetInputLayout(const EffectPass& pass) const;
 
-			const Technique& GetCurrentTechnique() const { return m_currentTechnique; }
-			void SetCurrentTechnique(const Technique& technique);
+		void Initialize();
+		bool IsInitialized() const { return m_isInitialized; }
 
-			ID3D11InputLayout* GetInputLayout(const Pass& pass) const;
+		virtual std::vector<ComPtr<ID3D11Buffer>> CreateVertexBuffers(ID3D11Device* const device, const Model& model) const;
+		virtual ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const void* data, const std::size_t size) const;
 
-			void Initialize();
-			bool IsInitialized() const { return m_isInitialized; }
+		virtual ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const = 0;
+		virtual unsigned GetVertexSize() const = 0;
 
-			virtual std::vector<ComPtr<ID3D11Buffer>> CreateVertexBuffers(ID3D11Device* const device, const Model& model) const;
-			virtual ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const void* data, const std::size_t size) const;
+	protected:
+		virtual void CreateInputLayout(
+			const std::string& techniqueName,
+			const std::string& passName,
+			const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions
+		);
 
-			virtual ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const = 0;
-			virtual unsigned GetVertexSize() const = 0;
+		virtual void InitializeInternal() = 0;
 
-		protected:
-			virtual void CreateInputLayout(
-				const std::string& techniqueName,
-				const std::string& passName,
-				const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions
-			);
+		const Effect& m_effect;
 
-			virtual void InitializeInternal() = 0;
+		std::reference_wrapper<const EffectTechnique> m_currentTechnique;
+		std::string m_defaultTechniqueName;
 
-			const Effect& m_effect;
+		bool m_isInitialized = false;
 
-			std::reference_wrapper<const Technique> m_currentTechnique;
-			std::string m_defaultTechniqueName;
-
-			bool m_isInitialized = false;
-
-			std::map<const Pass*, ComPtr<ID3D11InputLayout>> m_inputLayouts;
-		};
-
-	} // namespace effect
+		std::map<const EffectPass*, ComPtr<ID3D11InputLayout>> m_inputLayouts;
+	};
 } // namespace library

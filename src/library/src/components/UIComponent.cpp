@@ -5,7 +5,7 @@ namespace library
 {
 	UIComponent::UIComponent(const Application& app)
 		: DrawableComponent(app)
-		, m_position(math::constants::Vector2::Zero)
+		, m_position(math::Vector2::Zero)
 	{
 	}
 
@@ -16,5 +16,4 @@ namespace library
 			m_position = position;
 		}
 	}
-
 } // namespace library

@@ -21,23 +21,19 @@ namespace library
 	{
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
 #if defined(DEBUG) || defined(DEBUG)
-			fs::Path("../data/effects/Skybox_d.fxc")
+			Path("../data/effects/Skybox_d.fxc")
 #else
-			fs::Path("../data/effects/Skybox.fxc")
+			Path("../data/effects/Skybox.fxc")
 #endif
 		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(fs::Path("../data/models/Sphere.obj"));
+		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
 	}
 
-	SkyboxComponent::SkyboxComponent(
-		const Application& app,
-		const fs::Path& cubeMapPath,
-		const float scale
-	)
-		: Scene()
-		, ConcreteMaterialComponent(app, k_modelPath)
+	SkyboxComponent::SkyboxComponent(const Application& app, const Path& cubeMapPath, const float scale)
+		: SceneComponent(app)
 		, m_cubeMapPath(cubeMapPath)
 	{
+		SetModelPath(k_modelPath);
 		SetScaling(math::Vector3(scale));
 	}
 
@@ -46,10 +42,10 @@ namespace library
 		m_effect = EffectFactory::Create(m_app, k_effectPath);
 		m_effect->LoadCompiled();
 
-		m_material = std::make_unique<Material>(*m_effect);
+		m_material = std::make_unique<SkyboxEffectMaterial>(*m_effect);
 		m_material->Initialize();
 
-		MaterialComponent::Initialize();
+		DrawableComponent::Initialize();
 
 		// Load the texture
 		{
@@ -92,7 +88,6 @@ namespace library
 			
 		m_material->GetSkyboxTexture() << m_cubeMapShaderResourceView.Get();
 
-		MaterialComponent::SetEffectData();
+		DrawableComponent::SetEffectData();
 	}
-
 } // namespace library
