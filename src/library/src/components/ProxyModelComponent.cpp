@@ -18,9 +18,9 @@ namespace library
 	{
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
 #if defined(DEBUG) || defined(DEBUG)
-			Path("../data/effects/BasicEffect_d.fxc")
+			Path("../data/effects/Basic_d.fxc")
 #else
-			Path("../data/effects/BasicEffect.fxc")
+			Path("../data/effects/Basic.fxc")
 #endif
 		);
 	}

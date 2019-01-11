@@ -16,7 +16,7 @@ namespace demo
 
 	namespace
 	{
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(Path("../data/effects/BasicEffect.fx"));
+		const auto k_effectPath = utils::GetExecutableDirectory().Join(Path("../data/effects/Basic.fx"));
 	}
 
 	TriangleComponent::TriangleComponent(const Application& app)

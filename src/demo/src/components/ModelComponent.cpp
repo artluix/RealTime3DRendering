@@ -24,7 +24,7 @@ namespace demo
 		constexpr float k_rotationAngle = math::Pi_Div_2;
 		constexpr float k_movementRate = 0.01f;
 
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(Path("../data/effects/BasicEffect.fx"));
+		const auto k_effectPath = utils::GetExecutableDirectory().Join(Path("../data/effects/Basic.fx"));
 		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
 	}
 

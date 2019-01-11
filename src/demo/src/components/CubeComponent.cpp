@@ -21,7 +21,7 @@ namespace demo
 		constexpr unsigned k_verticesCount = 8;
 		constexpr float k_rotationAngle = math::Pi_Div_2;
 		constexpr float k_movementRate = 0.01f;
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(Path("../data/effects/BasicEffect.fx"));
+		const auto k_effectPath = utils::GetExecutableDirectory().Join(Path("../data/effects/Basic.fx"));
 	}
 
 	CubeComponent::CubeComponent(const Application& app)
