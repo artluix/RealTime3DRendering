@@ -3,16 +3,24 @@
 #include "library/NonConstructible.hpp"
 #include "library/DirectXForwardDeclarations.h"
 
-#include <map>
+#include <array>
 
 namespace library
 {
-	enum class RasterizerState
+	struct RasterizerState
 	{
-		BackCulling,
-		FrontCulling,
-		DisabledCulling,
-		Wireframe
+		using Ptr = ComPtr<ID3D11RasterizerState>;
+
+		enum Type : unsigned
+		{
+			BackCulling = 0,
+			FrontCulling,
+			DisabledCulling,
+			Wireframe,
+
+			//# Count
+			Count
+		};
 	};
 
 	class RasterizerStateHolder : public NonConstructible<RasterizerStateHolder>
@@ -21,9 +29,9 @@ namespace library
 		static void Initialize(ID3D11Device* const device);
 		static void Reset();
 
-		static ID3D11RasterizerState* GetRasterizerState(const RasterizerState rs);
+		static ID3D11RasterizerState* GetRasterizerState(const RasterizerState::Type rs);
 
 	private:
-		static std::map<RasterizerState, ComPtr<ID3D11RasterizerState>> s_rasterizerStates;
+		static std::array<RasterizerState::Ptr, RasterizerState::Count> s_rasterizerStates;
 	};
 } // namespace library

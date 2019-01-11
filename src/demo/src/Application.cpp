@@ -130,7 +130,7 @@ namespace demo
 
 		// mouse text component
 		auto mouseTextComponent = std::make_shared<TextComponent>(*this);
-		mouseTextComponent->SetGeneratorFunction(
+		mouseTextComponent->SetTextGeneratorFunction(
 			[this]() -> std::wstring
 			{
 				static const std::wstring empty;
@@ -147,12 +147,12 @@ namespace demo
 				return empty;
 			}
 		);
-		mouseTextComponent->SetPosition(library::math::Vector2(0.f, 50.f));
+		mouseTextComponent->SetPosition(math::Vector2(0.f, 50.f));
 		m_components.push_back(mouseTextComponent);
 
 		library::Application::Initialize();
 
-		cameraComponent->SetPosition(library::math::Vector3(0.0f, 0.0f, 50.0f));
+		cameraComponent->SetPosition(math::Vector3(0.0f, 0.0f, 50.0f));
 	}
 
 	void Application::Update(const library::Time& time)

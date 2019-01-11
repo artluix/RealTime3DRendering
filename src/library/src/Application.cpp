@@ -56,6 +56,8 @@ namespace library
 
 	void Application::Initialize()
 	{
+		m_renderer = std::make_unique<Renderer>();
+
 		for (const auto& component : m_components)
 		{
 			component->Initialize();
@@ -111,14 +113,16 @@ namespace library
 
 	void Application::Draw(const Time& time)
 	{
-		for (const auto& component : m_components)
+		m_renderer->Render(time);
+
+		/*for (const auto& component : m_components)
 		{
 			auto drawableComponent = component->As<DrawableComponent>();
 			if (!!drawableComponent && drawableComponent->IsVisible())
 			{
 				drawableComponent->Draw(time);
 			}
-		}
+		}*/
 	}
 
 	//-------------------------------------------------------------------------
@@ -372,6 +376,7 @@ namespace library
 		EffectFactory::Reset();
 
 		m_components.clear();
+		m_renderer.reset();
 
 		m_renderTargetView.Reset();
 		m_depthStencilView.Reset();

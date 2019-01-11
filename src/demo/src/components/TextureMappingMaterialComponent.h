@@ -26,7 +26,11 @@ namespace demo
 		void Update(const library::Time& time) override;
 		using DrawableComponent::Draw;
 
+		const library::TextureMappingEffectMaterial* GetEffectMaterial() const override { return m_material.get(); }
+
 	protected:
+		library::TextureMappingEffectMaterial* GetEffectMaterial() override { return m_material.get(); }
+
 		void SetEffectData() override;
 
 	private:

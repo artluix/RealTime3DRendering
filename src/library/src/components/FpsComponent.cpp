@@ -5,7 +5,7 @@ namespace library
 {
 	namespace
 	{
-		const auto k_fpsMeasureInterval = std::chrono::seconds(1);
+		constexpr auto k_fpsMeasureInterval = std::chrono::seconds(1);
 	}
 
 	FpsComponent::FpsComponent(const Application& app)
@@ -35,7 +35,7 @@ namespace library
 
 		std::wostringstream woss;
 		woss << std::setprecision(4) <<
-			L"Frame Rate: " << m_frameRate << std::endl <<
+			L"Frame Rate: " << m_frameRate << "\n" <<
 			L"Total Elapsed Time: " << time.total.GetSeconds<float>();
 
 		SetText(woss.str());

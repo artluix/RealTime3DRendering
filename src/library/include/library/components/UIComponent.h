@@ -15,7 +15,7 @@ namespace library
 		void SetPosition(const math::Vector2& position);
 		const math::Vector2& GetPosition() const { return m_position; }
 
-	protected:
+	private:
 		math::Vector2 m_position;
 	};
 } // namespace library

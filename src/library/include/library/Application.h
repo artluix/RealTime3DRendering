@@ -2,6 +2,7 @@
 #include "library/NonCopyable.hpp"
 #include "library/Stopwatch.h"
 #include "library/CommonTypes.h"
+#include "library/Renderer.h"
 
 #include <Windows.h>
 #include <d3d11_1.h>
@@ -42,6 +43,8 @@ namespace library
 		const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
 
 		const std::vector<ComponentPtr>& GetComponents() const { return m_components; }
+
+		Renderer* GetRenderer() const { return m_renderer.get(); }
 		
 		virtual void Initialize();
 		virtual void Run();
@@ -70,6 +73,8 @@ namespace library
 		Time m_time;
 
 		std::vector<ComponentPtr> m_components;
+
+		std::unique_ptr<Renderer> m_renderer;
 
 		// DirectX
 		D3D_FEATURE_LEVEL m_featureLevel;

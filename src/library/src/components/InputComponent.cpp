@@ -53,11 +53,8 @@ namespace library
 			throw Exception("IDirectInputDevice::SetCooperativeLevel() failed.", hr);
 		}
 
+		// try to acquire the device
 		hr = m_directInputDevice->Acquire();
-		if (FAILED(hr))
-		{
-			throw Exception("IDirectInputDevice8::Acquire() failed.", hr);
-		}
 	}
 
 	void InputComponent::GetState(const std::size_t bufferSize, void* buffer)

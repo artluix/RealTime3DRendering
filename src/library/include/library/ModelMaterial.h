@@ -3,56 +3,40 @@
 
 #include <string>
 #include <vector>
-#include <map>
+#include <array>
 
-struct aiMaterial;
+#include <assimp/material.h>
 
 namespace library
 {
-	enum class TextureType
+	struct TextureType
 	{
-		Diffuse = 0,
-		SpecularMap,
-		Ambient,
-		Emissive,
-		HeightMap,
-		NormalMap,
-		SpecularPowerMap,
-		DisplacementMap,
-		LightMap,
+		enum Type : unsigned
+		{
+			Diffuse = 0,
+			SpecularMap,
+			Ambient,
+			Emissive,
+			HeightMap,
+			NormalMap,
+			SpecularPowerMap,
+			DisplacementMap,
+			LightMap,
 
-		//# Count
-		Count,
+			//# Count
+			Count,
+			None = Count
+		};
 
-		First = Diffuse,
-		Last = Count
+		static constexpr Type FromAiTextureType(const aiTextureType aiTt);
+		static constexpr aiTextureType ToAiTextureType(const Type t);
+		static constexpr std::array<Type, Count> Values();
 	};
-
-	// for range based loop
-
-	inline TextureType operator++(TextureType& tt)
-	{
-		return tt = static_cast<TextureType>(std::underlying_type_t<TextureType>(tt) + 1);
-	}
-
-	inline TextureType operator * (const TextureType tt)
-	{
-		return tt;
-	}
-
-	inline TextureType begin(const TextureType tt)
-	{
-		return TextureType::First;
-	}
-
-	inline TextureType end(const TextureType tt)
-	{
-		return TextureType::Last;
-	}
 
 	//-------------------------------------------------------------------------
 
 	using TextureNameVector = std::vector<std::wstring>;
+	using TextureNameVectorArray = std::array<TextureNameVector, TextureType::Count>;
 
 	class ModelMaterial : public NonCopyable<ModelMaterial>
 	{
@@ -63,15 +47,15 @@ namespace library
 
 		const Model& GetModel() const { return m_model; }
 		const std::string& GetName() const { return m_name; }
-		const std::map<TextureType, TextureNameVector>& GetAllTextureNames() const { return m_textures; }
+		const TextureNameVectorArray& GetAllTextureNames() const { return m_textures; }
 
-		const TextureNameVector& GetTextureNames(const TextureType textureType) const;
+		const TextureNameVector& GetTextureNames(const TextureType::Type textureType) const;
 
 	private:
 		explicit ModelMaterial(const Model& model, const aiMaterial& material);
 
 		const Model& m_model;
 		std::string m_name;
-		std::map<TextureType, TextureNameVector> m_textures;
+		TextureNameVectorArray m_textures;
 	};
 } // namespace library

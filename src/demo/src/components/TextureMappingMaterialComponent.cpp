@@ -44,7 +44,7 @@ namespace demo
 
 	void TextureMappingMaterialComponent::Initialize()
 	{
-		m_effect = library::EffectFactory::Create(m_app, k_effectPath);
+		m_effect = EffectFactory::Create(m_app, k_effectPath);
 		m_effect->LoadCompiled();
 
 		m_material = std::make_unique<TextureMappingEffectMaterial>(*m_effect);

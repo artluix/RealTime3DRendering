@@ -8,7 +8,9 @@
 
 namespace library
 {
-	std::map<library::RasterizerState, ComPtr<ID3D11RasterizerState>> RasterizerStateHolder::s_rasterizerStates;
+	std::array<RasterizerState::Ptr, RasterizerState::Count> RasterizerStateHolder::s_rasterizerStates;
+
+	//-------------------------------------------------------------------------
 
 	void RasterizerStateHolder::Initialize(ID3D11Device* const device)
 	{
@@ -21,7 +23,7 @@ namespace library
 			rasterizerStateDesc.CullMode = D3D11_CULL_BACK;
 			rasterizerStateDesc.DepthClipEnable = true;
 
-			auto hr = device->CreateRasterizerState(&rasterizerStateDesc, s_rasterizerStates.at(RasterizerState::BackCulling).GetAddressOf());
+			auto hr = device->CreateRasterizerState(&rasterizerStateDesc, s_rasterizerStates[RasterizerState::FrontCulling].GetAddressOf());
 			if (FAILED(hr))
 			{
 				throw Exception("ID3D11Device::CreateRasterizerState() failed.", hr);
@@ -36,7 +38,7 @@ namespace library
 			rasterizerStateDesc.FrontCounterClockwise = true;
 			rasterizerStateDesc.DepthClipEnable = true;
 
-			auto hr = device->CreateRasterizerState(&rasterizerStateDesc, s_rasterizerStates.at(RasterizerState::FrontCulling).GetAddressOf());
+			auto hr = device->CreateRasterizerState(&rasterizerStateDesc,s_rasterizerStates[RasterizerState::FrontCulling].GetAddressOf());
 			if (FAILED(hr))
 			{
 				throw Exception("ID3D11Device::CreateRasterizerState() failed.", hr);
@@ -50,7 +52,7 @@ namespace library
 			rasterizerStateDesc.CullMode = D3D11_CULL_NONE;
 			rasterizerStateDesc.DepthClipEnable = true;
 
-			auto hr = device->CreateRasterizerState(&rasterizerStateDesc, s_rasterizerStates.at(RasterizerState::DisabledCulling).GetAddressOf());
+			auto hr = device->CreateRasterizerState(&rasterizerStateDesc, s_rasterizerStates[RasterizerState::DisabledCulling].GetAddressOf());
 			if (FAILED(hr))
 			{
 				throw Exception("ID3D11Device::CreateRasterizerState() failed.", hr);
@@ -64,7 +66,7 @@ namespace library
 			rasterizerStateDesc.CullMode = D3D11_CULL_NONE;
 			rasterizerStateDesc.DepthClipEnable = true;
 
-			auto hr = device->CreateRasterizerState(&rasterizerStateDesc, s_rasterizerStates.at(RasterizerState::Wireframe).GetAddressOf());
+			auto hr = device->CreateRasterizerState(&rasterizerStateDesc, s_rasterizerStates[RasterizerState::Wireframe].GetAddressOf());
 			if (FAILED(hr))
 			{
 				throw Exception("ID3D11Device::CreateRasterizerState() failed.", hr);
@@ -74,11 +76,11 @@ namespace library
 
 	void RasterizerStateHolder::Reset()
 	{
-		s_rasterizerStates.clear();
+		std::for_each(s_rasterizerStates.begin(), s_rasterizerStates.end(), [](RasterizerState::Ptr& rsp) { rsp.Reset(); });
 	}
 
-	ID3D11RasterizerState* RasterizerStateHolder::GetRasterizerState(const RasterizerState rs)
+	ID3D11RasterizerState* RasterizerStateHolder::GetRasterizerState(const RasterizerState::Type rs)
 	{
-		return s_rasterizerStates.at(rs).Get();
+		return s_rasterizerStates[rs].Get();
 	}
 } // namespace library

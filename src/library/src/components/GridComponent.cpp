@@ -153,6 +153,8 @@ namespace library
 		}
 
 		Build();
+
+		m_app.GetRenderer()->RegisterForRender(this);
 	}
 
 	void GridComponent::Update(const Time& time)

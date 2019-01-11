@@ -22,10 +22,10 @@ namespace library
 		void Update(const Time& time) override;
 		using DrawableComponent::Draw;
 
-		const EffectMaterial* GetEffectMaterial() const override { return m_material.get(); }
+		const SkyboxEffectMaterial* GetEffectMaterial() const override { return m_material.get(); }
 
 	protected:
-		EffectMaterial* GetEffectMaterial() override { return m_material.get(); }
+		SkyboxEffectMaterial* GetEffectMaterial() override { return m_material.get(); }
 		void SetEffectData() override;
 
 	private:
