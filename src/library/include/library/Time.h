@@ -23,19 +23,19 @@ namespace library
 		template <typename T>
 		T GetNanoseconds() const { return GetAs<T, std::chrono::nanoseconds::period>(); }
 
-		template <typename T>
+		template <typename T = float>
 		T GetMicroseconds() const { return GetAs<T, std::chrono::microseconds::period>(); }
 
-		template <typename T>
+		template <typename T = float>
 		T GetMilliseconds() const { return GetAs<T, std::chrono::milliseconds::period>(); }
 
-		template <typename T>
+		template <typename T = float>
 		T GetSeconds() const { return GetAs<T, std::chrono::seconds::period>(); }
 
-		template <typename T>
+		template <typename T = float>
 		T GetMinutes() const { return GetAs<T, std::chrono::minutes::period>(); }
 
-		template <typename T>
+		template <typename T = float>
 		T GetHours() const { return GetAs<T, std::chrono::hours::period>(); }
 
 	private:
@@ -62,5 +62,4 @@ namespace library
 		TimeValue total;
 		TimeValue elapsed;
 	};
-
 } // namespace library

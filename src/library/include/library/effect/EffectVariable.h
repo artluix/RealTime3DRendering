@@ -70,5 +70,4 @@ namespace library
 		thisRef << value.Load();
 		return thisRef;
 	}
-
 } // namespace library

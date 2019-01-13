@@ -4,12 +4,12 @@
 
 namespace library
 {
-	class SpotLightComponent
+	class SpotlightComponent
 		: public DirectionalLightComponent
 		, public PointLightComponent
 	{
 	public:
-		explicit SpotLightComponent();
+		explicit SpotlightComponent();
 
 		float GetInnerAngle() const { return m_innerAngle; }
 		void SetInnerAngle(const float innerAngle);

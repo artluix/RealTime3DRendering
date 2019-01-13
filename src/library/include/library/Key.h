@@ -6,16 +6,26 @@ namespace library
 	enum class Key : std::uint8_t
 	{
 		Escape = DIK_ESCAPE,
-		Num_0 = DIK_0,
-		Num_1 = DIK_1,
-		Num_2 = DIK_2,
-		Num_3 = DIK_3,
-		Num_4 = DIK_4,
-		Num_5 = DIK_5,
-		Num_6 = DIK_6,
-		Num_7 = DIK_7,
-		Num_8 = DIK_8,
-		Num_9 = DIK_9,
+		_0 = DIK_0,
+		_1 = DIK_1,
+		_2 = DIK_2,
+		_3 = DIK_3,
+		_4 = DIK_4,
+		_5 = DIK_5,
+		_6 = DIK_6,
+		_7 = DIK_7,
+		_8 = DIK_8,
+		_9 = DIK_9,
+		Num_0 = DIK_NUMPAD0,
+		Num_1 = DIK_NUMPAD1,
+		Num_2 = DIK_NUMPAD2,
+		Num_3 = DIK_NUMPAD3,
+		Num_4 = DIK_NUMPAD4,
+		Num_5 = DIK_NUMPAD5,
+		Num_6 = DIK_NUMPAD6,
+		Num_7 = DIK_NUMPAD7,
+		Num_8 = DIK_NUMPAD8,
+		Num_9 = DIK_NUMPAD9,
 		Q = DIK_Q,
 		W = DIK_W,
 		E = DIK_E,
@@ -58,8 +68,14 @@ namespace library
 		Down = DIK_DOWN,
 		Space = DIK_SPACE,
 		Enter = DIK_RETURN,
+		PageUp = DIK_PGUP,
+		PageDown = DIK_PGDN,
+		Home = DIK_HOME,
+		End = DIK_END,
+		Insert = DIK_INSERT,
+		Delete = DIK_DELETE,
 
-		// #Count
+		//# Count
 		Count
 	};
 } // namespace library

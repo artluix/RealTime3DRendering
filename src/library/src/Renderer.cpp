@@ -5,6 +5,8 @@
 #include "library/components/UIComponent.h"
 #include "library/components/SceneComponent.h"
 
+#include "library/components/ProxyModelComponent.h"
+
 #include "library/effect/Effect.h"
 #include "library/effect/EffectMaterial.h"
 

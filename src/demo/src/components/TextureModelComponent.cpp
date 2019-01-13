@@ -15,8 +15,6 @@
 
 #include <d3dx11effect.h>
 
-#include <DDSTextureLoader.h>
-
 namespace demo
 {
 	using namespace library;
@@ -51,6 +49,7 @@ namespace demo
 		, m_indicesCount(0)
 		, m_wheel(0)
 	{
+		SetTexturePath(k_texturePath);
 	}
 
 	void TextureModelComponent::Initialize()
@@ -152,27 +151,7 @@ namespace demo
 		m_indexBuffer = mesh.CreateIndexBuffer();
 		m_indicesCount = mesh.GetIndicesCount();
 
-		// Load the texture
-		{
-			std::vector<library::byte> textureData;
-			utils::LoadBinaryFile(k_texturePath, textureData);
-			if (textureData.empty())
-			{
-				throw Exception("Load texture failed.");
-			}
-
-			auto hr = DirectX::CreateDDSTextureFromMemory(
-				m_app.GetD3DDevice(),
-				reinterpret_cast<const std::uint8_t*>(textureData.data()),
-				textureData.size(),
-				nullptr,
-				m_textureShaderResourceView.GetAddressOf()
-			);
-			if (FAILED(hr))
-			{
-				throw Exception("CreateDDSTextureFromMemory() failed.", hr);
-			}
-		}
+		DrawableComponent::Initialize();
 	}
 
 	void TextureModelComponent::Update(const Time& time)
@@ -182,7 +161,7 @@ namespace demo
 			// rotation
 			if (m_keyboard->IsKeyDown(Key::R))
 			{
-				const auto rotationDelta = k_rotationAngle * time.elapsed.GetSeconds<float>();
+				const auto rotationDelta = k_rotationAngle * time.elapsed.GetSeconds();
 				Rotate(rotationDelta);
 			}
 
@@ -237,7 +216,7 @@ namespace demo
 	{
 		auto d3dDeviceContext = m_app.GetD3DDeviceContext();
 
-		auto wvp = m_worldMatrix;
+		auto wvp = GetWorldMatrix();
 		if (!!m_camera)
 			wvp *= m_camera->GetViewProjectionMatrix();
 		m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
@@ -295,5 +274,4 @@ namespace demo
 			}
 		}
 	}
-
 } // namespace demo

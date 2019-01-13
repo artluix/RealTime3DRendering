@@ -67,5 +67,4 @@ namespace library
 	{
 		return *m_materials.at(materialIdx);
 	}
-
 } // namespace library

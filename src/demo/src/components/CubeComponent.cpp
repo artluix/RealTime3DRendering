@@ -200,7 +200,7 @@ namespace demo
 			// rotation
 			if (m_keyboard->IsKeyDown(Key::R))
 			{
-				const auto rotationDelta = k_rotationAngle * time.elapsed.GetSeconds<float>();
+				const auto rotationDelta = k_rotationAngle * time.elapsed.GetSeconds();
 				Rotate(rotationDelta);
 			}
 
@@ -239,7 +239,7 @@ namespace demo
 	{
 		auto d3dDeviceContext = m_app.GetD3DDeviceContext();
 
-		auto wvp = m_worldMatrix;
+		auto wvp = GetWorldMatrix();
 		if (!!m_camera)
 			wvp *= m_camera->GetViewProjectionMatrix();
 		m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));

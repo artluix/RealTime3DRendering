@@ -14,7 +14,7 @@ namespace library
 
 	public:
 		explicit ProxyModelComponent(const Application& app, const Path& modelPath, const float scale);
-		~ProxyModelComponent() = default;
+		~ProxyModelComponent();
 
 		bool IsWireframeVisible() const { return m_isWireframeVisible; }
 		void SetWireframeVisible(const bool visible);
@@ -27,7 +27,13 @@ namespace library
 		void Update(const Time& time) override;
 		using DrawableComponent::Draw;
 
+		virtual const BasicEffectMaterial* GetEffectMaterial() const { return m_material.get(); }
+
+		void ApplyRotation(const math::Matrix4& rotation);
+
 	protected:
+		virtual BasicEffectMaterial* GetEffectMaterial() { return m_material.get(); }
+
 		void SetEffectData() override;
 		void Render() override;
 

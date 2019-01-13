@@ -2,7 +2,6 @@
 #include <library/components/SceneComponent.h>
 #include <library/effect/materials/TextureMappingEffectMaterial.h>
 #include <library/components/InputReceivableComponent.h>
-#include <library/DirectXForwardDeclarations.h>
 
 #include <memory>
 
@@ -36,7 +35,5 @@ namespace demo
 	private:
 		std::shared_ptr<library::Effect> m_effect;
 		std::unique_ptr<library::TextureMappingEffectMaterial> m_material;
-
-		ComPtr<ID3D11ShaderResourceView> m_textureShaderResourceView;
 	};
 } // namespace demo

@@ -9,7 +9,10 @@
 #include "library/Mesh.h"
 
 #include "library/Application.h"
+#include "library/Utils.h"
+#include "library/Exception.h"
 
+#include <DDSTextureLoader.h>
 #include <cassert>
 
 namespace library
@@ -25,6 +28,7 @@ namespace library
 		{
 			assert(material->IsInitialized());
 
+			// model
 			if (m_modelPath)
 			{
 				Model model(m_app, m_modelPath, true);
@@ -33,6 +37,29 @@ namespace library
 				m_vertexBuffer = material->CreateVertexBuffer(m_app.GetD3DDevice(), mesh);
 				m_indexBuffer = mesh.CreateIndexBuffer();
 				m_indicesCount = mesh.GetIndicesCount();
+			}
+		}
+
+		// texture
+		if (m_texturePath)
+		{
+			std::vector<library::byte> textureData;
+			utils::LoadBinaryFile(m_texturePath, textureData);
+			if (textureData.empty())
+			{
+				throw Exception("Load texture failed.");
+			}
+
+			auto hr = DirectX::CreateDDSTextureFromMemory(
+				m_app.GetD3DDevice(),
+				reinterpret_cast<const std::uint8_t*>(textureData.data()),
+				textureData.size(),
+				nullptr,
+				m_textureShaderResourceView.GetAddressOf()
+			);
+			if (FAILED(hr))
+			{
+				throw Exception("CreateDDSTextureFromMemory() failed.", hr);
 			}
 		}
 
@@ -97,5 +124,11 @@ namespace library
 	{
 		if (m_modelPath != path)
 			m_modelPath = path;
+	}
+
+	void DrawableComponent::SetTexturePath(const Path& path)
+	{
+		if (m_texturePath != path)
+			m_texturePath = path;
 	}
 } // namespace library

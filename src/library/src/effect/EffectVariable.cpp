@@ -66,5 +66,4 @@ namespace library
 		variable->SetMatrix(reinterpret_cast<const float*>(&value));
 		return *this;
 	}
-
 } // namespace library

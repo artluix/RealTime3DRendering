@@ -1,10 +1,11 @@
 #pragma once
 #include "library/RTTI.hpp"
+#include "library/NonCopyable.hpp"
 #include "library/Color.h"
 
 namespace library
 {
-	class LightComponent
+	class LightComponent : public NonCopyable<LightComponent>
 	{
 		RTTI_CLASS_BASE(LightComponent)
 

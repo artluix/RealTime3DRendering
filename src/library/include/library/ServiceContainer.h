@@ -16,5 +16,4 @@ namespace library
 	private:
 		static std::map<rtti::TypeId, void*> s_services;
 	};
-
 } // namespace library

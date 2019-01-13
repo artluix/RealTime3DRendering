@@ -12,6 +12,10 @@
 #include "components/ModelComponent.h"
 #include "components/TextureModelComponent.h"
 
+#include "components/DiffuseLightingEffectMaterialComponent.h"
+#include "components/PointLightEffectMaterialComponent.h"
+#include "components/SpotlightEffectMaterialComponent.h"
+
 #include "components/BasicEffectMaterialComponent.h"
 #include "components/TextureMappingEffectMaterialComponent.h"
 
@@ -20,7 +24,6 @@
 #include <library/Exception.h>
 
 #include <sstream>
-#include <iomanip>
 
 namespace demo
 {
@@ -38,8 +41,8 @@ namespace demo
 		const int showCmd
 	)
 		: library::Application(instanceHandle, windowClass, windowTitle, showCmd)
-		, m_keyboardComponent()
-		, m_mouseComponent()
+		, m_keyboard()
+		, m_mouse()
 	{
 		m_depthStencilBufferEnabled = true;
 		m_multiSamplingEnabled = true;
@@ -62,102 +65,120 @@ namespace demo
 		}
 
 		// keyboard
-		m_keyboardComponent = std::make_shared<KeyboardComponent>(*this, m_directInput);
-		m_components.push_back(m_keyboardComponent);
-		//m_services.AddService(m_keyboardComponent->GetTypeId(), m_keyboardComponent.get());
+		m_keyboard = std::make_shared<KeyboardComponent>(*this, m_directInput);
+		m_components.push_back(m_keyboard);
+		//m_services.AddService(m_keyboard->GetTypeId(), m_keyboard.get());
 
 		// mouse
-		m_mouseComponent = std::make_shared<MouseComponent>(*this, m_directInput);
-		m_components.push_back(m_mouseComponent);
+		m_mouse = std::make_shared<MouseComponent>(*this, m_directInput);
+		m_components.push_back(m_mouse);
 		//m_services.AddService(m_mouseComponent->GetTypeId(), m_mouseComponent.get());
 
 		// camera
-		auto cameraComponent = std::make_shared<FirstPersonCameraComponent>(*this);
-		cameraComponent->SetMouse(*m_mouseComponent);
-		cameraComponent->SetKeyboard(*m_keyboardComponent);
-		m_components.push_back(cameraComponent);
+		auto camera = std::make_shared<FirstPersonCameraComponent>(*this);
+		camera->SetMouse(*m_mouse);
+		camera->SetKeyboard(*m_keyboard);
+		m_components.push_back(camera);
 		//m_services.AddService(cameraComponent->GetTypeId(), cameraComponent.get());
 
 		// fps
-		auto fpsComponent = std::make_shared<FpsComponent>(*this);
-		m_components.push_back(fpsComponent);
+		auto fps = std::make_shared<FpsComponent>(*this);
+		m_components.push_back(fps);
 
 		// grid
-		auto gridComponent = std::make_shared<GridComponent>(*this);
-		gridComponent->SetCamera(*cameraComponent);
-		//m_components.push_back(gridComponent);
+		auto grid = std::make_shared<GridComponent>(*this);
+		grid->SetCamera(*camera);
+		//m_components.push_back(grid);
 
 		// triangle
-		auto triangleComponent = std::make_shared<TriangleComponent>(*this);
-		triangleComponent->SetCamera(*cameraComponent);
+		auto triangle = std::make_shared<TriangleComponent>(*this);
+		triangle->SetCamera(*camera);
 		//m_components.push_back(triangleComponent);
 
 		// cube
-		auto cubeComponent = std::make_shared<CubeComponent>(*this);
-		cubeComponent->SetCamera(*cameraComponent);
-		cubeComponent->SetKeyboard(*m_keyboardComponent);
+		auto cube = std::make_shared<CubeComponent>(*this);
+		cube->SetCamera(*camera);
+		cube->SetKeyboard(*m_keyboard);
 		//m_components.push_back(cubeComponent);
 
 		// model
-		auto modelComponent = std::make_shared<ModelComponent>(*this);
-		modelComponent->SetCamera(*cameraComponent);
-		modelComponent->SetKeyboard(*m_keyboardComponent);
+		auto model = std::make_shared<ModelComponent>(*this);
+		model->SetCamera(*camera);
+		model->SetKeyboard(*m_keyboard);
 		//m_components.push_back(modelComponent);
 
 		// texture with model
-		auto textureModelComponent = std::make_shared<TextureModelComponent>(*this);
-		textureModelComponent->SetCamera(*cameraComponent);
-		textureModelComponent->SetKeyboard(*m_keyboardComponent);
-		textureModelComponent->SetMouse(*m_mouseComponent);
+		auto textureModel = std::make_shared<TextureModelComponent>(*this);
+		textureModel->SetCamera(*camera);
+		textureModel->SetKeyboard(*m_keyboard);
+		textureModel->SetMouse(*m_mouse);
 		//m_components.push_back(textureModelComponent);
 
-		// basic material
-		auto basicMaterialComponent = std::make_shared<BasicEffectMaterialComponent>(*this);
-		basicMaterialComponent->SetCamera(*cameraComponent);
-		basicMaterialComponent->SetKeyboard(*m_keyboardComponent);
+		// basic
+		auto basic = std::make_shared<BasicEffectMaterialComponent>(*this);
+		basic->SetCamera(*camera);
+		basic->SetKeyboard(*m_keyboard);
 		//m_components.push_back(basicMaterialComponent);
 
-		// texture mapping material
-		auto textureMappingMaterialComponent = std::make_shared<TextureMappingEffectMaterialComponent>(*this);
-		textureMappingMaterialComponent->SetCamera(*cameraComponent);
-		textureMappingMaterialComponent->SetKeyboard(*m_keyboardComponent);
-		m_components.push_back(textureMappingMaterialComponent);
+		// texture mapping
+		auto textureMapping = std::make_shared<TextureMappingEffectMaterialComponent>(*this);
+		textureMapping->SetCamera(*camera);
+		textureMapping->SetKeyboard(*m_keyboard);
+		//m_components.push_back(textureMapping);
+
+		// diffuse lighting
+		auto diffuseLighting = std::make_shared<DiffuseLightingEffectMaterialComponent>(*this);
+		diffuseLighting->SetCamera(*camera);
+		diffuseLighting->SetKeyboard(*m_keyboard);
+		//m_components.push_back(diffuseLighting);
+
+		// point light
+		auto pointLight = std::make_shared<PointLightEffectMaterialComponent>(*this);
+		pointLight->SetCamera(*camera);
+		pointLight->SetKeyboard(*m_keyboard);
+		//m_components.push_back(pointLight);
+
+		// point light
+		auto spotlight = std::make_shared<SpotlightEffectMaterialComponent>(*this);
+		spotlight->SetCamera(*camera);
+		spotlight->SetKeyboard(*m_keyboard);
+		m_components.push_back(spotlight);
 
 		// skybox
-		auto skyboxComponent = std::make_shared<SkyboxComponent>(*this, k_skyboxCubeMapPath, 100.f);
-		skyboxComponent->SetCamera(*cameraComponent);
-		m_components.push_back(skyboxComponent);
+		auto skybox = std::make_shared<SkyboxComponent>(*this, k_skyboxCubeMapPath, 100.f);
+		skybox->SetCamera(*camera);
+		//m_components.push_back(skybox);
 
 		// mouse text component
-		auto mouseTextComponent = std::make_shared<TextComponent>(*this);
-		mouseTextComponent->SetTextGeneratorFunction(
+		auto mouseText = std::make_shared<TextComponent>(*this);
+		mouseText->SetTextGeneratorFunction(
 			[this]() -> std::wstring
 			{
 				static const std::wstring empty;
 
-				if (!!m_mouseComponent)
+				if (!!m_mouse)
 				{
 					std::wostringstream woss;
 					woss <<
-						L"Mouse Position: " << m_mouseComponent->GetX() << ", " << m_mouseComponent->GetY() << std::endl <<
-						L"Mouse Wheel: " << m_mouseComponent->GetWheel();
+						L"Mouse Position: " << m_mouse->GetX() << ", " << m_mouse->GetY() << std::endl <<
+						L"Mouse Wheel: " << m_mouse->GetWheel();
 					return woss.str();
 				}
 
 				return empty;
 			}
 		);
-		mouseTextComponent->SetPosition(math::Vector2(0.f, 50.f));
-		m_components.push_back(mouseTextComponent);
+		mouseText->SetPosition(math::Vector2(0.f, 50.f));
+		m_components.push_back(mouseText);
 
 		library::Application::Initialize();
 
-		cameraComponent->SetPosition(math::Vector3(0.0f, 0.0f, 50.0f));
+		camera->SetPosition(math::Vector3(0.0f, 0.0f, 50.0f));
 	}
 
 	void Application::Update(const library::Time& time)
 	{
-		if (m_keyboardComponent->WasKeyPressed(library::Key::Escape))
+		if (m_keyboard->WasKeyPressed(library::Key::Escape))
 		{
 			Exit();
 		}

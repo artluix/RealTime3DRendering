@@ -45,5 +45,4 @@ namespace library
 		assert(passIdx < m_passes.size());
 		return *m_passes[passIdx];
 	}
-
 } // namespace library

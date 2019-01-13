@@ -48,7 +48,7 @@ namespace library
 
 	void FirstPersonCameraComponent::Update(const Time& time)
 	{
-		const auto elapsedTime = time.elapsed.GetMilliseconds<float>();
+		const auto elapsedTime = time.elapsed.GetMilliseconds();
 
 		// compute rotation
 		if (!!m_mouse)

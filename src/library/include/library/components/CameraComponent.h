@@ -30,8 +30,8 @@ namespace library
 		float GetNearPlaneDistance() const { return m_nearPlaneDistance; }
 		float GetFarPlaneDistance() const { return m_farPlaneDistance; }
 
-		math::Matrix4 GetViewMatrix() const { return m_viewMatrix; }
-		math::Matrix4 GetProjectionMatrix() const { return m_projectionMatrix; }
+		const math::Matrix4& GetViewMatrix() const { return m_viewMatrix; }
+		const math::Matrix4& GetProjectionMatrix() const { return m_projectionMatrix; }
 		math::Matrix4 GetViewProjectionMatrix() const;
 
 		virtual void SetPosition(const math::Vector3& position);

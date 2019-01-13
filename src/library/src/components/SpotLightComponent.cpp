@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "library/components/SpotLightComponent.h"
+#include "library/components/SpotlightComponent.h"
 
 namespace library
 {
@@ -9,19 +9,19 @@ namespace library
 		constexpr float k_defaultOuterAngle = 0.25f;
 	}
 
-	SpotLightComponent::SpotLightComponent()
+	SpotlightComponent::SpotlightComponent()
 		: LightComponent()
 		, m_innerAngle(k_defaultInnerAngle)
 		, m_outerAngle(k_defaultOuterAngle)
 	{
 	}
 
-	void SpotLightComponent::SetInnerAngle(const float innerAngle)
+	void SpotlightComponent::SetInnerAngle(const float innerAngle)
 	{
 		m_innerAngle = innerAngle;
 	}
 
-	void SpotLightComponent::SetOuterAngle(const float outerAngle)
+	void SpotlightComponent::SetOuterAngle(const float outerAngle)
 	{
 		m_outerAngle = outerAngle;
 	}

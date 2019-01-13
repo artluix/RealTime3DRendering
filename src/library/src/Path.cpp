@@ -128,5 +128,4 @@ namespace library
 	{
 		m_wstring = utils::ToWideString(m_string);
 	}
-
 } // namespace library

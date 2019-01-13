@@ -155,8 +155,8 @@ namespace demo
 
 	void TriangleComponent::Update(const Time& time)
 	{
-		auto rotation = m_rotation;
-		rotation.z += math::Pi_Div_2 * time.elapsed.GetSeconds<float>();
+		auto rotation = GetRotation();
+		rotation.z += math::Pi_Div_2 * time.elapsed.GetSeconds();
 		SetRotation(rotation);
 	}
 
@@ -164,7 +164,7 @@ namespace demo
 	{
 		auto d3dDeviceContext = m_app.GetD3DDeviceContext();
 
-		auto wvp = m_worldMatrix;
+		auto wvp = GetWorldMatrix();
 		if (!!m_camera)
 			wvp *= m_camera->GetViewProjectionMatrix();
 

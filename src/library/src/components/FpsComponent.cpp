@@ -36,7 +36,7 @@ namespace library
 		std::wostringstream woss;
 		woss << std::setprecision(4) <<
 			L"Frame Rate: " << m_frameRate << "\n" <<
-			L"Total Elapsed Time: " << time.total.GetSeconds<float>();
+			L"Total Elapsed Time: " << time.total.GetSeconds();
 
 		SetText(woss.str());
 	}

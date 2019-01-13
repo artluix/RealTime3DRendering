@@ -30,9 +30,9 @@ namespace library
 
 	SkyboxComponent::SkyboxComponent(const Application& app, const Path& cubeMapPath, const float scale)
 		: SceneComponent(app)
-		, m_cubeMapPath(cubeMapPath)
 	{
 		SetModelPath(k_modelPath);
+		SetTexturePath(cubeMapPath);
 		SetScaling(math::Vector3(scale));
 	}
 
@@ -45,28 +45,6 @@ namespace library
 		m_material->Initialize();
 
 		DrawableComponent::Initialize();
-
-		// Load the texture
-		{
-			std::vector<library::byte> textureData;
-			utils::LoadBinaryFile(m_cubeMapPath, textureData);
-			if (textureData.empty())
-			{
-				throw Exception("Load texture failed.");
-			}
-
-			auto hr = DirectX::CreateDDSTextureFromMemory(
-				m_app.GetD3DDevice(),
-				reinterpret_cast<const std::uint8_t*>(textureData.data()),
-				textureData.size(),
-				nullptr,
-				m_cubeMapShaderResourceView.GetAddressOf()
-			);
-			if (FAILED(hr))
-			{
-				throw Exception("CreateDDSTextureFromMemory() failed.", hr);
-			}
-		}
 	}
 
 	void SkyboxComponent::Update(const Time& time)
@@ -80,12 +58,12 @@ namespace library
 
 	void SkyboxComponent::SetEffectData()
 	{
-		auto wvp = m_worldMatrix;
+		auto wvp = GetWorldMatrix();
 		if (!!m_camera)
 			wvp *= m_camera->GetViewProjectionMatrix();
+
 		m_material->GetWorldViewProjection() << wvp;
-			
-		m_material->GetSkyboxTexture() << m_cubeMapShaderResourceView.Get();
+		m_material->GetSkyboxTexture() << m_textureShaderResourceView.Get();
 
 		DrawableComponent::SetEffectData();
 	}

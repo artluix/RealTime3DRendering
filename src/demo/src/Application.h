@@ -31,8 +31,8 @@ namespace demo
 		void Shutdown() override;
 
 	private:
-		std::shared_ptr<library::KeyboardComponent> m_keyboardComponent;
-		std::shared_ptr<library::MouseComponent> m_mouseComponent;
+		std::shared_ptr<library::KeyboardComponent> m_keyboard;
+		std::shared_ptr<library::MouseComponent> m_mouse;
 
 		ComPtr<IDirectInput8> m_directInput;
 	};

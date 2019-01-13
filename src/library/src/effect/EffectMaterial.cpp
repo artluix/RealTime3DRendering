@@ -106,5 +106,4 @@ namespace library
 
 		return vertexBuffer;
 	}
-
 } // namespace library

@@ -12,8 +12,6 @@
 #include <library/effect/EffectTechnique.h>
 #include <library/effect/EffectVariable.h>
 
-#include <DDSTextureLoader.h>
-
 namespace demo
 {
 	using namespace library;
@@ -39,6 +37,7 @@ namespace demo
 		, InputReceivableComponent()
 	{
 		SetModelPath(k_modelPath);
+		SetTexturePath(k_texturePath);
 	}
 
 	void TextureMappingEffectMaterialComponent::Initialize()
@@ -50,28 +49,6 @@ namespace demo
 		m_material->Initialize();
 
 		DrawableComponent::Initialize();
-
-		// Load the texture
-		{
-			std::vector<library::byte> textureData;
-			utils::LoadBinaryFile(k_texturePath, textureData);
-			if (textureData.empty())
-			{
-				throw Exception("Load texture failed.");
-			}
-
-			auto hr = DirectX::CreateDDSTextureFromMemory(
-				m_app.GetD3DDevice(),
-				reinterpret_cast<const std::uint8_t*>(textureData.data()),
-				textureData.size(),
-				nullptr,
-				m_textureShaderResourceView.GetAddressOf()
-			);
-			if (FAILED(hr))
-			{
-				throw Exception("CreateDDSTextureFromMemory() failed.", hr);
-			}
-		}
 	}
 
 	void TextureMappingEffectMaterialComponent::Update(const Time& time)
@@ -81,7 +58,7 @@ namespace demo
 			// rotation
 			if (m_keyboard->IsKeyDown(Key::R))
 			{
-				const auto rotationDelta = k_rotationAngle * time.elapsed.GetSeconds<float>();
+				const auto rotationDelta = k_rotationAngle * time.elapsed.GetSeconds();
 				Rotate(rotationDelta);
 			}
 
@@ -118,7 +95,7 @@ namespace demo
 
 	void TextureMappingEffectMaterialComponent::SetEffectData()
 	{
-		auto wvp = m_worldMatrix;
+		auto wvp = GetWorldMatrix();
 		if (!!m_camera)
 			wvp *= m_camera->GetViewProjectionMatrix();
 		m_material->GetWVP() << wvp;

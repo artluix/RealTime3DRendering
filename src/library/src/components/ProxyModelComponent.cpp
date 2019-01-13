@@ -34,6 +34,8 @@ namespace library
 		SetScaling(math::Vector3(scale));
 	}
 
+	ProxyModelComponent::~ProxyModelComponent() = default;
+
 	void ProxyModelComponent::SetWireframeVisible(const bool visible)
 	{
 		m_isWireframeVisible = visible;
@@ -54,11 +56,17 @@ namespace library
 	{
 	}
 
+	void ProxyModelComponent::ApplyRotation(const math::Matrix4& rotation)
+	{
+
+	}
+
 	void ProxyModelComponent::SetEffectData()
 	{
-		auto wvp = m_worldMatrix;
+		auto wvp = GetWorldMatrix();
 		if (!!m_camera)
 			wvp *= m_camera->GetViewProjectionMatrix();
+		m_material->GetWorldViewProjection() << wvp;
 
 		DrawableComponent::SetEffectData();
 	}

@@ -23,7 +23,7 @@ namespace library::math
 	//-------------------------------------------------------------------------
 
 	constexpr Matrix<3> Matrix<3>::Zero = Matrix<3>(0.f);
-	constexpr Matrix<3> Matrix<3>::One = Matrix<3>(
+	constexpr Matrix<3> Matrix<3>::Identity = Matrix<3>(
 		1.f, 0.f, 0.f,
 		0.f, 1.f, 0.f,
 		0.f, 0.f, 1.f
@@ -103,7 +103,7 @@ namespace library::math
 	//-------------------------------------------------------------------------
 
 	constexpr Matrix<4> Matrix<4>::Zero = Matrix<4>(0.f);
-	constexpr Matrix<4> Matrix<4>::One = Matrix<4>(
+	constexpr Matrix<4> Matrix<4>::Identity = Matrix<4>(
 		1.f, 0.f, 0.f, 0.f,
 		0.f, 1.f, 0.f, 0.f, 
 		0.f, 0.f, 1.f, 0.f,
@@ -163,12 +163,12 @@ namespace library::math
 		return Store(DirectX::XMMatrixRotationAxis(axis.Load(), angle));
 	}
 
-	Matrix<4> Matrix<4>::RotationRollPitchYaw(const float roll, const float pitch, const float yaw)
+	Matrix<4> Matrix<4>::RotationPitchYawRoll(const float roll, const float pitch, const float yaw)
 	{
-		return Store(DirectX::XMMatrixRotationRollPitchYaw(roll, pitch, yaw));
+		return Store(DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll));
 	}
 
-	Matrix<4> Matrix<4>::RotationRollPitchYaw(const Vector3& vector)
+	Matrix<4> Matrix<4>::RotationPitchYawRoll(const Vector3& vector)
 	{
 		return Store(DirectX::XMMatrixRotationRollPitchYawFromVector(vector.Load()));
 	}
@@ -313,5 +313,4 @@ namespace library::math
 		vector = Vector4::Store(DirectX::XMVector4Transform(vector.Load(), matrix.Load()));
 		return vector;
 	}
-
 } // namespace library::math

@@ -66,5 +66,4 @@ namespace library
 	{
 		return m_string > other.m_string;
 	}
-
 } // namespace library

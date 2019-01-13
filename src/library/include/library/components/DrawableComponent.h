@@ -22,6 +22,9 @@ namespace library
 		const Path& GetModelPath() const { return m_modelPath; }
 		void SetModelPath(const Path& path);
 
+		const Path& GetTexturePath() const { return m_texturePath; }
+		void SetTexturePath(const Path& path);
+
 		virtual const EffectMaterial* GetEffectMaterial() const { return nullptr; }
 
 		void Initialize() override;
@@ -41,9 +44,11 @@ namespace library
 		bool m_visible = true;
 
 		Path m_modelPath;
+		Path m_texturePath;
 
 		ComPtr<ID3D11Buffer> m_indexBuffer;
 		ComPtr<ID3D11Buffer> m_vertexBuffer;
+		ComPtr<ID3D11ShaderResourceView> m_textureShaderResourceView;
 
 		unsigned m_indicesCount = 0;
 	};

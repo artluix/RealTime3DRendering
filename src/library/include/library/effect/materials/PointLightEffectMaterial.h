@@ -4,21 +4,25 @@
 
 namespace library
 {
-	class DiffuseLightingEffectMaterial : public EffectMaterial
+	class PointLightEffectMaterial : public EffectMaterial
 	{
-		RTTI_CLASS(DiffuseLightingEffectMaterial, EffectMaterial)
+		RTTI_CLASS(PointLightEffectMaterial, EffectMaterial)
 
 	public:
 		using Vertex = VertexPositionTextureNormal;
 
-		explicit DiffuseLightingEffectMaterial(const Effect& effect);
-		~DiffuseLightingEffectMaterial();
+		explicit PointLightEffectMaterial(const Effect& effect);
+		~PointLightEffectMaterial();
 
 		EffectVariable& GetWVP() const { return m_wvp; }
 		EffectVariable& GetWorld() const { return m_world; }
+		EffectVariable& GetSpecularPower() const { return m_specularPower; }
+		EffectVariable& GetSpecularColor() const { return m_specularColor; }
 		EffectVariable& GetAmbientColor() const { return m_ambientColor; }
 		EffectVariable& GetLightColor() const { return m_lightColor; }
-		EffectVariable& GetLightDirection() const { return m_lightDirection; }
+		EffectVariable& GetLightPosition() const { return m_lightPosition; }
+		EffectVariable& GetLightRadius() const { return m_lightRadius; }
+		EffectVariable& GetCameraPosition() const { return m_cameraPosition; }
 		EffectVariable& GetColorTexture() const { return m_colorTexture; }
 
 		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
@@ -29,9 +33,13 @@ namespace library
 
 		EffectVariable& m_wvp;
 		EffectVariable& m_world;
+		EffectVariable& m_specularPower;
+		EffectVariable& m_specularColor;
 		EffectVariable& m_ambientColor;
 		EffectVariable& m_lightColor;
-		EffectVariable& m_lightDirection;
+		EffectVariable& m_lightPosition;
+		EffectVariable& m_lightRadius;
+		EffectVariable& m_cameraPosition;
 		EffectVariable& m_colorTexture;
 	};
 } // namespace library

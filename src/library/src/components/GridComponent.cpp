@@ -165,7 +165,7 @@ namespace library
 	{
 		auto deviceContext = m_app.GetD3DDeviceContext();
 
-		auto wvp = m_worldMatrix;
+		auto wvp = GetWorldMatrix();
 		if (!!m_camera)
 			wvp *= m_camera->GetViewProjectionMatrix();
 		m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));

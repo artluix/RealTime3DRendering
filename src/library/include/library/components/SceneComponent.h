@@ -15,6 +15,7 @@ namespace library
 		const math::Vector3& GetRotation() const { return m_rotation; }
 		const math::Vector3& GetScaling() const { return m_scaling; }
 		const math::Matrix4& GetWorldMatrix() const { return m_worldMatrix; }
+		const math::Matrix4& GetExtraTransform() const { return m_worldMatrix; }
 
 		void SetPosition(const math::Vector3& position);
 		void Translate(const math::Vector3& translation);
@@ -25,9 +26,13 @@ namespace library
 		void SetScaling(const math::Vector3& scaling);
 		void Scale(const math::Vector3& scaling);
 
+		void ApplyExtraTransform(const math::Matrix4& extraTransform);
+		void SetExtraTransform(const math::Matrix4& extraTransform);
+
 	protected:
 		explicit SceneComponent(const Application& app);
 
+	private:
 		void UpdateWorldMatrix();
 
 		math::Vector3 m_position;
@@ -35,5 +40,6 @@ namespace library
 		math::Vector3 m_scaling;
 
 		math::Matrix4 m_worldMatrix;
+		math::Matrix4 m_extraTransform;
 	};
 } // namespace library

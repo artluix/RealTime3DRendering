@@ -1,12 +1,13 @@
 #pragma once
 #include "library/RTTI.hpp"
+#include "library/NonCopyable.hpp"
 
 namespace library
 {
 	class KeyboardComponent;
 	class MouseComponent;
 
-	class InputReceivableComponent
+	class InputReceivableComponent : public NonCopyable<InputReceivableComponent>
 	{
 		RTTI_CLASS_BASE(InputReceivableComponent)
 

@@ -415,5 +415,4 @@ namespace library::math
 		lhs /= Vector<Size>(value);
 		return lhs;
 	}
-
 } // namespace library::math

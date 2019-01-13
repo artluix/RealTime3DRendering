@@ -38,7 +38,6 @@ namespace demo
 		ComPtr<ID3D11Buffer> m_vertexBuffer;
 
 		// texture mapping specific
-		ComPtr<ID3D11ShaderResourceView> m_textureShaderResourceView;
 		ComPtr<ID3DX11EffectShaderResourceVariable> m_colorTextureVariable;
 
 		unsigned m_indicesCount;

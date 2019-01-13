@@ -289,5 +289,4 @@ namespace library::math
 	{
 		return DirectX::XMVector4LessOrEqual(lhs.Load(), rhs.Load());
 	}
-
 } // namespace library::math

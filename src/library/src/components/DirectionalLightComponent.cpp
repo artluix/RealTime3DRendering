@@ -8,8 +8,11 @@ namespace library
 		, m_direction(math::Vector3::Forward)
 		, m_up(math::Vector3::Up)
 		, m_right(math::Vector3::Right)
+		, m_worldMatrix(math::Matrix4::Identity)
 	{
 	}
+
+	DirectionalLightComponent::~DirectionalLightComponent() = default;
 
 	void DirectionalLightComponent::ApplyRotation(const math::Matrix4& transform)
 	{
@@ -22,5 +25,9 @@ namespace library
 		m_direction = direction;
 		m_up = up;
 		m_right = right;
+
+		m_worldMatrix.SetForward(m_direction);
+		m_worldMatrix.SetRight(m_right);
+		m_worldMatrix.SetUp(m_up);
 	}
 } // namespace library

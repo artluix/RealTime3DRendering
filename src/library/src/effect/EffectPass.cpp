@@ -41,5 +41,4 @@ namespace library
 	{
 		m_pass->Apply(flags, deviceContext);
 	}
-
 } // namespace library

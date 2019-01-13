@@ -69,7 +69,7 @@ namespace library::math
 		//-------------------------------------------------------------------------
 
 		static const Matrix Zero;
-		static const Matrix One;
+		static const Matrix Identity;
 
 		//-------------------------------------------------------------------------
 
@@ -164,7 +164,7 @@ namespace library::math
 		//-------------------------------------------------------------------------
 
 		static const Matrix Zero;
-		static const Matrix One;
+		static const Matrix Identity;
 
 		//-------------------------------------------------------------------------
 
@@ -188,8 +188,8 @@ namespace library::math
 
 		static Matrix RotationAxis(const Vector3& axis, const float angle);
 
-		static Matrix RotationRollPitchYaw(const float roll, const float pitch, const float yaw);
-		static Matrix RotationRollPitchYaw(const Vector3& vector);
+		static Matrix RotationPitchYawRoll(const float pitch, const float yaw, const float roll);
+		static Matrix RotationPitchYawRoll(const Vector3& vector);
 
 		static Matrix RotationX(const float angle);
 		static Matrix RotationY(const float angle);
@@ -298,5 +298,4 @@ namespace library::math
 		lhs = Matrix<Size>::Store(DirectX::XMMatrixMultiply(lhs.Load(), rhs.Load()));
 		return lhs;
 	}
-
 } // namespace library::math

@@ -6,12 +6,14 @@ namespace library
 	SceneComponent::SceneComponent(const Application& app)
 		: DrawableComponent(app)
 		, m_scaling(math::Vector3::One)
+		, m_worldMatrix(math::Matrix4::Identity)
+		, m_extraTransform(math::Matrix4::Identity)
 	{
 		UpdateWorldMatrix();
 	}
 
 	SceneComponent::~SceneComponent() = default;
-
+	
 	//-------------------------------------------------------------------------
 
 	void SceneComponent::SetPosition(const math::Vector3& position)
@@ -74,12 +76,27 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
+	void SceneComponent::ApplyExtraTransform(const math::Matrix4& extraTransform)
+	{
+		m_extraTransform *= extraTransform;
+		UpdateWorldMatrix();
+	}
+
+	void SceneComponent::SetExtraTransform(const math::Matrix4& extraTransform)
+	{
+		m_extraTransform = extraTransform;
+		UpdateWorldMatrix();
+	}
+
+	//-------------------------------------------------------------------------
+
 	void SceneComponent::UpdateWorldMatrix()
 	{
 		const auto translationMatrix = math::Matrix4::Translation(m_position);
-		const auto rotationMatrix = math::Matrix4::RotationRollPitchYaw(m_rotation);
+		const auto rotationMatrix = math::Matrix4::RotationPitchYawRoll(m_rotation);
 		const auto scalingMatrix = math::Matrix4::Scaling(m_scaling);
 
 		m_worldMatrix = scalingMatrix * rotationMatrix * translationMatrix;
+		m_worldMatrix *= m_extraTransform;
 	}
 } // namespace library
