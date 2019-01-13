@@ -155,6 +155,8 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     }
 
     OUT.rgb = ambient + (spotFactor * (diffuse + specular));
+    OUT.a = 1.0f;
+
     return OUT;
 }
 

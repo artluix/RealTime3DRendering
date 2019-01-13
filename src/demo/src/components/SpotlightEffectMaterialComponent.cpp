@@ -69,7 +69,7 @@ namespace demo
 
 		DrawableComponent::Initialize();
 
-		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.5f);
+		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.3f);
 		m_proxyModel->SetCamera(*m_camera);
 		m_proxyModel->SetRotation(math::Vector3(math::Pi_Div_2, 0.f, 0.f));
 		m_proxyModel->SetPosition(math::Vector3(0.0f, 0.f, 5.f));
@@ -97,7 +97,7 @@ namespace demo
 		m_text->Initialize();
 
 		m_spotlight = std::make_unique<SpotlightComponent>();
-		m_spotlight->SetRadius(50.f);
+		m_spotlight->SetRadius(10.f);
 		m_spotlight->SetPosition(math::Vector3(0.0f, 0.f, 5.f));
 
 		SetRotation(math::Vector3(math::Pi_Div_2, 0.f, 0.f));
@@ -194,16 +194,16 @@ namespace demo
 				math::Vector2 rotationAmount;
 
 				if (m_keyboard->IsKeyDown(Key::Left))
-					rotationAmount.x -= k_lightRotationRate.x * elapsedTime;
-
-				if (m_keyboard->IsKeyDown(Key::Right))
 					rotationAmount.x += k_lightRotationRate.x * elapsedTime;
 
+				if (m_keyboard->IsKeyDown(Key::Right))
+					rotationAmount.x -= k_lightRotationRate.x * elapsedTime;
+
 				if (m_keyboard->IsKeyDown(Key::Up))
-					rotationAmount.y -= k_lightRotationRate.y * elapsedTime;
+					rotationAmount.y += k_lightRotationRate.y * elapsedTime;
 
 				if (m_keyboard->IsKeyDown(Key::Down))
-					rotationAmount.y += k_lightRotationRate.y * elapsedTime;
+					rotationAmount.y -= k_lightRotationRate.y * elapsedTime;
 
 				if (rotationAmount)
 				{
