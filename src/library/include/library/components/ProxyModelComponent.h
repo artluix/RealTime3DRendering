@@ -24,12 +24,9 @@ namespace library
 		const math::Vector3& GetRight() const { return m_right; }
 
 		void Initialize() override;
-		void Update(const Time& time) override;
 		using DrawableComponent::Draw;
 
 		virtual const BasicEffectMaterial* GetEffectMaterial() const { return m_material.get(); }
-
-		void ApplyRotation(const math::Matrix4& rotation);
 
 	protected:
 		virtual BasicEffectMaterial* GetEffectMaterial() { return m_material.get(); }

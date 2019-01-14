@@ -52,15 +52,6 @@ namespace library
 		DrawableComponent::Initialize();
 	}
 
-	void ProxyModelComponent::Update(const Time& time)
-	{
-	}
-
-	void ProxyModelComponent::ApplyRotation(const math::Matrix4& rotation)
-	{
-
-	}
-
 	void ProxyModelComponent::SetEffectData()
 	{
 		auto wvp = GetWorldMatrix();

@@ -7,7 +7,9 @@ namespace library
 		: DrawableComponent(app)
 		, m_scaling(math::Vector3::One)
 		, m_worldMatrix(math::Matrix4::Identity)
-		, m_extraTransform(math::Matrix4::Identity)
+		, m_direction(math::Vector3::Forward)
+		, m_up(math::Vector3::Up)
+		, m_right(math::Vector3::Right)
 	{
 		UpdateWorldMatrix();
 	}
@@ -40,6 +42,7 @@ namespace library
 		if (m_rotation != rotation)
 		{
 			m_rotation = rotation;
+
 			UpdateWorldMatrix();
 		}
 	}
@@ -76,27 +79,16 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void SceneComponent::ApplyExtraTransform(const math::Matrix4& extraTransform)
-	{
-		m_extraTransform *= extraTransform;
-		UpdateWorldMatrix();
-	}
-
-	void SceneComponent::SetExtraTransform(const math::Matrix4& extraTransform)
-	{
-		m_extraTransform = extraTransform;
-		UpdateWorldMatrix();
-	}
-
-	//-------------------------------------------------------------------------
-
 	void SceneComponent::UpdateWorldMatrix()
 	{
 		const auto translationMatrix = math::Matrix4::Translation(m_position);
 		const auto rotationMatrix = math::Matrix4::RotationPitchYawRoll(m_rotation);
 		const auto scalingMatrix = math::Matrix4::Scaling(m_scaling);
 
+		m_direction = rotationMatrix.GetForward();
+		m_up = rotationMatrix.GetUp();
+		m_right = rotationMatrix.GetRight();
+
 		m_worldMatrix = scalingMatrix * rotationMatrix * translationMatrix;
-		m_worldMatrix *= m_extraTransform;
 	}
 } // namespace library

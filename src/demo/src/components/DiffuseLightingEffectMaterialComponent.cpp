@@ -29,6 +29,9 @@ namespace demo
 		constexpr float k_lightModulationRate = k_byteMax / 40;
 		constexpr math::Vector2 k_lightRotationRate = math::Vector2(math::Pi_2);
 
+		constexpr float k_proxyModelDistance = 10.f;
+		constexpr auto k_rotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
+
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
 #if defined(DEBUG) || defined(DEBUG)
 			Path("../data/effects/DiffuseLighting_d.fxc")
@@ -64,9 +67,11 @@ namespace demo
 
 		DrawableComponent::Initialize();
 
+		m_directionalLight = std::make_unique<DirectionalLightComponent>();
+
 		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.5f);
-		m_proxyModel->SetPosition(math::Vector3(0.f, 0.f, 10.f));
-		m_proxyModel->Rotate(math::Vector3(0.f, math::Pi_Div_2, 0.f));
+		m_proxyModel->Rotate(math::Vector3(k_rotationOffset));
+		m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistance);
 		m_proxyModel->SetCamera(*m_camera);
 		m_proxyModel->Initialize();
 
@@ -84,8 +89,6 @@ namespace demo
 			}
 		);
 		m_text->Initialize();
-
-		m_directionalLight = std::make_unique<DirectionalLightComponent>();
 	}
 
 	void DiffuseLightingEffectMaterialComponent::Update(const Time& time)
@@ -160,13 +163,12 @@ namespace demo
 
 			if (rotationAmount)
 			{
-				auto pitch = math::Matrix4::RotationAxis(m_directionalLight->GetRight(), rotationAmount.y);
-				auto yaw = math::Matrix4::RotationAxis(m_directionalLight->GetUp(), rotationAmount.x);
+				m_directionalLight->Rotate(math::Vector3(rotationAmount.y, rotationAmount.x, 0.f));
 
-				auto rotation = pitch * yaw;
-
-				m_directionalLight->ApplyRotation(rotation);
-				m_proxyModel->ApplyExtraTransform(rotation);
+				const auto& dirLightRot = m_directionalLight->GetRotation();
+				auto proxyModelRotation = math::Vector3(0.f, dirLightRot.y, dirLightRot.x) + k_rotationOffset;
+				m_proxyModel->SetRotation(proxyModelRotation);
+				m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistance);
 			}
 		}
 	}

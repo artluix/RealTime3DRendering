@@ -138,7 +138,7 @@ namespace demo
 		pointLight->SetKeyboard(*m_keyboard);
 		//m_components.push_back(pointLight);
 
-		// point light
+		// spot light
 		auto spotlight = std::make_shared<SpotlightEffectMaterialComponent>(*this);
 		spotlight->SetCamera(*camera);
 		spotlight->SetKeyboard(*m_keyboard);

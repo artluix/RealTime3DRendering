@@ -13,14 +13,16 @@ namespace library
 		const math::Vector3& GetDirection() const { return m_direction; }
 		const math::Vector3& GetUp() const { return m_up; }
 		const math::Vector3& GetRight() const { return m_right; }
-		const math::Matrix4& GetWorldMatrix() const { return m_worldMatrix; }
+		const math::Vector3& GetRotation() const { return m_rotation; }
 
-		void ApplyRotation(const math::Matrix4& transform);
+		void Rotate(const math::Vector3& rotation);
+		void SetRotation(const math::Vector3& rotation);
 
 	protected:
 		math::Vector3 m_direction;
 		math::Vector3 m_up;
 		math::Vector3 m_right;
-		math::Matrix4 m_worldMatrix;
+
+		math::Vector3 m_rotation;
 	};
 } // namespace library
