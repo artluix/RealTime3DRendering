@@ -78,6 +78,24 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
+	struct VertexPositionTextureNormalTangent : public VertexPositionTextureNormal
+	{
+		DirectX::XMFLOAT3 tangent;
+
+		explicit VertexPositionTextureNormalTangent(
+			const DirectX::XMFLOAT4& position,
+			const DirectX::XMFLOAT2& textureCoordinates,
+			const DirectX::XMFLOAT3& normal,
+			const DirectX::XMFLOAT3& tangent
+		)
+			: VertexPositionTextureNormal(position, textureCoordinates, normal)
+			, tangent(tangent)
+		{
+		}
+	};
+
+	//-------------------------------------------------------------------------
+
 	struct VertexPositionTextureNormalSkinned : public VertexPositionTextureNormal
 	{
 		DirectX::XMUINT4 boneIndices;

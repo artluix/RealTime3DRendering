@@ -24,44 +24,8 @@ namespace library
 
 	void DrawableComponent::Initialize()
 	{
-		if (const auto material = GetEffectMaterial())
-		{
-			assert(material->IsInitialized());
-
-			// model
-			if (m_modelPath)
-			{
-				Model model(m_app, m_modelPath, true);
-
-				const auto& mesh = model.GetMesh(0);
-				m_vertexBuffer = material->CreateVertexBuffer(m_app.GetD3DDevice(), mesh);
-				m_indexBuffer = mesh.CreateIndexBuffer();
-				m_indicesCount = mesh.GetIndicesCount();
-			}
-		}
-
-		// texture
-		if (m_texturePath)
-		{
-			std::vector<library::byte> textureData;
-			utils::LoadBinaryFile(m_texturePath, textureData);
-			if (textureData.empty())
-			{
-				throw Exception("Load texture failed.");
-			}
-
-			auto hr = DirectX::CreateDDSTextureFromMemory(
-				m_app.GetD3DDevice(),
-				reinterpret_cast<const std::uint8_t*>(textureData.data()),
-				textureData.size(),
-				nullptr,
-				m_textureShaderResourceView.GetAddressOf()
-			);
-			if (FAILED(hr))
-			{
-				throw Exception("CreateDDSTextureFromMemory() failed.", hr);
-			}
-		}
+		LoadModel(m_modelPath, m_vertexBuffer, m_indexBuffer);
+		LoadTexture(m_texturePath, m_textureShaderResourceView);
 
 		m_app.GetRenderer()->RegisterForRender(this);
 	}
@@ -86,10 +50,17 @@ namespace library
 			auto inputLayout = material->GetInputLayout(pass);
 			deviceContext->IASetInputLayout(inputLayout);
 
-			unsigned stride = material->GetVertexSize();
-			unsigned offset = 0;
-			deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
-			deviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+			if (!!m_vertexBuffer)
+			{
+				unsigned stride = material->GetVertexSize();
+				unsigned offset = 0;
+				deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
+			}
+
+			if (!!m_indexBuffer)
+			{
+				deviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+			}
 		}
 	}
 
@@ -106,7 +77,59 @@ namespace library
 
 	void DrawableComponent::Render()
 	{
-		m_app.GetD3DDeviceContext()->DrawIndexed(m_indicesCount, 0, 0);
+		auto deviceContext = m_app.GetD3DDeviceContext();
+
+		if (m_indicesCount > 0)
+			deviceContext->DrawIndexed(m_indicesCount, 0, 0);
+		else
+			deviceContext->Draw(m_verticesCount, 0);
+	}
+
+	void DrawableComponent::LoadModel(const Path& modelPath, ComPtr<ID3D11Buffer>& vertexBuffer, ComPtr<ID3D11Buffer>& indexBuffer)
+	{
+		if (const auto material = GetEffectMaterial())
+		{
+			assert(material->IsInitialized());
+
+			// model
+			if (modelPath)
+			{
+				Model model(m_app, modelPath, true);
+
+				const auto& mesh = model.GetMesh(0);
+				m_vertexBuffer = material->CreateVertexBuffer(m_app.GetD3DDevice(), mesh);
+				m_indexBuffer = mesh.CreateIndexBuffer();
+
+				m_indicesCount = mesh.GetIndicesCount();
+				m_verticesCount = mesh.GetVerticesCount();
+			}
+		}
+	}
+
+	void DrawableComponent::LoadTexture(const Path& texturePath, ComPtr<ID3D11ShaderResourceView>& textureShaderResourceView)
+	{
+		// texture
+		if (texturePath)
+		{
+			std::vector<library::byte> textureData;
+			utils::LoadBinaryFile(texturePath, textureData);
+			if (textureData.empty())
+			{
+				throw Exception("Load texture failed.");
+			}
+
+			auto hr = DirectX::CreateDDSTextureFromMemory(
+				m_app.GetD3DDevice(),
+				reinterpret_cast<const std::uint8_t*>(textureData.data()),
+				textureData.size(),
+				nullptr,
+				textureShaderResourceView.GetAddressOf()
+			);
+			if (FAILED(hr))
+			{
+				throw Exception("CreateDDSTextureFromMemory() failed.", hr);
+			}
+		}
 	}
 
 	void DrawableComponent::SetVisible(const bool visible)

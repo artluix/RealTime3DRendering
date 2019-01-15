@@ -30,10 +30,11 @@ if(APPLICATION)
                 # materials
                     include/library/effect/materials/BasicEffectMaterial.h
                     include/library/effect/materials/DiffuseLightingEffectMaterial.h
+                    include/library/effect/materials/NormalMappingEffectMaterial.h
                     include/library/effect/materials/PointLightEffectMaterial.h
                     include/library/effect/materials/SkyboxEffectMaterial.h
-                    include/library/effect/materials/SkyboxEffectMaterial.h
                     include/library/effect/materials/SpotlightEffectMaterial.h
+                    include/library/effect/materials/TextureMappingEffectMaterial.h
 
                 include/library/effect/Effect.h
                 include/library/effect/EffectMaterial.h
@@ -95,10 +96,11 @@ if(APPLICATION)
                 # materials
                     src/effect/materials/BasicEffectMaterial.cpp
                     src/effect/materials/DiffuseLightingEffectMaterial.cpp
-                    src/effect/materials/TextureMappingEffectMaterial.cpp
+                    src/effect/materials/NormalMappingEffectMaterial.cpp
                     src/effect/materials/PointLightEffectMaterial.cpp
                     src/effect/materials/SkyboxEffectMaterial.cpp
                     src/effect/materials/SpotlightEffectMaterial.cpp
+                    src/effect/materials/TextureMappingEffectMaterial.cpp
 
                 src/effect/Effect.cpp
                 src/effect/EffectMaterial.cpp

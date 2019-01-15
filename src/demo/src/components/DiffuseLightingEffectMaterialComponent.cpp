@@ -27,7 +27,10 @@ namespace demo
 		constexpr float k_byteMax = static_cast<float>(0xFF);
 
 		constexpr float k_lightModulationRate = k_byteMax / 40;
-		constexpr math::Vector2 k_lightRotationRate = math::Vector2(math::Pi_2);
+		constexpr auto k_lightRotationRate = math::Vector2(math::Pi_2);
+
+		constexpr auto k_proxyModelRotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
+		constexpr float k_proxyModelDistanceOffset = 10.f;
 
 		constexpr float k_proxyModelDistance = 10.f;
 		constexpr auto k_rotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
@@ -70,8 +73,8 @@ namespace demo
 		m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
 		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.5f);
-		m_proxyModel->Rotate(math::Vector3(k_rotationOffset));
-		m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistance);
+		m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
+		m_proxyModel->SetRotation(GetRotation() + k_proxyModelRotationOffset);
 		m_proxyModel->SetCamera(*m_camera);
 		m_proxyModel->Initialize();
 
@@ -165,10 +168,10 @@ namespace demo
 			{
 				m_directionalLight->Rotate(math::Vector3(rotationAmount.y, rotationAmount.x, 0.f));
 
-				const auto& dirLightRot = m_directionalLight->GetRotation();
-				auto proxyModelRotation = math::Vector3(0.f, dirLightRot.y, dirLightRot.x) + k_rotationOffset;
-				m_proxyModel->SetRotation(proxyModelRotation);
-				m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistance);
+				const auto dirLightRot = m_directionalLight->GetRotation();
+
+				m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
+				m_proxyModel->SetRotation(math::Vector3(dirLightRot.z, dirLightRot.y, dirLightRot.x) + k_proxyModelRotationOffset);
 			}
 		}
 	}

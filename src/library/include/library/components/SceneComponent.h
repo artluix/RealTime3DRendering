@@ -16,10 +16,6 @@ namespace library
 		const math::Vector3& GetScaling() const { return m_scaling; }
 		const math::Matrix4& GetWorldMatrix() const { return m_worldMatrix; }
 
-		const math::Vector3& GetDirection() const { return m_direction; }
-		const math::Vector3& GetUp() const { return m_up; }
-		const math::Vector3& GetRight() const { return m_right; }
-
 		void SetPosition(const math::Vector3& position);
 		void Translate(const math::Vector3& translation);
 
@@ -28,6 +24,10 @@ namespace library
 
 		void SetScaling(const math::Vector3& scaling);
 		void Scale(const math::Vector3& scaling);
+
+		const math::Vector3& GetDirection() const { return m_direction; }
+		const math::Vector3& GetUp() const { return m_up; }
+		const math::Vector3& GetRight() const { return m_right; }
 
 	protected:
 		explicit SceneComponent(const Application& app);
@@ -40,8 +40,8 @@ namespace library
 		math::Vector3 m_scaling;
 
 		math::Vector3 m_direction;
-		math::Vector3 m_up;
 		math::Vector3 m_right;
+		math::Vector3 m_up;
 
 		math::Matrix4 m_worldMatrix;
 	};

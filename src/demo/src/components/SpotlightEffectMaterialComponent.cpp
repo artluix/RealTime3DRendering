@@ -33,6 +33,9 @@ namespace demo
 		constexpr auto k_lightRotationRate = math::Vector2(math::Pi_2);
 		constexpr auto k_rotationOffset = math::Vector3(math::Pi_Div_2, 0.f, 0.f);
 
+		constexpr auto k_proxyModelRotationOffset = math::Vector3(math::Pi_Div_2, 0.f, 0.f);
+
+
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
 #if defined(DEBUG) || defined(DEBUG)
 			Path("../data/effects/Spotlight_d.fxc")
@@ -70,10 +73,14 @@ namespace demo
 
 		DrawableComponent::Initialize();
 
+		m_spotlight = std::make_unique<SpotlightComponent>();
+		m_spotlight->SetRadius(10.f);
+		m_spotlight->SetPosition(math::Vector3(0.0f, 0.f, 5.f));
+
 		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.3f);
 		m_proxyModel->SetCamera(*m_camera);
-		m_proxyModel->SetRotation(k_rotationOffset);
-		m_proxyModel->SetPosition(math::Vector3(0.0f, 0.f, 5.f));
+		m_proxyModel->SetRotation(k_proxyModelRotationOffset);
+		m_proxyModel->SetPosition(m_spotlight->GetPosition());
 		m_proxyModel->Initialize();
 
 		m_text = std::make_unique<TextComponent>(m_app);
@@ -96,10 +103,6 @@ namespace demo
 			}
 		);
 		m_text->Initialize();
-
-		m_spotlight = std::make_unique<SpotlightComponent>();
-		m_spotlight->SetRadius(10.f);
-		m_spotlight->SetPosition(math::Vector3(0.0f, 0.f, 5.f));
 
 		SetRotation(math::Vector3(math::Pi_Div_2, 0.f, 0.f));
 		SetScaling(math::Vector3(5.f));
@@ -209,7 +212,7 @@ namespace demo
 				if (rotationAmount)
 				{
 					m_spotlight->Rotate(math::Vector3(rotationAmount.y, rotationAmount.x, 0.f));
-					m_proxyModel->SetRotation(m_spotlight->GetRotation() + k_rotationOffset);
+					m_proxyModel->SetRotation(m_spotlight->GetRotation() + k_proxyModelRotationOffset);
 				}
 			}
 

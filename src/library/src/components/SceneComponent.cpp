@@ -90,5 +90,9 @@ namespace library
 		m_right = rotationMatrix.GetRight();
 
 		m_worldMatrix = scalingMatrix * rotationMatrix * translationMatrix;
+
+		m_direction = rotationMatrix.GetForward();
+		m_up = rotationMatrix.GetUp();
+		m_right = rotationMatrix.GetRight();
 	}
 } // namespace library

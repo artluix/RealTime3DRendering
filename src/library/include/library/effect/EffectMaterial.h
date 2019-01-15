@@ -41,7 +41,7 @@ namespace library
 		bool IsInitialized() const { return m_isInitialized; }
 
 		virtual std::vector<ComPtr<ID3D11Buffer>> CreateVertexBuffers(ID3D11Device* const device, const Model& model) const;
-		virtual ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const void* data, const std::size_t size) const;
+		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const void* data, const std::size_t size) const;
 
 		virtual ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const = 0;
 		virtual unsigned GetVertexSize() const = 0;

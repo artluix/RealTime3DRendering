@@ -4,8 +4,6 @@
 #include "library/effect/Effect.h"
 #include "library/Mesh.h"
 
-#include <cassert>
-
 namespace library
 {
 	PointLightEffectMaterial::PointLightEffectMaterial(const Effect& effect)

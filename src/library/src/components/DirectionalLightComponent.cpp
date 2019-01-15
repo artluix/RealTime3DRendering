@@ -24,10 +24,10 @@ namespace library
 
 	void DirectionalLightComponent::SetRotation(const math::Vector3& rotation)
 	{
-		const auto rotationMatrix = math::Matrix4::RotationPitchYawRoll(m_rotation);
+		const auto rotationMatrix = math::Matrix4::RotationPitchYawRoll(rotation);
 
 		m_direction = rotationMatrix.GetForward();
-		m_up = rotationMatrix.GetUp();
 		m_right = rotationMatrix.GetRight();
+		m_up = rotationMatrix.GetUp();
 	}
 } // namespace library

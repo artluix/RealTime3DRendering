@@ -19,6 +19,8 @@
 #include "components/BasicEffectMaterialComponent.h"
 #include "components/TextureMappingEffectMaterialComponent.h"
 
+#include "components/NormalMappingEffectMaterialComponent.h"
+
 #include <library/Path.h>
 #include <library/Utils.h>
 #include <library/Exception.h>
@@ -138,11 +140,17 @@ namespace demo
 		pointLight->SetKeyboard(*m_keyboard);
 		//m_components.push_back(pointLight);
 
-		// spot light
+		// spotlight
 		auto spotlight = std::make_shared<SpotlightEffectMaterialComponent>(*this);
 		spotlight->SetCamera(*camera);
 		spotlight->SetKeyboard(*m_keyboard);
-		m_components.push_back(spotlight);
+		//m_components.push_back(spotlight);
+
+		// spotlight
+		auto normalMapping = std::make_shared<NormalMappingEffectMaterialComponent>(*this);
+		normalMapping->SetCamera(*camera);
+		normalMapping->SetKeyboard(*m_keyboard);
+		m_components.push_back(normalMapping);
 
 		// skybox
 		auto skybox = std::make_shared<SkyboxComponent>(*this, k_skyboxCubeMapPath, 100.f);
