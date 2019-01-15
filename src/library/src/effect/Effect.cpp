@@ -10,7 +10,7 @@
 
 namespace library
 {
-	std::map<std::string, EffectPtr> Effect::s_effects;
+	std::map<std::string, std::weak_ptr<Effect>> Effect::s_effects;
 
 	Effect::Effect(const Application& app, const Path& path)
 		: m_app(app)
@@ -25,7 +25,8 @@ namespace library
 
 		auto it = s_effects.find(effectName);
 		if (it != s_effects.end())
-			return it->second;
+			if (auto effect = it->second.lock())
+					return effect;
 
 		auto effect = std::make_shared<Effect>(app, path);
 		s_effects.emplace(effectName, effect);

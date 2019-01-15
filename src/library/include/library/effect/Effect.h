@@ -57,6 +57,8 @@ namespace library
 		using EffectTechniquePtr = std::unique_ptr<EffectTechnique>;
 		using EffectVariablePtr = std::unique_ptr<EffectVariable>;
 
+		using EffectWPtr = std::weak_ptr<Effect>;
+
 		void Initialize();
 
 		const Application& m_app;
@@ -74,6 +76,6 @@ namespace library
 		std::vector<EffectVariablePtr> m_variables;
 		std::map<std::string, EffectVariable*> m_variablesMap;
 
-		static std::map<std::string, EffectPtr> s_effects;
+		static std::map<std::string, EffectWPtr> s_effects;
 	};
 } // namespace library

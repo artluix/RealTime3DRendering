@@ -40,6 +40,9 @@ namespace library
 		virtual void SetEffectData();
 		virtual void Render();
 
+		void LoadModel(const Path& modelPath, ComPtr<ID3D11Buffer>& vertexBuffer, ComPtr<ID3D11Buffer>& indexBuffer);
+		void LoadTexture(const Path& texturePath, ComPtr<ID3D11ShaderResourceView>& textureShaderResourceView);
+
 		const CameraComponent* m_camera = nullptr;
 		bool m_visible = true;
 
@@ -50,6 +53,7 @@ namespace library
 		ComPtr<ID3D11Buffer> m_vertexBuffer;
 		ComPtr<ID3D11ShaderResourceView> m_textureShaderResourceView;
 
+		unsigned m_verticesCount = 0;
 		unsigned m_indicesCount = 0;
 	};
 } // namespace library

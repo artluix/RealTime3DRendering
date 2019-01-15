@@ -27,7 +27,10 @@ namespace demo
 		constexpr float k_byteMax = static_cast<float>(0xFF);
 
 		constexpr float k_lightModulationRate = k_byteMax / 40;
-		constexpr math::Vector2 k_lightRotationRate = math::Vector2(math::Pi_2);
+		constexpr auto k_lightRotationRate = math::Vector2(math::Pi_2);
+
+		constexpr auto k_proxyModelRotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
+		constexpr float k_proxyModelDistanceOffset = 10.f;
 
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
 #if defined(DEBUG) || defined(DEBUG)
@@ -64,9 +67,11 @@ namespace demo
 
 		DrawableComponent::Initialize();
 
+		m_directionalLight = std::make_unique<DirectionalLightComponent>();
+
 		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.5f);
-		m_proxyModel->SetPosition(math::Vector3(0.f, 0.f, 10.f));
-		m_proxyModel->Rotate(math::Vector3(0.f, math::Pi_Div_2, 0.f));
+		m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
+		m_proxyModel->SetRotation(GetRotation() + k_proxyModelRotationOffset);
 		m_proxyModel->SetCamera(*m_camera);
 		m_proxyModel->Initialize();
 
@@ -84,8 +89,6 @@ namespace demo
 			}
 		);
 		m_text->Initialize();
-
-		m_directionalLight = std::make_unique<DirectionalLightComponent>();
 	}
 
 	void DiffuseLightingEffectMaterialComponent::Update(const Time& time)
@@ -160,13 +163,12 @@ namespace demo
 
 			if (rotationAmount)
 			{
-				auto pitch = math::Matrix4::RotationAxis(m_directionalLight->GetRight(), rotationAmount.y);
-				auto yaw = math::Matrix4::RotationAxis(m_directionalLight->GetUp(), rotationAmount.x);
+				m_directionalLight->Rotate(math::Vector3(rotationAmount.y, rotationAmount.x, 0.f));
 
-				auto rotation = pitch * yaw;
+				const auto dirLightRot = m_directionalLight->GetRotation();
 
-				m_directionalLight->ApplyRotation(rotation);
-				m_proxyModel->ApplyExtraTransform(rotation);
+				m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
+				m_proxyModel->SetRotation(math::Vector3(dirLightRot.z, dirLightRot.y, dirLightRot.x) + k_proxyModelRotationOffset);
 			}
 		}
 	}

@@ -4,8 +4,6 @@
 #include "library/effect/Effect.h"
 #include "library/Mesh.h"
 
-#include <cassert>
-
 namespace library
 {
 	DiffuseLightingEffectMaterial::DiffuseLightingEffectMaterial(const Effect& effect)
@@ -62,5 +60,4 @@ namespace library
 
 		return EffectMaterial::CreateVertexBuffer(device, vertices.data(), vertices.size() * sizeof(Vertex));
 	}
-
 } // namespace library

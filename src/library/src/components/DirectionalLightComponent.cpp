@@ -8,26 +8,26 @@ namespace library
 		, m_direction(math::Vector3::Forward)
 		, m_up(math::Vector3::Up)
 		, m_right(math::Vector3::Right)
-		, m_worldMatrix(math::Matrix4::Identity)
 	{
 	}
 
 	DirectionalLightComponent::~DirectionalLightComponent() = default;
 
-	void DirectionalLightComponent::ApplyRotation(const math::Matrix4& transform)
+	void DirectionalLightComponent::Rotate(const math::Vector3& rotation)
 	{
-		const auto direction = m_direction.TransformNormal(transform);
-		auto up = m_up.TransformNormal(transform);
+		if (!rotation)
+			return;
 
-		const auto right = direction.Cross(up);
-		up = right.Cross(direction);
+		m_rotation += rotation;
+		SetRotation(m_rotation);
+	}
 
-		m_direction = direction;
-		m_up = up;
-		m_right = right;
+	void DirectionalLightComponent::SetRotation(const math::Vector3& rotation)
+	{
+		const auto rotationMatrix = math::Matrix4::RotationPitchYawRoll(rotation);
 
-		m_worldMatrix.SetForward(m_direction);
-		m_worldMatrix.SetRight(m_right);
-		m_worldMatrix.SetUp(m_up);
+		m_direction = rotationMatrix.GetForward();
+		m_right = rotationMatrix.GetRight();
+		m_up = rotationMatrix.GetUp();
 	}
 } // namespace library
