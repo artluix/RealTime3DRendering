@@ -31,7 +31,7 @@ if(APPLICATION)
         src/components/DiffuseLightingEffectMaterialComponent.cpp
 
         src/components/NormalMappingEffectMaterialComponent.h
-        src/components/NormalMappingPointLightEffectMaterialComponent.cpp
+        src/components/NormalMappingEffectMaterialComponent.cpp
 
         src/components/PointLightEffectMaterialComponent.h
         src/components/PointLightEffectMaterialComponent.cpp

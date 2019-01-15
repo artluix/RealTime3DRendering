@@ -41,6 +41,8 @@ namespace library
 		if (!mesh.HasVertices())
 			return ComPtr<ID3D11Buffer>();
 
+		assert(mesh.HasTangentBinormals());
+
 		std::vector<Vertex> vertices;
 
 		const auto& meshVertices = mesh.GetVertices();

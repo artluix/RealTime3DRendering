@@ -16,6 +16,7 @@
 #include <library/effect/EffectTechnique.h>
 #include <library/effect/EffectVariable.h>
 
+#include <DDSTextureLoader.h>
 #include <sstream>
 
 namespace demo
@@ -30,7 +31,7 @@ namespace demo
 		constexpr auto k_lightRotationRate = math::Vector2(math::Pi_2);
 
 		constexpr auto k_proxyModelRotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
-		constexpr float k_proxyModelDistanceOffset = 10.f;
+		constexpr float k_proxyModelDistanceOffset = 3.f;
 
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
 #if defined(DEBUG) || defined(DEBUG)
@@ -76,17 +77,17 @@ namespace demo
 
 			std::vector<Vertex> vertices =
 			{
-				Vertex(DirectX::XMFLOAT4(-0.5f, 0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), backward, right),
-				Vertex(DirectX::XMFLOAT4(-0.5f, 1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f), backward, right),
-				Vertex(DirectX::XMFLOAT4(0.5f, 1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f), backward, right),
+				Vertex(DirectX::XMFLOAT4(-0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), backward, right),
+				Vertex(DirectX::XMFLOAT4(-0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f), backward, right),
+				Vertex(DirectX::XMFLOAT4(0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f), backward, right),
 
-				Vertex(DirectX::XMFLOAT4(-0.5f, 0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), backward, right),
-				Vertex(DirectX::XMFLOAT4(0.5f, 1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f), backward, right),
-				Vertex(DirectX::XMFLOAT4(0.5f, 0.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward, right),
+				Vertex(DirectX::XMFLOAT4(-0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), backward, right),
+				Vertex(DirectX::XMFLOAT4(0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f), backward, right),
+				Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward, right),
 			};
 
 			m_verticesCount = vertices.size();
-			m_vertexBuffer = m_material->EffectMaterial::CreateVertexBuffer(m_app.GetD3DDevice(), vertices.data(), m_verticesCount);
+			m_vertexBuffer = m_material->EffectMaterial::CreateVertexBuffer(m_app.GetD3DDevice(), vertices.data(), m_verticesCount * sizeof(Vertex));
 		}
 
 		DrawableComponent::Initialize();
@@ -95,7 +96,7 @@ namespace demo
 
 		m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
-		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.5f);
+		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.2f);
 		m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
 		m_proxyModel->SetRotation(GetRotation() + k_proxyModelRotationOffset);
 		m_proxyModel->SetCamera(*m_camera);
