@@ -91,7 +91,6 @@ namespace library
 		{
 			assert(material->IsInitialized());
 
-			// model
 			if (modelPath)
 			{
 				Model model(m_app, modelPath, true);
@@ -108,9 +107,10 @@ namespace library
 
 	void DrawableComponent::LoadTexture(const Path& texturePath, ComPtr<ID3D11ShaderResourceView>& textureShaderResourceView)
 	{
-		// texture
 		if (texturePath)
 		{
+			assert(texturePath.GetExt().GetString() == "dds");
+
 			std::vector<library::byte> textureData;
 			utils::LoadBinaryFile(texturePath, textureData);
 			if (textureData.empty())

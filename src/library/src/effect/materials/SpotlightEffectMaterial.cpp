@@ -10,10 +10,6 @@ namespace library
 {
 	SpotlightEffectMaterial::SpotlightEffectMaterial(const Effect& effect)
 		: EffectMaterial(effect, "main10")
-		, m_wvp(effect.GetVariable("wvp"))
-		, m_world(effect.GetVariable("world"))
-		, m_specularPower(effect.GetVariable("specularPower"))
-		, m_specularColor(effect.GetVariable("specularColor"))
 		, m_ambientColor(effect.GetVariable("ambientColor"))
 		, m_lightColor(effect.GetVariable("lightColor"))
 		, m_lightPosition(effect.GetVariable("lightPosition"))
@@ -22,6 +18,12 @@ namespace library
 		, m_spotlightInnerAngle(effect.GetVariable("spotLightInnerAngle"))
 		, m_spotlightOuterAngle(effect.GetVariable("spotLightOuterAngle"))
 		, m_cameraPosition(effect.GetVariable("cameraPosition"))
+
+		, m_wvp(effect.GetVariable("wvp"))
+		, m_world(effect.GetVariable("world"))
+		, m_specularPower(effect.GetVariable("specularPower"))
+		, m_specularColor(effect.GetVariable("specularColor"))
+
 		, m_colorTexture(effect.GetVariable("ColorTexture"))
 	{
 	}

@@ -4,28 +4,32 @@
 
 namespace library
 {
-	class NormalMappingEffectMaterial : public EffectMaterial
+	class TransparencyMappingEffectMaterial : public EffectMaterial
 	{
-		RTTI_CLASS(NormalMappingEffectMaterial, EffectMaterial)
+		RTTI_CLASS(TransparencyMappingEffectMaterial, EffectMaterial)
 
 	public:
-		using Vertex = VertexPositionTextureNormalTangent;
+		using Vertex = VertexPositionTextureNormal;
 
-		explicit NormalMappingEffectMaterial(const Effect& effect);
-		~NormalMappingEffectMaterial();
+		explicit TransparencyMappingEffectMaterial(const Effect& effect);
+		~TransparencyMappingEffectMaterial();
 
 		EffectVariable& GetAmbientColor() const { return m_ambientColor; }
 		EffectVariable& GetLightColor() const { return m_lightColor; }
-		EffectVariable& GetLightDirection() const { return m_lightDirection; }
+		EffectVariable& GetLightPosition() const { return m_lightPosition; }
+		EffectVariable& GetLightRadius() const { return m_lightRadius; }
+		EffectVariable& GetFogColor() const { return m_fogColor; }
+		EffectVariable& GetFogStart() const { return m_fogStart; }
+		EffectVariable& GetFogRange() const { return m_fogRange; }
 		EffectVariable& GetCameraPosition() const { return m_cameraPosition; }
 
 		EffectVariable& GetWVP() const { return m_wvp; }
 		EffectVariable& GetWorld() const { return m_world; }
-		EffectVariable& GetSpecularPower() const { return m_specularPower; }
 		EffectVariable& GetSpecularColor() const { return m_specularColor; }
+		EffectVariable& GetSpecularPower() const { return m_specularPower; }
 
 		EffectVariable& GetColorTexture() const { return m_colorTexture; }
-		EffectVariable& GetNormalMap() const { return m_normalMap; }
+		EffectVariable& GetTransparencyMap() const { return m_transparencyMap; }
 
 		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }
@@ -35,15 +39,19 @@ namespace library
 
 		EffectVariable& m_ambientColor;
 		EffectVariable& m_lightColor;
-		EffectVariable& m_lightDirection;
+		EffectVariable& m_lightPosition;
+		EffectVariable& m_lightRadius;
+		EffectVariable& m_fogColor;
+		EffectVariable& m_fogStart;
+		EffectVariable& m_fogRange;
 		EffectVariable& m_cameraPosition;
 
 		EffectVariable& m_wvp;
 		EffectVariable& m_world;
-		EffectVariable& m_specularPower;
 		EffectVariable& m_specularColor;
+		EffectVariable& m_specularPower;
 
 		EffectVariable& m_colorTexture;
-		EffectVariable& m_normalMap;
+		EffectVariable& m_transparencyMap;
 	};
 } // namespace library

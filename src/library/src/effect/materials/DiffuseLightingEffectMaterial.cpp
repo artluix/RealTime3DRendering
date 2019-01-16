@@ -8,11 +8,14 @@ namespace library
 {
 	DiffuseLightingEffectMaterial::DiffuseLightingEffectMaterial(const Effect& effect)
 		: EffectMaterial(effect, "main10")
-		, m_wvp(effect.GetVariable("wvp"))
-		, m_world(effect.GetVariable("world"))
+
 		, m_ambientColor(effect.GetVariable("ambientColor"))
 		, m_lightColor(effect.GetVariable("lightColor"))
 		, m_lightDirection(effect.GetVariable("lightDirection"))
+
+		, m_wvp(effect.GetVariable("wvp"))
+		, m_world(effect.GetVariable("world"))
+
 		, m_colorTexture(effect.GetVariable("ColorTexture"))
 	{
 	}
