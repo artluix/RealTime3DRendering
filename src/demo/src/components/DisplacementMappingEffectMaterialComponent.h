@@ -38,19 +38,21 @@ namespace demo
 
 		void UpdateAmbientLight(const library::Time& time);
 		void UpdatePointLight(const library::Time& time);
-		void UpdateSpecularLight(const library::Time& time);
+
+		void UpdateDisplacement(const library::Time& time);
 
 		void SetEffectData() override;
-		void Render() override;
 
 		std::shared_ptr<library::Effect> m_effect;
 		std::unique_ptr<library::DisplacementMappingEffectMaterial> m_material;
 
-		ComPtr<ID3D11ShaderResourceView> m_transparencyMapShaderResourceView;
+		ComPtr<ID3D11ShaderResourceView> m_displacementMapShaderResourceView;
 
 		library::Color m_ambientColor;
 		library::Color m_specularColor;
 		float m_specularPower;
+
+		float m_displacementScale;
 
 		std::unique_ptr<library::PointLightComponent> m_pointLight;
 		std::unique_ptr<library::ProxyModelComponent> m_proxyModel;

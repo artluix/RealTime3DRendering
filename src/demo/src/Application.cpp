@@ -173,6 +173,11 @@ namespace demo
 		transparencyMapping->SetCamera(*camera);
 		transparencyMapping->SetKeyboard(*m_keyboard);
 
+		// displacement mapping
+		auto displacementMapping = std::make_shared<DisplacementMappingEffectMaterialComponent>(*this);
+		displacementMapping->SetCamera(*camera);
+		displacementMapping->SetKeyboard(*m_keyboard);
+
 		// fog
 		auto fog = std::make_shared<FogEffectMaterialComponent>(*this);
 		fog->SetCamera(*camera);
@@ -185,6 +190,7 @@ namespace demo
 		m_components.push_back(camera);
 		m_components.push_back(fps);
 		m_components.push_back(skybox);
+		m_components.push_back(displacementMapping);
 
 		library::Application::Initialize();
 

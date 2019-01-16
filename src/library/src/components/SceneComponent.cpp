@@ -3,7 +3,7 @@
 
 namespace library
 {
-	SceneComponent::SceneComponent(const Application& app, const CameraComponent* camera /*= nullptr*/)
+	SceneComponent::SceneComponent(const Application& app)
 		: DrawableComponent(app)
 		, m_scaling(math::Vector3::One)
 		, m_worldMatrix(math::Matrix4::Identity)
