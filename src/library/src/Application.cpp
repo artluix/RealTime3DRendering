@@ -6,6 +6,7 @@
 
 #include "library/effect/Effect.h"
 #include "library/RasterizerStateHolder.h"
+#include "library/BlendStateHolder.h"
 
 #include <thread>
 
@@ -360,10 +361,12 @@ namespace library
 		}
 
 		RasterizerStateHolder::Initialize(m_device.Get());
+		BlendStateHolder::Initialize(m_device.Get());
 	}
 
 	void Application::Shutdown()
 	{
+		BlendStateHolder::Reset();
 		RasterizerStateHolder::Reset();
 		Effect::ClearAll();
 

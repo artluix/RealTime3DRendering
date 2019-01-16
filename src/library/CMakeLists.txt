@@ -52,6 +52,7 @@ if(APPLICATION)
                 include/library/math/Vector.h
 
             include/library/Application.h
+            include/library/BlendStateHolder.h
             include/library/Color.h
             include/library/CommonTypes.h
             include/library/DirectXForwardDeclarations.h
@@ -121,6 +122,7 @@ if(APPLICATION)
                 src/math/Vector.cpp
 
             src/Application.cpp
+            src/BlendStateHolder.cpp
             src/Color.cpp
             src/Exception.cpp
             src/Logger.cpp

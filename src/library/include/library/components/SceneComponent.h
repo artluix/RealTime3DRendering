@@ -4,6 +4,8 @@
 
 namespace library
 {
+	class CameraComponent;
+
 	class SceneComponent : public DrawableComponent
 	{
 		RTTI_CLASS(SceneComponent, DrawableComponent)

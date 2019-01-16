@@ -10,11 +10,14 @@
 #include <library/Utils.h>
 #include <library/Path.h>
 #include <library/Exception.h>
+#include <library/Renderer.h>
 
 #include <library/effect/Effect.h>
 #include <library/effect/EffectPass.h>
 #include <library/effect/EffectTechnique.h>
 #include <library/effect/EffectVariable.h>
+
+#include <library/BlendStateHolder.h>
 
 #include <sstream>
 
@@ -35,7 +38,6 @@ namespace demo
 			Path("../data/effects/TransparencyMapping.fxc")
 #endif
 		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
 		const auto k_proxyModelPath = utils::GetExecutableDirectory().Join(Path("../data/models/PointLightProxy.obj"));
 
 		const auto k_texturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/Checkerboard.dds"));
@@ -49,7 +51,6 @@ namespace demo
 		, m_specularColor(1.f, 1.f, 1.f, 1.f)
 		, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 	{
-		SetModelPath(k_modelPath);
 		SetTexturePath(k_texturePath);
 	}
 
@@ -65,12 +66,37 @@ namespace demo
 		m_material = std::make_unique<TransparencyMappingEffectMaterial>(*m_effect);
 		m_material->Initialize();
 
-		LoadTexture(k_transparencyMapTexturePath, m_transparencyMapShaderResourceView);
+		// build vertices manually
+		{
+			using Vertex = TransparencyMappingEffectMaterial::Vertex;
+
+			const auto backward = DirectX::XMFLOAT3(math::Vector3::Backward);
+
+			std::vector<Vertex> vertices =
+			{
+				Vertex(DirectX::XMFLOAT4(-0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), backward),
+				Vertex(DirectX::XMFLOAT4(-0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f), backward),
+				Vertex(DirectX::XMFLOAT4(0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f), backward),
+
+				Vertex(DirectX::XMFLOAT4(-0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), backward),
+				Vertex(DirectX::XMFLOAT4(0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f), backward),
+				Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward),
+			};
+
+			m_verticesCount = vertices.size();
+			m_vertexBuffer = m_material->EffectMaterial::CreateVertexBuffer(m_app.GetD3DDevice(), vertices.data(), m_verticesCount * sizeof(Vertex));
+		}
 
 		DrawableComponent::Initialize();
 
-		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.5f);
-		m_proxyModel->SetPosition(math::Vector3(0.f, 0.f, 10.f));
+		LoadTexture(k_transparencyMapTexturePath, m_transparencyMapShaderResourceView);
+
+		m_pointLight = std::make_unique<PointLightComponent>();
+		m_pointLight->SetRadius(50.f);
+		m_pointLight->SetPosition(math::Vector3(0.f, 0.f, 10.f));
+
+		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.2f);
+		m_proxyModel->SetPosition(m_pointLight->GetPosition());
 		m_proxyModel->Rotate(math::Vector3(0.f, math::Pi_Div_2, 0.f));
 		m_proxyModel->SetCamera(*m_camera);
 		m_proxyModel->Initialize();
@@ -79,19 +105,17 @@ namespace demo
 		m_text->SetPosition(math::Vector2(0.f, 100.f));
 		m_text->SetTextGeneratorFunction(
 			[this]() -> std::wstring
-		{
-			std::wostringstream woss;
-			woss <<
-				L"Ambient Intensity (+PageUp/-PageDown): " << m_ambientColor.a << "\n" <<
-				L"Point Light Intensity (+Home/-End): " << m_pointLight->GetColor().a << "\n" <<
-				L"Specular Power (+Insert/-Delete): " << m_specularPower << "\n" <<
-				L"Move Point Light (Numpad: 8/2, 4/6, 3/9)\n";
-			return woss.str();
-		}
+			{
+				std::wostringstream woss;
+				woss <<
+					L"Ambient Intensity (+PageUp/-PageDown): " << m_ambientColor.a << "\n" <<
+					L"Point Light Intensity (+Home/-End): " << m_pointLight->GetColor().a << "\n" <<
+					L"Specular Power (+Insert/-Delete): " << m_specularPower << "\n" <<
+					L"Move Point Light (Numpad: 8/2, 4/6, 3/9)\n";
+				return woss.str();
+			}
 		);
 		m_text->Initialize();
-
-		m_pointLight = std::make_unique<PointLightComponent>();
 	}
 
 	void TransparencyMappingEffectMaterialComponent::Update(const Time& time)
@@ -159,9 +183,9 @@ namespace demo
 				movementAmount.x = 1.0f;
 
 			if (m_keyboard->IsKeyDown(Key::Num_9))
-				movementAmount.y = -1.0f;
-			if (m_keyboard->IsKeyDown(Key::Num_3))
 				movementAmount.y = 1.0f;
+			if (m_keyboard->IsKeyDown(Key::Num_3))
+				movementAmount.y = -1.0f;
 
 			if (m_keyboard->IsKeyDown(Key::Num_8))
 				movementAmount.z = -1.0f;
@@ -228,5 +252,16 @@ namespace demo
 		m_material->GetTransparencyMap() << m_transparencyMapShaderResourceView.Get();
 
 		DrawableComponent::SetEffectData();
+	}
+
+	void TransparencyMappingEffectMaterialComponent::Render()
+	{
+		auto deviceContext = m_app.GetD3DDeviceContext();
+		auto renderer = m_app.GetRenderer();
+
+		renderer->SaveRenderState(RenderState::Blend);
+		deviceContext->OMSetBlendState(BlendStateHolder::GetBlendState(BlendState::Alpha), 0, 0xFFFFFFFF);
+		deviceContext->Draw(m_verticesCount, 0);
+		renderer->RestoreRenderState(RenderState::Blend);
 	}
 } // namespace demo

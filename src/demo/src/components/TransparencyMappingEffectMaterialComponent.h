@@ -41,6 +41,7 @@ namespace demo
 		void UpdateSpecularLight(const library::Time& time);
 
 		void SetEffectData() override;
+		void Render() override;
 
 		std::shared_ptr<library::Effect> m_effect;
 		std::unique_ptr<library::TransparencyMappingEffectMaterial> m_material;
