@@ -30,6 +30,12 @@ if(APPLICATION)
         src/components/DiffuseLightingEffectMaterialComponent.h
         src/components/DiffuseLightingEffectMaterialComponent.cpp
 
+        src/components/DisplacementMappingEffectMaterialComponent.h
+        src/components/DisplacementMappingEffectMaterialComponent.cpp
+
+        src/components/EnvironmentMappingEffectMaterialComponent.h
+        src/components/EnvironmentMappingEffectMaterialComponent.cpp
+
         src/components/NormalMappingEffectMaterialComponent.h
         src/components/NormalMappingEffectMaterialComponent.cpp
 
@@ -41,6 +47,9 @@ if(APPLICATION)
 
         src/components/TextureMappingEffectMaterialComponent.h
         src/components/TextureMappingEffectMaterialComponent.cpp
+
+        src/components/TransparencyMappingEffectMaterialComponent.h
+        src/components/TransparencyMappingEffectMaterialComponent.cpp
     )
 
     add_executable(demo WIN32 ${DEMO_SOURCES})

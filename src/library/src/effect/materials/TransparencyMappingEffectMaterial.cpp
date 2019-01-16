@@ -8,16 +8,20 @@ namespace library
 {
 	TransparencyMappingEffectMaterial::TransparencyMappingEffectMaterial(const Effect& effect)
 		: EffectMaterial(effect, "main10")
-		, m_wvp(effect.GetVariable("wvp"))
-		, m_world(effect.GetVariable("world"))
 		, m_ambientColor(effect.GetVariable("ambientColor"))
-		, m_specularColor(effect.GetVariable("specularColor"))
-		, m_specularPower(effect.GetVariable("specularPower"))
 		, m_lightColor(effect.GetVariable("lightColor"))
 		, m_lightPosition(effect.GetVariable("lightPosition"))
 		, m_lightRadius(effect.GetVariable("lightRadius"))
-		, m_displacementScale(effect.GetVariable("displacementScale"))
+		, m_fogColor(effect.GetVariable("fogColor"))
+		, m_fogStart(effect.GetVariable("fogStart"))
+		, m_fogRange(effect.GetVariable("fogRange"))
 		, m_cameraPosition(effect.GetVariable("cameraPosition"))
+		
+		, m_wvp(effect.GetVariable("wvp"))
+		, m_world(effect.GetVariable("world"))
+		, m_specularColor(effect.GetVariable("specularColor"))
+		, m_specularPower(effect.GetVariable("specularPower"))
+		
 		, m_colorTexture(effect.GetVariable("ColorTexture"))
 		, m_transparencyMap(effect.GetVariable("TransparencyMap"))
 	{

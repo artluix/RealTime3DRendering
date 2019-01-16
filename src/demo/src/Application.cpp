@@ -19,7 +19,10 @@
 #include "components/BasicEffectMaterialComponent.h"
 #include "components/TextureMappingEffectMaterialComponent.h"
 
+#include "components/EnvironmentMappingEffectMaterialComponent.h"
+#include "components/DisplacementMappingEffectMaterialComponent.h"
 #include "components/NormalMappingEffectMaterialComponent.h"
+#include "components/TransparencyMappingEffectMaterialComponent.h"
 
 #include <library/Path.h>
 #include <library/Utils.h>
@@ -76,6 +79,28 @@ namespace demo
 		m_components.push_back(m_mouse);
 		//m_services.AddService(m_mouseComponent->GetTypeId(), m_mouseComponent.get());
 
+		// mouse text component
+		auto mouseText = std::make_shared<TextComponent>(*this);
+		mouseText->SetTextGeneratorFunction(
+			[this]() -> std::wstring
+		{
+			static const std::wstring empty;
+
+			if (!!m_mouse)
+			{
+				std::wostringstream woss;
+				woss <<
+					L"Mouse Position: " << m_mouse->GetX() << ", " << m_mouse->GetY() << std::endl <<
+					L"Mouse Wheel: " << m_mouse->GetWheel();
+				return woss.str();
+			}
+
+			return empty;
+		}
+		);
+		mouseText->SetPosition(math::Vector2(0.f, 50.f));
+		m_components.push_back(mouseText);
+
 		// camera
 		auto camera = std::make_shared<FirstPersonCameraComponent>(*this);
 		camera->SetMouse(*m_mouse);
@@ -86,6 +111,11 @@ namespace demo
 		// fps
 		auto fps = std::make_shared<FpsComponent>(*this);
 		m_components.push_back(fps);
+
+		// skybox
+		auto skybox = std::make_shared<SkyboxComponent>(*this, k_skyboxCubeMapPath, 100.f);
+		skybox->SetCamera(*camera);
+		m_components.push_back(skybox);
 
 		// grid
 		auto grid = std::make_shared<GridComponent>(*this);
@@ -146,38 +176,17 @@ namespace demo
 		spotlight->SetKeyboard(*m_keyboard);
 		//m_components.push_back(spotlight);
 
-		// spotlight
+		// normal mapping
 		auto normalMapping = std::make_shared<NormalMappingEffectMaterialComponent>(*this);
 		normalMapping->SetCamera(*camera);
 		normalMapping->SetKeyboard(*m_keyboard);
-		m_components.push_back(normalMapping);
+		//m_components.push_back(normalMapping);
 
-		// skybox
-		auto skybox = std::make_shared<SkyboxComponent>(*this, k_skyboxCubeMapPath, 100.f);
-		skybox->SetCamera(*camera);
-		//m_components.push_back(skybox);
-
-		// mouse text component
-		auto mouseText = std::make_shared<TextComponent>(*this);
-		mouseText->SetTextGeneratorFunction(
-			[this]() -> std::wstring
-			{
-				static const std::wstring empty;
-
-				if (!!m_mouse)
-				{
-					std::wostringstream woss;
-					woss <<
-						L"Mouse Position: " << m_mouse->GetX() << ", " << m_mouse->GetY() << std::endl <<
-						L"Mouse Wheel: " << m_mouse->GetWheel();
-					return woss.str();
-				}
-
-				return empty;
-			}
-		);
-		mouseText->SetPosition(math::Vector2(0.f, 50.f));
-		m_components.push_back(mouseText);
+		// environment mapping
+		auto environmentMapping = std::make_shared<EnvironmentMappingEffectMaterialComponent>(*this);
+		environmentMapping->SetCamera(*camera);
+		environmentMapping->SetKeyboard(*m_keyboard);
+		m_components.push_back(environmentMapping);
 
 		library::Application::Initialize();
 

@@ -18,7 +18,7 @@ namespace library
 		, m_reflectionAmount(effect.GetVariable("reflectionAmount"))
 
 		, m_colorTexture(effect.GetVariable("ColorTexture"))
-		, m_environmentMap(effect.GetVariable("NormalMap"))
+		, m_environmentMap(effect.GetVariable("EnvironmentMap"))
 	{
 	}
 
