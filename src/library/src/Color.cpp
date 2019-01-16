@@ -13,6 +13,7 @@ namespace library
 	constexpr Color Color::Cyan = Color(0.f, 1.f, 1.f, 1.f);
 	constexpr Color Color::Magenta = Color(1.f, 0.f, 1.f, 1.f);
 	constexpr Color Color::Yellow = Color(1.f, 1.f, 0.f, 1.f);
+	constexpr Color Color::CornFlower = Color(0.392156899f, 0.584313750f, 0.929411829f, 1.000000000f);
 
 	Color Color::Random()
 	{

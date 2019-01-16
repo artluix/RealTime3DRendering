@@ -1,18 +1,17 @@
 #include "StdAfx.h"
-#include "library/effect/materials/TransparencyMappingEffectMaterial.h"
+#include "library/effect/materials/FogEffectMaterial.h"
 
 #include "library/effect/Effect.h"
 #include "library/Mesh.h"
 
 namespace library
 {
-	TransparencyMappingEffectMaterial::TransparencyMappingEffectMaterial(const Effect& effect)
-		: EffectMaterial(effect, "alphaBlendingWithoutFog")
+	FogEffectMaterial::FogEffectMaterial(const Effect& effect)
+		: EffectMaterial(effect, "fogEnabled")
 
 		, m_ambientColor(effect.GetVariable("ambientColor"))
 		, m_lightColor(effect.GetVariable("lightColor"))
-		, m_lightPosition(effect.GetVariable("lightPosition"))
-		, m_lightRadius(effect.GetVariable("lightRadius"))
+		, m_lightDirection(effect.GetVariable("lightDirection"))
 		, m_fogColor(effect.GetVariable("fogColor"))
 		, m_fogStart(effect.GetVariable("fogStart"))
 		, m_fogRange(effect.GetVariable("fogRange"))
@@ -20,17 +19,14 @@ namespace library
 
 		, m_wvp(effect.GetVariable("wvp"))
 		, m_world(effect.GetVariable("world"))
-		, m_specularColor(effect.GetVariable("specularColor"))
-		, m_specularPower(effect.GetVariable("specularPower"))
-		
+
 		, m_colorTexture(effect.GetVariable("ColorTexture"))
-		, m_transparencyMap(effect.GetVariable("TransparencyMap"))
 	{
 	}
 
-	TransparencyMappingEffectMaterial::~TransparencyMappingEffectMaterial() = default;
+	FogEffectMaterial::~FogEffectMaterial() = default;
 
-	void TransparencyMappingEffectMaterial::InitializeInternal()
+	void FogEffectMaterial::InitializeInternal()
 	{
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{
@@ -39,11 +35,11 @@ namespace library
 			{ "NORMAL", 0, DXGI_FORMAT_R32G32B32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 		};
 
-		CreateInputLayout("alphaBlendingWithoutFog", "p0", inputElementDescriptions);
-		CreateInputLayout("alphaBlendingWithFog", "p0", inputElementDescriptions);
+		CreateInputLayout("fogEnabled", "p0", inputElementDescriptions);
+		CreateInputLayout("fogDisabled", "p0", inputElementDescriptions);
 	}
 
-	ComPtr<ID3D11Buffer> TransparencyMappingEffectMaterial::CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const
+	ComPtr<ID3D11Buffer> FogEffectMaterial::CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const
 	{
 		if (!mesh.HasVertices())
 			return ComPtr<ID3D11Buffer>();

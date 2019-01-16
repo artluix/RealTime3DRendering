@@ -21,6 +21,7 @@ namespace library
 		static const Color Cyan;
 		static const Color Magenta;
 		static const Color Yellow;
+		static const Color CornFlower;
 
 		static Color Random();
 	};

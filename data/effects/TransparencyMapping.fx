@@ -114,12 +114,12 @@ VS_OUTPUT vertex_shader(VS_INPUT IN, uniform bool fogEnabled)
     OUT.position = mul(IN.objectPosition, wvp);
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
     OUT.normal = normalize(mul(float4(IN.normal, 0), world).xyz);
-    
+
     float3 worldPosition = mul(IN.objectPosition, world).xyz;
 
     OUT.lightDirection = get_light_data(lightPosition, worldPosition, lightRadius);
     float3 viewDirection = cameraPosition - worldPosition;
-    
+
     if (fogEnabled)
     {
         OUT.fogAmount = get_fog_amount(viewDirection, fogStart, fogRange);
@@ -157,7 +157,7 @@ float4 pixel_shader(VS_OUTPUT IN, uniform bool fogEnabled) : SV_Target
     {
         OUT.rgb = lerp(OUT.rgb, fogColor, IN.fogAmount);
     }
-    
+
     return OUT;
 }
 
@@ -171,7 +171,7 @@ technique10 alphaBlendingWithFog
         SetPixelShader(CompileShader(ps_4_0, pixel_shader(true)));
 
         SetRasterizerState(DisableCulling);
-        SetBlendState(EnableAlphaBlending, (float4)0, 0xFFFFFFFF);
+        // SetBlendState(EnableAlphaBlending, (float4)0, 0xFFFFFFFF); not supported by Effects11
     }
 }
 
@@ -184,7 +184,7 @@ technique10 alphaBlendingWithoutFog
         SetPixelShader(CompileShader(ps_4_0, pixel_shader(false)));
 
         SetRasterizerState(DisableCulling);
-        SetBlendState(EnableAlphaBlending, (float4)0, 0xFFFFFFFF);
+        // SetBlendState(EnableAlphaBlending, (float4)0, 0xFFFFFFFF); not supported by Effects11
     }
 }
 

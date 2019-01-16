@@ -23,6 +23,7 @@
 #include "components/DisplacementMappingEffectMaterialComponent.h"
 #include "components/NormalMappingEffectMaterialComponent.h"
 #include "components/TransparencyMappingEffectMaterialComponent.h"
+#include "components/FogEffectMaterialComponent.h"
 
 #include <library/Path.h>
 #include <library/Utils.h>
@@ -186,7 +187,19 @@ namespace demo
 		auto environmentMapping = std::make_shared<EnvironmentMappingEffectMaterialComponent>(*this);
 		environmentMapping->SetCamera(*camera);
 		environmentMapping->SetKeyboard(*m_keyboard);
-		m_components.push_back(environmentMapping);
+		//m_components.push_back(environmentMapping);
+
+		// transparency mapping
+		auto transparencyMapping = std::make_shared<TransparencyMappingEffectMaterialComponent>(*this);
+		transparencyMapping->SetCamera(*camera);
+		transparencyMapping->SetKeyboard(*m_keyboard);
+		//m_components.push_back(transparencyMapping);
+
+		// fog
+		auto fog = std::make_shared<FogEffectMaterialComponent>(*this);
+		fog->SetCamera(*camera);
+		fog->SetKeyboard(*m_keyboard);
+		m_components.push_back(fog);
 
 		library::Application::Initialize();
 

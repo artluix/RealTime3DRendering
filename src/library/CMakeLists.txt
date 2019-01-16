@@ -32,6 +32,7 @@ if(APPLICATION)
                     include/library/effect/materials/DiffuseLightingEffectMaterial.h
                     include/library/effect/materials/DisplacementMappingEffectMaterial.h
                     include/library/effect/materials/EnvironmentMappingEffectMaterial.h
+                    include/library/effect/materials/FogEffectMaterial.h
                     include/library/effect/materials/NormalMappingEffectMaterial.h
                     include/library/effect/materials/PointLightEffectMaterial.h
                     include/library/effect/materials/SkyboxEffectMaterial.h
@@ -101,6 +102,7 @@ if(APPLICATION)
                     src/effect/materials/DiffuseLightingEffectMaterial.cpp
                     src/effect/materials/DisplacementMappingEffectMaterial.cpp
                     src/effect/materials/EnvironmentMappingEffectMaterial.cpp
+                    src/effect/materials/FogEffectMaterial.cpp
                     src/effect/materials/NormalMappingEffectMaterial.cpp
                     src/effect/materials/PointLightEffectMaterial.cpp
                     src/effect/materials/SkyboxEffectMaterial.cpp
@@ -115,8 +117,8 @@ if(APPLICATION)
                 src/effect/EffectVariable.cpp
 
             # math
-            src/math/Matrix.cpp
-            src/math/Vector.cpp
+                src/math/Matrix.cpp
+                src/math/Vector.cpp
 
             src/Application.cpp
             src/Color.cpp
