@@ -12,6 +12,7 @@ if(APPLICATION)
                 include/library/components/DrawableComponent.h
                 include/library/components/FirstPersonCameraComponent.h
                 include/library/components/FpsComponent.h
+                include/library/components/FullScreenQuadComponent.h
                 include/library/components/GridComponent.h
                 include/library/components/InputComponent.h
                 include/library/components/InputReceivableComponent.h
@@ -57,6 +58,7 @@ if(APPLICATION)
             include/library/CommonTypes.h
             include/library/DirectXForwardDeclarations.h
             include/library/Exception.h
+            include/library/FullScreenRenderTarget.h
             include/library/Key.h
             include/library/Logger.h
             include/library/Mesh.h
@@ -82,6 +84,7 @@ if(APPLICATION)
                 src/components/DrawableComponent.cpp
                 src/components/FirstPersonCameraComponent.cpp
                 src/components/FpsComponent.cpp
+                src/components/FullScreenQuadComponent.cpp
                 src/components/GridComponent.cpp
                 src/components/InputComponent.cpp
                 src/components/InputReceivableComponent.cpp
@@ -125,6 +128,7 @@ if(APPLICATION)
             src/BlendStateHolder.cpp
             src/Color.cpp
             src/Exception.cpp
+            src/FullScreenRenderTarget.cpp
             src/Logger.cpp
             src/Mesh.cpp
             src/Model.cpp

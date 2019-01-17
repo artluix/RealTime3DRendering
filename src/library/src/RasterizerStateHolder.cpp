@@ -4,7 +4,7 @@
 #include "library/Exception.h"
 
 #include <cassert>
-#include <d3d11.h>
+#include <d3d11_1.h>
 
 namespace library
 {
@@ -79,8 +79,8 @@ namespace library
 		std::for_each(s_rasterizerStates.begin(), s_rasterizerStates.end(), [](RasterizerState::Ptr& rsp) { rsp.Reset(); });
 	}
 
-	ID3D11RasterizerState* RasterizerStateHolder::GetRasterizerState(const RasterizerState::Type rs)
+	RasterizerState::Ptr RasterizerStateHolder::GetRasterizerState(const RasterizerState::Type rs)
 	{
-		return s_rasterizerStates[rs].Get();
+		return s_rasterizerStates[rs];
 	}
 } // namespace library

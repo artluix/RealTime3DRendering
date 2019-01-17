@@ -22,7 +22,7 @@ namespace library
 	{
 		ComPtr<ID3D11InputLayout> inputLayout;
 
-		auto hr = m_app.GetD3DDevice()->CreateInputLayout(
+		auto hr = m_app.GetDevice()->CreateInputLayout(
 			inputElementDescriptions.data(),
 			inputElementDescriptions.size(),
 			m_passDesc.pIAInputSignature,

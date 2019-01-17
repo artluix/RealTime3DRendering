@@ -13,7 +13,6 @@
 #include "library/Application.h"
 #include "library/Time.h"
 
-#include <d3d11.h>
 #include <algorithm>
 #include <cassert>
 
@@ -123,7 +122,7 @@ namespace library
 
 	void Renderer::ResetRenderState(const RenderState rs /*= RenderState::All*/)
 	{
-		auto deviceContext = m_app.GetD3DDeviceContext();
+		auto deviceContext = m_app.GetDeviceContext();
 		assert(deviceContext);
 
 		switch (rs)
@@ -156,7 +155,7 @@ namespace library
 
 	void Renderer::SaveRenderState(const RenderState rs /*= RenderState::All*/)
 	{
-		auto deviceContext = m_app.GetD3DDeviceContext();
+		auto deviceContext = m_app.GetDeviceContext();
 		assert(deviceContext);
 
 		switch (rs)
@@ -189,7 +188,7 @@ namespace library
 
 	void Renderer::RestoreRenderState(const RenderState rs /*= RenderState::All*/)
 	{
-		auto deviceContext = m_app.GetD3DDeviceContext();
+		auto deviceContext = m_app.GetDeviceContext();
 		assert(deviceContext);
 
 		switch (rs)

@@ -62,7 +62,7 @@ namespace demo
 			hr = D3DX11CreateEffectFromMemory(
 				shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
 				0,
-				m_app.GetD3DDevice(),
+				m_app.GetDevice().Get(),
 				m_effect.GetAddressOf()
 			);
 			if (FAILED(hr))
@@ -111,7 +111,7 @@ namespace demo
 				{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			};
 
-			auto hr = m_app.GetD3DDevice()->CreateInputLayout(
+			auto hr = m_app.GetDevice()->CreateInputLayout(
 				inputElementDescriptions.data(), inputElementDescriptions.size(),
 				passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
 				m_inputLayout.GetAddressOf()
@@ -153,7 +153,7 @@ namespace demo
 			D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 			vertexSubResourceData.pSysMem = k_indices.data();
 
-			auto hr = m_app.GetD3DDevice()->CreateBuffer(&indexBufferDesc, &vertexSubResourceData, m_indexBuffer.GetAddressOf());
+			auto hr = m_app.GetDevice()->CreateBuffer(&indexBufferDesc, &vertexSubResourceData, m_indexBuffer.GetAddressOf());
 			if (FAILED(hr))
 			{
 				throw Exception("ID3D11Device::CreateBuffer() failed.", hr);
@@ -185,7 +185,7 @@ namespace demo
 			D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 			vertexSubResourceData.pSysMem = vertices.data();
 
-			auto hr = m_app.GetD3DDevice()->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_vertexBuffer.GetAddressOf());
+			auto hr = m_app.GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_vertexBuffer.GetAddressOf());
 			if (FAILED(hr))
 			{
 				throw Exception("ID3D11Device::CreateBuffer() failed.", hr);
@@ -237,24 +237,24 @@ namespace demo
 
 	void CubeComponent::Draw(const Time& time)
 	{
-		auto d3dDeviceContext = m_app.GetD3DDeviceContext();
+		auto deviceContext = m_app.GetDeviceContext();
 
 		auto wvp = GetWorldMatrix();
 		if (!!m_camera)
 			wvp *= m_camera->GetViewProjectionMatrix();
 		m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
-		m_pass->Apply(0, d3dDeviceContext);
+		m_pass->Apply(0, deviceContext.Get());
 
-		d3dDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		d3dDeviceContext->IASetInputLayout(m_inputLayout.Get());
+		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		deviceContext->IASetInputLayout(m_inputLayout.Get());
 
-		d3dDeviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		deviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 		unsigned stride = sizeof(VertexPositionColor);
 		unsigned offset = 0;
-		d3dDeviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
+		deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 
-		d3dDeviceContext->DrawIndexed(k_indicesCount, 0, 0);
+		deviceContext->DrawIndexed(k_indicesCount, 0, 0);
 	}
 } // namespace demo

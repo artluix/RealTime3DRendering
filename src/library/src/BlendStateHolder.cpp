@@ -4,7 +4,7 @@
 #include "library/Exception.h"
 
 #include <cassert>
-#include <d3d11.h>
+#include <d3d11_1.h>
 
 namespace library
 {
@@ -60,8 +60,8 @@ namespace library
 		std::for_each(s_blendStates.begin(), s_blendStates.end(), [](BlendState::Ptr& rsp) { rsp.Reset(); });
 	}
 
-	ID3D11BlendState* BlendStateHolder::GetBlendState(const BlendState::Type rs)
+	BlendState::Ptr BlendStateHolder::GetBlendState(const BlendState::Type rs)
 	{
-		return s_blendStates[rs].Get();
+		return s_blendStates[rs];
 	}
 } // namespace library

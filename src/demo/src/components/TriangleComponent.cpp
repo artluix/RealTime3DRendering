@@ -62,7 +62,7 @@ namespace demo
 			hr = D3DX11CreateEffectFromMemory(
 				shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
 				0,
-				m_app.GetD3DDevice(),
+				m_app.GetDevice().Get(),
 				m_effect.GetAddressOf()
 			);
 			if (FAILED(hr))
@@ -111,7 +111,7 @@ namespace demo
 				{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			};
 
-			auto hr = m_app.GetD3DDevice()->CreateInputLayout(
+			auto hr = m_app.GetDevice()->CreateInputLayout(
 				inputElementDescriptions.data(), inputElementDescriptions.size(),
 				passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
 				m_inputLayout.GetAddressOf()
@@ -141,7 +141,7 @@ namespace demo
 			D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 			vertexSubResourceData.pSysMem = vertices.data();
 
-			auto hr = m_app.GetD3DDevice()->CreateBuffer(
+			auto hr = m_app.GetDevice()->CreateBuffer(
 				&vertexBufferDesc,
 				&vertexSubResourceData,
 				m_vertexBuffer.GetAddressOf()
@@ -162,21 +162,21 @@ namespace demo
 
 	void TriangleComponent::Draw(const Time& time)
 	{
-		auto d3dDeviceContext = m_app.GetD3DDeviceContext();
+		auto deviceContext = m_app.GetDeviceContext();
 
 		auto wvp = GetWorldMatrix();
 		if (!!m_camera)
 			wvp *= m_camera->GetViewProjectionMatrix();
 
-		m_pass->Apply(0, d3dDeviceContext);
+		m_pass->Apply(0, deviceContext.Get());
 
-		d3dDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		d3dDeviceContext->IASetInputLayout(m_inputLayout.Get());
+		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		deviceContext->IASetInputLayout(m_inputLayout.Get());
 
 		unsigned stride = sizeof(VertexPositionColor);
 		unsigned offset = 0;
-		d3dDeviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
+		deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 
-		d3dDeviceContext->Draw(3, 0);
+		deviceContext->Draw(3, 0);
 	}
 } // namespace demo

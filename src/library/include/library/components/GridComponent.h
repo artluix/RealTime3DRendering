@@ -47,8 +47,5 @@ namespace library
 		ComPtr<ID3DX11EffectTechnique> m_technique;
 		ComPtr<ID3DX11EffectPass> m_pass;
 		ComPtr<ID3DX11EffectMatrixVariable> m_wvpVariable;
-
-		ComPtr<ID3D11InputLayout> m_inputLayout;
-		ComPtr<ID3D11Buffer> m_vertexBuffer;
 	};
 } // namespace library

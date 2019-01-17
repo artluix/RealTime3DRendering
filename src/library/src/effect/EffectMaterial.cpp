@@ -38,13 +38,13 @@ namespace library
 		}
 	}
 
-	ID3D11InputLayout* EffectMaterial::GetInputLayout(const EffectPass& pass) const
+	ComPtr<ID3D11InputLayout> EffectMaterial::GetInputLayout(const EffectPass& pass) const
 	{
 		const auto it = m_inputLayouts.find(&pass);
 		if (it != m_inputLayouts.cend())
 			return it->second.Get();
 
-		return nullptr;
+		return ComPtr<ID3D11InputLayout>();
 	}
 
 	void EffectMaterial::Initialize()

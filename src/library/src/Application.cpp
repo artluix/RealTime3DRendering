@@ -123,6 +123,19 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
+	void Application::ResetRenderTargets() const
+	{
+		m_deviceContext->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());
+	}
+
+	void Application::UnbindPixelShaderResources(const unsigned startIdx, const unsigned count) const
+	{
+		static ID3D11ShaderResourceView* const emptySRV = nullptr;
+		m_deviceContext->PSSetShaderResources(startIdx, count, &emptySRV);
+	}
+
+	//-------------------------------------------------------------------------
+
 	void Application::InitializeWindow()
 	{
 		// window
@@ -230,7 +243,7 @@ namespace library
 			throw Exception("Unsupported multi-sampling quality.");
 		}
 
-		DXGI_SWAP_CHAIN_DESC1 swapChainDesc = {};
+		DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 		swapChainDesc.Width = m_screenWidth;
 		swapChainDesc.Height = m_screenHeight;
 		swapChainDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -273,7 +286,7 @@ namespace library
 				throw Exception("IDXGIAdapter::GetParent() failed retrieving factory.", hr);
 			}
 
-			DXGI_SWAP_CHAIN_FULLSCREEN_DESC fullScreenDesc = {};
+			DXGI_SWAP_CHAIN_FULLSCREEN_DESC fullScreenDesc{};
 			fullScreenDesc.RefreshRate.Numerator = m_frameRate;
 			fullScreenDesc.RefreshRate.Denominator = 1;
 			fullScreenDesc.Windowed = !m_isFullScreen;
@@ -311,7 +324,7 @@ namespace library
 
 			if (m_depthStencilBufferEnabled)
 			{
-				D3D11_TEXTURE2D_DESC depthStencilDesc = {};
+				D3D11_TEXTURE2D_DESC depthStencilDesc{};
 				depthStencilDesc.Width = m_screenWidth;
 				depthStencilDesc.Height = m_screenHeight;
 				depthStencilDesc.MipLevels = 1;

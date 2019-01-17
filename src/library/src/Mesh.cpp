@@ -132,7 +132,7 @@ namespace library
 		indexSubResourceData.pSysMem = m_indices.data();
 
 		ComPtr<ID3D11Buffer> indexBuffer;
-		auto hr = m_model.GetApplication().GetD3DDevice()->CreateBuffer(
+		auto hr = m_model.GetApplication().GetDevice()->CreateBuffer(
 			&indexBufferDesc,
 			&indexSubResourceData,
 			indexBuffer.GetAddressOf()

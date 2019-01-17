@@ -27,6 +27,15 @@ namespace library
 		LoadModel(m_modelPath, m_vertexBuffer, m_indexBuffer);
 		LoadTexture(m_texturePath, m_textureShaderResourceView);
 
+		// set default input layout
+		if (auto material = GetEffectMaterial())
+		{
+			const auto& currentTechnique = material->GetCurrentTechnique();
+			const auto& pass = currentTechnique.GetPass(0);
+
+			m_inputLayout = material->GetInputLayout(pass);
+		}
+
 		m_app.GetRenderer()->RegisterForRender(this);
 	}
 
@@ -41,14 +50,9 @@ namespace library
 	{
 		if (const auto material = GetEffectMaterial())
 		{
-			auto deviceContext = m_app.GetD3DDeviceContext();
+			auto deviceContext = m_app.GetDeviceContext();
 			deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-			const auto& currentTechnique = material->GetCurrentTechnique();
-			const auto& pass = currentTechnique.GetPass(0);
-
-			auto inputLayout = material->GetInputLayout(pass);
-			deviceContext->IASetInputLayout(inputLayout);
+			deviceContext->IASetInputLayout(m_inputLayout.Get());
 
 			if (!!m_vertexBuffer)
 			{
@@ -71,13 +75,13 @@ namespace library
 			auto& currentTechnique = material->GetCurrentTechnique();
 			auto& pass = currentTechnique.GetPass(0);
 
-			pass.Apply(0, m_app.GetD3DDeviceContext());
+			pass.Apply(0, m_app.GetDeviceContext().Get());
 		}
 	}
 
 	void DrawableComponent::Render()
 	{
-		auto deviceContext = m_app.GetD3DDeviceContext();
+		auto deviceContext = m_app.GetDeviceContext();
 
 		if (m_indicesCount > 0)
 			deviceContext->DrawIndexed(m_indicesCount, 0, 0);
@@ -96,7 +100,7 @@ namespace library
 				Model model(m_app, modelPath, true);
 
 				const auto& mesh = model.GetMesh(0);
-				m_vertexBuffer = material->CreateVertexBuffer(m_app.GetD3DDevice(), mesh);
+				m_vertexBuffer = material->CreateVertexBuffer(m_app.GetDevice().Get(), mesh);
 				m_indexBuffer = mesh.CreateIndexBuffer();
 
 				m_indicesCount = mesh.GetIndicesCount();
@@ -119,7 +123,7 @@ namespace library
 			}
 
 			auto hr = DirectX::CreateDDSTextureFromMemory(
-				m_app.GetD3DDevice(),
+				m_app.GetDevice().Get(),
 				reinterpret_cast<const std::uint8_t*>(textureData.data()),
 				textureData.size(),
 				nullptr,

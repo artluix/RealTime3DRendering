@@ -96,6 +96,7 @@ namespace demo
 			wvp *= m_camera->GetViewProjectionMatrix();
 
 		m_material->GetWorldViewProjection() << wvp;
+
 		DrawableComponent::SetEffectData();
 	}
 } // namespace demo

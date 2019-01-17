@@ -40,7 +40,6 @@ namespace demo
 		void UpdateDirectionalLight(const library::Time& time);
 		void SetActiveTechnique();
 
-		void SetIA() override;
 		void SetEffectData() override;
 
 		std::shared_ptr<library::Effect> m_effect;
@@ -51,8 +50,6 @@ namespace demo
 		float m_fogStart;
 		float m_fogRange;
 		float m_fogEnabled;
-
-		ComPtr<ID3D11InputLayout> m_inputLayout;
 
 		std::unique_ptr<library::DirectionalLightComponent> m_directionalLight;
 		std::unique_ptr<library::ProxyModelComponent> m_proxyModel;

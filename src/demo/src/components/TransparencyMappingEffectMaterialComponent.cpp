@@ -20,6 +20,7 @@
 #include <library/BlendStateHolder.h>
 
 #include <sstream>
+#include <array>
 
 namespace demo
 {
@@ -72,7 +73,7 @@ namespace demo
 
 			const auto backward = DirectX::XMFLOAT3(math::Vector3::Backward);
 
-			std::vector<Vertex> vertices =
+			std::array<Vertex, 6> vertices =
 			{
 				Vertex(DirectX::XMFLOAT4(-0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), backward),
 				Vertex(DirectX::XMFLOAT4(-0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f), backward),
@@ -84,7 +85,11 @@ namespace demo
 			};
 
 			m_verticesCount = vertices.size();
-			m_vertexBuffer = m_material->EffectMaterial::CreateVertexBuffer(m_app.GetD3DDevice(), vertices.data(), m_verticesCount * sizeof(Vertex));
+			m_vertexBuffer = m_material->EffectMaterial::CreateVertexBuffer(
+				m_app.GetDevice().Get(),
+				vertices.data(),
+				m_verticesCount * sizeof(Vertex)
+			);
 		}
 
 		DrawableComponent::Initialize();
@@ -256,11 +261,11 @@ namespace demo
 
 	void TransparencyMappingEffectMaterialComponent::Render()
 	{
-		auto deviceContext = m_app.GetD3DDeviceContext();
+		auto deviceContext = m_app.GetDeviceContext();
 		auto renderer = m_app.GetRenderer();
 
 		renderer->SaveRenderState(RenderState::Blend);
-		deviceContext->OMSetBlendState(BlendStateHolder::GetBlendState(BlendState::Alpha), 0, 0xFFFFFFFF);
+		deviceContext->OMSetBlendState(BlendStateHolder::GetBlendState(BlendState::Alpha).Get(), 0, 0xFFFFFFFF);
 		deviceContext->Draw(m_verticesCount, 0);
 		renderer->RestoreRenderState(RenderState::Blend);
 	}

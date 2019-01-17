@@ -16,8 +16,8 @@
 #include <library/effect/EffectTechnique.h>
 #include <library/effect/EffectVariable.h>
 
-#include <DDSTextureLoader.h>
 #include <sstream>
+#include <array>
 
 namespace demo
 {
@@ -75,7 +75,7 @@ namespace demo
 			const auto right = DirectX::XMFLOAT3(math::Vector3::Right);
 			const auto backward = DirectX::XMFLOAT3(math::Vector3::Backward);
 
-			std::vector<Vertex> vertices =
+			std::array<Vertex, 6> vertices =
 			{
 				Vertex(DirectX::XMFLOAT4(-0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), backward, right),
 				Vertex(DirectX::XMFLOAT4(-0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f), backward, right),
@@ -87,7 +87,11 @@ namespace demo
 			};
 
 			m_verticesCount = vertices.size();
-			m_vertexBuffer = m_material->EffectMaterial::CreateVertexBuffer(m_app.GetD3DDevice(), vertices.data(), m_verticesCount * sizeof(Vertex));
+			m_vertexBuffer = m_material->EffectMaterial::CreateVertexBuffer(
+				m_app.GetDevice().Get(),
+				vertices.data(),
+				m_verticesCount * sizeof(Vertex)
+			);
 		}
 
 		DrawableComponent::Initialize();

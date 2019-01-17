@@ -72,7 +72,7 @@ namespace library
 		hr = D3DX11CreateEffectFromMemory(
 			shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
 			0,
-			m_app.GetD3DDevice(),
+			m_app.GetDevice().Get(),
 			m_effect.GetAddressOf()
 		);
 		if (FAILED(hr))
@@ -95,7 +95,7 @@ namespace library
 		auto hr = D3DX11CreateEffectFromMemory(
 			effectData.data(), effectData.size(),
 			0,
-			m_app.GetD3DDevice(),
+			m_app.GetDevice().Get(),
 			m_effect.GetAddressOf()
 		);
 		if (FAILED(hr))
@@ -108,12 +108,10 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void Effect::SetEffect(ID3DX11Effect* const effect)
+	void Effect::SetEffect(const ComPtr<ID3DX11Effect>& effect)
 	{
-		if (m_effect.Get() != effect)
-		{
+		if (m_effect != effect)
 			m_effect = effect;
-		}
 	}
 
 	//-------------------------------------------------------------------------

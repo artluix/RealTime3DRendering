@@ -36,8 +36,8 @@ namespace library
 		const Path& GetPath() const { return m_path; }
 		const std::string& GetName() const { return m_name; }
 
-		ID3DX11Effect* GetEffect() const { return m_effect.Get(); }
-		void SetEffect(ID3DX11Effect* const effect);
+		ComPtr<ID3DX11Effect> GetEffect() const { return m_effect; }
+		void SetEffect(const ComPtr<ID3DX11Effect>& effect);
 
 		const D3DX11_EFFECT_DESC& GetEffectDesc() const { return m_effectDesc; }
 

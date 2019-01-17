@@ -51,6 +51,8 @@ namespace library
 
 		ComPtr<ID3D11Buffer> m_indexBuffer;
 		ComPtr<ID3D11Buffer> m_vertexBuffer;
+		ComPtr<ID3D11InputLayout> m_inputLayout;
+
 		ComPtr<ID3D11ShaderResourceView> m_textureShaderResourceView;
 
 		unsigned m_verticesCount = 0;

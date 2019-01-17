@@ -34,8 +34,8 @@ namespace library
 		unsigned GetScreenHeight() const { return m_screenHeight; }
 		const RECT& GetWindowRect() const { return m_windowRect; }
 
-		ID3D11Device1* GetD3DDevice() const { return m_device.Get(); }
-		ID3D11DeviceContext1* GetD3DDeviceContext() const { return m_deviceContext.Get(); }
+		ComPtr<ID3D11Device1> GetDevice() const { return m_device; }
+		ComPtr<ID3D11DeviceContext1> GetDeviceContext() const { return m_deviceContext; }
 		bool IsDepthBufferEnabled() const { return m_depthStencilBufferEnabled; }
 		float GetAspectRatio() const;
 		bool IsFullScreen() const { return m_isFullScreen; }
@@ -52,6 +52,9 @@ namespace library
 
 		virtual void Update(const Time& time);
 		virtual void Draw(const Time& time);
+
+		virtual void ResetRenderTargets() const;
+		virtual void UnbindPixelShaderResources(const unsigned startIdx, const unsigned count) const;
 
 	protected:
 		virtual void InitializeWindow();

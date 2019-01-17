@@ -39,9 +39,9 @@ namespace library
 		void SaveRenderState(const RenderState rs = RenderState::All);
 		void RestoreRenderState(const RenderState rs = RenderState::All);
 
-		ID3D11RasterizerState* GetRasterizerState() { return m_rasterizerState.Get(); }
-		ID3D11BlendState* GetBlendState() { return m_blendState.Get(); }
-		ID3D11DepthStencilState* GetDepthStencilState() { return m_depthStencilState.Get(); }
+		ComPtr<ID3D11RasterizerState> GetRasterizerState() { return m_rasterizerState; }
+		ComPtr<ID3D11BlendState> GetBlendState() { return m_blendState; }
+		ComPtr<ID3D11DepthStencilState> GetDepthStencilState() { return m_depthStencilState; }
 
 	private:
 		using Drawables = std::vector<Drawable*>;

@@ -27,7 +27,7 @@ namespace library
 		static void Initialize(ID3D11Device* const device);
 		static void Reset();
 
-		static ID3D11BlendState* GetBlendState(const BlendState::Type bs);
+		static BlendState::Ptr GetBlendState(const BlendState::Type bs);
 
 	private:
 		static std::array<BlendState::Ptr, BlendState::Count> s_blendStates;

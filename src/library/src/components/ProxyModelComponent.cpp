@@ -64,11 +64,11 @@ namespace library
 
 	void ProxyModelComponent::Render()
 	{
-		auto deviceContext = m_app.GetD3DDeviceContext();
+		auto deviceContext = m_app.GetDeviceContext();
 
 		if (m_isWireframeVisible)
 		{
-			deviceContext->RSSetState(RasterizerStateHolder::GetRasterizerState(RasterizerState::Wireframe));
+			deviceContext->RSSetState(RasterizerStateHolder::GetRasterizerState(RasterizerState::Wireframe).Get());
 			deviceContext->DrawIndexed(m_indicesCount, 0, 0);
 			deviceContext->RSSetState(nullptr);
 		}

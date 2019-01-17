@@ -74,7 +74,7 @@ namespace demo
 			hr = D3DX11CreateEffectFromMemory(
 				shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
 				0,
-				m_app.GetD3DDevice(),
+				m_app.GetDevice().Get(),
 				m_effect.GetAddressOf()
 			);
 			if (FAILED(hr))
@@ -123,7 +123,7 @@ namespace demo
 				{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			};
 
-			auto hr = m_app.GetD3DDevice()->CreateInputLayout(
+			auto hr = m_app.GetDevice()->CreateInputLayout(
 				inputElementDescriptions.data(), inputElementDescriptions.size(),
 				passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
 				m_inputLayout.GetAddressOf()
@@ -139,7 +139,7 @@ namespace demo
 
 		// Create the vertex and index buffers
 		const auto& mesh = model.GetMesh(0);
-		CreateVertexBuffer(m_app.GetD3DDevice(), mesh);
+		CreateVertexBuffer(m_app.GetDevice(), mesh);
 		m_indexBuffer = mesh.CreateIndexBuffer();
 		m_indicesCount = mesh.GetIndicesCount();
 	}
@@ -188,25 +188,25 @@ namespace demo
 
 	void ModelComponent::Draw(const Time& time)
 	{
-		auto d3dDeviceContext = m_app.GetD3DDeviceContext();
+		auto deviceContext = m_app.GetDeviceContext();
 
 		auto wvp = GetWorldMatrix();
 		if (!!m_camera)
 			wvp *= m_camera->GetViewProjectionMatrix();
 		m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
-		m_pass->Apply(0, d3dDeviceContext);
+		m_pass->Apply(0, deviceContext.Get());
 
-		d3dDeviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-		d3dDeviceContext->IASetInputLayout(m_inputLayout.Get());
+		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
+		deviceContext->IASetInputLayout(m_inputLayout.Get());
 
-		d3dDeviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		deviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 		unsigned stride = sizeof(VertexType);
 		unsigned offset = 0;
-		d3dDeviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
+		deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 
-		d3dDeviceContext->DrawIndexed(m_indicesCount, 0, 0);
+		deviceContext->DrawIndexed(m_indicesCount, 0, 0);
 	}
 
 	void ModelComponent::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const Mesh& mesh)

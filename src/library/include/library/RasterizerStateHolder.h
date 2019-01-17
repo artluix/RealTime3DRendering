@@ -29,7 +29,7 @@ namespace library
 		static void Initialize(ID3D11Device* const device);
 		static void Reset();
 
-		static ID3D11RasterizerState* GetRasterizerState(const RasterizerState::Type rs);
+		static RasterizerState::Ptr GetRasterizerState(const RasterizerState::Type rs);
 
 	private:
 		static std::array<RasterizerState::Ptr, RasterizerState::Count> s_rasterizerStates;

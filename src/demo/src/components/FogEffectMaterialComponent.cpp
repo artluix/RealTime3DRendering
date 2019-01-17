@@ -200,22 +200,6 @@ namespace demo
 		m_inputLayout = m_material->GetInputLayout(pass);
 	}
 
-	void FogEffectMaterialComponent::SetIA()
-	{
-		auto deviceContext = m_app.GetD3DDeviceContext();
-		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-		const auto& currentTechnique = m_material->GetCurrentTechnique();
-		const auto& pass = currentTechnique.GetPass(0);
-
-		deviceContext->IASetInputLayout(m_inputLayout.Get());
-
-		unsigned stride = m_material->GetVertexSize();
-		unsigned offset = 0;
-		deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
-		deviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-	}
-
 	void FogEffectMaterialComponent::SetEffectData()
 	{
 		auto wvp = GetWorldMatrix();

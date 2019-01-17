@@ -98,7 +98,7 @@ namespace library
 				//shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
 				effectData.data(), effectData.size(),
 				0,
-				m_app.GetD3DDevice(),
+				m_app.GetDevice().Get(),
 				m_effect.GetAddressOf()
 			);
 			if (FAILED(hr))
@@ -143,7 +143,7 @@ namespace library
 				{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			};
 
-			auto hr = m_app.GetD3DDevice()->CreateInputLayout(
+			auto hr = m_app.GetDevice()->CreateInputLayout(
 				inputElementDescriptions.data(), inputElementDescriptions.size(),
 				passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
 				m_inputLayout.GetAddressOf()
@@ -163,14 +163,14 @@ namespace library
 
 	void GridComponent::Draw(const Time& time)
 	{
-		auto deviceContext = m_app.GetD3DDeviceContext();
+		auto deviceContext = m_app.GetDeviceContext();
 
 		auto wvp = GetWorldMatrix();
 		if (!!m_camera)
 			wvp *= m_camera->GetViewProjectionMatrix();
 		m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
-		m_pass->Apply(0, deviceContext);
+		m_pass->Apply(0, deviceContext.Get());
 
 		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 		deviceContext->IASetInputLayout(m_inputLayout.Get());
@@ -220,7 +220,7 @@ namespace library
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = vertices.data();
 
-		auto hr = m_app.GetD3DDevice()->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_vertexBuffer.GetAddressOf());
+		auto hr = m_app.GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_vertexBuffer.GetAddressOf());
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateBuffer() failed.", hr);
