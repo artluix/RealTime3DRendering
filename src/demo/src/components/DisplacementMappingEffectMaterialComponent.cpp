@@ -89,15 +89,15 @@ namespace demo
 		m_text->SetPosition(math::Vector2(0.f, 100.f));
 		m_text->SetTextGeneratorFunction(
 			[this]() -> std::wstring
-		{
-			std::wostringstream woss;
-			woss <<
-				L"Ambient Intensity (+PageUp/-PageDown): " << m_ambientColor.a << "\n" <<
-				L"Point Light Intensity (+Home/-End): " << m_pointLight->GetColor().a << "\n" <<
-				L"Displacement Scale (+Insert/-Delete): " << m_displacementScale << "\n" <<
-				L"Move Point Light (Numpad: 8/2, 4/6, 3/9)\n";
-			return woss.str();
-		}
+			{
+				std::wostringstream woss;
+				woss <<
+					L"Ambient Intensity (+PageUp/-PageDown): " << m_ambientColor.a << "\n" <<
+					L"Point Light Intensity (+Home/-End): " << m_pointLight->GetColor().a << "\n" <<
+					L"Displacement Scale (+Insert/-Delete): " << m_displacementScale << "\n" <<
+					L"Move Point Light (Numpad: 8/2, 4/6, 3/9)\n";
+				return woss.str();
+			}
 		);
 		m_text->Initialize();
 

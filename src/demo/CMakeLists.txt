@@ -27,8 +27,8 @@ if(APPLICATION)
                 src/components/BasicEffectMaterialComponent.h
                 src/components/BasicEffectMaterialComponent.cpp
 
-                src/components/ColorFilteringMaterialComponent.h
-                src/components/ColorFilteringMaterialComponent.cpp
+                src/components/ColorFilterEffectMaterialComponent.h
+                src/components/ColorFilterEffectMaterialComponent.cpp
 
                 src/components/DiffuseLightingEffectMaterialComponent.h
                 src/components/DiffuseLightingEffectMaterialComponent.cpp

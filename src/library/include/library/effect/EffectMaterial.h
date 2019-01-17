@@ -53,6 +53,11 @@ namespace library
 			const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions
 		);
 
+		virtual void CreateInputLayout(
+			const EffectPass& pass,
+			const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions
+		);
+
 		virtual void InitializeInternal() = 0;
 
 		const Effect& m_effect;

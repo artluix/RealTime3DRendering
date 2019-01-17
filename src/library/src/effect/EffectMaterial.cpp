@@ -70,6 +70,13 @@ namespace library
 		m_inputLayouts.emplace(&pass, inputLayout);
 	}
 
+
+	void EffectMaterial::CreateInputLayout(const EffectPass& pass, const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions)
+	{
+		auto inputLayout = pass.CreateInputLayout(inputElementDescriptions);
+		m_inputLayouts.emplace(&pass, inputLayout);
+	}
+
 	std::vector<ComPtr<ID3D11Buffer>> EffectMaterial::CreateVertexBuffers(ID3D11Device* const device, const Model& model) const
 	{
 		std::vector<ComPtr<ID3D11Buffer>> vertexBuffers;

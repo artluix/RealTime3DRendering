@@ -30,12 +30,14 @@ if(APPLICATION)
             # effect
                 # materials
                     include/library/effect/materials/BasicEffectMaterial.h
+                    include/library/effect/materials/ColorFilterEffectMaterial.h
                     include/library/effect/materials/DiffuseLightingEffectMaterial.h
                     include/library/effect/materials/DisplacementMappingEffectMaterial.h
                     include/library/effect/materials/EnvironmentMappingEffectMaterial.h
                     include/library/effect/materials/FogEffectMaterial.h
                     include/library/effect/materials/NormalMappingEffectMaterial.h
                     include/library/effect/materials/PointLightEffectMaterial.h
+                    include/library/effect/materials/PostProcessingEffectMaterial.h
                     include/library/effect/materials/SkyboxEffectMaterial.h
                     include/library/effect/materials/SpotlightEffectMaterial.h
                     include/library/effect/materials/TextureMappingEffectMaterial.h
@@ -103,12 +105,14 @@ if(APPLICATION)
             # effect
                 # materials
                     src/effect/materials/BasicEffectMaterial.cpp
+                    src/effect/materials/ColorFilterEffectMaterial.cpp
                     src/effect/materials/DiffuseLightingEffectMaterial.cpp
                     src/effect/materials/DisplacementMappingEffectMaterial.cpp
                     src/effect/materials/EnvironmentMappingEffectMaterial.cpp
                     src/effect/materials/FogEffectMaterial.cpp
                     src/effect/materials/NormalMappingEffectMaterial.cpp
                     src/effect/materials/PointLightEffectMaterial.cpp
+                    src/effect/materials/PostProcessingEffectMaterial.cpp
                     src/effect/materials/SkyboxEffectMaterial.cpp
                     src/effect/materials/SpotlightEffectMaterial.cpp
                     src/effect/materials/TextureMappingEffectMaterial.cpp
