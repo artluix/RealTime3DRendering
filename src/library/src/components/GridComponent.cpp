@@ -8,8 +8,10 @@
 #include "library/Exception.h"
 #include "library/VertexTypes.h"
 
-#include <d3dx11effect.h>
-#include <vector>
+#include "library/effect/Effect.h"
+#include "library/effect/EffectTechnique.h"
+#include "library/effect/EffectVariable.h"
+#include "library/effect/EffectPass.h"
 
 namespace library
 {
@@ -17,7 +19,9 @@ namespace library
 	{
 		constexpr unsigned k_defaultSize = 16;
 		constexpr unsigned k_defaultScale = 16;
+
 		const auto k_defaultColor = Color::White;
+
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(
 #if defined(DEBUG) || defined(DEBUG)
 			Path("../data/effects/Basic_d.fxc")
@@ -83,76 +87,13 @@ namespace library
 
 	void GridComponent::Initialize()
 	{
+		m_effect = Effect::Create(m_app, k_effectPath);
+		m_effect->LoadCompiled();
+
+		m_material = std::make_unique<BasicEffectMaterial>(*m_effect);
+		m_material->Initialize();
+
 		DrawableComponent::Initialize();
-
-		// shader
-		{
-			std::vector<library::byte> effectData;
-			utils::LoadBinaryFile(k_effectPath, effectData);
-			if (effectData.empty())
-			{
-				throw Exception("Load compiled effect failed.");
-			}
-
-			auto hr = D3DX11CreateEffectFromMemory(
-				//shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
-				effectData.data(), effectData.size(),
-				0,
-				m_app.GetDevice().Get(),
-				m_effect.GetAddressOf()
-			);
-			if (FAILED(hr))
-			{
-				throw Exception("D3DX11CreateEffectFromMemory() failed.", hr);
-			}
-		}
-
-		// Look up the technique, pass, and WVP variable from the effect
-		m_technique = m_effect->GetTechniqueByName("main11");
-		if (!m_technique)
-		{
-			throw Exception("ID3DX11Effect::GetTechniqueByName() could not find the specified technique.");
-		}
-
-		m_pass = m_technique->GetPassByName("p0");
-		if (!m_pass)
-		{
-			throw Exception("ID3DX11Effect::GetPassByName() could not find the specified pass.");
-		}
-
-		auto variable = m_effect->GetVariableByName("WorldViewProjection");
-		if (!variable)
-		{
-			throw Exception("ID3DX11Effect::GetVariableByName() could not find the specified variable.");
-		}
-
-		m_wvpVariable = variable->AsMatrix();
-		if (!m_wvpVariable->IsValid())
-		{
-			throw Exception("Invalid effect variable cast.");
-		}
-
-		// Create the input layout
-		{
-			D3DX11_PASS_DESC passDesc;
-			m_pass->GetDesc(&passDesc);
-
-			std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
-			{
-				{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-				{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			};
-
-			auto hr = m_app.GetDevice()->CreateInputLayout(
-				inputElementDescriptions.data(), inputElementDescriptions.size(),
-				passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
-				m_inputLayout.GetAddressOf()
-			);
-			if (FAILED(hr))
-			{
-				throw Exception("ID3D11Device::CreateInputLayout() failed.", hr);
-			}
-		}
 
 		Build();
 	}
@@ -165,19 +106,22 @@ namespace library
 	{
 		auto deviceContext = m_app.GetDeviceContext();
 
-		auto wvp = GetWorldMatrix();
-		if (!!m_camera)
-			wvp *= m_camera->GetViewProjectionMatrix();
-		m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
-
-		m_pass->Apply(0, deviceContext.Get());
-
 		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 		deviceContext->IASetInputLayout(m_inputLayout.Get());
 
 		unsigned stride = sizeof(VertexPositionColor);
 		unsigned offset = 0;
 		deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
+
+		auto wvp = GetWorldMatrix();
+		if (!!m_camera)
+			wvp *= m_camera->GetViewProjectionMatrix();
+
+		m_material->GetWorldViewProjection() << wvp;
+
+		auto& currentTechnique = m_material->GetCurrentTechnique();
+		auto& pass = currentTechnique.GetPass(0);
+		pass.Apply(0, m_app.GetDeviceContext());
 
 		deviceContext->Draw((m_size + 1) * 4, 0);
 	}

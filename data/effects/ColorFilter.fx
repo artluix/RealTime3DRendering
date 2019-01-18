@@ -55,6 +55,6 @@ technique11 grayscale_filter
     {
         SetVertexShader(CompileShader(vs_5_0, vertex_shader()));
         SetGeometryShader(NULL);
-        SetVertexShader(CompileShader(ps_5_0, grayscale_pixel_shader()));
+        SetPixelShader(CompileShader(ps_5_0, grayscale_pixel_shader()));
     }
 }

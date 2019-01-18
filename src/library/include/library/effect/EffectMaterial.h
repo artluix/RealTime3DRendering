@@ -35,7 +35,8 @@ namespace library
 		const EffectTechnique& GetCurrentTechnique() const { return m_currentTechnique; }
 		void SetCurrentTechnique(const EffectTechnique& technique);
 
-		ComPtr<ID3D11InputLayout> GetInputLayout(const EffectPass& pass) const;
+		ID3D11InputLayout* GetInputLayout(const EffectPass& pass) const;
+		ComPtr<ID3D11InputLayout> GetInputLayoutShared(const EffectPass& pass) const;
 
 		void Initialize();
 		bool IsInitialized() const { return m_isInitialized; }

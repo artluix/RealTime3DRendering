@@ -43,7 +43,7 @@ namespace library
 		auto& pass = technique.GetPass(passName);
 
 		m_pass = &pass;
-		m_inputLayout = m_material->GetInputLayout(pass);
+		m_inputLayout = m_material->GetInputLayoutShared(pass);
 	}
 
 	void FullScreenQuadComponent::SetMaterialUpdateFunction(const MaterialUpdateFunction& func)
@@ -123,6 +123,6 @@ namespace library
 			m_materialUpdateFunction();
 		}
 
-		m_pass->Apply(0, m_app.GetDeviceContext().Get());
+		m_pass->Apply(0, m_app.GetDeviceContext());
 	}
 } // namespace library

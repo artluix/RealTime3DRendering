@@ -11,6 +11,7 @@
 #include "library/effect/EffectPass.h"
 #include "library/effect/EffectTechnique.h"
 #include "library/effect/EffectVariable.h"
+#include "library/effect/materials/SkyboxEffectMaterial.h"
 
 #include <DDSTextureLoader.h>
 

@@ -65,8 +65,12 @@ namespace demo
 
 		DrawableComponent::Initialize();
 
+		m_pointLight = std::make_unique<PointLightComponent>();
+		m_pointLight->SetRadius(500.f);
+		m_pointLight->SetPosition(math::Vector3(0.f, 0.f, 10.f));
+
 		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.5f);
-		m_proxyModel->SetPosition(math::Vector3(0.f, 0.f, 10.f));
+		m_proxyModel->SetPosition(m_pointLight->GetPosition());
 		m_proxyModel->Rotate(math::Vector3(0.f, math::Pi_Div_2, 0.f));
 		m_proxyModel->SetCamera(*m_camera);
 		m_proxyModel->Initialize();
@@ -86,8 +90,6 @@ namespace demo
 			}
 		);
 		m_text->Initialize();
-
-		m_pointLight = std::make_unique<PointLightComponent>();
 	}
 
 	void PointLightEffectMaterialComponent::Update(const Time& time)
@@ -155,9 +157,9 @@ namespace demo
 				movementAmount.x = 1.0f;
 
 			if (m_keyboard->IsKeyDown(Key::Num_9))
-				movementAmount.y = -1.0f;
-			if (m_keyboard->IsKeyDown(Key::Num_3))
 				movementAmount.y = 1.0f;
+			if (m_keyboard->IsKeyDown(Key::Num_3))
+				movementAmount.y = -1.0f;
 
 			if (m_keyboard->IsKeyDown(Key::Num_8))
 				movementAmount.z = -1.0f;

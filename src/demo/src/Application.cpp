@@ -1,12 +1,5 @@
 #include "Application.h"
 
-#include <library/components/FpsComponent.h>
-#include <library/components/KeyboardComponent.h>
-#include <library/components/MouseComponent.h>
-#include <library/components/GridComponent.h>
-#include <library/components/FirstPersonCameraComponent.h>
-#include <library/components/SkyboxComponent.h>
-
 #include "components/TriangleComponent.h"
 #include "components/CubeComponent.h"
 #include "components/ModelComponent.h"
@@ -25,6 +18,22 @@
 #include "components/TransparencyMappingEffectMaterialComponent.h"
 #include "components/FogEffectMaterialComponent.h"
 
+#include <library/components/FpsComponent.h>
+#include <library/components/KeyboardComponent.h>
+#include <library/components/MouseComponent.h>
+#include <library/components/GridComponent.h>
+#include <library/components/FirstPersonCameraComponent.h>
+#include <library/components/SkyboxComponent.h>
+
+#include <library/components/FullScreenQuadComponent.h>
+#include <library/FullScreenRenderTarget.h>
+
+#include <library/effect/Effect.h>
+#include <library/effect/EffectVariable.h>
+#include <library/effect/EffectPass.h>
+#include <library/effect/EffectTechnique.h>
+#include <library/effect/materials/ColorFilterEffectMaterial.h>
+
 #include <library/Path.h>
 #include <library/Utils.h>
 #include <library/Exception.h>
@@ -38,6 +47,13 @@ namespace demo
 		const auto k_backgroundColor = library::Color::Black;
 
 		const auto k_skyboxCubeMapPath = library::utils::GetExecutableDirectory().Join(library::Path("../data/textures/Maskonaive2_1024.dds"));
+		const auto k_colorFilterEffectPath = library::utils::GetExecutableDirectory().Join(
+#if defined(DEBUG) || defined(DEBUG)
+			library::Path("../data/effects/ColorFilter_d.fxc")
+#else
+			library::Path("../data/effects/ColorFilter.fxc")
+#endif
+		);
 	}
 
 	Application::Application(
@@ -47,12 +63,12 @@ namespace demo
 		const int showCmd
 	)
 		: library::Application(instanceHandle, windowClass, windowTitle, showCmd)
-		, m_keyboard()
-		, m_mouse()
 	{
 		m_depthStencilBufferEnabled = true;
 		m_multiSamplingEnabled = true;
 	}
+
+	Application::~Application() = default;
 
 	void Application::Initialize()
 	{
@@ -80,20 +96,20 @@ namespace demo
 		auto mouseText = std::make_shared<TextComponent>(*this);
 		mouseText->SetTextGeneratorFunction(
 			[this]() -> std::wstring
-		{
-			static const std::wstring empty;
-
-			if (!!m_mouse)
 			{
-				std::wostringstream woss;
-				woss <<
-					L"Mouse Position: " << m_mouse->GetX() << ", " << m_mouse->GetY() << std::endl <<
-					L"Mouse Wheel: " << m_mouse->GetWheel();
-				return woss.str();
-			}
+				static const std::wstring empty;
 
-			return empty;
-		}
+				if (!!m_mouse)
+				{
+					std::wostringstream woss;
+					woss <<
+						L"Mouse Position: " << m_mouse->GetX() << ", " << m_mouse->GetY() << std::endl <<
+						L"Mouse Wheel: " << m_mouse->GetWheel();
+					return woss.str();
+				}
+
+				return empty;
+			}
 		);
 		mouseText->SetPosition(math::Vector2(0.f, 50.f));
 
@@ -183,14 +199,36 @@ namespace demo
 		fog->SetCamera(*camera);
 		fog->SetKeyboard(*m_keyboard);
 
+		// color filter
+		{
+			m_renderTarget = std::make_unique<FullScreenRenderTarget>(*this);
+
+			m_colorFilterEffect = Effect::Create(*this, k_colorFilterEffectPath);
+			m_colorFilterEffect->LoadCompiled();
+
+			m_colorFilterMaterial = std::make_unique<ColorFilterEffectMaterial>(*m_colorFilterEffect);
+			m_colorFilterMaterial->Initialize();
+
+			m_fullScreenQuad = std::make_unique<FullScreenQuadComponent>(*this);
+			m_fullScreenQuad->SetEffectMaterial(*m_colorFilterMaterial, "grayscale_filter", "p0");
+			m_fullScreenQuad->Initialize();
+			m_fullScreenQuad->SetMaterialUpdateFunction(
+				[this]()
+				{
+					m_colorFilterMaterial->GetColorTexture() << m_renderTarget->GetOutputTexture();
+				}
+			);
+		}
+
 		// push needed components
 		m_components.push_back(m_keyboard);
 		m_components.push_back(m_mouse);
 		m_components.push_back(mouseText);
 		m_components.push_back(camera);
+		m_components.push_back(grid);
 		m_components.push_back(fps);
 		m_components.push_back(skybox);
-		m_components.push_back(displacementMapping);
+		m_components.push_back(pointLight);
 
 		library::Application::Initialize();
 
@@ -209,10 +247,21 @@ namespace demo
 
 	void Application::Draw(const library::Time& time)
 	{
+		// Render the scene to an off-screen texture
+		m_renderTarget->Begin();
+
+		m_deviceContext->ClearRenderTargetView(m_renderTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
+		m_deviceContext->ClearDepthStencilView(m_renderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+		library::Application::Draw(time);
+
+		m_renderTarget->End();
+
+		// Render a full-screen quad with a post-processing effect
 		m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
 		m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-		library::Application::Draw(time);
+		m_fullScreenQuad->Draw(time);
 
 		HRESULT hr = m_swapChain->Present(0, 0);
 		if (FAILED(hr))

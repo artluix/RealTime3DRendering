@@ -9,6 +9,7 @@ namespace library
 
 	public:
 		explicit ColorFilterEffectMaterial(const Effect& effect);
+		~ColorFilterEffectMaterial();
 
 		//EffectVariable& GetColorFilter() const { return m_colorFilter; }
 

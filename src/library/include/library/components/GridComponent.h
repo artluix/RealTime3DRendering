@@ -1,12 +1,14 @@
 #pragma once
 #include "library/components/SceneComponent.h"
 #include "library/components/InputReceivableComponent.h"
-
+#include "library/effect/materials/BasicEffectMaterial.h"
 #include "library/Color.h"
 #include "library/DirectXForwardDeclarations.h"
 
 namespace library
 {
+	class Effect;
+
 	class GridComponent
 		: public SceneComponent
 		, public InputReceivableComponent
@@ -36,16 +38,19 @@ namespace library
 		void Update(const Time& time) override;
 		void Draw(const Time& time) override;
 
+		const EffectMaterial* GetEffectMaterial() const override { return m_material.get(); }
+
+	protected:
+		EffectMaterial* GetEffectMaterial() override { return m_material.get(); }
+
 	private:
 		void Build();
+
+		std::shared_ptr<Effect> m_effect;
+		std::unique_ptr<BasicEffectMaterial> m_material;
 
 		unsigned m_size;
 		unsigned m_scale;
 		Color m_color;
-
-		ComPtr<ID3DX11Effect> m_effect;
-		ComPtr<ID3DX11EffectTechnique> m_technique;
-		ComPtr<ID3DX11EffectPass> m_pass;
-		ComPtr<ID3DX11EffectMatrixVariable> m_wvpVariable;
 	};
 } // namespace library

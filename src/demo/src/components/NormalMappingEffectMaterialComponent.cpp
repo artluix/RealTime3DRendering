@@ -88,7 +88,7 @@ namespace demo
 
 			m_verticesCount = vertices.size();
 			m_vertexBuffer = m_material->EffectMaterial::CreateVertexBuffer(
-				m_app.GetDevice().Get(),
+				m_app.GetDevice(),
 				vertices.data(),
 				m_verticesCount * sizeof(Vertex)
 			);

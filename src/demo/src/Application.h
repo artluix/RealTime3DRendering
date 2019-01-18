@@ -9,6 +9,12 @@ namespace library
 {
 	class KeyboardComponent;
 	class MouseComponent;
+
+	class FullScreenQuadComponent;
+	class FullScreenRenderTarget;
+
+	class Effect;
+	class ColorFilterEffectMaterial;
 } // namespace library
 
 namespace demo
@@ -22,6 +28,7 @@ namespace demo
 			const std::wstring& windowTitle,
 			const int showCmd
 		);
+		~Application();
 
 		void Initialize() override;
 		void Update(const library::Time& time) override;
@@ -33,6 +40,12 @@ namespace demo
 	private:
 		std::shared_ptr<library::KeyboardComponent> m_keyboard;
 		std::shared_ptr<library::MouseComponent> m_mouse;
+
+		std::unique_ptr<library::FullScreenQuadComponent> m_fullScreenQuad;
+		std::unique_ptr<library::FullScreenRenderTarget> m_renderTarget;
+
+		std::shared_ptr<library::Effect> m_colorFilterEffect;
+		std::unique_ptr<library::ColorFilterEffectMaterial> m_colorFilterMaterial;
 
 		ComPtr<IDirectInput8> m_directInput;
 	};

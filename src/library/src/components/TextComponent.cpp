@@ -47,7 +47,7 @@ namespace library
 		if (!m_spriteFont || m_fontPath != fontPath)
 		{
 			m_fontPath = fontPath;
-			m_spriteFont = std::make_unique<DirectX::SpriteFont>(m_app.GetDevice().Get(), m_fontPath.GetWideCString());
+			m_spriteFont = std::make_unique<DirectX::SpriteFont>(m_app.GetDevice(), m_fontPath.GetWideCString());
 		}
 	}
 
@@ -60,7 +60,7 @@ namespace library
 	{
 		DrawableComponent::Initialize();
 
-		m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(m_app.GetDeviceContext().Get());
+		m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(m_app.GetDeviceContext());
 		SetFontPath(m_fontPath);
 	}
 

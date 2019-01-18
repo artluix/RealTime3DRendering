@@ -33,7 +33,7 @@ namespace library
 			const auto& currentTechnique = material->GetCurrentTechnique();
 			const auto& pass = currentTechnique.GetPass(0);
 
-			m_inputLayout = material->GetInputLayout(pass);
+			m_inputLayout = material->GetInputLayoutShared(pass);
 		}
 
 		m_app.GetRenderer()->RegisterForRender(this);
@@ -75,7 +75,7 @@ namespace library
 			auto& currentTechnique = material->GetCurrentTechnique();
 			auto& pass = currentTechnique.GetPass(0);
 
-			pass.Apply(0, m_app.GetDeviceContext().Get());
+			pass.Apply(0, m_app.GetDeviceContext());
 		}
 	}
 
@@ -100,7 +100,7 @@ namespace library
 				Model model(m_app, modelPath, true);
 
 				const auto& mesh = model.GetMesh(0);
-				m_vertexBuffer = material->CreateVertexBuffer(m_app.GetDevice().Get(), mesh);
+				m_vertexBuffer = material->CreateVertexBuffer(m_app.GetDevice(), mesh);
 				m_indexBuffer = mesh.CreateIndexBuffer();
 
 				m_indicesCount = mesh.GetIndicesCount();
@@ -123,7 +123,7 @@ namespace library
 			}
 
 			auto hr = DirectX::CreateDDSTextureFromMemory(
-				m_app.GetDevice().Get(),
+				m_app.GetDevice(),
 				reinterpret_cast<const std::uint8_t*>(textureData.data()),
 				textureData.size(),
 				nullptr,

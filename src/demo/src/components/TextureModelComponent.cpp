@@ -67,7 +67,7 @@ namespace demo
 				//shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
 				effectData.data(), effectData.size(),
 				0,
-				m_app.GetDevice().Get(),
+				m_app.GetDevice(),
 				m_effect.GetAddressOf()
 			);
 			if (FAILED(hr))
@@ -223,7 +223,7 @@ namespace demo
 
 		m_colorTextureVariable->SetResource(m_textureShaderResourceView.Get());
 
-		m_pass->Apply(0, deviceContext.Get());
+		m_pass->Apply(0, deviceContext);
 
 		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		deviceContext->IASetInputLayout(m_inputLayout.Get());

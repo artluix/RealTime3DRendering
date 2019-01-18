@@ -10,4 +10,6 @@ namespace library
 		//, m_colorFilter(effect.GetVariable("colorFilter"))
 	{
 	}
+
+	ColorFilterEffectMaterial::~ColorFilterEffectMaterial() = default;
 } // namespace library

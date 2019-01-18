@@ -74,7 +74,7 @@ namespace demo
 			hr = D3DX11CreateEffectFromMemory(
 				shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
 				0,
-				m_app.GetDevice().Get(),
+				m_app.GetDevice(),
 				m_effect.GetAddressOf()
 			);
 			if (FAILED(hr))
@@ -195,7 +195,7 @@ namespace demo
 			wvp *= m_camera->GetViewProjectionMatrix();
 		m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
-		m_pass->Apply(0, deviceContext.Get());
+		m_pass->Apply(0, deviceContext);
 
 		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		deviceContext->IASetInputLayout(m_inputLayout.Get());
