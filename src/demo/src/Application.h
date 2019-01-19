@@ -2,6 +2,9 @@
 #include <library/Application.h>
 #include <library/CommonTypes.h>
 #include <library/Color.h>
+#include <library/math/Matrix.h>
+
+#include <library/effect/materials/ColorFilterEffectMaterial.h>
 
 #include <dinput.h>
 
@@ -14,7 +17,6 @@ namespace library
 	class FullScreenRenderTarget;
 
 	class Effect;
-	class ColorFilterEffectMaterial;
 } // namespace library
 
 namespace demo
@@ -38,6 +40,8 @@ namespace demo
 		void Shutdown() override;
 
 	private:
+		void UpdateGenericColorFilter(const library::Time& time);
+
 		std::shared_ptr<library::KeyboardComponent> m_keyboard;
 		std::shared_ptr<library::MouseComponent> m_mouse;
 
@@ -46,6 +50,8 @@ namespace demo
 
 		std::shared_ptr<library::Effect> m_colorFilterEffect;
 		std::unique_ptr<library::ColorFilterEffectMaterial> m_colorFilterMaterial;
+		library::ColorFilter::Type m_colorFilterType;
+		library::math::Matrix4 m_genericColorFilter;
 
 		ComPtr<IDirectInput8> m_directInput;
 	};

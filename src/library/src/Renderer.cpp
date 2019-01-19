@@ -112,9 +112,9 @@ namespace library
 		{
 			std::sort(uiIt, drawables.end(), effectComp);
 	
-			//SaveRenderState(RenderState::All);
-			//std::for_each(uiIt, drawables.end(), drawPred);
-			//RestoreRenderState(RenderState::All);
+			SaveRenderState(RenderState::All);
+			std::for_each(uiIt, drawables.end(), drawPred);
+			RestoreRenderState(RenderState::All);
 		}
 	}
 

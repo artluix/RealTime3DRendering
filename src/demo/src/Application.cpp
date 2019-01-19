@@ -32,7 +32,6 @@
 #include <library/effect/EffectVariable.h>
 #include <library/effect/EffectPass.h>
 #include <library/effect/EffectTechnique.h>
-#include <library/effect/materials/ColorFilterEffectMaterial.h>
 
 #include <library/Path.h>
 #include <library/Utils.h>
@@ -44,6 +43,8 @@ namespace demo
 {
 	namespace
 	{
+		constexpr float k_brightnessModulationRate = 3.0f;
+
 		const auto k_backgroundColor = library::Color::Black;
 
 		const auto k_skyboxCubeMapPath = library::utils::GetExecutableDirectory().Join(library::Path("../data/textures/Maskonaive2_1024.dds"));
@@ -63,6 +64,8 @@ namespace demo
 		const int showCmd
 	)
 		: library::Application(instanceHandle, windowClass, windowTitle, showCmd)
+		, m_colorFilterType(library::ColorFilter::Original)
+		, m_genericColorFilter(library::math::Matrix4::Identity)
 	{
 		m_depthStencilBufferEnabled = true;
 		m_multiSamplingEnabled = true;
@@ -103,7 +106,7 @@ namespace demo
 				{
 					std::wostringstream woss;
 					woss <<
-						L"Mouse Position: " << m_mouse->GetX() << ", " << m_mouse->GetY() << std::endl <<
+						L"Mouse Position: " << m_mouse->GetX() << ", " << m_mouse->GetY() << "\n" <<
 						L"Mouse Wheel: " << m_mouse->GetWheel();
 					return woss.str();
 				}
@@ -216,14 +219,33 @@ namespace demo
 				[this]()
 				{
 					m_colorFilterMaterial->GetColorTexture() << m_renderTarget->GetOutputTexture();
+					m_colorFilterMaterial->GetColorFilter() << m_genericColorFilter;
 				}
 			);
+
+			// color filter text component
+			auto colorFilterText = std::make_shared<TextComponent>(*this);
+			colorFilterText->SetTextGeneratorFunction(
+				[this]() -> std::wstring
+				{
+					std::ostringstream oss;
+					oss << "Color Filter (Space Bar): " << ColorFilter::ToString(m_colorFilterType);
+
+					if (m_colorFilterType == library::ColorFilter::Generic)
+					{
+						oss << "\nBrightness (+Comma/-Period): " << m_genericColorFilter._11 << "\n";
+					}
+
+					return utils::ToWideString(oss.str());
+				}
+			);
+			colorFilterText->SetPosition(math::Vector2(0.f, 50.f));
+			m_components.push_back(colorFilterText);
 		}
 
 		// push needed components
 		m_components.push_back(m_keyboard);
 		m_components.push_back(m_mouse);
-		m_components.push_back(mouseText);
 		m_components.push_back(camera);
 		m_components.push_back(grid);
 		m_components.push_back(fps);
@@ -237,31 +259,62 @@ namespace demo
 
 	void Application::Update(const library::Time& time)
 	{
-		if (m_keyboard->WasKeyPressed(library::Key::Escape))
+		if (!!m_keyboard)
 		{
-			Exit();
+			if (m_keyboard->WasKeyPressed(library::Key::Escape))
+			{
+				Exit();
+			}
+
+			if (m_keyboard->WasKeyPressed(library::Key::Space))
+			{
+				using library::ColorFilter;
+
+				m_colorFilterType = static_cast<ColorFilter::Type>(m_colorFilterType + 1);
+
+				if (m_colorFilterType == ColorFilter::Count)
+				{
+					m_colorFilterType = library::ColorFilter::Original;
+				}
+				else
+				{
+					m_fullScreenQuad->SetActiveTechnique(ColorFilter::ToTechniqueName(m_colorFilterType), "p0");
+				}
+			}
 		}
+
+		UpdateGenericColorFilter(time);
 
 		library::Application::Update(time);
 	}
 
 	void Application::Draw(const library::Time& time)
 	{
-		// Render the scene to an off-screen texture
-		m_renderTarget->Begin();
+		if (m_colorFilterType != library::ColorFilter::Original)
+		{
+			// Render the scene to an off-screen texture
+			m_renderTarget->Begin();
 
-		m_deviceContext->ClearRenderTargetView(m_renderTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
-		m_deviceContext->ClearDepthStencilView(m_renderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+			m_deviceContext->ClearRenderTargetView(m_renderTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
+			m_deviceContext->ClearDepthStencilView(m_renderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-		library::Application::Draw(time);
+			library::Application::Draw(time);
 
-		m_renderTarget->End();
+			m_renderTarget->End();
 
-		// Render a full-screen quad with a post-processing effect
-		m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
-		m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+			// Render a full-screen quad with a post-processing effect
+			m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
+			m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-		m_fullScreenQuad->Draw(time);
+			m_fullScreenQuad->Draw(time);
+		}
+		else
+		{
+			m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
+			m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+			library::Application::Draw(time);
+		}
 
 		HRESULT hr = m_swapChain->Present(0, 0);
 		if (FAILED(hr))
@@ -275,5 +328,30 @@ namespace demo
 		m_directInput.Reset();
 
 		library::Application::Shutdown();
+	}
+
+	void Application::UpdateGenericColorFilter(const library::Time& time)
+	{
+		static float brightness = 1.0f;
+
+		if (!!m_keyboard)
+		{
+			using namespace library;
+
+			const auto elapsedTime = time.elapsed.GetSeconds();
+
+			if (m_keyboard->IsKeyDown(Key::Comma) && brightness < 1.f)
+			{
+				brightness += k_brightnessModulationRate * elapsedTime;
+			}
+
+			if (m_keyboard->IsKeyDown(Key::Period) && brightness > 0.f)
+			{
+				brightness -= k_brightnessModulationRate * elapsedTime;
+			}
+
+			brightness = math::Clamp(brightness, 0.f, 1.f);
+			m_genericColorFilter = math::Matrix4::Scaling(math::Vector3(brightness));
+		}
 	}
 } // namespace demo

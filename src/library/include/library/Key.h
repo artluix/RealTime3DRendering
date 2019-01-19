@@ -74,6 +74,8 @@ namespace library
 		End = DIK_END,
 		Insert = DIK_INSERT,
 		Delete = DIK_DELETE,
+		Comma = DIK_COMMA,
+		Period = DIK_PERIOD,
 
 		//# Count
 		Count
