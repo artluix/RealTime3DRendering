@@ -24,35 +24,35 @@ if(APPLICATION)
                 src/components/TextureModelComponent.cpp
 
                 # with materials
-                src/components/BasicEffectMaterialComponent.h
-                src/components/BasicEffectMaterialComponent.cpp
+                src/components/BasicComponent.h
+                src/components/BasicComponent.cpp
 
-                src/components/DiffuseLightingEffectMaterialComponent.h
-                src/components/DiffuseLightingEffectMaterialComponent.cpp
+                src/components/DiffuseLightingComponent.h
+                src/components/DiffuseLightingComponent.cpp
 
-                src/components/DisplacementMappingEffectMaterialComponent.h
-                src/components/DisplacementMappingEffectMaterialComponent.cpp
+                src/components/DisplacementMappingComponent.h
+                src/components/DisplacementMappingComponent.cpp
 
-                src/components/EnvironmentMappingEffectMaterialComponent.h
-                src/components/EnvironmentMappingEffectMaterialComponent.cpp
+                src/components/EnvironmentMappingComponent.h
+                src/components/EnvironmentMappingComponent.cpp
 
-                src/components/FogEffectMaterialComponent.h
-                src/components/FogEffectMaterialComponent.cpp
+                src/components/FogComponent.h
+                src/components/FogComponent.cpp
 
-                src/components/NormalMappingEffectMaterialComponent.h
-                src/components/NormalMappingEffectMaterialComponent.cpp
+                src/components/NormalMappingComponent.h
+                src/components/NormalMappingComponent.cpp
 
-                src/components/PointLightEffectMaterialComponent.h
-                src/components/PointLightEffectMaterialComponent.cpp
+                src/components/PointLightComponent.h
+                src/components/PointLightComponent.cpp
 
-                src/components/SpotlightEffectMaterialComponent.h
-                src/components/SpotlightEffectMaterialComponent.cpp
+                src/components/SpotlightComponent.h
+                src/components/SpotlightComponent.cpp
 
-                src/components/TextureMappingEffectMaterialComponent.h
-                src/components/TextureMappingEffectMaterialComponent.cpp
+                src/components/TextureMappingComponent.h
+                src/components/TextureMappingComponent.cpp
 
-                src/components/TransparencyMappingEffectMaterialComponent.h
-                src/components/TransparencyMappingEffectMaterialComponent.cpp
+                src/components/TransparencyMappingComponent.h
+                src/components/TransparencyMappingComponent.cpp
     )
 
     add_executable(demo WIN32 ${DEMO_SOURCES})

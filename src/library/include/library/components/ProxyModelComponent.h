@@ -1,6 +1,6 @@
 #pragma once
 #include "library/components/SceneComponent.h"
-#include "library/effect/materials/BasicEffectMaterial.h"
+#include "library/materials/BasicMaterial.h"
 #include "library/DirectXForwardDeclarations.h"
 
 namespace library
@@ -26,17 +26,17 @@ namespace library
 		void Initialize() override;
 		using DrawableComponent::Draw;
 
-		virtual const BasicEffectMaterial* GetEffectMaterial() const { return m_material.get(); }
+		virtual const BasicMaterial* GetMaterial() const { return m_material.get(); }
 
 	protected:
-		virtual BasicEffectMaterial* GetEffectMaterial() { return m_material.get(); }
+		virtual BasicMaterial* GetMaterial() { return m_material.get(); }
 
 		void SetEffectData() override;
 		void Render() override;
 
 	private:
 		std::shared_ptr<Effect> m_effect;
-		std::unique_ptr<BasicEffectMaterial> m_material;
+		std::unique_ptr<BasicMaterial> m_material;
 
 		bool m_isWireframeVisible = true;
 

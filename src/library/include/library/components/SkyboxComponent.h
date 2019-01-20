@@ -1,6 +1,6 @@
 #pragma once
 #include "library/components/SceneComponent.h"
-#include "library/effect/materials/SkyboxEffectMaterial.h"
+#include "library/materials/SkyboxMaterial.h"
 
 #include <memory>
 
@@ -21,14 +21,14 @@ namespace library
 		void Update(const Time& time) override;
 		using DrawableComponent::Draw;
 
-		const SkyboxEffectMaterial* GetEffectMaterial() const override { return m_material.get(); }
+		const SkyboxMaterial* GetMaterial() const override { return m_material.get(); }
 
 	protected:
-		SkyboxEffectMaterial* GetEffectMaterial() override { return m_material.get(); }
+		SkyboxMaterial* GetMaterial() override { return m_material.get(); }
 		void SetEffectData() override;
 
 	private:
 		std::shared_ptr<Effect> m_effect;
-		std::unique_ptr<SkyboxEffectMaterial> m_material;
+		std::unique_ptr<SkyboxMaterial> m_material;
 	};
 } // namespace library

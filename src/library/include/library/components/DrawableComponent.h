@@ -5,7 +5,7 @@
 
 namespace library
 {
-	class EffectMaterial;
+	class Material;
 	class CameraComponent;
 
 	class DrawableComponent : public Component
@@ -25,7 +25,7 @@ namespace library
 		const Path& GetTexturePath() const { return m_texturePath; }
 		void SetTexturePath(const Path& path);
 
-		virtual const EffectMaterial* GetEffectMaterial() const { return nullptr; }
+		virtual const Material* GetMaterial() const { return nullptr; }
 
 		void Initialize() override;
 		virtual void Draw(const Time& time);
@@ -33,7 +33,7 @@ namespace library
 	protected:
 		explicit DrawableComponent(const Application& app);
 
-		virtual EffectMaterial* GetEffectMaterial() { return nullptr; }
+		virtual Material* GetMaterial() { return nullptr; }
 
 		// render stages
 		virtual void SetIA();

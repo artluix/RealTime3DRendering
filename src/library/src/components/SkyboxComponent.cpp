@@ -11,7 +11,7 @@
 #include "library/effect/EffectPass.h"
 #include "library/effect/EffectTechnique.h"
 #include "library/effect/EffectVariable.h"
-#include "library/effect/materials/SkyboxEffectMaterial.h"
+#include "library/materials/SkyboxMaterial.h"
 
 #include <DDSTextureLoader.h>
 
@@ -42,7 +42,7 @@ namespace library
 		m_effect = Effect::Create(m_app, k_effectPath);
 		m_effect->LoadCompiled();
 
-		m_material = std::make_unique<SkyboxEffectMaterial>(*m_effect);
+		m_material = std::make_unique<SkyboxMaterial>(*m_effect);
 		m_material->Initialize();
 
 		DrawableComponent::Initialize();

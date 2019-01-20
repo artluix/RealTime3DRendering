@@ -5,18 +5,18 @@
 #include "components/ModelComponent.h"
 #include "components/TextureModelComponent.h"
 
-#include "components/DiffuseLightingEffectMaterialComponent.h"
-#include "components/PointLightEffectMaterialComponent.h"
-#include "components/SpotlightEffectMaterialComponent.h"
+#include "components/DiffuseLightingComponent.h"
+#include "components/PointLightComponent.h"
+#include "components/SpotlightComponent.h"
 
-#include "components/BasicEffectMaterialComponent.h"
-#include "components/TextureMappingEffectMaterialComponent.h"
+#include "components/BasicComponent.h"
+#include "components/TextureMappingComponent.h"
 
-#include "components/EnvironmentMappingEffectMaterialComponent.h"
-#include "components/DisplacementMappingEffectMaterialComponent.h"
-#include "components/NormalMappingEffectMaterialComponent.h"
-#include "components/TransparencyMappingEffectMaterialComponent.h"
-#include "components/FogEffectMaterialComponent.h"
+#include "components/EnvironmentMappingComponent.h"
+#include "components/DisplacementMappingComponent.h"
+#include "components/NormalMappingComponent.h"
+#include "components/TransparencyMappingComponent.h"
+#include "components/FogComponent.h"
 
 #include <library/components/FpsComponent.h>
 #include <library/components/KeyboardComponent.h>
@@ -153,52 +153,52 @@ namespace demo
 		textureModel->SetMouse(*m_mouse);
 
 		// basic
-		auto basic = std::make_shared<BasicEffectMaterialComponent>(*this);
+		auto basic = std::make_shared<BasicComponent>(*this);
 		basic->SetCamera(*camera);
 		basic->SetKeyboard(*m_keyboard);
 
 		// texture mapping
-		auto textureMapping = std::make_shared<TextureMappingEffectMaterialComponent>(*this);
+		auto textureMapping = std::make_shared<TextureMappingComponent>(*this);
 		textureMapping->SetCamera(*camera);
 		textureMapping->SetKeyboard(*m_keyboard);
 
 		// diffuse lighting
-		auto diffuseLighting = std::make_shared<DiffuseLightingEffectMaterialComponent>(*this);
+		auto diffuseLighting = std::make_shared<DiffuseLightingComponent>(*this);
 		diffuseLighting->SetCamera(*camera);
 		diffuseLighting->SetKeyboard(*m_keyboard);
 
 		// point light
-		auto pointLight = std::make_shared<PointLightEffectMaterialComponent>(*this);
+		auto pointLight = std::make_shared<PointLightComponent>(*this);
 		pointLight->SetCamera(*camera);
 		pointLight->SetKeyboard(*m_keyboard);
 
 		// spotlight
-		auto spotlight = std::make_shared<SpotlightEffectMaterialComponent>(*this);
+		auto spotlight = std::make_shared<SpotlightComponent>(*this);
 		spotlight->SetCamera(*camera);
 		spotlight->SetKeyboard(*m_keyboard);
 
 		// normal mapping
-		auto normalMapping = std::make_shared<NormalMappingEffectMaterialComponent>(*this);
+		auto normalMapping = std::make_shared<NormalMappingComponent>(*this);
 		normalMapping->SetCamera(*camera);
 		normalMapping->SetKeyboard(*m_keyboard);
 
 		// environment mapping
-		auto environmentMapping = std::make_shared<EnvironmentMappingEffectMaterialComponent>(*this);
+		auto environmentMapping = std::make_shared<EnvironmentMappingComponent>(*this);
 		environmentMapping->SetCamera(*camera);
 		environmentMapping->SetKeyboard(*m_keyboard);
 
 		// transparency mapping
-		auto transparencyMapping = std::make_shared<TransparencyMappingEffectMaterialComponent>(*this);
+		auto transparencyMapping = std::make_shared<TransparencyMappingComponent>(*this);
 		transparencyMapping->SetCamera(*camera);
 		transparencyMapping->SetKeyboard(*m_keyboard);
 
 		// displacement mapping
-		auto displacementMapping = std::make_shared<DisplacementMappingEffectMaterialComponent>(*this);
+		auto displacementMapping = std::make_shared<DisplacementMappingComponent>(*this);
 		displacementMapping->SetCamera(*camera);
 		displacementMapping->SetKeyboard(*m_keyboard);
 
 		// fog
-		auto fog = std::make_shared<FogEffectMaterialComponent>(*this);
+		auto fog = std::make_shared<FogComponent>(*this);
 		fog->SetCamera(*camera);
 		fog->SetKeyboard(*m_keyboard);
 
@@ -209,11 +209,11 @@ namespace demo
 			m_colorFilterEffect = Effect::Create(*this, k_colorFilterEffectPath);
 			m_colorFilterEffect->LoadCompiled();
 
-			m_colorFilterMaterial = std::make_unique<ColorFilterEffectMaterial>(*m_colorFilterEffect);
+			m_colorFilterMaterial = std::make_unique<ColorFilterMaterial>(*m_colorFilterEffect);
 			m_colorFilterMaterial->Initialize();
 
 			m_fullScreenQuad = std::make_unique<FullScreenQuadComponent>(*this);
-			m_fullScreenQuad->SetEffectMaterial(*m_colorFilterMaterial, "grayscale_filter", "p0");
+			m_fullScreenQuad->SetMaterial(*m_colorFilterMaterial, "grayscale_filter", "p0");
 			m_fullScreenQuad->Initialize();
 			m_fullScreenQuad->SetMaterialUpdateFunction(
 				[this]()
@@ -343,15 +343,16 @@ namespace demo
 			if (m_keyboard->IsKeyDown(Key::Comma) && brightness < 1.f)
 			{
 				brightness += k_brightnessModulationRate * elapsedTime;
+				brightness = math::Min(brightness, 1.f);
+				m_genericColorFilter = math::Matrix4::Scaling(math::Vector3(brightness));
 			}
 
 			if (m_keyboard->IsKeyDown(Key::Period) && brightness > 0.f)
 			{
 				brightness -= k_brightnessModulationRate * elapsedTime;
+				brightness = math::Max(brightness, 0.f);
+				m_genericColorFilter = math::Matrix4::Scaling(math::Vector3(brightness));
 			}
-
-			brightness = math::Clamp(brightness, 0.f, 1.f);
-			m_genericColorFilter = math::Matrix4::Scaling(math::Vector3(brightness));
 		}
 	}
 } // namespace demo

@@ -66,4 +66,15 @@ namespace library
 		variable->SetMatrix(reinterpret_cast<const float*>(&value));
 		return *this;
 	}
+
+	void EffectVariable::SetRawData(const void* data, const std::size_t offset, const std::size_t size)
+	{
+		auto variable = m_variable->AsVector();
+		if (!variable->IsValid())
+		{
+			throw Exception("Invalid effect variable cast.");
+		}
+
+		variable->SetRawValue(data, offset, size);
+	}
 } // namespace library

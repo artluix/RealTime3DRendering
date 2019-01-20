@@ -1,9 +1,10 @@
 #include "StdAfx.h"
 #include "library/components/DrawableComponent.h"
 
-#include "library/effect/EffectMaterial.h"
 #include "library/effect/EffectPass.h"
 #include "library/effect/EffectTechnique.h"
+
+#include "library/materials/Material.h"
 
 #include "library/Model.h"
 #include "library/Mesh.h"
@@ -28,7 +29,7 @@ namespace library
 		LoadTexture(m_texturePath, m_textureShaderResourceView);
 
 		// set default input layout
-		if (auto material = GetEffectMaterial())
+		if (auto material = GetMaterial())
 		{
 			const auto& currentTechnique = material->GetCurrentTechnique();
 			const auto& pass = currentTechnique.GetPass(0);
@@ -48,7 +49,7 @@ namespace library
 
 	void DrawableComponent::SetIA()
 	{
-		if (const auto material = GetEffectMaterial())
+		if (const auto material = GetMaterial())
 		{
 			auto deviceContext = m_app.GetDeviceContext();
 			deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
@@ -70,7 +71,7 @@ namespace library
 
 	void DrawableComponent::SetEffectData()
 	{
-		if (auto material = GetEffectMaterial())
+		if (auto material = GetMaterial())
 		{
 			auto& currentTechnique = material->GetCurrentTechnique();
 			auto& pass = currentTechnique.GetPass(0);
@@ -91,7 +92,7 @@ namespace library
 
 	void DrawableComponent::LoadModel(const Path& modelPath, ComPtr<ID3D11Buffer>& vertexBuffer, ComPtr<ID3D11Buffer>& indexBuffer)
 	{
-		if (const auto material = GetEffectMaterial())
+		if (const auto material = GetMaterial())
 		{
 			assert(material->IsInitialized());
 

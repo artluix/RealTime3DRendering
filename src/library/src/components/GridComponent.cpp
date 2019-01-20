@@ -90,7 +90,7 @@ namespace library
 		m_effect = Effect::Create(m_app, k_effectPath);
 		m_effect->LoadCompiled();
 
-		m_material = std::make_unique<BasicEffectMaterial>(*m_effect);
+		m_material = std::make_unique<BasicMaterial>(*m_effect);
 		m_material->Initialize();
 
 		DrawableComponent::Initialize();

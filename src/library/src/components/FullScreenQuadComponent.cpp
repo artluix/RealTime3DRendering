@@ -2,9 +2,10 @@
 #include "library/components/FullScreenQuadComponent.h"
 
 #include "library/effect/Effect.h"
-#include "library/effect/EffectMaterial.h"
 #include "library/effect/EffectTechnique.h"
 #include "library/effect/EffectPass.h"
+
+#include "library/materials/Material.h"
 
 #include "library/VertexTypes.h"
 #include "library/Application.h"
@@ -22,8 +23,8 @@ namespace library
 
 	FullScreenQuadComponent::~FullScreenQuadComponent() = default;
 
-	void FullScreenQuadComponent::SetEffectMaterial(
-		EffectMaterial& material,
+	void FullScreenQuadComponent::SetMaterial(
+		Material& material,
 		const std::string& techniqueName,
 		const std::string& passName
 	)

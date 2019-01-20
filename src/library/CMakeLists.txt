@@ -6,8 +6,9 @@ if(APPLICATION)
     set(LIBRARY_SOURCES
         # include
             # components
-                include/library/components/CameraComponent.h
                 include/library/components/Component.h
+
+                include/library/components/CameraComponent.h
                 include/library/components/DirectionalLightComponent.h
                 include/library/components/DrawableComponent.h
                 include/library/components/FirstPersonCameraComponent.h
@@ -28,29 +29,33 @@ if(APPLICATION)
                 include/library/components/UIComponent.h
 
             # effect
-                # materials
-                    include/library/effect/materials/BasicEffectMaterial.h
-                    include/library/effect/materials/ColorFilterEffectMaterial.h
-                    include/library/effect/materials/DiffuseLightingEffectMaterial.h
-                    include/library/effect/materials/DisplacementMappingEffectMaterial.h
-                    include/library/effect/materials/EnvironmentMappingEffectMaterial.h
-                    include/library/effect/materials/FogEffectMaterial.h
-                    include/library/effect/materials/NormalMappingEffectMaterial.h
-                    include/library/effect/materials/PointLightEffectMaterial.h
-                    include/library/effect/materials/PostProcessingEffectMaterial.h
-                    include/library/effect/materials/SkyboxEffectMaterial.h
-                    include/library/effect/materials/SpotlightEffectMaterial.h
-                    include/library/effect/materials/TextureMappingEffectMaterial.h
-                    include/library/effect/materials/TransparencyMappingEffectMaterial.h
-
                 include/library/effect/Effect.h
-                include/library/effect/EffectMaterial.h
+
                 include/library/effect/EffectPass.h
                 include/library/effect/EffectTechnique.h
                 include/library/effect/EffectVariable.h
 
+            # materials
+                include/library/materials/Material.h
+
+                include/library/materials/BasicMaterial.h
+                include/library/materials/ColorFilterMaterial.h
+                include/library/materials/DiffuseLightingMaterial.h
+                include/library/materials/DisplacementMappingMaterial.h
+                include/library/materials/EnvironmentMappingMaterial.h
+                include/library/materials/FogMaterial.h
+                include/library/materials/GaussianBlurMaterial.h
+                include/library/materials/NormalMappingMaterial.h
+                include/library/materials/PointLightMaterial.h
+                include/library/materials/PostProcessingMaterial.h
+                include/library/materials/SkyboxMaterial.h
+                include/library/materials/SpotlightMaterial.h
+                include/library/materials/TextureMappingMaterial.h
+                include/library/materials/TransparencyMappingMaterial.h
+
             # math
                 include/library/math/Math.h
+
                 include/library/math/Matrix.h
                 include/library/math/Vector.h
 
@@ -80,8 +85,9 @@ if(APPLICATION)
 
         # src
             # components
-                src/components/CameraComponent.cpp
                 src/components/Component.cpp
+
+                src/components/CameraComponent.cpp
                 src/components/DirectionalLightComponent.cpp
                 src/components/DrawableComponent.cpp
                 src/components/FirstPersonCameraComponent.cpp
@@ -103,26 +109,29 @@ if(APPLICATION)
 
 
             # effect
-                # materials
-                    src/effect/materials/BasicEffectMaterial.cpp
-                    src/effect/materials/ColorFilterEffectMaterial.cpp
-                    src/effect/materials/DiffuseLightingEffectMaterial.cpp
-                    src/effect/materials/DisplacementMappingEffectMaterial.cpp
-                    src/effect/materials/EnvironmentMappingEffectMaterial.cpp
-                    src/effect/materials/FogEffectMaterial.cpp
-                    src/effect/materials/NormalMappingEffectMaterial.cpp
-                    src/effect/materials/PointLightEffectMaterial.cpp
-                    src/effect/materials/PostProcessingEffectMaterial.cpp
-                    src/effect/materials/SkyboxEffectMaterial.cpp
-                    src/effect/materials/SpotlightEffectMaterial.cpp
-                    src/effect/materials/TextureMappingEffectMaterial.cpp
-                    src/effect/materials/TransparencyMappingEffectMaterial.cpp
-
                 src/effect/Effect.cpp
-                src/effect/EffectMaterial.cpp
+
                 src/effect/EffectPass.cpp
                 src/effect/EffectTechnique.cpp
                 src/effect/EffectVariable.cpp
+
+            # materials
+                src/materials/Material.cpp
+
+                src/materials/BasicMaterial.cpp
+                src/materials/ColorFilterMaterial.cpp
+                src/materials/DiffuseLightingMaterial.cpp
+                src/materials/DisplacementMappingMaterial.cpp
+                src/materials/EnvironmentMappingMaterial.cpp
+                src/materials/FogMaterial.cpp
+                src/materials/GaussianBlurMaterial.cpp
+                src/materials/NormalMappingMaterial.cpp
+                src/materials/PointLightMaterial.cpp
+                src/materials/PostProcessingMaterial.cpp
+                src/materials/SkyboxMaterial.cpp
+                src/materials/SpotlightMaterial.cpp
+                src/materials/TextureMappingMaterial.cpp
+                src/materials/TransparencyMappingMaterial.cpp
 
             # math
                 src/math/Matrix.cpp

@@ -17,9 +17,9 @@ namespace library
 		explicit FullScreenQuadComponent(const Application& app);
 		~FullScreenQuadComponent();
 
-		const EffectMaterial* GetEffectMaterial() const override { return m_material; }
-		void SetEffectMaterial(
-			EffectMaterial& material,
+		const Material* GetMaterial() const override { return m_material; }
+		void SetMaterial(
+			Material& material,
 			const std::string& techniqueName,
 			const std::string& passName
 		);
@@ -31,11 +31,11 @@ namespace library
 		using DrawableComponent::Draw;
 
 	protected:
-		EffectMaterial* GetEffectMaterial() override { return m_material; }
+		Material* GetMaterial() override { return m_material; }
 		void SetEffectData() override;
 
 	private:
-		EffectMaterial* m_material = nullptr;
+		Material* m_material = nullptr;
 		EffectPass* m_pass = nullptr;
 
 		MaterialUpdateFunction m_materialUpdateFunction;

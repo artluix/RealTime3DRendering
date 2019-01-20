@@ -5,10 +5,8 @@
 #include "library/components/UIComponent.h"
 #include "library/components/SceneComponent.h"
 
-#include "library/components/ProxyModelComponent.h"
-
 #include "library/effect/Effect.h"
-#include "library/effect/EffectMaterial.h"
+#include "library/materials/Material.h"
 
 #include "library/Application.h"
 #include "library/Time.h"
@@ -60,11 +58,11 @@ namespace library
 	{
 		auto effectComp = [](const Drawable* lhs, const Drawable* rhs)
 		{
-			const auto lhsMat = lhs->GetEffectMaterial();
+			const auto lhsMat = lhs->GetMaterial();
 			if (lhsMat)
 				return false;
 
-			const auto rhsMat = lhs->GetEffectMaterial();
+			const auto rhsMat = lhs->GetMaterial();
 			if (!rhsMat)
 				return false;
 

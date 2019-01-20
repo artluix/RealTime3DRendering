@@ -1,7 +1,7 @@
 #pragma once
 #include "library/components/SceneComponent.h"
 #include "library/components/InputReceivableComponent.h"
-#include "library/effect/materials/BasicEffectMaterial.h"
+#include "library/materials/BasicMaterial.h"
 #include "library/Color.h"
 #include "library/DirectXForwardDeclarations.h"
 
@@ -38,16 +38,16 @@ namespace library
 		void Update(const Time& time) override;
 		void Draw(const Time& time) override;
 
-		const EffectMaterial* GetEffectMaterial() const override { return m_material.get(); }
+		const Material* GetMaterial() const override { return m_material.get(); }
 
 	protected:
-		EffectMaterial* GetEffectMaterial() override { return m_material.get(); }
+		Material* GetMaterial() override { return m_material.get(); }
 
 	private:
 		void Build();
 
 		std::shared_ptr<Effect> m_effect;
-		std::unique_ptr<BasicEffectMaterial> m_material;
+		std::unique_ptr<BasicMaterial> m_material;
 
 		unsigned m_size;
 		unsigned m_scale;

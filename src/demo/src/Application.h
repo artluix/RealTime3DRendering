@@ -4,7 +4,7 @@
 #include <library/Color.h>
 #include <library/math/Matrix.h>
 
-#include <library/effect/materials/ColorFilterEffectMaterial.h>
+#include <library/materials/ColorFilterMaterial.h>
 
 #include <dinput.h>
 
@@ -49,7 +49,7 @@ namespace demo
 		std::unique_ptr<library::FullScreenRenderTarget> m_renderTarget;
 
 		std::shared_ptr<library::Effect> m_colorFilterEffect;
-		std::unique_ptr<library::ColorFilterEffectMaterial> m_colorFilterMaterial;
+		std::unique_ptr<library::ColorFilterMaterial> m_colorFilterMaterial;
 		library::ColorFilter::Type m_colorFilterType;
 		library::math::Matrix4 m_genericColorFilter;
 

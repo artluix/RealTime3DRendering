@@ -5,6 +5,7 @@
 
 #include <d3dx11effect.h>
 #include <string>
+#include <vector>
 
 interface ID3D11ShaderResourceView;
 
@@ -42,7 +43,13 @@ namespace library
 		template<std::size_t Size>
 		EffectVariable& operator << (const math::Matrix<Size>& value);
 
+
+		template<typename T>
+		EffectVariable& operator << (const std::vector<T>& value);
+
 	private:
+		void SetRawData(const void* data, const std::size_t offset, const std::size_t size);
+
 		const Effect& m_effect;
 		std::string m_name;
 
@@ -64,10 +71,17 @@ namespace library
 	}
 
 	template<std::size_t Size>
-	inline EffectVariable& EffectVariable::operator<<(const math::Vector<Size>& value)
+	inline EffectVariable& EffectVariable::operator << (const math::Vector<Size>& value)
 	{
 		auto& thisRef = *this;
 		thisRef << value.Load();
 		return thisRef;
+	}
+
+	template<typename T>
+	inline EffectVariable& EffectVariable::operator << (const std::vector<T>& value)
+	{
+		Set(value.data(), sizeof(T), sizeof(T) * value.size());
+		return *this;
 	}
 } // namespace library
