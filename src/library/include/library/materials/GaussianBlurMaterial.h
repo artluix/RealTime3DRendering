@@ -3,18 +3,6 @@
 
 namespace library
 {
-	struct GaussianBlurSample
-	{
-		struct
-		{
-			float x, y;
-		} offset;
-
-		float weight;
-	};
-
-	//-------------------------------------------------------------------------
-
 	class GaussianBlurMaterial : public PostProcessingMaterial
 	{
 		RTTI_CLASS(GaussianBlurMaterial, PostProcessingMaterial)
@@ -23,9 +11,11 @@ namespace library
 		explicit GaussianBlurMaterial(const Effect& effect);
 		~GaussianBlurMaterial();
 
-		EffectVariable& GetSamples() const { return m_samples; }
+		EffectVariable& GetSampleOffsets() const { return m_sampleOffsets; }
+		EffectVariable& GetSampleWeights() const { return m_sampleWeights; }
 
 	private:
-		EffectVariable& m_samples;
+		EffectVariable& m_sampleOffsets;
+		EffectVariable& m_sampleWeights;
 	};
 } // namespace library

@@ -19,43 +19,14 @@ namespace library
 		const CameraComponent* GetCamera() const { return m_camera; }
 		void SetCamera(const CameraComponent& camera);
 
-		const Path& GetModelPath() const { return m_modelPath; }
-		void SetModelPath(const Path& path);
-
-		const Path& GetTexturePath() const { return m_texturePath; }
-		void SetTexturePath(const Path& path);
-
-		virtual const Material* GetMaterial() const { return nullptr; }
-
 		void Initialize() override;
-		virtual void Draw(const Time& time);
+		virtual void Draw(const Time& time) = 0;
 
 	protected:
 		explicit DrawableComponent(const Application& app);
 
-		virtual Material* GetMaterial() { return nullptr; }
-
-		// render stages
-		virtual void SetIA();
-		virtual void SetEffectData();
-		virtual void Render();
-
-		void LoadModel(const Path& modelPath, ComPtr<ID3D11Buffer>& vertexBuffer, ComPtr<ID3D11Buffer>& indexBuffer);
-		void LoadTexture(const Path& texturePath, ComPtr<ID3D11ShaderResourceView>& textureShaderResourceView);
-
+	private:
 		const CameraComponent* m_camera = nullptr;
 		bool m_visible = true;
-
-		Path m_modelPath;
-		Path m_texturePath;
-
-		ComPtr<ID3D11Buffer> m_indexBuffer;
-		ComPtr<ID3D11Buffer> m_vertexBuffer;
-		ComPtr<ID3D11InputLayout> m_inputLayout;
-
-		ComPtr<ID3D11ShaderResourceView> m_textureShaderResourceView;
-
-		unsigned m_verticesCount = 0;
-		unsigned m_indicesCount = 0;
 	};
 } // namespace library

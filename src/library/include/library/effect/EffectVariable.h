@@ -2,6 +2,7 @@
 #include "library/CommonTypes.h"
 #include "library/NonCopyable.hpp"
 #include "library/math/Math.h"
+#include "library/Exception.h"
 
 #include <d3dx11effect.h>
 #include <string>
@@ -43,13 +44,16 @@ namespace library
 		template<std::size_t Size>
 		EffectVariable& operator << (const math::Matrix<Size>& value);
 
+		// vector of types
+		EffectVariable& operator << (const std::vector<float>& value);
 
-		template<typename T>
-		EffectVariable& operator << (const std::vector<T>& value);
+		template<std::size_t Size>
+		EffectVariable& operator << (const std::vector<math::Vector<Size>>& value);
+
+		template<std::size_t Size>
+		EffectVariable& operator << (const std::vector<math::Matrix<Size>>& value);
 
 	private:
-		void SetRawData(const void* data, const std::size_t offset, const std::size_t size);
-
 		const Effect& m_effect;
 		std::string m_name;
 
@@ -63,25 +67,54 @@ namespace library
 	// ----------------------------------------------------------------------------------------------------------
 
 	template<std::size_t Size>
-	inline EffectVariable& EffectVariable::operator << (const math::Matrix<Size>& value)
+	inline EffectVariable& EffectVariable::operator << (const math::Vector<Size>& value)
 	{
-		auto& thisRef = *this;
-		thisRef << value.Load();
-		return thisRef;
+		auto variable = m_variable->AsVector();
+		if (!variable->IsValid())
+		{
+			throw Exception("Invalid effect variable cast.");
+		}
+
+		variable->SetFloatVector(static_cast<const float*>(value));
+		return *this;
 	}
 
 	template<std::size_t Size>
-	inline EffectVariable& EffectVariable::operator << (const math::Vector<Size>& value)
+	inline EffectVariable& EffectVariable::operator << (const math::Matrix<Size>& value)
 	{
-		auto& thisRef = *this;
-		thisRef << value.Load();
-		return thisRef;
+		auto variable = m_variable->AsMatrix();
+		if (!variable->IsValid())
+		{
+			throw Exception("Invalid effect variable cast.");
+		}
+
+		variable->SetMatrix(static_cast<const float*>(value));
+		return *this;
 	}
 
-	template<typename T>
-	inline EffectVariable& EffectVariable::operator << (const std::vector<T>& value)
+	template<std::size_t Size>
+	inline EffectVariable& EffectVariable::operator << (const std::vector<math::Vector<Size>>& value)
 	{
-		Set(value.data(), sizeof(T), sizeof(T) * value.size());
+		auto variable = m_variable->AsVector();
+		if (!variable->IsValid())
+		{
+			throw Exception("Invalid effect variable cast.");
+		}
+
+		variable->SetFloatVectorArray(value.data(), 0, value.size());
+		return *this;
+	}
+
+	template<std::size_t Size>
+	inline EffectVariable& EffectVariable::operator << (const std::vector<math::Matrix<Size>>& value)
+	{
+		auto variable = m_variable->AsMatrix();
+		if (!variable->IsValid())
+		{
+			throw Exception("Invalid effect variable cast.");
+		}
+
+		variable->SetMatrixArray(value.data(), 0, value.size());
 		return *this;
 	}
 } // namespace library

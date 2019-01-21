@@ -1,15 +1,10 @@
 /************* Resources *************/
 #define SAMPLE_COUNT 9
 
-struct Sample
-{
-    float2 offset;
-    float weight;
-};
-
 cbuffer CBufferPerFrame
 {
-    Sample samples[SAMPLE_COUNT];
+    float2 sampleOffsets[SAMPLE_COUNT];
+    float sampleWeights[SAMPLE_COUNT];
 };
 
 Texture2D ColorTexture;
@@ -55,8 +50,7 @@ float4 blur_pixel_shader(VS_OUTPUT IN) : SV_Target
 
     for (int i = 0; i < SAMPLE_COUNT; i++)
     {
-        Sample s = samples[i];
-        color += ColorTexture.Sample(TrilinearSampler, IN.textureCoordinate + s.offset) * s.weight;
+        color += ColorTexture.Sample(TrilinearSampler, IN.textureCoordinate + sampleOffsets[i]) * sampleWeights[i];
     }
 
     return color;

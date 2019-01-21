@@ -1,8 +1,6 @@
 #include "StdAfx.h"
 #include "library/effect/EffectVariable.h"
 
-#include "library/Exception.h"
-
 namespace library
 {
 	EffectVariable::EffectVariable(const Effect& effect, ID3DX11EffectVariable* const variable)
@@ -19,7 +17,9 @@ namespace library
 
 	EffectVariable::~EffectVariable() = default;
 
-	EffectVariable& EffectVariable::operator<<(const float value)
+	//-------------------------------------------------------------------------
+
+	EffectVariable& EffectVariable::operator << (const float value)
 	{
 		auto variable = m_variable->AsScalar();
 		if (!variable->IsValid())
@@ -31,7 +31,19 @@ namespace library
 		return *this;
 	}
 
-	EffectVariable& EffectVariable::operator<<(ID3D11ShaderResourceView* const value)
+	EffectVariable& EffectVariable::operator << (const std::vector<float>& value)
+	{
+		auto variable = m_variable->AsScalar();
+		if (!variable->IsValid())
+		{
+			throw Exception("Invalid effect variable cast.");
+		}
+
+		variable->SetFloatArray(value.data(), 0, value.size());
+		return *this;
+	}
+
+	EffectVariable& EffectVariable::operator << (ID3D11ShaderResourceView* const value)
 	{
 		auto variable = m_variable->AsShaderResource();
 		if (!variable->IsValid())
@@ -43,7 +55,7 @@ namespace library
 		return *this;
 	}
 
-	EffectVariable& EffectVariable::operator<<(const math::XMVector& value)
+	EffectVariable& EffectVariable::operator << (const math::XMVector& value)
 	{
 		auto variable = m_variable->AsVector();
 		if (!variable->IsValid())
@@ -55,7 +67,7 @@ namespace library
 		return *this;
 	}
 
-	EffectVariable& EffectVariable::operator<<(const math::XMMatrix& value)
+	EffectVariable& EffectVariable::operator << (const math::XMMatrix& value)
 	{
 		auto variable = m_variable->AsMatrix();
 		if (!variable->IsValid())
@@ -65,16 +77,5 @@ namespace library
 
 		variable->SetMatrix(reinterpret_cast<const float*>(&value));
 		return *this;
-	}
-
-	void EffectVariable::SetRawData(const void* data, const std::size_t offset, const std::size_t size)
-	{
-		auto variable = m_variable->AsVector();
-		if (!variable->IsValid())
-		{
-			throw Exception("Invalid effect variable cast.");
-		}
-
-		variable->SetRawValue(data, offset, size);
 	}
 } // namespace library

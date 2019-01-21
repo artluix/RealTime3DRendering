@@ -17,7 +17,6 @@ namespace library
 		explicit FullScreenQuadComponent(const Application& app);
 		~FullScreenQuadComponent();
 
-		const Material* GetMaterial() const override { return m_material; }
 		void SetMaterial(
 			Material& material,
 			const std::string& techniqueName,
@@ -31,7 +30,6 @@ namespace library
 		using DrawableComponent::Draw;
 
 	protected:
-		Material* GetMaterial() override { return m_material; }
 		void SetEffectData() override;
 
 	private:

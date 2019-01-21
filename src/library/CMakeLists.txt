@@ -14,6 +14,7 @@ if(APPLICATION)
                 include/library/components/FirstPersonCameraComponent.h
                 include/library/components/FpsComponent.h
                 include/library/components/FullScreenQuadComponent.h
+                include/library/components/GaussianBlurComponent.h
                 include/library/components/GridComponent.h
                 include/library/components/InputComponent.h
                 include/library/components/InputReceivableComponent.h
@@ -93,6 +94,7 @@ if(APPLICATION)
                 src/components/FirstPersonCameraComponent.cpp
                 src/components/FpsComponent.cpp
                 src/components/FullScreenQuadComponent.cpp
+                src/components/GaussianBlurComponent.cpp
                 src/components/GridComponent.cpp
                 src/components/InputComponent.cpp
                 src/components/InputReceivableComponent.cpp
