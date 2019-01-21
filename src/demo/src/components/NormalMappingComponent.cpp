@@ -47,7 +47,8 @@ namespace demo
 	}
 
 	NormalMappingComponent::NormalMappingComponent(const Application& app)
-		: SceneComponent(app)
+		: SceneComponent()
+		, ConcreteMaterialComponent(app)
 		, InputReceivableComponent()
 		, m_specularPower(25.f)
 		, m_specularColor(1.f, 1.f, 1.f, 1.f)
@@ -60,7 +61,7 @@ namespace demo
 
 	void NormalMappingComponent::Initialize()
 	{
-		assert(!!m_camera);
+		assert(!!GetCamera());
 
 		m_effect = Effect::Create(m_app, k_effectPath);
 		m_effect->LoadCompiled();
@@ -94,16 +95,16 @@ namespace demo
 			);
 		}
 
-		DrawableComponent::Initialize();
+		MaterialComponent::Initialize();
 
-		LoadTexture(k_normalMapTexturePath, m_normalMapShaderResourceView);
+		m_app.LoadTexture(k_normalMapTexturePath, m_normalMapShaderResourceView);
 
 		m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
 		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.2f);
 		m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
 		m_proxyModel->SetRotation(GetRotation() + k_proxyModelRotationOffset);
-		m_proxyModel->SetCamera(*m_camera);
+		m_proxyModel->SetCamera(*GetCamera());
 		m_proxyModel->Initialize();
 
 		m_text = std::make_unique<TextComponent>(m_app);
@@ -235,11 +236,11 @@ namespace demo
 	void NormalMappingComponent::SetEffectData()
 	{
 		auto wvp = GetWorldMatrix();
-		if (!!m_camera)
+		if (auto camera = GetCamera())
 		{
-			wvp *= m_camera->GetViewProjectionMatrix();
+			wvp *= camera->GetViewProjectionMatrix();
 
-			m_material->GetCameraPosition() << m_camera->GetPosition();
+			m_material->GetCameraPosition() << camera->GetPosition();
 		}
 
 		m_material->GetWVP() << wvp;
@@ -252,6 +253,6 @@ namespace demo
 		m_material->GetColorTexture() << m_textureShaderResourceView.Get();
 		m_material->GetNormalMap() << m_normalMapShaderResourceView.Get();
 
-		DrawableComponent::SetEffectData();
+		MaterialComponent::SetEffectData();
 	}
 } // namespace demo

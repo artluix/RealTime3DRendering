@@ -1,7 +1,10 @@
 #pragma once
-#include <library/components/SceneComponent.h>
-#include <library/components/InputReceivableComponent.h>
 #include <library/materials/FogMaterial.h>
+
+#include <library/components/SceneComponent.h>
+#include <library/components/MaterialComponent.h>
+#include <library/components/InputReceivableComponent.h>
+
 #include <library/DirectXForwardDeclarations.h>
 #include <library/Color.h>
 
@@ -9,7 +12,6 @@
 
 namespace library
 {
-	class Effect;
 	class DirectionalLightComponent;
 	class ProxyModelComponent;
 	class TextComponent;
@@ -19,9 +21,10 @@ namespace demo
 {
 	class FogComponent
 		: public library::SceneComponent
+		, public library::ConcreteMaterialComponent<library::FogMaterial>
 		, public library::InputReceivableComponent
 	{
-		RTTI_CLASS(FogComponent, library::SceneComponent, library::InputReceivableComponent)
+		RTTI_CLASS(FogComponent, library::SceneComponent, library::MaterialComponent, library::InputReceivableComponent)
 
 	public:
 		explicit FogComponent(const library::Application& app);
@@ -31,19 +34,12 @@ namespace demo
 		void Update(const library::Time& time) override;
 		using library::DrawableComponent::Draw;
 
-		const library::FogMaterial* GetMaterial() const override { return m_material.get(); }
-
 	private:
-		library::FogMaterial* GetMaterial() override { return m_material.get(); }
-
 		void UpdateAmbientLight(const library::Time& time);
 		void UpdateDirectionalLight(const library::Time& time);
 		void SetActiveTechnique();
 
 		void SetEffectData() override;
-
-		std::shared_ptr<library::Effect> m_effect;
-		std::unique_ptr<library::FogMaterial> m_material;
 
 		library::Color m_ambientColor;
 

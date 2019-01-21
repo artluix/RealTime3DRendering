@@ -41,7 +41,8 @@ namespace demo
 	}
 
 	PointLightComponent::PointLightComponent(const Application& app)
-		: SceneComponent(app)
+		: SceneComponent()
+		, ConcreteMaterialComponent(app)
 		, InputReceivableComponent()
 		, m_specularPower(25.f)
 		, m_specularColor(1.f, 1.f, 1.f, 1.f)
@@ -55,7 +56,7 @@ namespace demo
 
 	void PointLightComponent::Initialize()
 	{
-		assert(!!m_camera);
+		assert(!!GetCamera());
 
 		m_effect = Effect::Create(m_app, k_effectPath);
 		m_effect->LoadCompiled();
@@ -63,7 +64,7 @@ namespace demo
 		m_material = std::make_unique<PointLightMaterial>(*m_effect);
 		m_material->Initialize();
 
-		DrawableComponent::Initialize();
+		MaterialComponent::Initialize();
 
 		m_pointLight = std::make_unique<library::PointLightComponent>();
 		m_pointLight->SetRadius(500.f);
@@ -72,7 +73,7 @@ namespace demo
 		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.5f);
 		m_proxyModel->SetPosition(m_pointLight->GetPosition());
 		m_proxyModel->Rotate(math::Vector3(0.f, math::Pi_Div_2, 0.f));
-		m_proxyModel->SetCamera(*m_camera);
+		m_proxyModel->SetCamera(*GetCamera());
 		m_proxyModel->Initialize();
 
 		m_text = std::make_unique<TextComponent>(m_app);
@@ -205,11 +206,11 @@ namespace demo
 	void PointLightComponent::SetEffectData()
 	{
 		auto wvp = GetWorldMatrix();
-		if (!!m_camera)
+		if (auto camera = GetCamera())
 		{
-			wvp *= m_camera->GetViewProjectionMatrix();
+			wvp *= camera->GetViewProjectionMatrix();
 
-			m_material->GetCameraPosition() << m_camera->GetPosition();
+			m_material->GetCameraPosition() << camera->GetPosition();
 		}
 
 		m_material->GetWVP() << wvp;
@@ -222,6 +223,6 @@ namespace demo
 		m_material->GetLightRadius() << m_pointLight->GetRadius();
 		m_material->GetColorTexture() << m_textureShaderResourceView.Get();
 
-		DrawableComponent::SetEffectData();
+		MaterialComponent::SetEffectData();
 	}
 } // namespace demo

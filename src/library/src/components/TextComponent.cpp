@@ -13,7 +13,7 @@ namespace library
 	}
 
 	TextComponent::TextComponent(const Application& app)
-		: UIComponent(app)
+		: DrawableComponent(app)
 		, m_color(k_defaultColor)
 		, m_fontPath(k_defaultFontPath)
 	{
@@ -29,17 +29,19 @@ namespace library
 	void TextComponent::SetText(const std::wstring& text)
 	{
 		if (m_text != text)
-		{
 			m_text = text;
-		}
+	}
+
+	void TextComponent::SetPosition(const math::Vector2& position)
+	{
+		if (m_position != position)
+			m_position = position;
 	}
 
 	void TextComponent::SetColor(const Color& color)
 	{
 		if (m_color != color)
-		{
 			m_color = color;
-		}
 	}
 
 	void TextComponent::SetFontPath(const Path& fontPath)

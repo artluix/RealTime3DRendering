@@ -46,7 +46,8 @@ namespace demo
 	}
 
 	TransparencyMappingComponent::TransparencyMappingComponent(const Application& app)
-		: SceneComponent(app)
+		: SceneComponent()
+		, ConcreteMaterialComponent(app)
 		, InputReceivableComponent()
 		, m_specularPower(25.f)
 		, m_specularColor(1.f, 1.f, 1.f, 1.f)
@@ -59,7 +60,7 @@ namespace demo
 
 	void TransparencyMappingComponent::Initialize()
 	{
-		assert(!!m_camera);
+		assert(!!GetCamera());
 
 		m_effect = Effect::Create(m_app, k_effectPath);
 		m_effect->LoadCompiled();
@@ -92,9 +93,8 @@ namespace demo
 			);
 		}
 
-		DrawableComponent::Initialize();
-
-		LoadTexture(k_transparencyMapTexturePath, m_transparencyMapShaderResourceView);
+		MaterialComponent::Initialize();
+		m_app.LoadTexture(k_transparencyMapTexturePath, m_transparencyMapShaderResourceView);
 
 		m_pointLight = std::make_unique<PointLightComponent>();
 		m_pointLight->SetRadius(50.f);
@@ -103,7 +103,7 @@ namespace demo
 		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.2f);
 		m_proxyModel->SetPosition(m_pointLight->GetPosition());
 		m_proxyModel->Rotate(math::Vector3(0.f, math::Pi_Div_2, 0.f));
-		m_proxyModel->SetCamera(*m_camera);
+		m_proxyModel->SetCamera(*GetCamera());
 		m_proxyModel->Initialize();
 
 		m_text = std::make_unique<TextComponent>(m_app);
@@ -236,11 +236,11 @@ namespace demo
 	void TransparencyMappingComponent::SetEffectData()
 	{
 		auto wvp = GetWorldMatrix();
-		if (!!m_camera)
+		if (auto camera = GetCamera())
 		{
-			wvp *= m_camera->GetViewProjectionMatrix();
+			wvp *= camera->GetViewProjectionMatrix();
 
-			m_material->GetCameraPosition() << m_camera->GetPosition();
+			m_material->GetCameraPosition() << camera->GetPosition();
 		}
 
 		m_material->GetAmbientColor() << m_ambientColor;
@@ -256,7 +256,7 @@ namespace demo
 		m_material->GetColorTexture() << m_textureShaderResourceView.Get();
 		m_material->GetTransparencyMap() << m_transparencyMapShaderResourceView.Get();
 
-		DrawableComponent::SetEffectData();
+		MaterialComponent::SetEffectData();
 	}
 
 	void TransparencyMappingComponent::Render()

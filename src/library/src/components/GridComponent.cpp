@@ -32,7 +32,8 @@ namespace library
 	}
 
 	GridComponent::GridComponent(const Application& app)
-		: SceneComponent(app)
+		: SceneComponent()
+		, ConcreteMaterialComponent(app)
 		, InputReceivableComponent()
 		, m_size(k_defaultSize)
 		, m_scale(k_defaultScale)
@@ -46,7 +47,8 @@ namespace library
 		const unsigned scale,
 		const Color& color
 	)
-		: SceneComponent(app)
+		: SceneComponent()
+		, ConcreteMaterialComponent(app)
 		, InputReceivableComponent()
 		, m_size(size)
 		, m_scale(scale)
@@ -93,7 +95,7 @@ namespace library
 		m_material = std::make_unique<BasicMaterial>(*m_effect);
 		m_material->Initialize();
 
-		DrawableComponent::Initialize();
+		MaterialComponent::Initialize();
 
 		Build();
 	}
@@ -114,8 +116,8 @@ namespace library
 		deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
 
 		auto wvp = GetWorldMatrix();
-		if (!!m_camera)
-			wvp *= m_camera->GetViewProjectionMatrix();
+		if (auto camera = GetCamera())
+			wvp *= camera->GetViewProjectionMatrix();
 
 		m_material->GetWorldViewProjection() << wvp;
 

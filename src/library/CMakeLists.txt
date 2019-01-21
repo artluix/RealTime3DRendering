@@ -20,6 +20,7 @@ if(APPLICATION)
                 include/library/components/InputReceivableComponent.h
                 include/library/components/KeyboardComponent.h
                 include/library/components/LightComponent.h
+                include/library/components/MaterialComponent.h
                 include/library/components/MouseComponent.h
                 include/library/components/PointLightComponent.h
                 include/library/components/ProxyModelComponent.h
@@ -27,7 +28,6 @@ if(APPLICATION)
                 include/library/components/SkyboxComponent.h
                 include/library/components/SpotLightComponent.h
                 include/library/components/TextComponent.h
-                include/library/components/UIComponent.h
 
             # effect
                 include/library/effect/Effect.h
@@ -100,6 +100,7 @@ if(APPLICATION)
                 src/components/InputReceivableComponent.cpp
                 src/components/KeyboardComponent.cpp
                 src/components/LightComponent.cpp
+                src/components/MaterialComponent.cpp
                 src/components/MouseComponent.cpp
                 src/components/PointLightComponent.cpp
                 src/components/ProxyModelComponent.cpp
@@ -107,7 +108,6 @@ if(APPLICATION)
                 src/components/SkyboxComponent.cpp
                 src/components/SpotLightComponent.cpp
                 src/components/TextComponent.cpp
-                src/components/UIComponent.cpp
 
 
             # effect

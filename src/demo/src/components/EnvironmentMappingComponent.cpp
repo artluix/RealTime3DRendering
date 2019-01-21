@@ -4,6 +4,7 @@
 #include <library/components/CameraComponent.h>
 #include <library/components/TextComponent.h>
 
+#include <library/Application.h>
 #include <library/Path.h>
 #include <library/Utils.h>
 #include <library/Time.h>
@@ -36,7 +37,8 @@ namespace demo
 	}
 
 	EnvironmentMappingComponent::EnvironmentMappingComponent(const Application& app)
-		: SceneComponent(app)
+		: SceneComponent()
+		, ConcreteMaterialComponent(app)
 		, InputReceivableComponent()
 		, m_reflectionAmount(1.0f)
 		, m_ambientColor(1.0f, 1.0f, 1.0f, 1.0f)
@@ -55,8 +57,8 @@ namespace demo
 		m_material = std::make_unique<EnvironmentMappingMaterial>(*m_effect);
 		m_material->Initialize();
 
-		DrawableComponent::Initialize();
-		LoadTexture(k_environmentMapTexturePath, m_environmentMapShaderResourceView);
+		MaterialComponent::Initialize();
+		m_app.LoadTexture(k_environmentMapTexturePath, m_environmentMapShaderResourceView);
 
 		m_text = std::make_unique<TextComponent>(m_app);
 		m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -96,11 +98,11 @@ namespace demo
 	void EnvironmentMappingComponent::SetEffectData()
 	{
 		auto wvp = GetWorldMatrix();
-		if (!!m_camera)
+		if (auto camera = GetCamera())
 		{
-			wvp *= m_camera->GetViewProjectionMatrix();
+			wvp *= camera->GetViewProjectionMatrix();
 
-			m_material->GetCameraPosition() << m_camera->GetPosition();
+			m_material->GetCameraPosition() << camera->GetPosition();
 		}
 
 		m_material->GetAmbientColor() << m_ambientColor;
@@ -113,6 +115,6 @@ namespace demo
 		m_material->GetColorTexture() << m_textureShaderResourceView.Get();
 		m_material->GetEnvironmentMap() << m_environmentMapShaderResourceView.Get();
 
-		DrawableComponent::SetEffectData();
+		MaterialComponent::SetEffectData();
 	}
 } // namespace demo

@@ -1,19 +1,21 @@
 #pragma once
-#include "library/components/SceneComponent.h"
-#include "library/components/InputReceivableComponent.h"
 #include "library/materials/BasicMaterial.h"
+
+#include "library/components/SceneComponent.h"
+#include "library/components/MaterialComponent.h"
+#include "library/components/InputReceivableComponent.h"
+
 #include "library/Color.h"
 #include "library/DirectXForwardDeclarations.h"
 
 namespace library
 {
-	class Effect;
-
 	class GridComponent
 		: public SceneComponent
+		, public ConcreteMaterialComponent<BasicMaterial>
 		, public InputReceivableComponent
 	{
-		RTTI_CLASS(GridComponent, SceneComponent, InputReceivableComponent)
+		RTTI_CLASS(GridComponent, SceneComponent, MaterialComponent, InputReceivableComponent)
 
 	public:
 		explicit GridComponent(const Application& app);
@@ -38,16 +40,8 @@ namespace library
 		void Update(const Time& time) override;
 		void Draw(const Time& time) override;
 
-		const Material* GetMaterial() const override { return m_material.get(); }
-
-	protected:
-		Material* GetMaterial() override { return m_material.get(); }
-
 	private:
 		void Build();
-
-		std::shared_ptr<Effect> m_effect;
-		std::unique_ptr<BasicMaterial> m_material;
 
 		unsigned m_size;
 		unsigned m_scale;

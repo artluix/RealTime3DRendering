@@ -1,18 +1,16 @@
 #pragma once
-#include "library/components/DrawableComponent.h"
 #include "library/materials/GaussianBlurMaterial.h"
-
-#include <memory>
+#include "library/components/MaterialComponent.h"
+#include "library/math/Vector.h"
 
 namespace library
 {
-	class Effect;
 	class FullScreenRenderTarget;
 	class FullScreenQuadComponent;
 
-	class GaussianBlurComponent : public DrawableComponent
+	class GaussianBlurComponent : public ConcreteMaterialComponent<GaussianBlurMaterial>
 	{
-		RTTI_CLASS(GaussianBlurComponent, DrawableComponent)
+		RTTI_CLASS(GaussianBlurComponent, MaterialComponent)
 
 	public:
 		explicit GaussianBlurComponent(const Application& app);
@@ -37,9 +35,6 @@ namespace library
 		void UpdateVerticalOffsets();
 
 		float GetWeight(const float x);
-
-		std::shared_ptr<Effect> m_effect;
-		std::unique_ptr<GaussianBlurMaterial> m_material;
 
 		ComPtr<ID3D11ShaderResourceView> m_outputTexture;
 		std::unique_ptr<FullScreenQuadComponent> m_fullScreenQuad;

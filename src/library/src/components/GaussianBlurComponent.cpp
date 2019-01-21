@@ -33,7 +33,7 @@ namespace library
 	}
 
 	GaussianBlurComponent::GaussianBlurComponent(const Application& app)
-		: DrawableComponent(app)
+		: ConcreteMaterialComponent(app)
 		, m_blurAmount(k_defaultBlurAmount)
 	{
 	}
@@ -57,7 +57,7 @@ namespace library
 		m_material = std::make_unique<GaussianBlurMaterial>(*m_effect);
 		m_material->Initialize();
 
-		DrawableComponent::Initialize();
+		MaterialComponent::Initialize();
 
 		m_fullScreenQuad = std::make_unique<FullScreenQuadComponent>(m_app);
 		m_fullScreenQuad->Initialize();

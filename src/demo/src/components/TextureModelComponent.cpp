@@ -44,16 +44,18 @@ namespace demo
 	//-------------------------------------------------------------------------
 
 	TextureModelComponent::TextureModelComponent(const Application& app)
-		: SceneComponent(app)
+		: SceneComponent()
+		, DrawableComponent(app)
 		, InputReceivableComponent()
 		, m_indicesCount(0)
 		, m_wheel(0)
 	{
-		SetTexturePath(k_texturePath);
 	}
 
 	void TextureModelComponent::Initialize()
 	{
+		m_app.LoadTexture(k_texturePath, m_textureShaderResourceView);
+
 		// shader
 		{
 			std::vector<library::byte> effectData;
@@ -217,9 +219,9 @@ namespace demo
 		auto deviceContext = m_app.GetDeviceContext();
 
 		auto wvp = GetWorldMatrix();
-		if (!!m_camera)
-			wvp *= m_camera->GetViewProjectionMatrix();
-		m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
+		if (auto camera = GetCamera())
+			wvp *= camera->GetViewProjectionMatrix();
+		m_wvpVariable->SetMatrix(static_cast<const float*>(wvp));
 
 		m_colorTextureVariable->SetResource(m_textureShaderResourceView.Get());
 

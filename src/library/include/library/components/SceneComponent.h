@@ -1,17 +1,18 @@
 #pragma once
-#include "library/components/DrawableComponent.h"
+#include "library/RTTI.hpp"
+#include "library/NonCopyable.hpp"
 #include "library/math/Math.h"
 
 namespace library
 {
 	class CameraComponent;
 
-	class SceneComponent : public DrawableComponent
+	class SceneComponent : public NonCopyable<SceneComponent>
 	{
-		RTTI_CLASS(SceneComponent, DrawableComponent)
+		RTTI_CLASS_BASE(SceneComponent)
 
 	public:
-		~SceneComponent();
+		virtual ~SceneComponent();
 
 		const math::Vector3& GetPosition() const { return m_position; }
 		const math::Vector3& GetRotation() const { return m_rotation; }
@@ -27,15 +28,20 @@ namespace library
 		void SetScaling(const math::Vector3& scaling);
 		void Scale(const math::Vector3& scaling);
 
+		const CameraComponent* GetCamera() const { return m_camera; }
+		void SetCamera(const CameraComponent& camera);
+
 		const math::Vector3& GetDirection() const { return m_direction; }
 		const math::Vector3& GetUp() const { return m_up; }
 		const math::Vector3& GetRight() const { return m_right; }
 
 	protected:
-		explicit SceneComponent(const Application& app);
+		explicit SceneComponent();
 
 	private:
 		void UpdateWorldMatrix();
+
+		const CameraComponent* m_camera = nullptr;
 
 		math::Vector3 m_position;
 		math::Vector3 m_rotation;

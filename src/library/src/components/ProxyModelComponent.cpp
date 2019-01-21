@@ -25,7 +25,8 @@ namespace library
 	}
 
 	ProxyModelComponent::ProxyModelComponent(const Application& app, const Path& modelPath, const float scale)
-		: SceneComponent(app)
+		: SceneComponent()
+		, ConcreteMaterialComponent(app)
 		, m_direction(math::Vector3::Forward)
 		, m_up(math::Vector3::Up)
 		, m_right(math::Vector3::Right)
@@ -49,17 +50,17 @@ namespace library
 		m_material = std::make_unique<BasicMaterial>(*m_effect);
 		m_material->Initialize();
 
-		DrawableComponent::Initialize();
+		MaterialComponent::Initialize();
 	}
 
 	void ProxyModelComponent::SetEffectData()
 	{
 		auto wvp = GetWorldMatrix();
-		if (!!m_camera)
-			wvp *= m_camera->GetViewProjectionMatrix();
+		if (auto camera = GetCamera())
+			wvp *= camera->GetViewProjectionMatrix();
 		m_material->GetWorldViewProjection() << wvp;
 
-		DrawableComponent::SetEffectData();
+		MaterialComponent::SetEffectData();
 	}
 
 	void ProxyModelComponent::Render()

@@ -49,7 +49,8 @@ namespace demo
 	}
 
 	SpotlightComponent::SpotlightComponent(const Application& app)
-		: SceneComponent(app)
+		: SceneComponent()
+		, ConcreteMaterialComponent(app)
 		, InputReceivableComponent()
 		, m_specularPower(25.f)
 		, m_specularColor(1.f, 1.f, 1.f, 1.f)
@@ -63,7 +64,7 @@ namespace demo
 
 	void SpotlightComponent::Initialize()
 	{
-		assert(!!m_camera);
+		assert(!!GetCamera());
 
 		m_effect = Effect::Create(m_app, k_effectPath);
 		m_effect->LoadCompiled();
@@ -71,14 +72,14 @@ namespace demo
 		m_material = std::make_unique<SpotlightMaterial>(*m_effect);
 		m_material->Initialize();
 
-		DrawableComponent::Initialize();
+		MaterialComponent::Initialize();
 
 		m_spotlight = std::make_unique<library::SpotlightComponent>();
 		m_spotlight->SetRadius(10.f);
 		m_spotlight->SetPosition(math::Vector3(0.0f, 0.f, 5.f));
 
 		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.3f);
-		m_proxyModel->SetCamera(*m_camera);
+		m_proxyModel->SetCamera(*GetCamera());
 		m_proxyModel->SetRotation(k_proxyModelRotationOffset);
 		m_proxyModel->SetPosition(m_spotlight->GetPosition());
 		m_proxyModel->Initialize();
@@ -298,11 +299,11 @@ namespace demo
 	void SpotlightComponent::SetEffectData()
 	{
 		auto world = GetWorldMatrix();
-		if (!!m_camera)
+		if (auto camera = GetCamera())
 		{
-			auto wvp = world * m_camera->GetViewProjectionMatrix();
+			auto wvp = world * camera->GetViewProjectionMatrix();
 
-			m_material->GetCameraPosition() << m_camera->GetPosition();
+			m_material->GetCameraPosition() << camera->GetPosition();
 			m_material->GetWVP() << wvp;
 		}
 
@@ -318,6 +319,6 @@ namespace demo
 		m_material->GetSpotlightOuterAngle() << m_spotlight->GetOuterAngle();
 		m_material->GetColorTexture() << m_textureShaderResourceView.Get();
 
-		DrawableComponent::SetEffectData();
+		MaterialComponent::SetEffectData();
 	}
 } // namespace demo

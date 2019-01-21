@@ -1,6 +1,8 @@
 #pragma once
-#include <library/components/SceneComponent.h>
 #include <library/materials/DiffuseLightingMaterial.h>
+
+#include <library/components/SceneComponent.h>
+#include <library/components/MaterialComponent.h>
 #include <library/components/InputReceivableComponent.h>
 #include <library/Color.h>
 
@@ -8,7 +10,6 @@
 
 namespace library
 {
-	class Effect;
 	class DirectionalLightComponent;
 	class ProxyModelComponent;
 	class TextComponent;
@@ -18,9 +19,10 @@ namespace demo
 {
 	class DiffuseLightingComponent
 		: public library::SceneComponent
+		, public library::ConcreteMaterialComponent<library::DiffuseLightingMaterial>
 		, public library::InputReceivableComponent
 	{
-		RTTI_CLASS(DiffuseLightingComponent, library::SceneComponent, library::InputReceivableComponent)
+		RTTI_CLASS(DiffuseLightingComponent, library::SceneComponent, library::MaterialComponent, library::InputReceivableComponent)
 
 	public:
 		explicit DiffuseLightingComponent(const library::Application& app);
@@ -30,18 +32,11 @@ namespace demo
 		void Update(const library::Time& time) override;
 		using library::DrawableComponent::Draw;
 
-		const library::DiffuseLightingMaterial* GetMaterial() const override { return m_material.get(); }
-
 	private:
-		library::DiffuseLightingMaterial* GetMaterial() override { return m_material.get(); }
-
 		void UpdateAmbientLight(const library::Time& time);
 		void UpdateDirectionalLight(const library::Time& time);
 
 		void SetEffectData() override;
-
-		std::shared_ptr<library::Effect> m_effect;
-		std::unique_ptr<library::DiffuseLightingMaterial> m_material;
 
 		library::Color m_ambientColor;
 		

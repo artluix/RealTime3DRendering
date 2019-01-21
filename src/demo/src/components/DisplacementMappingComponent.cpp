@@ -48,7 +48,8 @@ namespace demo
 	}
 
 	DisplacementMappingComponent::DisplacementMappingComponent(const Application& app)
-		: SceneComponent(app)
+		: SceneComponent()
+		, ConcreteMaterialComponent(app)
 		, InputReceivableComponent()
 		, m_specularPower(25.f)
 		, m_specularColor(1.f, 1.f, 1.f, 1.f)
@@ -63,7 +64,7 @@ namespace demo
 
 	void DisplacementMappingComponent::Initialize()
 	{
-		assert(!!m_camera);
+		assert(!!GetCamera());
 
 		m_effect = Effect::Create(m_app, k_effectPath);
 		m_effect->LoadCompiled();
@@ -71,9 +72,9 @@ namespace demo
 		m_material = std::make_unique<DisplacementMappingMaterial>(*m_effect);
 		m_material->Initialize();
 
-		DrawableComponent::Initialize();
+		MaterialComponent::Initialize();
 
-		LoadTexture(k_displacementMapTexturePath, m_displacementMapShaderResourceView);
+		m_app.LoadTexture(k_displacementMapTexturePath, m_displacementMapShaderResourceView);
 
 		m_pointLight = std::make_unique<PointLightComponent>();
 		m_pointLight->SetRadius(50.f);
@@ -82,7 +83,7 @@ namespace demo
 		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.2f);
 		m_proxyModel->SetPosition(m_pointLight->GetPosition());
 		m_proxyModel->Rotate(math::Vector3(0.f, math::Pi_Div_2, 0.f));
-		m_proxyModel->SetCamera(*m_camera);
+		m_proxyModel->SetCamera(*GetCamera());
 		m_proxyModel->Initialize();
 
 		m_text = std::make_unique<TextComponent>(m_app);
@@ -212,11 +213,11 @@ namespace demo
 	void DisplacementMappingComponent::SetEffectData()
 	{
 		auto wvp = GetWorldMatrix();
-		if (!!m_camera)
+		if (auto camera = GetCamera())
 		{
-			wvp *= m_camera->GetViewProjectionMatrix();
+			wvp *= camera->GetViewProjectionMatrix();
 
-			m_material->GetCameraPosition() << m_camera->GetPosition();
+			m_material->GetCameraPosition() << camera->GetPosition();
 		}
 
 		m_material->GetAmbientColor() << m_ambientColor;
@@ -233,6 +234,6 @@ namespace demo
 		m_material->GetColorTexture() << m_textureShaderResourceView.Get();
 		m_material->GetDisplacementMap() << m_displacementMapShaderResourceView.Get();
 
-		DrawableComponent::SetEffectData();
+		MaterialComponent::SetEffectData();
 	}
 } // namespace demo

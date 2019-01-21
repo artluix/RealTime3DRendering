@@ -30,7 +30,8 @@ namespace demo
 	}
 
 	BasicComponent::BasicComponent(const Application& app) 
-		: SceneComponent(app)
+		: SceneComponent()
+		, ConcreteMaterialComponent(app)
 		, InputReceivableComponent()
 	{
 		SetModelPath(k_modelPath);
@@ -44,7 +45,7 @@ namespace demo
 		m_material = std::make_unique<BasicMaterial>(*m_effect);
 		m_material->Initialize();
 
-		DrawableComponent::Initialize();
+		MaterialComponent::Initialize();
 	}
 
 	void BasicComponent::Update(const Time& time)
@@ -92,11 +93,11 @@ namespace demo
 	void BasicComponent::SetEffectData()
 	{
 		auto wvp = GetWorldMatrix();
-		if (!!m_camera)
-			wvp *= m_camera->GetViewProjectionMatrix();
+		if (auto camera = GetCamera())
+			wvp *= camera->GetViewProjectionMatrix();
 
 		m_material->GetWorldViewProjection() << wvp;
 
-		DrawableComponent::SetEffectData();
+		MaterialComponent::SetEffectData();
 	}
 } // namespace demo

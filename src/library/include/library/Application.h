@@ -11,6 +11,8 @@
 
 namespace library
 {
+	class Path;
+
 	class Component;
 	using ComponentPtr = std::shared_ptr<Component>;
 
@@ -55,6 +57,8 @@ namespace library
 
 		virtual void ResetRenderTargets() const;
 		virtual void UnbindPixelShaderResources(const unsigned startIdx, const unsigned count) const;
+
+		void LoadTexture(const Path& texturePath, ComPtr<ID3D11ShaderResourceView>& textureShaderResourceView) const;
 
 	protected:
 		virtual void InitializeWindow();

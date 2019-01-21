@@ -33,7 +33,8 @@ namespace demo
 	}
 
 	TextureMappingComponent::TextureMappingComponent(const Application& app)
-		: SceneComponent(app)
+		: SceneComponent()
+		, ConcreteMaterialComponent(app)
 		, InputReceivableComponent()
 	{
 		SetModelPath(k_modelPath);
@@ -48,7 +49,7 @@ namespace demo
 		m_material = std::make_unique<TextureMappingMaterial>(*m_effect);
 		m_material->Initialize();
 
-		DrawableComponent::Initialize();
+		MaterialComponent::Initialize();
 	}
 
 	void TextureMappingComponent::Update(const Time& time)
@@ -96,12 +97,12 @@ namespace demo
 	void TextureMappingComponent::SetEffectData()
 	{
 		auto wvp = GetWorldMatrix();
-		if (!!m_camera)
-			wvp *= m_camera->GetViewProjectionMatrix();
+		if (auto camera = GetCamera())
+			wvp *= camera->GetViewProjectionMatrix();
 		m_material->GetWVP() << wvp;
 
 		m_material->GetColorTexture() << m_textureShaderResourceView.Get();
 
-		DrawableComponent::SetEffectData();
+		MaterialComponent::SetEffectData();
 	}
 } // namespace demo

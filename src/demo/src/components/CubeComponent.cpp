@@ -25,7 +25,8 @@ namespace demo
 	}
 
 	CubeComponent::CubeComponent(const Application& app)
-		: SceneComponent(app)
+		: SceneComponent()
+		, DrawableComponent(app)
 		, InputReceivableComponent()
 	{
 	}
@@ -240,8 +241,8 @@ namespace demo
 		auto deviceContext = m_app.GetDeviceContext();
 
 		auto wvp = GetWorldMatrix();
-		if (!!m_camera)
-			wvp *= m_camera->GetViewProjectionMatrix();
+		if (auto camera = GetCamera())
+			wvp *= camera->GetViewProjectionMatrix();
 		m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
 		m_pass->Apply(0, deviceContext);

@@ -48,7 +48,8 @@ namespace demo
 	}
 
 	DiffuseLightingComponent::DiffuseLightingComponent(const Application& app)
-		: SceneComponent(app)
+		: SceneComponent()
+		, ConcreteMaterialComponent(app)
 		, InputReceivableComponent()
 		, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 	{
@@ -60,7 +61,7 @@ namespace demo
 
 	void DiffuseLightingComponent::Initialize()
 	{
-		assert(!!m_camera);
+		assert(!!GetCamera());
 
 		m_effect = Effect::Create(m_app, k_effectPath);
 		m_effect->LoadCompiled();
@@ -68,14 +69,14 @@ namespace demo
 		m_material = std::make_unique<DiffuseLightingMaterial>(*m_effect);
 		m_material->Initialize();
 
-		DrawableComponent::Initialize();
+		MaterialComponent::Initialize();
 
 		m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
 		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.5f);
 		m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
 		m_proxyModel->SetRotation(GetRotation() + k_proxyModelRotationOffset);
-		m_proxyModel->SetCamera(*m_camera);
+		m_proxyModel->SetCamera(*GetCamera());
 		m_proxyModel->Initialize();
 
 		m_text = std::make_unique<TextComponent>(m_app);
@@ -178,8 +179,8 @@ namespace demo
 	void DiffuseLightingComponent::SetEffectData()
 	{
 		auto wvp = GetWorldMatrix();
-		if (!!m_camera)
-			wvp *= m_camera->GetViewProjectionMatrix();
+		if (auto camera = GetCamera())
+			wvp *= camera->GetViewProjectionMatrix();
 		
 		m_material->GetWVP() << wvp;
 		m_material->GetWorld() << GetWorldMatrix();
@@ -188,6 +189,6 @@ namespace demo
 		m_material->GetLightDirection() << m_directionalLight->GetDirection();
 		m_material->GetColorTexture() << m_textureShaderResourceView.Get();
 
-		DrawableComponent::SetEffectData();
+		MaterialComponent::SetEffectData();
 	}
 } // namespace demo

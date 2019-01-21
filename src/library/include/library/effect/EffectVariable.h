@@ -101,7 +101,7 @@ namespace library
 			throw Exception("Invalid effect variable cast.");
 		}
 
-		variable->SetFloatVectorArray(value.data(), 0, value.size());
+		variable->SetFloatVectorArray(reinterpret_cast<const float*>(value.data()), 0, value.size());
 		return *this;
 	}
 
@@ -114,7 +114,7 @@ namespace library
 			throw Exception("Invalid effect variable cast.");
 		}
 
-		variable->SetMatrixArray(value.data(), 0, value.size());
+		variable->SetMatrixArray(reinterpret_cast<const float*>(value.data()), 0, value.size());
 		return *this;
 	}
 } // namespace library

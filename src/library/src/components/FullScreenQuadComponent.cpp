@@ -17,17 +17,13 @@
 namespace library
 {
 	FullScreenQuadComponent::FullScreenQuadComponent(const Application& app)
-		: DrawableComponent(app)
+		: MaterialComponent(app)
 	{
 	}
 
 	FullScreenQuadComponent::~FullScreenQuadComponent() = default;
 
-	void FullScreenQuadComponent::SetMaterial(
-		Material& material,
-		const std::string& techniqueName,
-		const std::string& passName
-	)
+	void FullScreenQuadComponent::SetMaterial(Material& material, const std::string& techniqueName, const std::string& passName)
 	{
 		if (m_material != &material)
 		{

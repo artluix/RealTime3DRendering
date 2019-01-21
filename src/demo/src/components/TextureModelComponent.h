@@ -1,6 +1,9 @@
 #pragma once
 #include <library/components/SceneComponent.h>
+#include <library/components/DrawableComponent.h>
 #include <library/components/InputReceivableComponent.h>
+
+#include <library/CommonTypes.h>
 #include <library/DirectXForwardDeclarations.h>
 
 namespace library
@@ -14,6 +17,7 @@ namespace demo
 {
 	class TextureModelComponent
 		: public library::SceneComponent
+		, public library::DrawableComponent
 		, public library::InputReceivableComponent
 	{
 		RTTI_CLASS(TextureModelComponent, library::SceneComponent, library::DrawableComponent, library::InputReceivableComponent)
@@ -36,6 +40,7 @@ namespace demo
 		ComPtr<ID3D11InputLayout> m_inputLayout;
 		ComPtr<ID3D11Buffer> m_indexBuffer;
 		ComPtr<ID3D11Buffer> m_vertexBuffer;
+		ComPtr<ID3D11ShaderResourceView> m_textureShaderResourceView;
 
 		// texture mapping specific
 		ComPtr<ID3DX11EffectShaderResourceVariable> m_colorTextureVariable;

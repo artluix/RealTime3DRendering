@@ -3,9 +3,8 @@
 
 namespace library
 {
-	SceneComponent::SceneComponent(const Application& app)
-		: DrawableComponent(app)
-		, m_scaling(math::Vector3::One)
+	SceneComponent::SceneComponent()
+		: m_scaling(math::Vector3::One)
 		, m_worldMatrix(math::Matrix4::Identity)
 		, m_direction(math::Vector3::Forward)
 		, m_up(math::Vector3::Up)
@@ -75,6 +74,14 @@ namespace library
 			return;
 
 		SetScaling(m_scaling + scaling);
+	}
+
+	//-------------------------------------------------------------------------
+
+	void SceneComponent::SetCamera(const CameraComponent& camera)
+	{
+		if (m_camera != &camera)
+			m_camera = &camera;
 	}
 
 	//-------------------------------------------------------------------------

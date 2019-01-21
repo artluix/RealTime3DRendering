@@ -1,6 +1,8 @@
 #include "StdAfx.h"
 #include "library/Application.h"
 
+#include "library/Path.h"
+#include "library/Utils.h"
 #include "library/Exception.h"
 #include "library/components/DrawableComponent.h"
 
@@ -8,6 +10,7 @@
 #include "library/RasterizerStateHolder.h"
 #include "library/BlendStateHolder.h"
 
+#include <DDSTextureLoader.h>
 #include <thread>
 
 namespace library
@@ -132,6 +135,36 @@ namespace library
 	{
 		static ID3D11ShaderResourceView* const emptySRV = nullptr;
 		m_deviceContext->PSSetShaderResources(startIdx, count, &emptySRV);
+	}
+
+	//-------------------------------------------------------------------------
+
+	void Application::LoadTexture(const Path& texturePath, ComPtr<ID3D11ShaderResourceView>& textureShaderResourceView) const
+	{
+		if (!texturePath)
+			return;
+
+		assert(texturePath.GetExt().GetString() == "dds");
+
+		std::vector<library::byte> textureData;
+		utils::LoadBinaryFile(texturePath, textureData);
+		if (textureData.empty())
+		{
+			throw Exception("Load texture failed.");
+		}
+
+		auto hr = DirectX::CreateDDSTextureFromMemory(
+			m_device.Get(),
+			m_deviceContext.Get(),
+			reinterpret_cast<const std::uint8_t*>(textureData.data()),
+			textureData.size(),
+			nullptr,
+			textureShaderResourceView.GetAddressOf()
+		);
+		if (FAILED(hr))
+		{
+			throw Exception("CreateDDSTextureFromMemory() failed.", hr);
+		}
 	}
 
 	//-------------------------------------------------------------------------

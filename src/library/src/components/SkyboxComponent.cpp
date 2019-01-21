@@ -30,7 +30,8 @@ namespace library
 	}
 
 	SkyboxComponent::SkyboxComponent(const Application& app, const Path& cubeMapPath, const float scale)
-		: SceneComponent(app)
+		: SceneComponent()
+		, ConcreteMaterialComponent(app)
 	{
 		SetModelPath(k_modelPath);
 		SetTexturePath(cubeMapPath);
@@ -45,14 +46,14 @@ namespace library
 		m_material = std::make_unique<SkyboxMaterial>(*m_effect);
 		m_material->Initialize();
 
-		DrawableComponent::Initialize();
+		MaterialComponent::Initialize();
 	}
 
 	void SkyboxComponent::Update(const Time& time)
 	{
-		if (!!m_camera)
+		if (auto camera = GetCamera())
 		{
-			const auto& position = m_camera->GetPosition();
+			const auto& position = camera->GetPosition();
 			SetPosition(position);
 		}
 	}
@@ -60,12 +61,12 @@ namespace library
 	void SkyboxComponent::SetEffectData()
 	{
 		auto wvp = GetWorldMatrix();
-		if (!!m_camera)
-			wvp *= m_camera->GetViewProjectionMatrix();
+		if (auto camera = GetCamera())
+			wvp *= camera->GetViewProjectionMatrix();
 
 		m_material->GetWorldViewProjection() << wvp;
 		m_material->GetSkyboxTexture() << m_textureShaderResourceView.Get();
 
-		DrawableComponent::SetEffectData();
+		MaterialComponent::SetEffectData();
 	}
 } // namespace library

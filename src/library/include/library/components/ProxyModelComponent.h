@@ -1,14 +1,18 @@
 #pragma once
-#include "library/components/SceneComponent.h"
 #include "library/materials/BasicMaterial.h"
+
+#include "library/components/SceneComponent.h"
+#include "library/components/MaterialComponent.h"
+
 #include "library/DirectXForwardDeclarations.h"
 
 namespace library
 {
 	class Path;
-	class Effect;
 
-	class ProxyModelComponent : public SceneComponent
+	class ProxyModelComponent
+		: public SceneComponent
+		, public ConcreteMaterialComponent<BasicMaterial>
 	{
 		RTTI_CLASS(ProxyModelComponent, SceneComponent)
 
@@ -26,18 +30,11 @@ namespace library
 		void Initialize() override;
 		using DrawableComponent::Draw;
 
-		virtual const BasicMaterial* GetMaterial() const { return m_material.get(); }
-
 	protected:
-		virtual BasicMaterial* GetMaterial() { return m_material.get(); }
-
 		void SetEffectData() override;
 		void Render() override;
 
 	private:
-		std::shared_ptr<Effect> m_effect;
-		std::unique_ptr<BasicMaterial> m_material;
-
 		bool m_isWireframeVisible = true;
 
 		math::Vector3 m_direction;

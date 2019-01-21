@@ -20,7 +20,8 @@ namespace demo
 	}
 
 	TriangleComponent::TriangleComponent(const Application& app)
-		: SceneComponent(app)
+		: SceneComponent()
+		, DrawableComponent(app)
 		, m_effect()
 		, m_technique()
 		, m_pass()
@@ -165,8 +166,8 @@ namespace demo
 		auto deviceContext = m_app.GetDeviceContext();
 
 		auto wvp = GetWorldMatrix();
-		if (!!m_camera)
-			wvp *= m_camera->GetViewProjectionMatrix();
+		if (auto camera = GetCamera())
+			wvp *= camera->GetViewProjectionMatrix();
 
 		m_pass->Apply(0, deviceContext);
 

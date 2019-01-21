@@ -1,6 +1,9 @@
 #pragma once
 #include <library/components/SceneComponent.h>
+#include <library/components/DrawableComponent.h>
 #include <library/components/InputReceivableComponent.h>
+
+#include <library/CommonTypes.h>
 #include <library/DirectXForwardDeclarations.h>
 
 namespace library
@@ -12,9 +15,10 @@ namespace demo
 {
 	class CubeComponent
 		: public library::SceneComponent
+		, public library::DrawableComponent
 		, public library::InputReceivableComponent
 	{
-		RTTI_CLASS(CubeComponent, library::SceneComponent, library::InputReceivableComponent)
+		RTTI_CLASS(CubeComponent, library::SceneComponent, library::DrawableComponent, library::InputReceivableComponent)
 
 	public:
 		explicit CubeComponent(const library::Application& app);

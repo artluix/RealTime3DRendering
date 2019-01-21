@@ -2,8 +2,9 @@
 #include "library/Renderer.h"
 
 #include "library/components/DrawableComponent.h"
-#include "library/components/UIComponent.h"
+#include "library/components/TextComponent.h"
 #include "library/components/SceneComponent.h"
+#include "library/components/MaterialComponent.h"
 
 #include "library/effect/Effect.h"
 #include "library/materials/Material.h"
@@ -58,28 +59,24 @@ namespace library
 	{
 		auto effectComp = [](const Drawable* lhs, const Drawable* rhs)
 		{
-			const auto lhsMat = lhs->GetMaterial();
-			if (lhsMat)
-				return false;
+			if (const auto lhsMatComponent = lhs->As<MaterialComponent>())
+				if (const auto rhsMatComponent = rhs->As<MaterialComponent>())
+					return lhsMatComponent->GetMaterial().GetEffect().GetName() < rhsMatComponent->GetMaterial().GetEffect().GetName();
 
-			const auto rhsMat = lhs->GetMaterial();
-			if (!rhsMat)
-				return false;
-
-			return lhsMat->GetEffect().GetName() < rhsMat->GetEffect().GetName();
+			return false;
 		};
 
 		auto typeComp = [](const Drawable* lhs, const Drawable* rhs)
 		{
-			if (lhs->As<SceneComponent>() && rhs->As<UIComponent>())
+			if (lhs->As<SceneComponent>() && rhs->As<TextComponent>())
 				return true;
 
 			return false;
 		};
 
-		auto uiPred = [](const Drawable* drawable)
+		auto textPred = [](const Drawable* drawable)
 		{
-			return !!drawable->As<UIComponent>();
+			return !!drawable->As<TextComponent>();
 		};
 
 		auto drawPred = [&time](Drawable* drawable)
@@ -96,7 +93,7 @@ namespace library
 		std::sort(drawables.begin(), drawables.end(), typeComp);
 
 		// 3. Find separate border
-		auto uiIt = std::find_if(drawables.begin(), drawables.end(), uiPred);
+		auto uiIt = std::find_if(drawables.begin(), drawables.end(), textPred);
 
 		// 4. Sort by effect and draw scene components
 		if (uiIt != drawables.begin()) // has scene components

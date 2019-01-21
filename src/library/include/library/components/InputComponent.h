@@ -7,6 +7,8 @@ namespace library
 {
 	class InputComponent : public Component
 	{
+		RTTI_CLASS(InputComponent, Component)
+
 	public:
 		virtual ~InputComponent();
 
