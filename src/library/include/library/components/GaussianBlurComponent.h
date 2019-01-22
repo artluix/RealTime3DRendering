@@ -14,15 +14,16 @@ namespace library
 
 	public:
 		explicit GaussianBlurComponent(const Application& app);
+		~GaussianBlurComponent();
 
 		void Initialize() override;
 		void Draw(const Time& time) override;
 		void DrawToTexture(const Time& time);
 
-		ID3D11ShaderResourceView* GetSceneTexture() const { return m_textureShaderResourceView.Get(); }
-		void SetSceneTexture();
+		ID3D11ShaderResourceView* GetSceneTexture() const { return m_sceneTexture; }
+		void SetSceneTexture(ID3D11ShaderResourceView& sceneTexture);
 
-		ID3D11ShaderResourceView* GetOutputTexture() const { return m_outputTexture.Get(); }
+		ID3D11ShaderResourceView* GetOutputTexture() const { return m_outputTexture; }
 
 		float GetBlurAmount() const { return m_blurAmount; }
 		void SetBlurAmount(const float blurAmount);
@@ -36,7 +37,9 @@ namespace library
 
 		float GetWeight(const float x);
 
-		ComPtr<ID3D11ShaderResourceView> m_outputTexture;
+		ID3D11ShaderResourceView* m_sceneTexture = nullptr;
+		ID3D11ShaderResourceView* m_outputTexture = nullptr;
+
 		std::unique_ptr<FullScreenQuadComponent> m_fullScreenQuad;
 		std::unique_ptr<FullScreenRenderTarget> m_horizontalBlurTarget;
 		std::unique_ptr<FullScreenRenderTarget> m_verticalBlurTarget;

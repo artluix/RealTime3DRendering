@@ -32,11 +32,17 @@ namespace library
 		);
 	}
 
+	//-------------------------------------------------------------------------
+
 	GaussianBlurComponent::GaussianBlurComponent(const Application& app)
 		: ConcreteMaterialComponent(app)
 		, m_blurAmount(k_defaultBlurAmount)
 	{
 	}
+
+	GaussianBlurComponent::~GaussianBlurComponent() = default;
+
+	//-------------------------------------------------------------------------
 
 	void GaussianBlurComponent::SetBlurAmount(const float blurAmount)
 	{
@@ -57,11 +63,9 @@ namespace library
 		m_material = std::make_unique<GaussianBlurMaterial>(*m_effect);
 		m_material->Initialize();
 
-		MaterialComponent::Initialize();
-
 		m_fullScreenQuad = std::make_unique<FullScreenQuadComponent>(m_app);
-		m_fullScreenQuad->Initialize();
 		m_fullScreenQuad->SetMaterial(*m_material, "blur", "p0");
+		m_fullScreenQuad->Initialize();
 
 		m_horizontalBlurTarget = std::make_unique<FullScreenRenderTarget>(m_app);
 		m_verticalBlurTarget = std::make_unique<FullScreenRenderTarget>(m_app);
@@ -85,7 +89,7 @@ namespace library
 
 		offsets.vertical.front() = offsets.horizontal.front() = math::Vector2::Zero;
 
-		for (unsigned i = 0; i < sampleOffsetsCount >> 1; i++)
+		for (unsigned i = 0; i < (sampleOffsetsCount >> 1); i++)
 		{
 			const float sampleOffset = (i << 1) + 1.5f;
 
@@ -109,7 +113,7 @@ namespace library
 		
 		float totalWeight = weights.front() = GetWeight(0.f);
 
-		for (unsigned i = 0; i < sampleWeightsCount >> 1; i++)
+		for (unsigned i = 0; i < (sampleWeightsCount >> 1); i++)
 		{
 			const float weight = GetWeight(i + 1.f);
 
@@ -149,11 +153,19 @@ namespace library
 
 	}
 
+	void GaussianBlurComponent::SetSceneTexture(ID3D11ShaderResourceView& sceneTexture)
+	{
+		if (m_sceneTexture != &sceneTexture)
+		{
+			m_sceneTexture = &sceneTexture;
+		}
+	}
+
 	//-------------------------------------------------------------------------
 
 	void GaussianBlurComponent::UpdateHorizontalOffsets()
 	{
-		m_material->GetColorTexture() << m_textureShaderResourceView.Get();
+		m_material->GetColorTexture() << m_sceneTexture;
 		m_material->GetSampleWeights() << m_sample.weights;
 		m_material->GetSampleOffsets() << m_sample.offsets.horizontal;
 	}
@@ -162,7 +174,7 @@ namespace library
 	{
 		m_material->GetColorTexture() << m_horizontalBlurTarget->GetOutputTexture();
 		m_material->GetSampleWeights() << m_sample.weights;
-		m_material->GetSampleOffsets() << m_sample.offsets.horizontal;
+		m_material->GetSampleOffsets() << m_sample.offsets.vertical;
 	}
 
 	//-------------------------------------------------------------------------

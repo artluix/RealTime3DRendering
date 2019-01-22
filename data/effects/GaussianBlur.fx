@@ -12,8 +12,8 @@ Texture2D ColorTexture;
 SamplerState TrilinearSampler
 {
     Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = CLAMP;
-    AddressV = CLAMP;
+    AddressU = WRAP;
+    AddressV = WRAP;
 };
 
 /************* Data Structures *************/

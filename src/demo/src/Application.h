@@ -17,6 +17,7 @@ namespace library
 	class FullScreenRenderTarget;
 
 	class Effect;
+	class GaussianBlurComponent;
 } // namespace library
 
 namespace demo
@@ -41,6 +42,7 @@ namespace demo
 
 	private:
 		void UpdateGenericColorFilter(const library::Time& time);
+		void UpdateBlurAmount(const library::Time& time);
 
 		std::shared_ptr<library::KeyboardComponent> m_keyboard;
 		std::shared_ptr<library::MouseComponent> m_mouse;
@@ -52,6 +54,8 @@ namespace demo
 		std::unique_ptr<library::ColorFilterMaterial> m_colorFilterMaterial;
 		library::ColorFilter::Type m_colorFilterType;
 		library::math::Matrix4 m_genericColorFilter;
+
+		std::unique_ptr<library::GaussianBlurComponent> m_gaussianBlur;
 
 		ComPtr<IDirectInput8> m_directInput;
 	};
