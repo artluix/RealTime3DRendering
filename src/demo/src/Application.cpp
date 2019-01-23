@@ -320,6 +320,8 @@ namespace demo
 		else
 			m_fullScreenQuad->Draw(time);
 
+		UnbindPixelShaderResources(0, 1);
+
 		HRESULT hr = m_swapChain->Present(0, 0);
 		if (FAILED(hr))
 		{
@@ -379,7 +381,7 @@ namespace demo
 			if (m_keyboard->IsKeyDown(Key::K) && blurAmount > 0.f)
 			{
 				blurAmount -= k_blurModulationRate * elapsedTime;
-				blurAmount = math::Max(0.f, blurAmount);
+				blurAmount = math::Max(1e-10f, blurAmount);
 
 				m_gaussianBlur->SetBlurAmount(blurAmount);
 			}

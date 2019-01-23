@@ -118,7 +118,7 @@ namespace library
 			const float weight = GetWeight(i + 1.f);
 
 			weights[(i << 1) + 1] = weight;
-			weights[(i << 1) + 2] = -weight;
+			weights[(i << 1) + 2] = weight;
 
 			totalWeight += weight * 2;
 		}

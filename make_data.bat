@@ -55,7 +55,7 @@ echo %STEP%.2 Export other textures to DDS
 for %%f in (%SRC_PATH%\textures\*.*) do (
     if /i "%%~xf" neq ".dds" (
         echo Export texture %%f
-        %TEXCONV_TOOL% -ft dds %%f -o %TEXTURES_DEST_PATH% -nologo
+        %TEXCONV_TOOL% -m 1 -ft dds %%f -o %TEXTURES_DEST_PATH% -nologo
         echo.
     )
 )
