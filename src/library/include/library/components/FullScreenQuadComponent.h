@@ -20,10 +20,10 @@ namespace library
 		void SetMaterial(
 			Material& material,
 			const std::string& techniqueName,
-			const std::string& passName
+			const std::string& passName = "p0"
 		);
 
-		void SetActiveTechnique(const std::string& techniqueName, const std::string& passName);
+		void SetActiveTechnique(const std::string& techniqueName, const std::string& passName = "p0");
 		void SetMaterialUpdateFunction(const MaterialUpdateFunction& func);
 
 		void Initialize() override;

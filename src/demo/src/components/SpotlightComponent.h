@@ -2,7 +2,7 @@
 #include <library/materials/SpotlightMaterial.h>
 
 #include <library/components/SceneComponent.h>
-#include <library/components/MaterialComponent.h>
+#include <library/components/MaterialComponentGlue.hpp>
 #include <library/components/InputReceivableComponent.h>
 #include <library/Color.h>
 
@@ -19,7 +19,7 @@ namespace demo
 {
 	class SpotlightComponent
 		: public library::SceneComponent
-		, public library::ConcreteMaterialComponent<library::SpotlightMaterial>
+		, public library::MaterialComponentGlue<library::SpotlightMaterial>
 		, public library::InputReceivableComponent
 	{
 		RTTI_CLASS(SpotlightComponent, library::SceneComponent, library::InputReceivableComponent)

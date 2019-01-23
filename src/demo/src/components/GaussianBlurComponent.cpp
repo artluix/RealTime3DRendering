@@ -1,25 +1,31 @@
-#include "StdAfx.h"
-#include "library/components/GaussianBlurComponent.h"
+#include "components/GaussianBlurComponent.h"
 
-#include "library/Application.h"
+#include <library/components/KeyboardComponent.h>
+#include <library/components/TextComponent.h>
 
-#include "library/effect/Effect.h"
-#include "library/effect/EffectVariable.h"
+#include <library/effect/Effect.h>
+#include <library/effect/EffectVariable.h>
 
-#include "library/Utils.h"
-#include "library/Path.h"
-#include "library/Color.h"
-#include "library/Application.h"
-#include "library/FullScreenRenderTarget.h"
-#include "library/components/FullScreenQuadComponent.h"
+#include <library/Application.h>
+#include <library/Utils.h>
+#include <library/Path.h>
+#include <library/Color.h>
+#include <library/Application.h>
+#include <library/FullScreenRenderTarget.h>
+#include <library/components/FullScreenQuadComponent.h>
 
 #include <cmath>
+#include <sstream>
+#include <iomanip>
 
-namespace library
+namespace demo
 {
+	using namespace library;
+
 	namespace
 	{
 		constexpr float k_defaultBlurAmount = 1.f;
+		constexpr float k_blurModulationRate = 1.0f;
 
 		const auto k_backgroundColor = library::Color::Black;
 
@@ -35,7 +41,7 @@ namespace library
 	//-------------------------------------------------------------------------
 
 	GaussianBlurComponent::GaussianBlurComponent(const Application& app)
-		: ConcreteMaterialComponent(app)
+		: PostProcessingComponentGlue(app)
 		, m_blurAmount(k_defaultBlurAmount)
 	{
 	}
@@ -44,34 +50,62 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void GaussianBlurComponent::SetBlurAmount(const float blurAmount)
-	{
-		if (m_blurAmount != blurAmount)
-		{
-			m_blurAmount = blurAmount;
-			InitializeSampleWeights();
-		}
-	}
-
-	//-------------------------------------------------------------------------
-
 	void GaussianBlurComponent::Initialize()
 	{
-		m_effect = Effect::Create(m_app, k_effectPath);
-		m_effect->LoadCompiled();
+		InitializeMaterial(m_app, k_effectPath);
+		InitializeQuad("blur");
 
-		m_material = std::make_unique<GaussianBlurMaterial>(*m_effect);
-		m_material->Initialize();
+		m_text = std::make_unique<TextComponent>(m_app);
+		m_text->SetPosition(math::Vector2(0.f, 45.f));
+		m_text->SetTextGeneratorFunction(
+			[this]() -> std::wstring
+			{
+				std::wostringstream woss;
+				woss << std::setprecision(2) << "Blur Amount (+J/-K): " << m_blurAmount;
 
-		m_fullScreenQuad = std::make_unique<FullScreenQuadComponent>(m_app);
-		m_fullScreenQuad->SetMaterial(*m_material, "blur", "p0");
-		m_fullScreenQuad->Initialize();
+				return woss.str();
+			}
+		);
+		m_text->Initialize();
 
 		m_horizontalBlurTarget = std::make_unique<FullScreenRenderTarget>(m_app);
 		m_verticalBlurTarget = std::make_unique<FullScreenRenderTarget>(m_app);
 
 		InitializeSampleOffsets();
 		InitializeSampleWeights();
+	}
+
+	//-------------------------------------------------------------------------
+
+	void GaussianBlurComponent::Update(const library::Time& time)
+	{
+		UpdateBlurAmount(time);
+
+		m_text->Update(time);
+	}
+
+	void GaussianBlurComponent::UpdateBlurAmount(const library::Time& time)
+	{
+		if (!!m_keyboard)
+		{
+			using namespace library;
+
+			const auto elapsedTime = time.elapsed.GetSeconds();
+
+			if (m_keyboard->IsKeyDown(Key::J))
+			{
+				m_blurAmount += k_blurModulationRate * elapsedTime;
+				InitializeSampleWeights();
+			}
+
+			if (m_keyboard->IsKeyDown(Key::K) && m_blurAmount > 0.f)
+			{
+				m_blurAmount -= k_blurModulationRate * elapsedTime;
+				m_blurAmount = math::Max(1e-10f, m_blurAmount);
+				
+				InitializeSampleWeights();
+			}
+		}
 	}
 
 	//-------------------------------------------------------------------------
@@ -148,24 +182,11 @@ namespace library
 		m_fullScreenQuad->Draw(time);
 	}
 
-	void GaussianBlurComponent::DrawToTexture(const Time& time)
-	{
-
-	}
-
-	void GaussianBlurComponent::SetSceneTexture(ID3D11ShaderResourceView& sceneTexture)
-	{
-		if (m_sceneTexture != &sceneTexture)
-		{
-			m_sceneTexture = &sceneTexture;
-		}
-	}
-
 	//-------------------------------------------------------------------------
 
 	void GaussianBlurComponent::UpdateHorizontalOffsets()
 	{
-		m_material->GetColorTexture() << m_sceneTexture;
+		m_material->GetColorTexture() << GetSceneTexture();
 		m_material->GetSampleWeights() << m_sample.weights;
 		m_material->GetSampleOffsets() << m_sample.offsets.horizontal;
 	}
@@ -183,4 +204,4 @@ namespace library
 	{
 		return exp(-(x * x) / (2 * m_blurAmount * m_blurAmount));
 	}
-} // namespace library
+} // namespace demo

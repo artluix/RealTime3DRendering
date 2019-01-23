@@ -49,7 +49,7 @@ namespace demo
 
 	DiffuseLightingComponent::DiffuseLightingComponent(const Application& app)
 		: SceneComponent()
-		, ConcreteMaterialComponent(app)
+		, MaterialComponentGlue(app)
 		, InputReceivableComponent()
 		, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 	{

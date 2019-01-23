@@ -33,7 +33,7 @@ namespace library
 
 	GridComponent::GridComponent(const Application& app)
 		: SceneComponent()
-		, ConcreteMaterialComponent(app)
+		, MaterialComponentGlue(app)
 		, InputReceivableComponent()
 		, m_size(k_defaultSize)
 		, m_scale(k_defaultScale)
@@ -48,7 +48,7 @@ namespace library
 		const Color& color
 	)
 		: SceneComponent()
-		, ConcreteMaterialComponent(app)
+		, MaterialComponentGlue(app)
 		, InputReceivableComponent()
 		, m_size(size)
 		, m_scale(scale)

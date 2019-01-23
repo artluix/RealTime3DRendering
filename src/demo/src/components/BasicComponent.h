@@ -2,14 +2,14 @@
 #include <library/materials/BasicMaterial.h>
 
 #include <library/components/SceneComponent.h>
-#include <library/components/MaterialComponent.h>
+#include <library/components/MaterialComponentGlue.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 namespace demo
 {
 	class BasicComponent
 		: public library::SceneComponent
-		, public library::ConcreteMaterialComponent<library::BasicMaterial>
+		, public library::MaterialComponentGlue<library::BasicMaterial>
 		, public library::InputReceivableComponent
 	{
 		RTTI_CLASS(BasicComponent, library::SceneComponent, library::MaterialComponent, library::InputReceivableComponent)

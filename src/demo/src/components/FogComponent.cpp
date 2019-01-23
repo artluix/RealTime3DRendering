@@ -50,7 +50,7 @@ namespace demo
 
 	FogComponent::FogComponent(const Application& app)
 		: SceneComponent()
-		, ConcreteMaterialComponent(app)
+		, MaterialComponentGlue(app)
 		, InputReceivableComponent()
 		, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 		, m_fogStart(15.0f)

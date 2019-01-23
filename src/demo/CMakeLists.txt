@@ -27,6 +27,9 @@ if(APPLICATION)
                 src/components/BasicComponent.h
                 src/components/BasicComponent.cpp
 
+                src/components/ColorFilterComponent.h
+                src/components/ColorFilterComponent.cpp
+
                 src/components/DiffuseLightingComponent.h
                 src/components/DiffuseLightingComponent.cpp
 
@@ -38,6 +41,9 @@ if(APPLICATION)
 
                 src/components/FogComponent.h
                 src/components/FogComponent.cpp
+
+                src/components/GaussianBlurComponent.h
+                src/components/GaussianBlurComponent.cpp
 
                 src/components/NormalMappingComponent.h
                 src/components/NormalMappingComponent.cpp
@@ -69,6 +75,7 @@ if(APPLICATION)
             /GR- # disable rtti
             /MP
             /std:c++17
+            /wd4250 # disable dominance via inheritance warning (VS specific)
     )
 
     target_compile_definitions(demo

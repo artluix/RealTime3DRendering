@@ -1,22 +1,19 @@
 #pragma once
-#include "library/materials/Material.h"
-
+#include "library/components/IMaterialComponent.h"
 #include "library/components/DrawableComponent.h"
+
 #include "library/Path.h"
 #include "library/DirectXForwardDeclarations.h"
 
-#include <type_traits>
-#include <memory>
-
 namespace library
 {
-	class MaterialComponent : public DrawableComponent
+	class MaterialComponent
+		: public virtual IMaterialComponent
+		, public DrawableComponent
 	{
 		RTTI_CLASS(MaterialComponent, DrawableComponent)
 
 	public:
-		virtual const Material& GetMaterial() const = 0;
-
 		const Path& GetModelPath() const { return m_modelPath; }
 		void SetModelPath(const Path& path);
 
@@ -28,8 +25,6 @@ namespace library
 
 	protected:
 		explicit MaterialComponent(const Application& app);
-
-		virtual Material& GetMaterial() = 0;
 
 		// render stages
 		virtual void SetIA();
@@ -49,29 +44,5 @@ namespace library
 	private:
 		Path m_modelPath;
 		Path m_texturePath;
-	};
-
-	//-------------------------------------------------------------------------
-
-	class Effect;
-
-	template<class MaterialType, typename = std::enable_if_t<std::is_base_of_v<Material, MaterialType>>>
-	class ConcreteMaterialComponent : public MaterialComponent
-	{
-	public:
-		using Material = MaterialType;
-
-		const Material& GetMaterial() const override { return *m_material; }
-
-	protected:
-		explicit ConcreteMaterialComponent(const Application& app)
-			: MaterialComponent(app)
-		{
-		}
-
-		Material& GetMaterial() override { return *m_material; }
-
-		std::shared_ptr<Effect> m_effect;
-		std::unique_ptr<Material> m_material;
 	};
 } // namespace library

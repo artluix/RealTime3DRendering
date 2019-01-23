@@ -23,7 +23,7 @@ namespace library
 
 	FullScreenQuadComponent::~FullScreenQuadComponent() = default;
 
-	void FullScreenQuadComponent::SetMaterial(Material& material, const std::string& techniqueName, const std::string& passName)
+	void FullScreenQuadComponent::SetMaterial(Material& material, const std::string& techniqueName, const std::string& passName /* = "p0"*/)
 	{
 		if (m_material != &material)
 		{
@@ -32,7 +32,7 @@ namespace library
 		}
 	}
 
-	void FullScreenQuadComponent::SetActiveTechnique(const std::string& techniqueName, const std::string& passName)
+	void FullScreenQuadComponent::SetActiveTechnique(const std::string& techniqueName, const std::string& passName /* = "p0"*/)
 	{
 		assert(!!m_material);
 

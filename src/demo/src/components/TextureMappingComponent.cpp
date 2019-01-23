@@ -34,7 +34,7 @@ namespace demo
 
 	TextureMappingComponent::TextureMappingComponent(const Application& app)
 		: SceneComponent()
-		, ConcreteMaterialComponent(app)
+		, MaterialComponentGlue(app)
 		, InputReceivableComponent()
 	{
 		SetModelPath(k_modelPath);

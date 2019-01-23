@@ -18,6 +18,9 @@
 #include "components/TransparencyMappingComponent.h"
 #include "components/FogComponent.h"
 
+#include "components/ColorFilterComponent.h"
+#include "components/GaussianBlurComponent.h"
+
 #include <library/components/FpsComponent.h>
 #include <library/components/KeyboardComponent.h>
 #include <library/components/MouseComponent.h>
@@ -27,8 +30,6 @@
 
 #include <library/components/FullScreenQuadComponent.h>
 #include <library/FullScreenRenderTarget.h>
-
-#include <library/components/GaussianBlurComponent.h>
 
 #include <library/effect/Effect.h>
 #include <library/effect/EffectVariable.h>
@@ -46,19 +47,9 @@ namespace demo
 {
 	namespace
 	{
-		constexpr float k_brightnessModulationRate = 3.0f;
-		constexpr float k_blurModulationRate = 1.0f;
-
 		const auto k_backgroundColor = library::Color::Black;
 
 		const auto k_skyboxCubeMapPath = library::utils::GetExecutableDirectory().Join(library::Path("../data/textures/Maskonaive2_1024.dds"));
-		const auto k_colorFilterEffectPath = library::utils::GetExecutableDirectory().Join(
-#if defined(DEBUG) || defined(DEBUG)
-			library::Path("../data/effects/ColorFilter_d.fxc")
-#else
-			library::Path("../data/effects/ColorFilter.fxc")
-#endif
-		);
 	}
 
 	Application::Application(
@@ -68,8 +59,6 @@ namespace demo
 		const int showCmd
 	)
 		: library::Application(instanceHandle, windowClass, windowTitle, showCmd)
-		, m_colorFilterType(library::ColorFilter::Original)
-		, m_genericColorFilter(library::math::Matrix4::Identity)
 	{
 		m_depthStencilBufferEnabled = true;
 		m_multiSamplingEnabled = true;
@@ -94,6 +83,7 @@ namespace demo
 		}
 
 		// create needed components
+		// don't initialize them before library::Application::Initialize
 
 		// keyboard & mouse
 		m_keyboard = std::make_shared<KeyboardComponent>(*this, m_directInput);
@@ -206,50 +196,18 @@ namespace demo
 		fog->SetCamera(*camera);
 		fog->SetKeyboard(*m_keyboard);
 
-		// color filter
+		// render target
+		m_renderTarget = std::make_unique<FullScreenRenderTarget>(*this);
+		
+		// post processing
 		{
-			m_renderTarget = std::make_unique<FullScreenRenderTarget>(*this);
+			auto postProcessing = new ColorFilterComponent(*this);
+			//auto postProcessing = new GaussianBlurComponent(*this);
+			postProcessing->SetKeyboard(*m_keyboard);
+			postProcessing->SetSceneTexture(*(m_renderTarget->GetOutputTexture()));
 
-			m_colorFilterEffect = Effect::Create(*this, k_colorFilterEffectPath);
-			m_colorFilterEffect->LoadCompiled();
-
-			m_colorFilterMaterial = std::make_unique<ColorFilterMaterial>(*m_colorFilterEffect);
-			m_colorFilterMaterial->Initialize();
-
-			m_fullScreenQuad = std::make_unique<FullScreenQuadComponent>(*this);
-			m_fullScreenQuad->SetMaterial(*m_colorFilterMaterial, "grayscale_filter", "p0");
-			m_fullScreenQuad->Initialize();
-			m_fullScreenQuad->SetMaterialUpdateFunction(
-				[this]()
-				{
-					m_colorFilterMaterial->GetColorTexture() << m_renderTarget->GetOutputTexture();
-					m_colorFilterMaterial->GetColorFilter() << m_genericColorFilter;
-				}
-			);
+			m_postProcessing = std::unique_ptr<PostProcessingComponent>(postProcessing);
 		}
-
-		// gaussian blur
-		m_gaussianBlur = std::make_unique<GaussianBlurComponent>(*this);
-		m_gaussianBlur->SetSceneTexture(*(m_renderTarget->GetOutputTexture()));
-		m_gaussianBlur->Initialize();
-
-		// text info component
-		auto textInfo = std::make_shared<TextComponent>(*this);
-		textInfo->SetTextGeneratorFunction(
-			[this]() -> std::wstring
-			{
-				std::ostringstream oss;
-				oss << "Color Filter (Space Bar): " << ColorFilter::ToString(m_colorFilterType) << "\n";
-
-				if (m_colorFilterType == library::ColorFilter::Generic)
-					oss << "Brightness (+Comma/-Period): " << m_genericColorFilter._11;
-				else if (m_colorFilterType == library::ColorFilter::Original)
-					oss << std::setprecision(2) << "Blur Amount (+J/-K): " << m_gaussianBlur->GetBlurAmount();
-
-				return utils::ToWideString(oss.str());
-			}
-		);
-		textInfo->SetPosition(math::Vector2(0.f, 45.f));
 
 		// push needed components
 		m_components.push_back(m_keyboard);
@@ -259,9 +217,10 @@ namespace demo
 		m_components.push_back(fps);
 		m_components.push_back(skybox);
 		m_components.push_back(pointLight);
-		m_components.push_back(textInfo);
 
 		library::Application::Initialize();
+
+		m_postProcessing->Initialize();
 
 		camera->SetPosition(math::Vector3(0.0f, 0.0f, 50.0f));
 	}
@@ -271,56 +230,45 @@ namespace demo
 		if (!!m_keyboard)
 		{
 			if (m_keyboard->WasKeyPressed(library::Key::Escape))
-			{
 				Exit();
-			}
 
-			if (m_keyboard->WasKeyPressed(library::Key::Space))
-			{
-				using library::ColorFilter;
-
-				m_colorFilterType = static_cast<ColorFilter::Type>(m_colorFilterType + 1);
-
-				if (m_colorFilterType == ColorFilter::Count)
-				{
-					m_colorFilterType = library::ColorFilter::Original;
-				}
-				else
-				{
-					m_fullScreenQuad->SetActiveTechnique(ColorFilter::ToTechniqueName(m_colorFilterType), "p0");
-				}
-			}
+			if (m_keyboard->WasKeyPressed(library::Key::Tab))
+				m_postProcessingEnabled = !m_postProcessingEnabled;
 		}
 
-		UpdateGenericColorFilter(time);
-		UpdateBlurAmount(time);
+		if (m_postProcessingEnabled)
+			m_postProcessing->Update(time);
 
 		library::Application::Update(time);
 	}
 
 	void Application::Draw(const library::Time& time)
 	{
-		// Render the scene to an off-screen texture
-		m_renderTarget->Begin();
+		if (m_postProcessingEnabled)
+		{
+			// Render the scene to an off-screen texture
+			m_renderTarget->Begin();
 
-		m_deviceContext->ClearRenderTargetView(m_renderTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
-		m_deviceContext->ClearDepthStencilView(m_renderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+			m_deviceContext->ClearRenderTargetView(m_renderTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
+			m_deviceContext->ClearDepthStencilView(m_renderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-		library::Application::Draw(time);
+			library::Application::Draw(time);
 
-		m_renderTarget->End();
+			m_renderTarget->End();
 
-		// Render a full-screen quad with a post-processing effect
-		m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
-		m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+			// Render a full-screen quad with a post-processing effect
+			m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
+			m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-		// apply gaussian blur only to original image
-		if (m_colorFilterType == library::ColorFilter::Original)
-			m_gaussianBlur->Draw(time);
+			m_postProcessing->Draw(time);
+		}
 		else
-			m_fullScreenQuad->Draw(time);
+		{
+			m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
+			m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-		UnbindPixelShaderResources(0, 1);
+			library::Application::Draw(time);
+		}
 
 		HRESULT hr = m_swapChain->Present(0, 0);
 		if (FAILED(hr))
@@ -334,57 +282,5 @@ namespace demo
 		m_directInput.Reset();
 
 		library::Application::Shutdown();
-	}
-
-	void Application::UpdateGenericColorFilter(const library::Time& time)
-	{
-		static float brightness = 1.0f;
-
-		if (!!m_keyboard)
-		{
-			using namespace library;
-
-			const auto elapsedTime = time.elapsed.GetSeconds();
-
-			if (m_keyboard->IsKeyDown(Key::Comma) && brightness < 1.f)
-			{
-				brightness += k_brightnessModulationRate * elapsedTime;
-				brightness = math::Min(brightness, 1.f);
-				m_genericColorFilter = math::Matrix4::Scaling(math::Vector3(brightness));
-			}
-
-			if (m_keyboard->IsKeyDown(Key::Period) && brightness > 0.f)
-			{
-				brightness -= k_brightnessModulationRate * elapsedTime;
-				brightness = math::Max(brightness, 0.f);
-				m_genericColorFilter = math::Matrix4::Scaling(math::Vector3(brightness));
-			}
-		}
-	}
-
-	void Application::UpdateBlurAmount(const library::Time& time)
-	{
-		static float blurAmount = m_gaussianBlur->GetBlurAmount();
-
-		if (!!m_keyboard)
-		{
-			using namespace library;
-
-			const auto elapsedTime = time.elapsed.GetSeconds();
-
-			if (m_keyboard->IsKeyDown(Key::J))
-			{
-				blurAmount += k_blurModulationRate * elapsedTime;
-				m_gaussianBlur->SetBlurAmount(blurAmount);
-			}
-
-			if (m_keyboard->IsKeyDown(Key::K) && blurAmount > 0.f)
-			{
-				blurAmount -= k_blurModulationRate * elapsedTime;
-				blurAmount = math::Max(1e-10f, blurAmount);
-
-				m_gaussianBlur->SetBlurAmount(blurAmount);
-			}
-		}
 	}
 } // namespace demo

@@ -42,7 +42,7 @@ namespace demo
 
 	PointLightComponent::PointLightComponent(const Application& app)
 		: SceneComponent()
-		, ConcreteMaterialComponent(app)
+		, MaterialComponentGlue(app)
 		, InputReceivableComponent()
 		, m_specularPower(25.f)
 		, m_specularColor(1.f, 1.f, 1.f, 1.f)

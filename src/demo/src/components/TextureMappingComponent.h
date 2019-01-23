@@ -2,14 +2,14 @@
 #include <library/materials/TextureMappingMaterial.h>
 
 #include <library/components/SceneComponent.h>
-#include <library/components/MaterialComponent.h>
+#include <library/components/MaterialComponentGlue.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 namespace demo
 {
 	class TextureMappingComponent
 		: public library::SceneComponent
-		, public library::ConcreteMaterialComponent<library::TextureMappingMaterial>
+		, public library::MaterialComponentGlue<library::TextureMappingMaterial>
 		, public library::InputReceivableComponent
 	{
 		RTTI_CLASS(TextureMappingComponent, library::SceneComponent, library::MaterialComponent, library::InputReceivableComponent)

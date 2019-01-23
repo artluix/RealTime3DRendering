@@ -2,7 +2,7 @@
 #include "library/materials/BasicMaterial.h"
 
 #include "library/components/SceneComponent.h"
-#include "library/components/MaterialComponent.h"
+#include "library/components/MaterialComponentGlue.hpp"
 
 #include "library/DirectXForwardDeclarations.h"
 
@@ -12,7 +12,7 @@ namespace library
 
 	class ProxyModelComponent
 		: public SceneComponent
-		, public ConcreteMaterialComponent<BasicMaterial>
+		, public MaterialComponentGlue<BasicMaterial>
 	{
 		RTTI_CLASS(ProxyModelComponent, SceneComponent)
 

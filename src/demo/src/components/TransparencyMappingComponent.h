@@ -2,7 +2,7 @@
 #include <library/materials/TransparencyMappingMaterial.h>
 
 #include <library/components/SceneComponent.h>
-#include <library/components/MaterialComponent.h>
+#include <library/components/MaterialComponentGlue.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 #include <library/DirectXForwardDeclarations.h>
@@ -21,7 +21,7 @@ namespace demo
 {
 	class TransparencyMappingComponent
 		: public library::SceneComponent
-		, public library::ConcreteMaterialComponent<library::TransparencyMappingMaterial>
+		, public library::MaterialComponentGlue<library::TransparencyMappingMaterial>
 		, public library::InputReceivableComponent
 	{
 		RTTI_CLASS(TransparencyMappingComponent, library::SceneComponent, library::MaterialComponent, library::InputReceivableComponent)

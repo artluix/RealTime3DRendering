@@ -2,7 +2,7 @@
 #include "library/materials/BasicMaterial.h"
 
 #include "library/components/SceneComponent.h"
-#include "library/components/MaterialComponent.h"
+#include "library/components/MaterialComponentGlue.hpp"
 #include "library/components/InputReceivableComponent.h"
 
 #include "library/Color.h"
@@ -12,7 +12,7 @@ namespace library
 {
 	class GridComponent
 		: public SceneComponent
-		, public ConcreteMaterialComponent<BasicMaterial>
+		, public MaterialComponentGlue<BasicMaterial>
 		, public InputReceivableComponent
 	{
 		RTTI_CLASS(GridComponent, SceneComponent, MaterialComponent, InputReceivableComponent)

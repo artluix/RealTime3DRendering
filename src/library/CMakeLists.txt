@@ -9,20 +9,24 @@ if(APPLICATION)
                 include/library/components/Component.h
 
                 include/library/components/CameraComponent.h
+                include/library/components/ConcreteMaterialComponent.hpp
                 include/library/components/DirectionalLightComponent.h
                 include/library/components/DrawableComponent.h
                 include/library/components/FirstPersonCameraComponent.h
                 include/library/components/FpsComponent.h
                 include/library/components/FullScreenQuadComponent.h
-                include/library/components/GaussianBlurComponent.h
                 include/library/components/GridComponent.h
                 include/library/components/InputComponent.h
                 include/library/components/InputReceivableComponent.h
                 include/library/components/KeyboardComponent.h
                 include/library/components/LightComponent.h
+                include/library/components/IMaterialComponent.h
                 include/library/components/MaterialComponent.h
+                include/library/components/MaterialComponentGlue.hpp
                 include/library/components/MouseComponent.h
                 include/library/components/PointLightComponent.h
+                include/library/components/PostProcessingComponent.h
+                include/library/components/PostProcessingComponentGlue.hpp
                 include/library/components/ProxyModelComponent.h
                 include/library/components/SceneComponent.h
                 include/library/components/SkyboxComponent.h
@@ -94,7 +98,6 @@ if(APPLICATION)
                 src/components/FirstPersonCameraComponent.cpp
                 src/components/FpsComponent.cpp
                 src/components/FullScreenQuadComponent.cpp
-                src/components/GaussianBlurComponent.cpp
                 src/components/GridComponent.cpp
                 src/components/InputComponent.cpp
                 src/components/InputReceivableComponent.cpp
@@ -103,6 +106,7 @@ if(APPLICATION)
                 src/components/MaterialComponent.cpp
                 src/components/MouseComponent.cpp
                 src/components/PointLightComponent.cpp
+                src/components/PostProcessingComponent.cpp
                 src/components/ProxyModelComponent.cpp
                 src/components/SceneComponent.cpp
                 src/components/SkyboxComponent.cpp
@@ -176,6 +180,7 @@ if(APPLICATION)
             /YuStdAfx.h
             /MP
             /std:c++17
+            /wd4250 # disable dominance via inheritance warning (VS specific)
     )
 
     target_compile_definitions(library

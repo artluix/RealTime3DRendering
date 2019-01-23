@@ -2,7 +2,7 @@
 #include <library/materials/FogMaterial.h>
 
 #include <library/components/SceneComponent.h>
-#include <library/components/MaterialComponent.h>
+#include <library/components/MaterialComponentGlue.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 #include <library/DirectXForwardDeclarations.h>
@@ -21,7 +21,7 @@ namespace demo
 {
 	class FogComponent
 		: public library::SceneComponent
-		, public library::ConcreteMaterialComponent<library::FogMaterial>
+		, public library::MaterialComponentGlue<library::FogMaterial>
 		, public library::InputReceivableComponent
 	{
 		RTTI_CLASS(FogComponent, library::SceneComponent, library::MaterialComponent, library::InputReceivableComponent)

@@ -2,7 +2,7 @@
 #include "library/materials/SkyboxMaterial.h"
 
 #include "library/components/SceneComponent.h"
-#include "library/components/MaterialComponent.h"
+#include "library/components/MaterialComponentGlue.hpp"
 
 namespace library
 {
@@ -10,7 +10,7 @@ namespace library
 
 	class SkyboxComponent
 		: public SceneComponent
-		, public ConcreteMaterialComponent<SkyboxMaterial>
+		, public MaterialComponentGlue<SkyboxMaterial>
 	{
 		RTTI_CLASS(SkyboxComponent, SceneComponent, MaterialComponent)
 

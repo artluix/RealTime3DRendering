@@ -38,7 +38,7 @@ namespace demo
 
 	EnvironmentMappingComponent::EnvironmentMappingComponent(const Application& app)
 		: SceneComponent()
-		, ConcreteMaterialComponent(app)
+		, MaterialComponentGlue(app)
 		, InputReceivableComponent()
 		, m_reflectionAmount(1.0f)
 		, m_ambientColor(1.0f, 1.0f, 1.0f, 1.0f)

@@ -31,7 +31,7 @@ namespace library
 
 	SkyboxComponent::SkyboxComponent(const Application& app, const Path& cubeMapPath, const float scale)
 		: SceneComponent()
-		, ConcreteMaterialComponent(app)
+		, MaterialComponentGlue(app)
 	{
 		SetModelPath(k_modelPath);
 		SetTexturePath(cubeMapPath);
