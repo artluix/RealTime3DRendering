@@ -9,12 +9,18 @@ namespace library
 		constexpr float k_defaultOuterAngle = 0.25f;
 	}
 
+	//-------------------------------------------------------------------------
+
 	SpotlightComponent::SpotlightComponent()
 		: LightComponent()
 		, m_innerAngle(k_defaultInnerAngle)
 		, m_outerAngle(k_defaultOuterAngle)
 	{
 	}
+
+	SpotlightComponent::~SpotlightComponent() = default;
+
+	//-------------------------------------------------------------------------
 
 	void SpotlightComponent::SetInnerAngle(const float innerAngle)
 	{

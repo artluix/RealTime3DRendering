@@ -1,5 +1,4 @@
 #pragma once
-#include "library/components/IMaterialComponent.h"
 #include "library/components/DrawableComponent.h"
 
 #include "library/Path.h"
@@ -7,9 +6,9 @@
 
 namespace library
 {
-	class MaterialComponent
-		: public virtual IMaterialComponent
-		, public DrawableComponent
+	class Material;
+
+	class MaterialComponent : public DrawableComponent
 	{
 		RTTI_CLASS(MaterialComponent, DrawableComponent)
 
@@ -20,11 +19,15 @@ namespace library
 		const Path& GetTexturePath() const { return m_texturePath; }
 		void SetTexturePath(const Path& path);
 
-		void Initialize() override;
+		void Initialize(const Application& app) override;
 		void Draw(const Time& time) override;
 
+		virtual const Material& GetMaterial() const = 0;
+
 	protected:
-		explicit MaterialComponent(const Application& app);
+		explicit MaterialComponent() = default;
+
+		virtual Material& GetMaterial() = 0;
 
 		// render stages
 		virtual void SetIA();

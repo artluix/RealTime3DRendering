@@ -9,14 +9,12 @@
 namespace library
 {
 	InputComponent::InputComponent(
-		const Application& app, 
 		const ComPtr<IDirectInput8>& directInput,
 		const DIDATAFORMAT& dataFormat,
 		const GUID& guid,
 		const DWORD cooperativeLevel
 	)
-		: Component(app)
-		, m_directInput(directInput)
+		: m_directInput(directInput)
 		, m_dataFormat(dataFormat)
 		, m_guid(guid)
 		, m_cooperativeLevel(cooperativeLevel)
@@ -33,8 +31,10 @@ namespace library
 		}
 	}
 
-	void InputComponent::Initialize()
+	void InputComponent::Initialize(const Application& app)
 	{
+		Component::Initialize(app);
+
 		auto hr = m_directInput->CreateDevice(m_guid, m_directInputDevice.GetAddressOf(), nullptr);
 		if (FAILED(hr))
 		{
@@ -47,7 +47,7 @@ namespace library
 			throw Exception("IDirectInputDevice::SetDataFormat() failed.", hr);
 		}
 
-		hr = m_directInputDevice->SetCooperativeLevel(m_app.GetWindowHandle(), m_cooperativeLevel);
+		hr = m_directInputDevice->SetCooperativeLevel(app.GetWindowHandle(), m_cooperativeLevel);
 		if (FAILED(hr))
 		{
 			throw Exception("IDirectInputDevice::SetCooperativeLevel() failed.", hr);

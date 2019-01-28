@@ -24,10 +24,8 @@ namespace library
 		);
 	}
 
-	ProxyModelComponent::ProxyModelComponent(const Application& app, const Path& modelPath, const float scale)
-		: SceneComponent()
-		, MaterialComponentGlue(app)
-		, m_direction(math::Vector3::Forward)
+	ProxyModelComponent::ProxyModelComponent(const Path& modelPath, const float scale)
+		: m_direction(math::Vector3::Forward)
 		, m_up(math::Vector3::Up)
 		, m_right(math::Vector3::Right)
 	{
@@ -42,15 +40,10 @@ namespace library
 		m_isWireframeVisible = visible;
 	}
 
-	void ProxyModelComponent::Initialize()
+	void ProxyModelComponent::Initialize(const Application& app)
 	{
-		m_effect = Effect::Create(m_app, k_effectPath);
-		m_effect->LoadCompiled();
-
-		m_material = std::make_unique<BasicMaterial>(*m_effect);
-		m_material->Initialize();
-
-		MaterialComponent::Initialize();
+		InitializeMaterial(app, k_effectPath);
+		MaterialComponent::Initialize(app);
 	}
 
 	void ProxyModelComponent::SetEffectData()
@@ -65,7 +58,7 @@ namespace library
 
 	void ProxyModelComponent::Render()
 	{
-		auto deviceContext = m_app.GetDeviceContext();
+		auto deviceContext = m_app->GetDeviceContext();
 
 		if (m_isWireframeVisible)
 		{

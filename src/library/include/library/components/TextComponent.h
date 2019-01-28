@@ -21,7 +21,7 @@ namespace library
 	public:
 		using TextGeneratorFunction = std::function<std::wstring(void)>;
 
-		explicit TextComponent(const Application& app);
+		explicit TextComponent();
 		~TextComponent();
 
 		void SetText(const std::string& text);
@@ -39,7 +39,7 @@ namespace library
 
 		void SetTextGeneratorFunction(const TextGeneratorFunction& generatorFunction);
 
-		void Initialize() override;
+		void Initialize(const Application& app) override;
 		void Update(const Time& time) override;
 		void Draw(const Time& time) override;
 

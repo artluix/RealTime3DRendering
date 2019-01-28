@@ -47,11 +47,8 @@ namespace demo
 		const auto k_texturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/EarthComposite.dds"));
 	}
 
-	DiffuseLightingComponent::DiffuseLightingComponent(const Application& app)
-		: SceneComponent()
-		, MaterialComponentGlue(app)
-		, InputReceivableComponent()
-		, m_ambientColor(1.f, 1.f, 1.f, 0.f)
+	DiffuseLightingComponent::DiffuseLightingComponent()
+		: m_ambientColor(1.f, 1.f, 1.f, 0.f)
 	{
 		SetModelPath(k_modelPath);
 		SetTexturePath(k_texturePath);
@@ -59,17 +56,12 @@ namespace demo
 
 	DiffuseLightingComponent::~DiffuseLightingComponent() = default;
 
-	void DiffuseLightingComponent::Initialize()
+	void DiffuseLightingComponent::Initialize(const Application& app)
 	{
 		assert(!!GetCamera());
 
-		m_effect = Effect::Create(m_app, k_effectPath);
-		m_effect->LoadCompiled();
-
-		m_material = std::make_unique<DiffuseLightingMaterial>(*m_effect);
-		m_material->Initialize();
-
-		MaterialComponent::Initialize();
+		InitializeMaterial(app, k_effectPath);
+		MaterialComponent::Initialize(app);
 
 		m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
@@ -77,7 +69,7 @@ namespace demo
 		m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
 		m_proxyModel->SetRotation(GetRotation() + k_proxyModelRotationOffset);
 		m_proxyModel->SetCamera(*GetCamera());
-		m_proxyModel->Initialize();
+		m_proxyModel->Initialize(app);
 
 		m_text = std::make_unique<TextComponent>(m_app);
 		m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -92,7 +84,7 @@ namespace demo
 				return woss.str();
 			}
 		);
-		m_text->Initialize();
+		m_text->Initialize(app);
 	}
 
 	void DiffuseLightingComponent::Update(const Time& time)

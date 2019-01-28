@@ -1,19 +1,16 @@
 #pragma once
-#include "library/RTTI.hpp"
-#include "library/NonCopyable.hpp"
+#include "library/components/Component.h"
 #include "library/math/Math.h"
 
 namespace library
 {
 	class CameraComponent;
 
-	class SceneComponent : public NonCopyable<SceneComponent>
+	class SceneComponent : public virtual Component
 	{
-		RTTI_CLASS_BASE(SceneComponent)
+		RTTI_CLASS(SceneComponent, Component)
 
 	public:
-		virtual ~SceneComponent();
-
 		const math::Vector3& GetPosition() const { return m_position; }
 		const math::Vector3& GetRotation() const { return m_rotation; }
 		const math::Vector3& GetScaling() const { return m_scaling; }

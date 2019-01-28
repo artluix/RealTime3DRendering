@@ -10,6 +10,7 @@ namespace library
 	{
 	public:
 		explicit SpotlightComponent();
+		~SpotlightComponent();
 
 		float GetInnerAngle() const { return m_innerAngle; }
 		void SetInnerAngle(const float innerAngle);

@@ -8,8 +8,8 @@ namespace library
 		constexpr BYTE k_buttonDownMask = 0x80;
 	}
 
-	MouseComponent::MouseComponent(const Application& app, ComPtr<IDirectInput8>& directInput)
-		: InputComponent(app, directInput, c_dfDIMouse, GUID_SysMouse, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE)
+	MouseComponent::MouseComponent(ComPtr<IDirectInput8>& directInput)
+		: InputComponent(directInput, c_dfDIMouse, GUID_SysMouse, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE)
 		, m_currentState{}, m_previousState{}
 		, m_x(0), m_y(0), m_wheel(0)
 	{

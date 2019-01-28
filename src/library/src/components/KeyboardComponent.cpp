@@ -8,8 +8,8 @@ namespace library
 		constexpr BYTE k_keyDownMask = 0x80;
 	}
 
-	KeyboardComponent::KeyboardComponent(const Application& app, const ComPtr<IDirectInput8>& directInput)
-		: InputComponent(app, directInput, c_dfDIKeyboard, GUID_SysKeyboard, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE)
+	KeyboardComponent::KeyboardComponent(const ComPtr<IDirectInput8>& directInput)
+		: InputComponent(directInput, c_dfDIKeyboard, GUID_SysKeyboard, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE)
 	{
 		m_keysState.fill(0);
 		m_previousKeysState.fill(0);

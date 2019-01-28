@@ -4,14 +4,15 @@
 namespace library
 {
 	DirectionalLightComponent::DirectionalLightComponent()
-		: LightComponent()
-		, m_direction(math::Vector3::Forward)
+		: m_direction(math::Vector3::Forward)
 		, m_up(math::Vector3::Up)
 		, m_right(math::Vector3::Right)
 	{
 	}
 
 	DirectionalLightComponent::~DirectionalLightComponent() = default;
+
+	//-------------------------------------------------------------------------
 
 	void DirectionalLightComponent::Rotate(const math::Vector3& rotation)
 	{

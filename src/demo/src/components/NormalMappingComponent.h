@@ -2,7 +2,7 @@
 #include <library/materials/NormalMappingMaterial.h>
 
 #include <library/components/SceneComponent.h>
-#include <library/components/MaterialComponentGlue.hpp>
+#include <library/components/ConcreteMaterialComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 #include <library/Color.h>
@@ -21,16 +21,16 @@ namespace demo
 {
 	class NormalMappingComponent
 		: public library::SceneComponent
-		, public library::MaterialComponentGlue<library::NormalMappingMaterial>
+		, public library::ConcreteMaterialComponent<library::NormalMappingMaterial>
 		, public library::InputReceivableComponent
 	{
 		RTTI_CLASS(NormalMappingComponent, library::SceneComponent, library::MaterialComponent, library::InputReceivableComponent)
 
 	public:
-		explicit NormalMappingComponent(const library::Application& app);
+		explicit NormalMappingComponent();
 		~NormalMappingComponent();
 
-		void Initialize() override;
+		void Initialize(const library::Application& app) override;
 		void Update(const library::Time& time) override;
 		using library::DrawableComponent::Draw;
 

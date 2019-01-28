@@ -5,18 +5,17 @@
 
 namespace library
 {
-	class InputComponent : public Component
+	class InputComponent : public virtual Component
 	{
 		RTTI_CLASS(InputComponent, Component)
 
 	public:
 		virtual ~InputComponent();
 
-		void Initialize() override;
+		void Initialize(const Application& app) override;
 
 	protected:
 		explicit InputComponent(
-			const Application& app,
 			const ComPtr<IDirectInput8>& directInput,
 			const DIDATAFORMAT& dataFormat,
 			const GUID& guid,

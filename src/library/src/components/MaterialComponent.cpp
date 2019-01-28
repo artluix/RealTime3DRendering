@@ -18,13 +18,6 @@
 
 namespace library
 {
-	MaterialComponent::MaterialComponent(const Application& app)
-		: DrawableComponent(app)
-	{
-	}
-
-	//-------------------------------------------------------------------------
-
 	void MaterialComponent::LoadModel(const Path& modelPath)
 	{
 		if (!modelPath)
@@ -33,10 +26,10 @@ namespace library
 		const auto& material = GetMaterial();
 		assert(material.IsInitialized());
 
-		Model model(m_app, modelPath, true);
+		Model model(*m_app, modelPath, true);
 
 		const auto& mesh = model.GetMesh(0);
-		m_vertexBuffer = material.CreateVertexBuffer(m_app.GetDevice(), mesh);
+		m_vertexBuffer = material.CreateVertexBuffer(m_app->GetDevice(), mesh);
 		m_indexBuffer = mesh.CreateIndexBuffer();
 
 		m_indicesCount = mesh.GetIndicesCount();
@@ -59,10 +52,12 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void MaterialComponent::Initialize()
+	void MaterialComponent::Initialize(const Application& app)
 	{
+		DrawableComponent::Initialize(app);
+
 		LoadModel(m_modelPath);
-		m_app.LoadTexture(m_texturePath, m_textureShaderResourceView);
+		app.LoadTexture(m_texturePath, m_textureShaderResourceView);
 
 		// set default input layout
 		const auto& material = GetMaterial();
@@ -70,8 +65,6 @@ namespace library
 		const auto& currentTechnique = material.GetCurrentTechnique();
 		const auto& pass = currentTechnique.GetPass(0);
 		m_inputLayout = material.GetInputLayoutShared(pass);
-
-		DrawableComponent::Initialize();
 	}
 
 	void MaterialComponent::Draw(const Time& time)
@@ -85,7 +78,7 @@ namespace library
 	{
 		const auto& material = GetMaterial();
 
-		auto deviceContext = m_app.GetDeviceContext();
+		auto deviceContext = m_app->GetDeviceContext();
 		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
 		deviceContext->IASetInputLayout(m_inputLayout.Get());
 
@@ -109,12 +102,12 @@ namespace library
 		auto& currentTechnique = material.GetCurrentTechnique();
 		auto& pass = currentTechnique.GetPass(0);
 
-		pass.Apply(0, m_app.GetDeviceContext());
+		pass.Apply(0, m_app->GetDeviceContext());
 	}
 
 	void MaterialComponent::Render()
 	{
-		auto deviceContext = m_app.GetDeviceContext();
+		auto deviceContext = m_app->GetDeviceContext();
 
 		if (m_indicesCount > 0)
 			deviceContext->DrawIndexed(m_indicesCount, 0, 0);

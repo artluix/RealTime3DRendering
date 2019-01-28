@@ -1,7 +1,7 @@
 #pragma once
 #include <library/materials/GaussianBlurMaterial.h>
 
-#include <library/components/PostProcessingComponentGlue.hpp>
+#include <library/components/ConcretePostProcessingComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 #include <library/math/Vector.h>
@@ -14,16 +14,16 @@ namespace library
 namespace demo
 {
 	class GaussianBlurComponent
-		: public library::PostProcessingComponentGlue<library::GaussianBlurMaterial>
+		: public library::ConcretePostProcessingComponent<library::GaussianBlurMaterial>
 		, public library::InputReceivableComponent
 	{
 		RTTI_CLASS(GaussianBlurComponent, library::PostProcessingComponent, library::InputReceivableComponent)
 
 	public:
-		explicit GaussianBlurComponent(const library::Application& app);
+		explicit GaussianBlurComponent();
 		~GaussianBlurComponent();
 
-		void Initialize() override;
+		void Initialize(const library::Application& app) override;
 		void Update(const library::Time& time) override;
 		void Draw(const library::Time& time) override;
 

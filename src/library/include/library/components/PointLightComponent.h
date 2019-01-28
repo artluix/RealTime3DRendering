@@ -8,7 +8,7 @@ namespace library
 	{
 	public:
 		explicit PointLightComponent();
-		~PointLightComponent() = default;
+		~PointLightComponent();
 
 		const math::Vector3& GetPosition() const { return m_position; }
 		void SetPosition(const math::Vector3& position);

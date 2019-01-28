@@ -12,14 +12,17 @@ namespace library
 		const auto k_defaultFontPath = utils::GetExecutableDirectory().Join(Path("../data/fonts/Arial_14_Regular.spritefont"));
 	}
 
-	TextComponent::TextComponent(const Application& app)
-		: DrawableComponent(app)
-		, m_color(k_defaultColor)
+	//-------------------------------------------------------------------------
+
+	TextComponent::TextComponent()
+		: m_color(k_defaultColor)
 		, m_fontPath(k_defaultFontPath)
 	{
 	}
 
 	TextComponent::~TextComponent() = default;
+
+	//-------------------------------------------------------------------------
 
 	void TextComponent::SetText(const std::string& text)
 	{
@@ -49,7 +52,7 @@ namespace library
 		if (!m_spriteFont || m_fontPath != fontPath)
 		{
 			m_fontPath = fontPath;
-			m_spriteFont = std::make_unique<DirectX::SpriteFont>(m_app.GetDevice(), m_fontPath.GetWideCString());
+			m_spriteFont = std::make_unique<DirectX::SpriteFont>(m_app->GetDevice(), m_fontPath.GetWideCString());
 		}
 	}
 
@@ -58,11 +61,11 @@ namespace library
 		m_generatorFunction = generatorFunction;
 	}
 
-	void TextComponent::Initialize()
+	void TextComponent::Initialize(const Application& app)
 	{
-		DrawableComponent::Initialize();
+		DrawableComponent::Initialize(app);
 
-		m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(m_app.GetDeviceContext());
+		m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(app.GetDeviceContext());
 		SetFontPath(m_fontPath);
 	}
 

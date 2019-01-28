@@ -36,11 +36,8 @@ namespace demo
 		const auto k_environmentMapTexturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/Maskonaive2_1024.dds"));
 	}
 
-	EnvironmentMappingComponent::EnvironmentMappingComponent(const Application& app)
-		: SceneComponent()
-		, MaterialComponentGlue(app)
-		, InputReceivableComponent()
-		, m_reflectionAmount(1.0f)
+	EnvironmentMappingComponent::EnvironmentMappingComponent()
+		: m_reflectionAmount(1.0f)
 		, m_ambientColor(1.0f, 1.0f, 1.0f, 1.0f)
 	{
 		SetModelPath(k_modelPath);
@@ -49,16 +46,12 @@ namespace demo
 
 	EnvironmentMappingComponent::~EnvironmentMappingComponent() = default;
 
-	void EnvironmentMappingComponent::Initialize()
+	void EnvironmentMappingComponent::Initialize(const Application& app)
 	{
-		m_effect = Effect::Create(m_app, k_effectPath);
-		m_effect->LoadCompiled();
+		InitializeMaterial(app, k_effectPath);
+		MaterialComponent::Initialize(app);
 
-		m_material = std::make_unique<EnvironmentMappingMaterial>(*m_effect);
-		m_material->Initialize();
-
-		MaterialComponent::Initialize();
-		m_app.LoadTexture(k_environmentMapTexturePath, m_environmentMapShaderResourceView);
+		app.LoadTexture(k_environmentMapTexturePath, m_environmentMapShaderResourceView);
 
 		m_text = std::make_unique<TextComponent>(m_app);
 		m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -71,7 +64,7 @@ namespace demo
 				return woss.str();
 			}
 		);
-		m_text->Initialize();
+		m_text->Initialize(app);
 	}
 
 	void EnvironmentMappingComponent::Update(const Time& time)

@@ -9,9 +9,8 @@ namespace library
 		RTTI_CLASS(CameraComponent, Component)
 
 	public:
-		explicit CameraComponent(const Application& app);
+		explicit CameraComponent();
 		explicit CameraComponent(
-			const Application& app,
 			const float fieldOfView,
 			const float aspectRatio,
 			const float nearPlaneDistance,
@@ -37,7 +36,7 @@ namespace library
 		virtual void SetPosition(const math::Vector3& position);
 		virtual void Reset();
 
-		void Initialize() override;
+		void Initialize(const Application& app) override;
 		void Update(const Time& time) override;
 
 		virtual void UpdateViewMatrix();

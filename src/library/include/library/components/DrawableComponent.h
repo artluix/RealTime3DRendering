@@ -3,7 +3,7 @@
 
 namespace library
 {
-	class DrawableComponent : public Component
+	class DrawableComponent : public virtual Component
 	{
 		RTTI_CLASS(DrawableComponent, Component)
 
@@ -11,11 +11,11 @@ namespace library
 		bool IsVisible() const { return m_visible; }
 		void SetVisible(const bool visible);
 
-		void Initialize() override;
+		void Initialize(const Application& app) override;
 		virtual void Draw(const Time& time) {}
 
 	protected:
-		explicit DrawableComponent(const Application& app);
+		explicit DrawableComponent() = default;
 
 	private:
 		bool m_visible = true;

@@ -14,10 +14,8 @@ namespace library
 		const auto k_defaultFontPath = utils::GetExecutableDirectory().Join(Path("data/fonts/Arial_14_Regular.spritefont"));
 	}
 
-	CameraComponent::CameraComponent(const Application& app)
-		: Component(app)
-		, m_fieldOfView(k_defaultFieldOfView)
-		, m_aspectRatio(app.GetAspectRatio())
+	CameraComponent::CameraComponent()
+		: m_fieldOfView(k_defaultFieldOfView)
 		, m_nearPlaneDistance(k_defaultNearPlaneDistance)
 		, m_farPlaneDistance(k_defaultFarPlaneDistance)
 		, m_isViewMatrixDirty(true)
@@ -25,14 +23,12 @@ namespace library
 	}
 
 	CameraComponent::CameraComponent(
-		const Application& app,
 		const float fieldOfView,
 		const float aspectRatio,
 		const float nearPlaneDistance,
 		const float farPlaneDistance
 	)
-		: Component(app)
-		, m_fieldOfView(fieldOfView)
+		: m_fieldOfView(fieldOfView)
 		, m_nearPlaneDistance(nearPlaneDistance)
 		, m_farPlaneDistance(farPlaneDistance)
 	{
@@ -72,8 +68,12 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void CameraComponent::Initialize()
+	void CameraComponent::Initialize(const Application& app)
 	{
+		Component::Initialize(app);
+
+		m_aspectRatio = app.GetAspectRatio();
+
 		UpdateProjectionMatrix();
 		Reset();
 	}

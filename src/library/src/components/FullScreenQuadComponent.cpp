@@ -16,11 +16,6 @@
 
 namespace library
 {
-	FullScreenQuadComponent::FullScreenQuadComponent(const Application& app)
-		: MaterialComponent(app)
-	{
-	}
-
 	FullScreenQuadComponent::~FullScreenQuadComponent() = default;
 
 	void FullScreenQuadComponent::SetMaterial(Material& material, const std::string& techniqueName, const std::string& passName /* = "p0"*/)
@@ -48,8 +43,10 @@ namespace library
 		m_materialUpdateFunction = func;
 	}
 
-	void FullScreenQuadComponent::Initialize()
+	void FullScreenQuadComponent::Initialize(const Application& app)
 	{
+		Component::Initialize(app);
+
 		assert(!!m_material && !!m_pass);
 
 		// vertex buffer
@@ -73,7 +70,7 @@ namespace library
 			D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 			vertexSubResourceData.pSysMem = vertices.data();
 
-			auto hr = m_app.GetDevice()->CreateBuffer(
+			auto hr = app.GetDevice()->CreateBuffer(
 				&vertexBufferDesc,
 				&vertexSubResourceData,
 				m_vertexBuffer.GetAddressOf()
@@ -101,7 +98,7 @@ namespace library
 			D3D11_SUBRESOURCE_DATA indexSubResourceData{};
 			indexSubResourceData.pSysMem = indices.data();
 
-			auto hr = m_app.GetDevice()->CreateBuffer(
+			auto hr = app.GetDevice()->CreateBuffer(
 				&indexBufferDesc,
 				&indexSubResourceData,
 				m_indexBuffer.GetAddressOf()
@@ -120,6 +117,6 @@ namespace library
 			m_materialUpdateFunction();
 		}
 
-		m_pass->Apply(0, m_app.GetDeviceContext());
+		m_pass->Apply(0, m_app->GetDeviceContext());
 	}
 } // namespace library

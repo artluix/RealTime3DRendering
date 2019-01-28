@@ -15,8 +15,8 @@ namespace library
 		RTTI_CLASS(FpsComponent, TextComponent)
 
 	public:
-		explicit FpsComponent(const Application& app);
-		~FpsComponent() = default;
+		explicit FpsComponent();
+		~FpsComponent();
 
 		unsigned GetFrameRate() const { return m_frameRate; }
 

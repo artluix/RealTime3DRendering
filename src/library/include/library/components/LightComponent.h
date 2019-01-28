@@ -1,17 +1,14 @@
 #pragma once
-#include "library/RTTI.hpp"
-#include "library/NonCopyable.hpp"
+#include "library/components/Component.h"
 #include "library/Color.h"
 
 namespace library
 {
-	class LightComponent : public NonCopyable<LightComponent>
+	class LightComponent : public virtual Component
 	{
-		RTTI_CLASS_BASE(LightComponent)
+		RTTI_CLASS(LightComponent, Component)
 
 	public:
-		virtual ~LightComponent() = default;
-
 		const Color& GetColor() const { return m_color; }
 		void SetColor(const Color& color);
 

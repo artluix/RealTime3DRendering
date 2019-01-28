@@ -11,9 +11,8 @@ namespace library
 		RTTI_CLASS(FirstPersonCameraComponent, CameraComponent, InputReceivableComponent)
 
 	public:
-		explicit FirstPersonCameraComponent(const Application& app);
+		explicit FirstPersonCameraComponent();
 		explicit FirstPersonCameraComponent(
-			const Application& app,
 			const float fieldOfView,
 			const float aspectRatio,
 			const float nearPlaneDistance,
@@ -31,7 +30,6 @@ namespace library
 		float GetMovementRate() const { return m_movementRate; }
 		void SetMovementRate(const float movementRate) { m_movementRate = movementRate; }
 
-		void Initialize() override;
 		void Update(const Time& time) override;
 
 	protected:

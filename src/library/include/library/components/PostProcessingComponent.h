@@ -12,15 +12,15 @@ namespace library
 		RTTI_CLASS(PostProcessingComponent, MaterialComponent)
 
 	public:
-		virtual ~PostProcessingComponent();
+		~PostProcessingComponent();
 
 		ID3D11ShaderResourceView* GetSceneTexture() const { return m_sceneTexture; }
 		void SetSceneTexture(ID3D11ShaderResourceView& sceneTexture);
 
 	protected:
-		using MaterialComponent::MaterialComponent;
+		explicit PostProcessingComponent() = default;
 		
-		void InitializeQuad(const std::string& techniqueName, const std::string& passName = "p0");
+		void InitializeQuad(const Application& app, const std::string& techniqueName, const std::string& passName = "p0");
 
 		std::unique_ptr<FullScreenQuadComponent> m_fullScreenQuad;
 

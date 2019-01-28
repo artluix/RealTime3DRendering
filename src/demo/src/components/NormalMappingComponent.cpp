@@ -46,11 +46,8 @@ namespace demo
 		const auto k_normalMapTexturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/Blocks_NORM.dds"));
 	}
 
-	NormalMappingComponent::NormalMappingComponent(const Application& app)
-		: SceneComponent()
-		, MaterialComponentGlue(app)
-		, InputReceivableComponent()
-		, m_specularPower(25.f)
+	NormalMappingComponent::NormalMappingComponent()
+		: m_specularPower(25.f)
 		, m_specularColor(1.f, 1.f, 1.f, 1.f)
 		, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 	{
@@ -59,15 +56,11 @@ namespace demo
 
 	NormalMappingComponent::~NormalMappingComponent() = default;
 
-	void NormalMappingComponent::Initialize()
+	void NormalMappingComponent::Initialize(const Application& app)
 	{
 		assert(!!GetCamera());
 
-		m_effect = Effect::Create(m_app, k_effectPath);
-		m_effect->LoadCompiled();
-
-		m_material = std::make_unique<NormalMappingMaterial>(*m_effect);
-		m_material->Initialize();
+		InitializeMaterial(app, k_effectPath);
 
 		// build vertices manually
 		{
@@ -89,15 +82,15 @@ namespace demo
 
 			m_verticesCount = vertices.size();
 			m_vertexBuffer = m_material->Material::CreateVertexBuffer(
-				m_app.GetDevice(),
+				app.GetDevice(),
 				vertices.data(),
 				m_verticesCount * sizeof(Vertex)
 			);
 		}
 
-		MaterialComponent::Initialize();
+		MaterialComponent::Initialize(app);
 
-		m_app.LoadTexture(k_normalMapTexturePath, m_normalMapShaderResourceView);
+		app.LoadTexture(k_normalMapTexturePath, m_normalMapShaderResourceView);
 
 		m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
@@ -105,7 +98,7 @@ namespace demo
 		m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
 		m_proxyModel->SetRotation(GetRotation() + k_proxyModelRotationOffset);
 		m_proxyModel->SetCamera(*GetCamera());
-		m_proxyModel->Initialize();
+		m_proxyModel->Initialize(app);
 
 		m_text = std::make_unique<TextComponent>(m_app);
 		m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -121,7 +114,7 @@ namespace demo
 				return woss.str();
 			}
 		);
-		m_text->Initialize();
+		m_text->Initialize(app);
 	}
 
 	void NormalMappingComponent::Update(const Time& time)

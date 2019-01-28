@@ -64,7 +64,7 @@ namespace library
 
 		for (const auto& component : m_components)
 		{
-			component->Initialize();
+			component->Initialize(*this);
 		}
 	}
 

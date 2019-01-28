@@ -11,7 +11,7 @@ namespace library
 		RTTI_CLASS(KeyboardComponent, InputComponent)
 
 	public:
-		explicit KeyboardComponent(const Application& app, const ComPtr<IDirectInput8>& directInput);
+		explicit KeyboardComponent(const ComPtr<IDirectInput8>& directInput);
 
 		void Update(const Time& time) override;
 

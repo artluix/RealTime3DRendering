@@ -1,7 +1,7 @@
 #pragma once
 #include <library/materials/ColorFilterMaterial.h>
 
-#include <library/components/PostProcessingComponentGlue.hpp>
+#include <library/components/ConcretePostProcessingComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 #include <library/math/Matrix.h>
@@ -36,16 +36,16 @@ namespace demo
 	//-------------------------------------------------------------------------
 
 	class ColorFilterComponent
-		: public library::PostProcessingComponentGlue<library::ColorFilterMaterial>
+		: public library::ConcretePostProcessingComponent<library::ColorFilterMaterial>
 		, public library::InputReceivableComponent
 	{
 		RTTI_CLASS(ColorFilterComponent, library::PostProcessingComponent, library::InputReceivableComponent)
 
 	public:
-		explicit ColorFilterComponent(const library::Application& app);
+		explicit ColorFilterComponent();
 		~ColorFilterComponent();
 
-		void Initialize() override;
+		void Initialize(const library::Application& app) override;
 		void Update(const library::Time& time) override;
 		void Draw(const library::Time& time) override;
 

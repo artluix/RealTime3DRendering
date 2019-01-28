@@ -2,7 +2,7 @@
 #include <library/materials/DiffuseLightingMaterial.h>
 
 #include <library/components/SceneComponent.h>
-#include <library/components/MaterialComponentGlue.hpp>
+#include <library/components/ConcreteMaterialComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 #include <library/Color.h>
 
@@ -19,16 +19,16 @@ namespace demo
 {
 	class DiffuseLightingComponent
 		: public library::SceneComponent
-		, public library::MaterialComponentGlue<library::DiffuseLightingMaterial>
+		, public library::ConcreteMaterialComponent<library::DiffuseLightingMaterial>
 		, public library::InputReceivableComponent
 	{
 		RTTI_CLASS(DiffuseLightingComponent, library::SceneComponent, library::MaterialComponent, library::InputReceivableComponent)
 
 	public:
-		explicit DiffuseLightingComponent(const library::Application& app);
+		explicit DiffuseLightingComponent();
 		~DiffuseLightingComponent();
 
-		void Initialize() override;
+		void Initialize(const library::Application& app) override;
 		void Update(const library::Time& time) override;
 		using library::DrawableComponent::Draw;
 

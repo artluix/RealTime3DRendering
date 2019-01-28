@@ -18,7 +18,7 @@ namespace library
 		RTTI_CLASS(MouseComponent, InputComponent)
 
 	public:
-		explicit MouseComponent(const Application& app, ComPtr<IDirectInput8>& directInput);
+		explicit MouseComponent(ComPtr<IDirectInput8>& directInput);
 
 		void Update(const Time& time) override;
 

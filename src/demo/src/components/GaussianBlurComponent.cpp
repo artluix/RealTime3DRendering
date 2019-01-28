@@ -40,9 +40,8 @@ namespace demo
 
 	//-------------------------------------------------------------------------
 
-	GaussianBlurComponent::GaussianBlurComponent(const Application& app)
-		: PostProcessingComponentGlue(app)
-		, m_blurAmount(k_defaultBlurAmount)
+	GaussianBlurComponent::GaussianBlurComponent()
+		: m_blurAmount(k_defaultBlurAmount)
 	{
 	}
 
@@ -50,10 +49,10 @@ namespace demo
 
 	//-------------------------------------------------------------------------
 
-	void GaussianBlurComponent::Initialize()
+	void GaussianBlurComponent::Initialize(const Application& app)
 	{
-		InitializeMaterial(m_app, k_effectPath);
-		InitializeQuad("blur");
+		InitializeMaterial(app, k_effectPath);
+		InitializeQuad(app, "blur");
 
 		m_text = std::make_unique<TextComponent>(m_app);
 		m_text->SetPosition(math::Vector2(0.f, 45.f));
@@ -66,10 +65,10 @@ namespace demo
 				return woss.str();
 			}
 		);
-		m_text->Initialize();
+		m_text->Initialize(app);
 
-		m_horizontalBlurTarget = std::make_unique<FullScreenRenderTarget>(m_app);
-		m_verticalBlurTarget = std::make_unique<FullScreenRenderTarget>(m_app);
+		m_horizontalBlurTarget = std::make_unique<FullScreenRenderTarget>();
+		m_verticalBlurTarget = std::make_unique<FullScreenRenderTarget>();
 
 		InitializeSampleOffsets();
 		InitializeSampleWeights();
@@ -112,8 +111,8 @@ namespace demo
 
 	void GaussianBlurComponent::InitializeSampleOffsets()
 	{
-		const float horizontalPixelSize = 1.f / m_app.GetScreenWidth();
-		const float verticalPixelSize = 1.f / m_app.GetScreenHeight();
+		const float horizontalPixelSize = 1.f / m_app->GetScreenWidth();
+		const float verticalPixelSize = 1.f / m_app->GetScreenHeight();
 
 		auto& offsets = m_sample.offsets;
 
@@ -166,7 +165,7 @@ namespace demo
 
 	void GaussianBlurComponent::Draw(const Time& time)
 	{
-		auto deviceContext = m_app.GetDeviceContext();
+		auto deviceContext = m_app->GetDeviceContext();
 
 		// Horizontal Blur
 		m_horizontalBlurTarget->Begin();

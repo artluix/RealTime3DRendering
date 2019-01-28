@@ -1,19 +1,16 @@
 #pragma once
-#include "library/RTTI.hpp"
-#include "library/NonCopyable.hpp"
+#include "library/components/Component.h"
 
 namespace library
 {
 	class KeyboardComponent;
 	class MouseComponent;
 
-	class InputReceivableComponent : public NonCopyable<InputReceivableComponent>
+	class InputReceivableComponent : public virtual Component
 	{
 		RTTI_CLASS_BASE(InputReceivableComponent)
 
 	public:
-		virtual ~InputReceivableComponent() = default;
-
 		const KeyboardComponent* GetKeyboard() const { return m_keyboard; }
 		void SetKeyboard(const KeyboardComponent& keyboard);
 

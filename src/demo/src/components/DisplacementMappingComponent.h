@@ -2,7 +2,7 @@
 #include <library/materials/DisplacementMappingMaterial.h>
 
 #include <library/components/SceneComponent.h>
-#include <library/components/MaterialComponentGlue.hpp>
+#include <library/components/ConcreteMaterialComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 #include <library/DirectXForwardDeclarations.h>
@@ -21,16 +21,16 @@ namespace demo
 {
 	class DisplacementMappingComponent
 		: public library::SceneComponent
-		, public library::MaterialComponentGlue<library::DisplacementMappingMaterial>
+		, public library::ConcreteMaterialComponent<library::DisplacementMappingMaterial>
 		, public library::InputReceivableComponent
 	{
 		RTTI_CLASS(DisplacementMappingComponent, library::SceneComponent, library::MaterialComponent, library::InputReceivableComponent)
 
 	public:
-		explicit DisplacementMappingComponent(const library::Application& app);
+		explicit DisplacementMappingComponent();
 		~DisplacementMappingComponent();
 
-		void Initialize() override;
+		void Initialize(const library::Application& app) override;
 		void Update(const library::Time& time) override;
 		using library::DrawableComponent::Draw;
 

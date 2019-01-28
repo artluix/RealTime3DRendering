@@ -10,6 +10,7 @@ if(APPLICATION)
 
                 include/library/components/CameraComponent.h
                 include/library/components/ConcreteMaterialComponent.hpp
+                include/library/components/ConcretePostProcessingComponent.hpp
                 include/library/components/DirectionalLightComponent.h
                 include/library/components/DrawableComponent.h
                 include/library/components/FirstPersonCameraComponent.h
@@ -22,11 +23,9 @@ if(APPLICATION)
                 include/library/components/LightComponent.h
                 include/library/components/IMaterialComponent.h
                 include/library/components/MaterialComponent.h
-                include/library/components/MaterialComponentGlue.hpp
                 include/library/components/MouseComponent.h
                 include/library/components/PointLightComponent.h
                 include/library/components/PostProcessingComponent.h
-                include/library/components/PostProcessingComponentGlue.hpp
                 include/library/components/ProxyModelComponent.h
                 include/library/components/SceneComponent.h
                 include/library/components/SkyboxComponent.h

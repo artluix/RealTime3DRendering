@@ -29,24 +29,17 @@ namespace library
 		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
 	}
 
-	SkyboxComponent::SkyboxComponent(const Application& app, const Path& cubeMapPath, const float scale)
-		: SceneComponent()
-		, MaterialComponentGlue(app)
+	SkyboxComponent::SkyboxComponent(const Path& cubeMapPath, const float scale)
 	{
 		SetModelPath(k_modelPath);
 		SetTexturePath(cubeMapPath);
 		SetScaling(math::Vector3(scale));
 	}
 
-	void SkyboxComponent::Initialize()
+	void SkyboxComponent::Initialize(const Application& app)
 	{
-		m_effect = Effect::Create(m_app, k_effectPath);
-		m_effect->LoadCompiled();
-
-		m_material = std::make_unique<SkyboxMaterial>(*m_effect);
-		m_material->Initialize();
-
-		MaterialComponent::Initialize();
+		InitializeMaterial(app, k_effectPath);
+		MaterialComponent::Initialize(app);
 	}
 
 	void SkyboxComponent::Update(const Time& time)

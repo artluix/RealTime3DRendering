@@ -31,30 +31,25 @@ namespace library
 		);
 	}
 
-	GridComponent::GridComponent(const Application& app)
-		: SceneComponent()
-		, MaterialComponentGlue(app)
-		, InputReceivableComponent()
-		, m_size(k_defaultSize)
+	GridComponent::GridComponent()
+		: m_size(k_defaultSize)
 		, m_scale(k_defaultScale)
 		, m_color(k_defaultColor)
 	{
 	}
 
 	GridComponent::GridComponent(
-		const Application& app,
 		const unsigned size,
 		const unsigned scale,
 		const Color& color
 	)
-		: SceneComponent()
-		, MaterialComponentGlue(app)
-		, InputReceivableComponent()
-		, m_size(size)
+		: m_size(size)
 		, m_scale(scale)
 		, m_color(color)
 	{
 	}
+
+	GridComponent::~GridComponent() = default;
 
 	//-------------------------------------------------------------------------
 
@@ -87,15 +82,11 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void GridComponent::Initialize()
+	void GridComponent::Initialize(const Application& app)
 	{
-		m_effect = Effect::Create(m_app, k_effectPath);
-		m_effect->LoadCompiled();
+		InitializeMaterial(app, k_effectPath);
 
-		m_material = std::make_unique<BasicMaterial>(*m_effect);
-		m_material->Initialize();
-
-		MaterialComponent::Initialize();
+		MaterialComponent::Initialize(app);
 
 		Build();
 	}
@@ -106,7 +97,7 @@ namespace library
 
 	void GridComponent::Draw(const Time& time)
 	{
-		auto deviceContext = m_app.GetDeviceContext();
+		auto deviceContext = m_app->GetDeviceContext();
 
 		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
 		deviceContext->IASetInputLayout(m_inputLayout.Get());
@@ -123,7 +114,7 @@ namespace library
 
 		auto& currentTechnique = m_material->GetCurrentTechnique();
 		auto& pass = currentTechnique.GetPass(0);
-		pass.Apply(0, m_app.GetDeviceContext());
+		pass.Apply(0, deviceContext);
 
 		deviceContext->Draw((m_size + 1) * 4, 0);
 	}
@@ -166,7 +157,7 @@ namespace library
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = vertices.data();
 
-		auto hr = m_app.GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_vertexBuffer.GetAddressOf());
+		auto hr = m_app->GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_vertexBuffer.GetAddressOf());
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateBuffer() failed.", hr);

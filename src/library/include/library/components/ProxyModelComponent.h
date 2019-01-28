@@ -2,7 +2,7 @@
 #include "library/materials/BasicMaterial.h"
 
 #include "library/components/SceneComponent.h"
-#include "library/components/MaterialComponentGlue.hpp"
+#include "library/components/ConcreteMaterialComponent.hpp"
 
 #include "library/DirectXForwardDeclarations.h"
 
@@ -12,12 +12,12 @@ namespace library
 
 	class ProxyModelComponent
 		: public SceneComponent
-		, public MaterialComponentGlue<BasicMaterial>
+		, public ConcreteMaterialComponent<BasicMaterial>
 	{
 		RTTI_CLASS(ProxyModelComponent, SceneComponent)
 
 	public:
-		explicit ProxyModelComponent(const Application& app, const Path& modelPath, const float scale);
+		explicit ProxyModelComponent(const Path& modelPath, const float scale);
 		~ProxyModelComponent();
 
 		bool IsWireframeVisible() const { return m_isWireframeVisible; }
@@ -27,7 +27,7 @@ namespace library
 		const math::Vector3& GetUp() const { return m_up; }
 		const math::Vector3& GetRight() const { return m_right; }
 
-		void Initialize() override;
+		void Initialize(const Application& app) override;
 		using DrawableComponent::Draw;
 
 	protected:

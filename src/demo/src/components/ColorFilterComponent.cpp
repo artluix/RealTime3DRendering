@@ -66,9 +66,8 @@ namespace demo
 
 	//-------------------------------------------------------------------------
 
-	ColorFilterComponent::ColorFilterComponent(const Application& app)
-		: PostProcessingComponentGlue(app)
-		, m_colorFilterType(ColorFilter::First)
+	ColorFilterComponent::ColorFilterComponent()
+		: m_colorFilterType(ColorFilter::First)
 		, m_genericColorFilter(math::Matrix4::Identity)
 	{
 	}
@@ -77,10 +76,10 @@ namespace demo
 
 	//-------------------------------------------------------------------------
 
-	void ColorFilterComponent::Initialize()
+	void ColorFilterComponent::Initialize(const Application& app)
 	{
-		InitializeMaterial(m_app, k_effectPath);
-		InitializeQuad("grayscale_filter");
+		InitializeMaterial(app, k_effectPath);
+		InitializeQuad(app, "grayscale_filter");
 
 		m_fullScreenQuad->SetMaterialUpdateFunction(
 			[this]()
@@ -104,7 +103,7 @@ namespace demo
 				return utils::ToWideString(oss.str());
 			}
 		);
-		m_text->Initialize();
+		m_text->Initialize(app);
 	}
 
 	void ColorFilterComponent::Update(const Time& time)

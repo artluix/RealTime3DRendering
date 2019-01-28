@@ -48,11 +48,10 @@ namespace demo
 		const auto k_texturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/EarthComposite.dds"));
 	}
 
-	FogComponent::FogComponent(const Application& app)
-		: SceneComponent()
-		, MaterialComponentGlue(app)
-		, InputReceivableComponent()
-		, m_ambientColor(1.f, 1.f, 1.f, 0.f)
+	//-------------------------------------------------------------------------
+
+	FogComponent::FogComponent()
+		: m_ambientColor(1.f, 1.f, 1.f, 0.f)
 		, m_fogStart(15.0f)
 		, m_fogRange(20.0f)
 		, m_fogEnabled(true)
@@ -63,25 +62,22 @@ namespace demo
 
 	FogComponent::~FogComponent() = default;
 
-	void FogComponent::Initialize()
+	//-------------------------------------------------------------------------
+
+	void FogComponent::Initialize(const Application& app)
 	{
 		assert(!!GetCamera());
 
-		m_effect = Effect::Create(m_app, k_effectPath);
-		m_effect->LoadCompiled();
-
-		m_material = std::make_unique<FogMaterial>(*m_effect);
-		m_material->Initialize();
-
-		MaterialComponent::Initialize();
+		InitializeMaterial(app, k_effectPath);
+		MaterialComponent::Initialize(app);
 
 		m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
-		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.2f);
+		m_proxyModel = std::make_unique<ProxyModelComponent>(k_proxyModelPath, 0.2f);
 		m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
 		m_proxyModel->SetRotation(GetRotation() + k_proxyModelRotationOffset);
 		m_proxyModel->SetCamera(*GetCamera());
-		m_proxyModel->Initialize();
+		m_proxyModel->Initialize(app);
 
 		m_text = std::make_unique<TextComponent>(m_app);
 		m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -99,7 +95,7 @@ namespace demo
 				return woss.str();
 			}
 		);
-		m_text->Initialize();
+		m_text->Initialize(app);
 
 		SetActiveTechnique();
 	}

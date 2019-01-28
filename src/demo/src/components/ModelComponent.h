@@ -21,9 +21,9 @@ namespace demo
 		RTTI_CLASS(ModelComponent, library::SceneComponent, library::DrawableComponent, library::InputReceivableComponent)
 
 	public:
-		explicit ModelComponent(const library::Application& app);
+		explicit ModelComponent();
 
-		void Initialize() override;
+		void Initialize(const library::Application& app) override;
 		void Update(const library::Time& time) override;
 		void Draw(const library::Time& time) override;
 

@@ -13,8 +13,6 @@ namespace library
 		UpdateWorldMatrix();
 	}
 
-	SceneComponent::~SceneComponent() = default;
-	
 	//-------------------------------------------------------------------------
 
 	void SceneComponent::SetPosition(const math::Vector3& position)

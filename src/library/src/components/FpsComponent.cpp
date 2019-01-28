@@ -8,13 +8,18 @@ namespace library
 		constexpr auto k_fpsMeasureInterval = std::chrono::seconds(1);
 	}
 
-	FpsComponent::FpsComponent(const Application& app)
-		: TextComponent(app)
-		, m_frameCount(0)
+	//-------------------------------------------------------------------------
+
+	FpsComponent::FpsComponent()
+		: m_frameCount(0)
 		, m_frameRate(0)
 		, m_timeAccumulator(Duration::zero())
 	{
 	}
+
+	FpsComponent::~FpsComponent() = default;
+
+	//-------------------------------------------------------------------------
 
 	void FpsComponent::Update(const Time& time)
 	{

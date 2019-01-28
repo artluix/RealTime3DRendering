@@ -2,7 +2,7 @@
 #include "library/materials/SkyboxMaterial.h"
 
 #include "library/components/SceneComponent.h"
-#include "library/components/MaterialComponentGlue.hpp"
+#include "library/components/ConcreteMaterialComponent.hpp"
 
 namespace library
 {
@@ -10,15 +10,15 @@ namespace library
 
 	class SkyboxComponent
 		: public SceneComponent
-		, public MaterialComponentGlue<SkyboxMaterial>
+		, public ConcreteMaterialComponent<SkyboxMaterial>
 	{
 		RTTI_CLASS(SkyboxComponent, SceneComponent, MaterialComponent)
 
 	public:
-		explicit SkyboxComponent(const Application& app, const Path& cubeMapPath, const float scale);
+		explicit SkyboxComponent(const Path& cubeMapPath, const float scale);
 		~SkyboxComponent() = default;
 
-		void Initialize() override;
+		void Initialize(const Application& app) override;
 		void Update(const Time& time) override;
 		using DrawableComponent::Draw;
 

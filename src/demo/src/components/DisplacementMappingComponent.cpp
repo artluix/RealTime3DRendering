@@ -47,11 +47,8 @@ namespace demo
 		const auto k_displacementMapTexturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/Blocks_DISP.dds"));
 	}
 
-	DisplacementMappingComponent::DisplacementMappingComponent(const Application& app)
-		: SceneComponent()
-		, MaterialComponentGlue(app)
-		, InputReceivableComponent()
-		, m_specularPower(25.f)
+	DisplacementMappingComponent::DisplacementMappingComponent()
+		: m_specularPower(25.f)
 		, m_specularColor(1.f, 1.f, 1.f, 1.f)
 		, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 		, m_displacementScale(0.f)
@@ -62,19 +59,14 @@ namespace demo
 
 	DisplacementMappingComponent::~DisplacementMappingComponent() = default;
 
-	void DisplacementMappingComponent::Initialize()
+	void DisplacementMappingComponent::Initialize(const Application& app)
 	{
 		assert(!!GetCamera());
 
-		m_effect = Effect::Create(m_app, k_effectPath);
-		m_effect->LoadCompiled();
+		InitializeMaterial(app, k_effectPath);
+		MaterialComponent::Initialize(app);
 
-		m_material = std::make_unique<DisplacementMappingMaterial>(*m_effect);
-		m_material->Initialize();
-
-		MaterialComponent::Initialize();
-
-		m_app.LoadTexture(k_displacementMapTexturePath, m_displacementMapShaderResourceView);
+		app.LoadTexture(k_displacementMapTexturePath, m_displacementMapShaderResourceView);
 
 		m_pointLight = std::make_unique<PointLightComponent>();
 		m_pointLight->SetRadius(50.f);
@@ -84,7 +76,7 @@ namespace demo
 		m_proxyModel->SetPosition(m_pointLight->GetPosition());
 		m_proxyModel->Rotate(math::Vector3(0.f, math::Pi_Div_2, 0.f));
 		m_proxyModel->SetCamera(*GetCamera());
-		m_proxyModel->Initialize();
+		m_proxyModel->Initialize(app);
 
 		m_text = std::make_unique<TextComponent>(m_app);
 		m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -100,7 +92,7 @@ namespace demo
 				return woss.str();
 			}
 		);
-		m_text->Initialize();
+		m_text->Initialize(app);
 
 		SetRotation(math::Vector3(math::Pi_Div_2, 0.f, 0.f));
 	}

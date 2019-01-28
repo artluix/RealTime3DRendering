@@ -14,7 +14,7 @@ namespace library
 	public:
 		using MaterialUpdateFunction = std::function<void()>;
 
-		explicit FullScreenQuadComponent(const Application& app);
+		explicit FullScreenQuadComponent() = default;
 		~FullScreenQuadComponent();
 
 		void SetMaterial(
@@ -26,7 +26,7 @@ namespace library
 		void SetActiveTechnique(const std::string& techniqueName, const std::string& passName = "p0");
 		void SetMaterialUpdateFunction(const MaterialUpdateFunction& func);
 
-		void Initialize() override;
+		void Initialize(const Application& app) override;
 		using DrawableComponent::Draw;
 
 		const Material& GetMaterial() const override { return *m_material; }

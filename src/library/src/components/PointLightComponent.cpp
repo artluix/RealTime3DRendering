@@ -8,12 +8,17 @@ namespace library
 		constexpr float k_defaultRadius = 10.f;
 	}
 
+	//-------------------------------------------------------------------------
+
 	PointLightComponent::PointLightComponent()
-		: LightComponent()
-		, m_position(math::Vector3::Zero)
+		: m_position(math::Vector3::Zero)
 		, m_radius(k_defaultRadius)
 	{
 	}
+
+	PointLightComponent::~PointLightComponent() = default;
+
+	//-------------------------------------------------------------------------
 
 	void PointLightComponent::SetPosition(const math::Vector3& position)
 	{
