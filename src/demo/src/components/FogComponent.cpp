@@ -79,7 +79,7 @@ namespace demo
 		m_proxyModel->SetCamera(*GetCamera());
 		m_proxyModel->Initialize(app);
 
-		m_text = std::make_unique<TextComponent>(m_app);
+		m_text = std::make_unique<TextComponent>();
 		m_text->SetPosition(math::Vector2(0.f, 100.f));
 		m_text->SetTextGeneratorFunction(
 			[this]() -> std::wstring

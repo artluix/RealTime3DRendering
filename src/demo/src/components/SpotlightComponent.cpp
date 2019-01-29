@@ -48,11 +48,8 @@ namespace demo
 		const auto k_texturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/Checkerboard.dds"));
 	}
 
-	SpotlightComponent::SpotlightComponent(const Application& app)
-		: SceneComponent()
-		, MaterialComponentGlue(app)
-		, InputReceivableComponent()
-		, m_specularPower(25.f)
+	SpotlightComponent::SpotlightComponent()
+		: m_specularPower(25.f)
 		, m_specularColor(1.f, 1.f, 1.f, 1.f)
 		, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 	{
@@ -62,29 +59,24 @@ namespace demo
 
 	SpotlightComponent::~SpotlightComponent() = default;
 
-	void SpotlightComponent::Initialize()
+	void SpotlightComponent::Initialize(const Application& app)
 	{
 		assert(!!GetCamera());
 
-		m_effect = Effect::Create(m_app, k_effectPath);
-		m_effect->LoadCompiled();
-
-		m_material = std::make_unique<SpotlightMaterial>(*m_effect);
-		m_material->Initialize();
-
-		MaterialComponent::Initialize();
+		InitializeMaterial(app, k_effectPath);
+		MaterialComponent::Initialize(app);
 
 		m_spotlight = std::make_unique<library::SpotlightComponent>();
 		m_spotlight->SetRadius(10.f);
 		m_spotlight->SetPosition(math::Vector3(0.0f, 0.f, 5.f));
 
-		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.3f);
+		m_proxyModel = std::make_unique<ProxyModelComponent>(k_proxyModelPath, 0.3f);
 		m_proxyModel->SetCamera(*GetCamera());
 		m_proxyModel->SetRotation(k_proxyModelRotationOffset);
 		m_proxyModel->SetPosition(m_spotlight->GetPosition());
-		m_proxyModel->Initialize();
+		m_proxyModel->Initialize(app);
 
-		m_text = std::make_unique<TextComponent>(m_app);
+		m_text = std::make_unique<TextComponent>();
 		m_text->SetPosition(math::Vector2(0.f, 100.f));
 		m_text->SetTextGeneratorFunction(
 			[this]() -> std::wstring
@@ -103,7 +95,7 @@ namespace demo
 				return woss.str();
 			}
 		);
-		m_text->Initialize();
+		m_text->Initialize(app);
 
 		SetRotation(math::Vector3(math::Pi_Div_2, 0.f, 0.f));
 		SetScaling(math::Vector3(5.f));

@@ -23,9 +23,9 @@ namespace demo
 		RTTI_CLASS(TextureModelComponent, library::SceneComponent, library::DrawableComponent, library::InputReceivableComponent)
 
 	public:
-		explicit TextureModelComponent(const library::Application& app);
+		explicit TextureModelComponent();
 
-		void Initialize() override;
+		void Initialize(const library::Application& app) override;
 		void Update(const library::Time& time) override;
 		void Draw(const library::Time& time) override;
 

@@ -11,6 +11,9 @@ namespace library
 		: public PostProcessingComponent
 		, public ConcreteMaterialComponent<MaterialType>
 	{
+	public:
+		using ConcreteMaterialComponent<MaterialType>::GetMaterial;
+
 	protected:
 		explicit ConcretePostProcessingComponent() = default;
 	};

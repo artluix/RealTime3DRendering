@@ -32,24 +32,16 @@ namespace demo
 		const auto k_texturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/EarthComposite.dds"));
 	}
 
-	TextureMappingComponent::TextureMappingComponent(const Application& app)
-		: SceneComponent()
-		, MaterialComponentGlue(app)
-		, InputReceivableComponent()
+	TextureMappingComponent::TextureMappingComponent()
 	{
 		SetModelPath(k_modelPath);
 		SetTexturePath(k_texturePath);
 	}
 
-	void TextureMappingComponent::Initialize()
+	void TextureMappingComponent::Initialize(const Application& app)
 	{
-		m_effect = Effect::Create(m_app, k_effectPath);
-		m_effect->LoadCompiled();
-
-		m_material = std::make_unique<TextureMappingMaterial>(*m_effect);
-		m_material->Initialize();
-
-		MaterialComponent::Initialize();
+		InitializeMaterial(app, k_effectPath);
+		MaterialComponent::Initialize(app);
 	}
 
 	void TextureMappingComponent::Update(const Time& time)

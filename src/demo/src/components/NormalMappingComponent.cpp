@@ -60,8 +60,6 @@ namespace demo
 	{
 		assert(!!GetCamera());
 
-		InitializeMaterial(app, k_effectPath);
-
 		// build vertices manually
 		{
 			using Vertex = NormalMappingMaterial::Vertex;
@@ -88,19 +86,20 @@ namespace demo
 			);
 		}
 
+		InitializeMaterial(app, k_effectPath);
 		MaterialComponent::Initialize(app);
 
 		app.LoadTexture(k_normalMapTexturePath, m_normalMapShaderResourceView);
 
 		m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
-		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.2f);
+		m_proxyModel = std::make_unique<ProxyModelComponent>(k_proxyModelPath, 0.2f);
 		m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
 		m_proxyModel->SetRotation(GetRotation() + k_proxyModelRotationOffset);
 		m_proxyModel->SetCamera(*GetCamera());
 		m_proxyModel->Initialize(app);
 
-		m_text = std::make_unique<TextComponent>(m_app);
+		m_text = std::make_unique<TextComponent>();
 		m_text->SetPosition(math::Vector2(0.f, 100.f));
 		m_text->SetTextGeneratorFunction(
 			[this]() -> std::wstring

@@ -72,13 +72,13 @@ namespace demo
 		m_pointLight->SetRadius(50.f);
 		m_pointLight->SetPosition(math::Vector3(0.f, 0.f, 10.f));
 
-		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.2f);
+		m_proxyModel = std::make_unique<ProxyModelComponent>(k_proxyModelPath, 0.2f);
 		m_proxyModel->SetPosition(m_pointLight->GetPosition());
 		m_proxyModel->Rotate(math::Vector3(0.f, math::Pi_Div_2, 0.f));
 		m_proxyModel->SetCamera(*GetCamera());
 		m_proxyModel->Initialize(app);
 
-		m_text = std::make_unique<TextComponent>(m_app);
+		m_text = std::make_unique<TextComponent>();
 		m_text->SetPosition(math::Vector2(0.f, 100.f));
 		m_text->SetTextGeneratorFunction(
 			[this]() -> std::wstring

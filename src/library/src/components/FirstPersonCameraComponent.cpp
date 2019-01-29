@@ -17,6 +17,8 @@ namespace library
 		constexpr float k_defaultMovementRate = 0.1f;
 	}
 
+	//-------------------------------------------------------------------------
+
 	FirstPersonCameraComponent::FirstPersonCameraComponent()
 		: m_rotationStartPoint(0.f, 0.f)
 		, m_mouseSensitivity(k_defaultMouseSensitivity)
@@ -38,6 +40,10 @@ namespace library
 		, m_rotationStartPoint(0.f, 0.f)
 	{
 	}
+
+	FirstPersonCameraComponent::~FirstPersonCameraComponent() = default;
+
+	//-------------------------------------------------------------------------
 
 	void FirstPersonCameraComponent::Update(const Time& time)
 	{

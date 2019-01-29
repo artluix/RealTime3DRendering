@@ -53,7 +53,7 @@ namespace demo
 
 		app.LoadTexture(k_environmentMapTexturePath, m_environmentMapShaderResourceView);
 
-		m_text = std::make_unique<TextComponent>(m_app);
+		m_text = std::make_unique<TextComponent>();
 		m_text->SetPosition(math::Vector2(0.f, 100.f));
 		m_text->SetTextGeneratorFunction(
 			[this]() -> std::wstring

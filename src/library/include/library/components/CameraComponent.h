@@ -4,7 +4,7 @@
 
 namespace library
 {
-	class CameraComponent : public Component
+	class CameraComponent : public virtual Component
 	{
 		RTTI_CLASS(CameraComponent, Component)
 

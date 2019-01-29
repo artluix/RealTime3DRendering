@@ -19,7 +19,7 @@ namespace library
 			const float farPlaneDistance
 		);
 
-		~FirstPersonCameraComponent() = default;
+		~FirstPersonCameraComponent();
 
 		float GetMouseSensitivity() const { return m_mouseSensitivity; }
 		void SetMouseSensitivity(const float sensitivity) { m_mouseSensitivity = sensitivity; }

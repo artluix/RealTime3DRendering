@@ -43,18 +43,15 @@ namespace demo
 
 	//-------------------------------------------------------------------------
 
-	TextureModelComponent::TextureModelComponent(const Application& app)
-		: SceneComponent()
-		, DrawableComponent(app)
-		, InputReceivableComponent()
-		, m_indicesCount(0)
+	TextureModelComponent::TextureModelComponent()
+		: m_indicesCount(0)
 		, m_wheel(0)
 	{
 	}
 
-	void TextureModelComponent::Initialize()
+	void TextureModelComponent::Initialize(const Application& app)
 	{
-		m_app.LoadTexture(k_texturePath, m_textureShaderResourceView);
+		app.LoadTexture(k_texturePath, m_textureShaderResourceView);
 
 		// shader
 		{
@@ -69,7 +66,7 @@ namespace demo
 				//shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
 				effectData.data(), effectData.size(),
 				0,
-				m_app.GetDevice(),
+				app.GetDevice(),
 				m_effect.GetAddressOf()
 			);
 			if (FAILED(hr))
@@ -133,7 +130,7 @@ namespace demo
 				{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			};
 
-			auto hr = m_app.GetDevice()->CreateInputLayout(
+			auto hr = app.GetDevice()->CreateInputLayout(
 				inputElementDescriptions.data(), inputElementDescriptions.size(),
 				passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
 				m_inputLayout.GetAddressOf()
@@ -145,15 +142,15 @@ namespace demo
 		}
 
 		// Load the model
-		Model model(m_app, k_modelPath, true);
+		Model model(app, k_modelPath, true);
 
 		// Create the vertex and index buffers
 		const auto& mesh = model.GetMesh(0);
-		CreateVertexBuffer(m_app.GetDevice(), mesh);
+		CreateVertexBuffer(app.GetDevice(), mesh);
 		m_indexBuffer = mesh.CreateIndexBuffer();
 		m_indicesCount = mesh.GetIndicesCount();
 
-		DrawableComponent::Initialize();
+		DrawableComponent::Initialize(app);
 	}
 
 	void TextureModelComponent::Update(const Time& time)
@@ -216,7 +213,7 @@ namespace demo
 
 	void TextureModelComponent::Draw(const Time& time)
 	{
-		auto deviceContext = m_app.GetDeviceContext();
+		auto deviceContext = m_app->GetDeviceContext();
 
 		auto wvp = GetWorldMatrix();
 		if (auto camera = GetCamera())

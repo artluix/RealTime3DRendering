@@ -12,7 +12,7 @@ namespace library
 
 	void Component::Initialize(const Application& app)
 	{
-		assert(!!m_app);
+		assert(!m_app);
 		m_app = &app;
 	}
 } // namespace library

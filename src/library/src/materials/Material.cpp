@@ -106,7 +106,9 @@ namespace library
 		return vertexBuffers;
 	}
 
-	ComPtr<ID3D11Buffer> Material::CreateVertexBuffer(ID3D11Device* const device, const void* data, const std::size_t size) const
+	//-------------------------------------------------------------------------
+
+	ComPtr<ID3D11Buffer> Material::CreateVertexBuffer(ID3D11Device* const device, const void* data, const std::size_t size)
 	{
 		ComPtr<ID3D11Buffer> vertexBuffer;
 

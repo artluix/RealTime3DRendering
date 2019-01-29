@@ -45,11 +45,8 @@ namespace demo
 		const auto k_transparencyMapTexturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/AlphaMask_32bpp.dds"));
 	}
 
-	TransparencyMappingComponent::TransparencyMappingComponent(const Application& app)
-		: SceneComponent()
-		, MaterialComponentGlue(app)
-		, InputReceivableComponent()
-		, m_specularPower(25.f)
+	TransparencyMappingComponent::TransparencyMappingComponent()
+		: m_specularPower(25.f)
 		, m_specularColor(1.f, 1.f, 1.f, 1.f)
 		, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 	{
@@ -58,15 +55,9 @@ namespace demo
 
 	TransparencyMappingComponent::~TransparencyMappingComponent() = default;
 
-	void TransparencyMappingComponent::Initialize()
+	void TransparencyMappingComponent::Initialize(const Application& app)
 	{
 		assert(!!GetCamera());
-
-		m_effect = Effect::Create(m_app, k_effectPath);
-		m_effect->LoadCompiled();
-
-		m_material = std::make_unique<TransparencyMappingMaterial>(*m_effect);
-		m_material->Initialize();
 
 		// build vertices manually
 		{
@@ -86,27 +77,29 @@ namespace demo
 			};
 
 			m_verticesCount = vertices.size();
-			m_vertexBuffer = m_material->Material::CreateVertexBuffer(
-				m_app.GetDevice(),
+			m_vertexBuffer = library::Material::CreateVertexBuffer(
+				app.GetDevice(),
 				vertices.data(),
 				m_verticesCount * sizeof(Vertex)
 			);
 		}
 
-		MaterialComponent::Initialize();
-		m_app.LoadTexture(k_transparencyMapTexturePath, m_transparencyMapShaderResourceView);
+		InitializeMaterial(app, k_effectPath);
+		MaterialComponent::Initialize(app);
+
+		app.LoadTexture(k_transparencyMapTexturePath, m_transparencyMapShaderResourceView);
 
 		m_pointLight = std::make_unique<PointLightComponent>();
 		m_pointLight->SetRadius(50.f);
 		m_pointLight->SetPosition(math::Vector3(0.f, 0.f, 10.f));
 
-		m_proxyModel = std::make_unique<ProxyModelComponent>(m_app, k_proxyModelPath, 0.2f);
+		m_proxyModel = std::make_unique<ProxyModelComponent>(k_proxyModelPath, 0.2f);
 		m_proxyModel->SetPosition(m_pointLight->GetPosition());
 		m_proxyModel->Rotate(math::Vector3(0.f, math::Pi_Div_2, 0.f));
 		m_proxyModel->SetCamera(*GetCamera());
-		m_proxyModel->Initialize();
+		m_proxyModel->Initialize(app);
 
-		m_text = std::make_unique<TextComponent>(m_app);
+		m_text = std::make_unique<TextComponent>();
 		m_text->SetPosition(math::Vector2(0.f, 100.f));
 		m_text->SetTextGeneratorFunction(
 			[this]() -> std::wstring
@@ -120,7 +113,7 @@ namespace demo
 				return woss.str();
 			}
 		);
-		m_text->Initialize();
+		m_text->Initialize(app);
 	}
 
 	void TransparencyMappingComponent::Update(const Time& time)
@@ -261,8 +254,8 @@ namespace demo
 
 	void TransparencyMappingComponent::Render()
 	{
-		auto deviceContext = m_app.GetDeviceContext();
-		auto renderer = m_app.GetRenderer();
+		auto deviceContext = m_app->GetDeviceContext();
+		auto renderer = m_app->GetRenderer();
 
 		renderer->SaveRenderState(RenderState::Blend);
 		deviceContext->OMSetBlendState(BlendStateHolder::GetBlendState(BlendState::Alpha).Get(), 0, 0xFFFFFFFF);

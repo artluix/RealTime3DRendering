@@ -54,7 +54,7 @@ namespace demo
 		InitializeMaterial(app, k_effectPath);
 		InitializeQuad(app, "blur");
 
-		m_text = std::make_unique<TextComponent>(m_app);
+		m_text = std::make_unique<TextComponent>();
 		m_text->SetPosition(math::Vector2(0.f, 45.f));
 		m_text->SetTextGeneratorFunction(
 			[this]() -> std::wstring
@@ -67,8 +67,8 @@ namespace demo
 		);
 		m_text->Initialize(app);
 
-		m_horizontalBlurTarget = std::make_unique<FullScreenRenderTarget>();
-		m_verticalBlurTarget = std::make_unique<FullScreenRenderTarget>();
+		m_horizontalBlurTarget = std::make_unique<FullScreenRenderTarget>(app);
+		m_verticalBlurTarget = std::make_unique<FullScreenRenderTarget>(app);
 
 		InitializeSampleOffsets();
 		InitializeSampleWeights();

@@ -89,7 +89,7 @@ namespace demo
 			}
 		);
 
-		m_text = std::make_unique<TextComponent>(m_app);
+		m_text = std::make_unique<TextComponent>();
 		m_text->SetPosition(math::Vector2(0.f, 45.f));
 		m_text->SetTextGeneratorFunction(
 			[this]() -> std::wstring

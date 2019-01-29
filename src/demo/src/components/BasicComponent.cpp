@@ -29,23 +29,15 @@ namespace demo
 		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
 	}
 
-	BasicComponent::BasicComponent(const Application& app) 
-		: SceneComponent()
-		, MaterialComponentGlue(app)
-		, InputReceivableComponent()
+	BasicComponent::BasicComponent() 
 	{
 		SetModelPath(k_modelPath);
 	}
 
-	void BasicComponent::Initialize()
+	void BasicComponent::Initialize(const Application& app)
 	{
-		m_effect = Effect::Create(m_app, k_effectPath);
-		m_effect->LoadCompiled();
-
-		m_material = std::make_unique<BasicMaterial>(*m_effect);
-		m_material->Initialize();
-
-		MaterialComponent::Initialize();
+		InitializeMaterial(app, k_effectPath);
+		MaterialComponent::Initialize(app);
 	}
 
 	void BasicComponent::Update(const Time& time)

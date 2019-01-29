@@ -7,7 +7,7 @@ namespace library
 	class FullScreenRenderTarget;
 	class FullScreenQuadComponent;
 
-	class PostProcessingComponent : public MaterialComponent
+	class PostProcessingComponent : public virtual MaterialComponent
 	{
 		RTTI_CLASS(PostProcessingComponent, MaterialComponent)
 

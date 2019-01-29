@@ -2,22 +2,22 @@
 #include <library/materials/TextureMappingMaterial.h>
 
 #include <library/components/SceneComponent.h>
-#include <library/components/MaterialComponentGlue.hpp>
+#include <library/components/ConcreteMaterialComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 namespace demo
 {
 	class TextureMappingComponent
 		: public library::SceneComponent
-		, public library::MaterialComponentGlue<library::TextureMappingMaterial>
+		, public library::ConcreteMaterialComponent<library::TextureMappingMaterial>
 		, public library::InputReceivableComponent
 	{
 		RTTI_CLASS(TextureMappingComponent, library::SceneComponent, library::MaterialComponent, library::InputReceivableComponent)
 
 	public:
-		explicit TextureMappingComponent(const library::Application& app);
+		explicit TextureMappingComponent();
 
-		void Initialize() override;
+		void Initialize(const library::Application& app) override;
 		void Update(const library::Time& time) override;
 		using DrawableComponent::Draw;
 

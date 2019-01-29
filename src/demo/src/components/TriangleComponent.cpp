@@ -19,19 +19,11 @@ namespace demo
 		const auto k_effectPath = utils::GetExecutableDirectory().Join(Path("../data/effects/Basic.fx"));
 	}
 
-	TriangleComponent::TriangleComponent(const Application& app)
-		: SceneComponent()
-		, DrawableComponent(app)
-		, m_effect()
-		, m_technique()
-		, m_pass()
-		, m_wvpVariable()
-		, m_inputLayout()
-		, m_vertexBuffer()
+	TriangleComponent::TriangleComponent()
 	{
 	}
 
-	void TriangleComponent::Initialize()
+	void TriangleComponent::Initialize(const Application& app)
 	{
 		// shader
 		{
@@ -63,7 +55,7 @@ namespace demo
 			hr = D3DX11CreateEffectFromMemory(
 				shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
 				0,
-				m_app.GetDevice(),
+				app.GetDevice(),
 				m_effect.GetAddressOf()
 			);
 			if (FAILED(hr))
@@ -112,7 +104,7 @@ namespace demo
 				{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
 			};
 
-			auto hr = m_app.GetDevice()->CreateInputLayout(
+			auto hr = app.GetDevice()->CreateInputLayout(
 				inputElementDescriptions.data(), inputElementDescriptions.size(),
 				passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
 				m_inputLayout.GetAddressOf()
@@ -142,7 +134,7 @@ namespace demo
 			D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 			vertexSubResourceData.pSysMem = vertices.data();
 
-			auto hr = m_app.GetDevice()->CreateBuffer(
+			auto hr = app.GetDevice()->CreateBuffer(
 				&vertexBufferDesc,
 				&vertexSubResourceData,
 				m_vertexBuffer.GetAddressOf()
@@ -163,7 +155,7 @@ namespace demo
 
 	void TriangleComponent::Draw(const Time& time)
 	{
-		auto deviceContext = m_app.GetDeviceContext();
+		auto deviceContext = m_app->GetDeviceContext();
 
 		auto wvp = GetWorldMatrix();
 		if (auto camera = GetCamera())
