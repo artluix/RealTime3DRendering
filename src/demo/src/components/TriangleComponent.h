@@ -14,7 +14,7 @@ namespace demo
 		RTTI_CLASS(TriangleComponent, library::SceneComponent, library::DrawableComponent)
 
 	public:
-		explicit TriangleComponent();
+		explicit TriangleComponent() = default;
 
 		void Initialize(const library::Application& app) override;
 		void Update(const library::Time& time) override;

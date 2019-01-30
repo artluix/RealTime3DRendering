@@ -28,14 +28,6 @@ namespace demo
 		constexpr float k_blurModulationRate = 1.0f;
 
 		const auto k_backgroundColor = library::Color::Black;
-
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-#if defined(DEBUG) || defined(DEBUG)
-			Path("../data/effects/GaussianBlur_d.fxc")
-#else
-			Path("../data/effects/GaussianBlur.fxc")
-#endif
-		);
 	}
 
 	//-------------------------------------------------------------------------
@@ -51,7 +43,7 @@ namespace demo
 
 	void GaussianBlurComponent::Initialize(const Application& app)
 	{
-		InitializeMaterial(app, k_effectPath);
+		InitializeMaterial(app, "GaussianBlur");
 		InitializeQuad(app, "blur");
 
 		m_text = std::make_unique<TextComponent>();

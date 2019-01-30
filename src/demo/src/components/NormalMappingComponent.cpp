@@ -32,18 +32,6 @@ namespace demo
 
 		constexpr auto k_proxyModelRotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
 		constexpr float k_proxyModelDistanceOffset = 3.f;
-
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-#if defined(DEBUG) || defined(DEBUG)
-			Path("../data/effects/NormalMapping_d.fxc")
-#else
-			Path("../data/effects/NormalMapping.fxc")
-#endif
-		);
-		const auto k_proxyModelPath = utils::GetExecutableDirectory().Join(Path("../data/models/DirectionalLightProxy.obj"));
-		
-		const auto k_colorTexturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/Blocks_COLOR_RGB.dds"));
-		const auto k_normalMapTexturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/Blocks_NORM.dds"));
 	}
 
 	NormalMappingComponent::NormalMappingComponent()
@@ -51,7 +39,7 @@ namespace demo
 		, m_specularColor(1.f, 1.f, 1.f, 1.f)
 		, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 	{
-		SetTexturePath(k_colorTexturePath);
+		SetTextureName("Blocks_COLOR_RGB");
 	}
 
 	NormalMappingComponent::~NormalMappingComponent() = default;
@@ -86,14 +74,14 @@ namespace demo
 			);
 		}
 
-		InitializeMaterial(app, k_effectPath);
+		InitializeMaterial(app, "NormalMapping");
 		MaterialComponent::Initialize(app);
 
-		app.LoadTexture(k_normalMapTexturePath, m_normalMapShaderResourceView);
+		app.LoadTexture("Blocks_NORM", m_normalMapShaderResourceView);
 
 		m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
-		m_proxyModel = std::make_unique<ProxyModelComponent>(k_proxyModelPath, 0.2f);
+		m_proxyModel = std::make_unique<ProxyModelComponent>("DirectionalLightProxy", 0.2f);
 		m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
 		m_proxyModel->SetRotation(GetRotation() + k_proxyModelRotationOffset);
 		m_proxyModel->SetCamera(*GetCamera());

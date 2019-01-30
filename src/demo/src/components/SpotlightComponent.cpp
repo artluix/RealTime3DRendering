@@ -34,18 +34,6 @@ namespace demo
 		constexpr auto k_rotationOffset = math::Vector3(math::Pi_Div_2, 0.f, 0.f);
 
 		constexpr auto k_proxyModelRotationOffset = math::Vector3(math::Pi_Div_2, 0.f, 0.f);
-
-
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-#if defined(DEBUG) || defined(DEBUG)
-			Path("../data/effects/Spotlight_d.fxc")
-#else
-			Path("../data/effects/Spotlight.fxc")
-#endif
-		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Plane.obj"));
-		const auto k_proxyModelPath = utils::GetExecutableDirectory().Join(Path("../data/models/SpotlightProxy.obj"));
-		const auto k_texturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/Checkerboard.dds"));
 	}
 
 	SpotlightComponent::SpotlightComponent()
@@ -53,8 +41,8 @@ namespace demo
 		, m_specularColor(1.f, 1.f, 1.f, 1.f)
 		, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 	{
-		SetModelPath(k_modelPath);
-		SetTexturePath(k_texturePath);
+		SetModelName("Plane");
+		SetTextureName("Checkerboard");
 	}
 
 	SpotlightComponent::~SpotlightComponent() = default;
@@ -63,14 +51,14 @@ namespace demo
 	{
 		assert(!!GetCamera());
 
-		InitializeMaterial(app, k_effectPath);
+		InitializeMaterial(app, "Spotlight");
 		MaterialComponent::Initialize(app);
 
 		m_spotlight = std::make_unique<library::SpotlightComponent>();
 		m_spotlight->SetRadius(10.f);
 		m_spotlight->SetPosition(math::Vector3(0.0f, 0.f, 5.f));
 
-		m_proxyModel = std::make_unique<ProxyModelComponent>(k_proxyModelPath, 0.3f);
+		m_proxyModel = std::make_unique<ProxyModelComponent>("SpotlightProxy", 0.3f);
 		m_proxyModel->SetCamera(*GetCamera());
 		m_proxyModel->SetRotation(k_proxyModelRotationOffset);
 		m_proxyModel->SetPosition(m_spotlight->GetPosition());

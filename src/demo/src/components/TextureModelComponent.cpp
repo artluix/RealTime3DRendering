@@ -25,16 +25,6 @@ namespace demo
 		constexpr float k_movementRate = 0.01f;
 
 		constexpr float k_scaleRate = 0.01f;
-
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-#if defined(DEBUG) || defined(DEBUG)
-			Path("../data/effects/TextureMapping_d.fxc")
-#else
-			Path("../data/effects/TextureMapping.fxc")
-#endif
-		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
-		const auto k_texturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/EarthComposite.dds"));
 	}
 
 	//-------------------------------------------------------------------------
@@ -51,12 +41,16 @@ namespace demo
 
 	void TextureModelComponent::Initialize(const Application& app)
 	{
-		app.LoadTexture(k_texturePath, m_textureShaderResourceView);
+		DrawableComponent::Initialize(app);
+
+		app.LoadTexture("EarthComposite", m_textureShaderResourceView);
 
 		// shader
 		{
+			const auto path = app.GetTexturesPath() + Path("TextureMapping.fxc");
+
 			std::vector<library::byte> effectData;
-			utils::LoadBinaryFile(k_effectPath, effectData);
+			utils::LoadBinaryFile(path, effectData);
 			if (effectData.empty())
 			{
 				throw Exception("Load compiled effect failed.");
@@ -142,7 +136,7 @@ namespace demo
 		}
 
 		// Load the model
-		Model model(app, k_modelPath, true);
+		Model model(app, "Sphere", true);
 
 		// Create the vertex and index buffers
 		const auto& mesh = model.GetMesh(0);

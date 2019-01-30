@@ -30,21 +30,7 @@ namespace demo
 		constexpr float k_byteMax = static_cast<float>(0xFF);
 		constexpr float k_lightModulationRate = 10.f;
 		constexpr float k_lightMovementRate = 10.f;
-
 		constexpr float k_displacementRate = 5.f;
-
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-#if defined(DEBUG) || defined(DEBUG)
-			Path("../data/effects/DisplacementMapping_d.fxc")
-#else
-			Path("../data/effects/DisplacementMapping.fxc")
-#endif
-		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Plane.obj"));
-		const auto k_proxyModelPath = utils::GetExecutableDirectory().Join(Path("../data/models/PointLightProxy.obj"));
-
-		const auto k_colorTexturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/Blocks_COLOR_RGB.dds"));
-		const auto k_displacementMapTexturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/Blocks_DISP.dds"));
 	}
 
 	DisplacementMappingComponent::DisplacementMappingComponent()
@@ -53,8 +39,8 @@ namespace demo
 		, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 		, m_displacementScale(0.f)
 	{
-		SetModelPath(k_modelPath);
-		SetTexturePath(k_colorTexturePath);
+		SetModelName("Plane");
+		SetTextureName("Blocks_COLOR_RGB");
 	}
 
 	DisplacementMappingComponent::~DisplacementMappingComponent() = default;
@@ -63,16 +49,16 @@ namespace demo
 	{
 		assert(!!GetCamera());
 
-		InitializeMaterial(app, k_effectPath);
+		InitializeMaterial(app, "DisplacementMapping");
 		MaterialComponent::Initialize(app);
 
-		app.LoadTexture(k_displacementMapTexturePath, m_displacementMapShaderResourceView);
+		app.LoadTexture("Blocks_DISP", m_displacementMapShaderResourceView);
 
 		m_pointLight = std::make_unique<PointLightComponent>();
 		m_pointLight->SetRadius(50.f);
 		m_pointLight->SetPosition(math::Vector3(0.f, 0.f, 10.f));
 
-		m_proxyModel = std::make_unique<ProxyModelComponent>(k_proxyModelPath, 0.2f);
+		m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.2f);
 		m_proxyModel->SetPosition(m_pointLight->GetPosition());
 		m_proxyModel->Rotate(math::Vector3(0.f, math::Pi_Div_2, 0.f));
 		m_proxyModel->SetCamera(*GetCamera());

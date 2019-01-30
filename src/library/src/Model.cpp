@@ -14,7 +14,7 @@
 
 namespace library
 {
-	Model::Model(const Application& app, const Path& filePath, const bool flipUVs /*= false*/)
+	Model::Model(const Application& app, const std::string& name, const bool flipUVs /*= false*/)
 		: m_app(app)
 	{
 		Assimp::Importer importer;
@@ -28,7 +28,9 @@ namespace library
 		if (flipUVs)
 			flags |= aiProcess_FlipUVs;
 
-		if (const auto scene = importer.ReadFile(filePath.GetString(), flags))
+		const auto path = app.GetModelsPath() + Path(name + ".obj");
+
+		if (const auto scene = importer.ReadFile(path.GetString(), flags))
 		{
 			if (scene->HasMaterials())
 			{

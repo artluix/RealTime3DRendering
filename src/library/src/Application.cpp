@@ -139,12 +139,12 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void Application::LoadTexture(const Path& texturePath, ComPtr<ID3D11ShaderResourceView>& textureShaderResourceView) const
+	void Application::LoadTexture(const std::string& textureName, ComPtr<ID3D11ShaderResourceView>& textureShaderResourceView) const
 	{
-		if (!texturePath)
+		if (textureName.empty())
 			return;
 
-		assert(texturePath.GetExt().GetString() == "dds");
+		const auto texturePath = GetTexturesPath() + Path(textureName + ".dds");
 
 		std::vector<library::byte> textureData;
 		utils::LoadBinaryFile(texturePath, textureData);
@@ -165,6 +165,26 @@ namespace library
 		{
 			throw Exception("CreateDDSTextureFromMemory() failed.", hr);
 		}
+	}
+
+	//-------------------------------------------------------------------------
+
+	const Path& Application::GetTexturesPath() const
+	{
+		static const auto s_texturesPath = GetDataPath() + Path("textures");
+		return s_texturesPath;
+	}
+
+	const Path& Application::GetEffectsPath() const
+	{
+		static const auto s_effectsPath = GetDataPath() + Path("effects");
+		return s_effectsPath;
+	}
+
+	const Path& Application::GetModelsPath() const
+	{
+		static const auto s_modelsPath = GetDataPath() + Path("models");
+		return s_modelsPath;
 	}
 
 	//-------------------------------------------------------------------------

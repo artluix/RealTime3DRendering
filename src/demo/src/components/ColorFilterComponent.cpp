@@ -20,14 +20,6 @@ namespace demo
 	namespace
 	{
 		constexpr float k_brightnessModulationRate = 3.0f;
-
-		const auto k_effectPath = library::utils::GetExecutableDirectory().Join(
-#if defined(DEBUG) || defined(DEBUG)
-			library::Path("../data/effects/ColorFilter_d.fxc")
-#else
-			library::Path("../data/effects/ColorFilter.fxc")
-#endif
-		);
 	}
 
 	//-------------------------------------------------------------------------
@@ -78,7 +70,7 @@ namespace demo
 
 	void ColorFilterComponent::Initialize(const Application& app)
 	{
-		InitializeMaterial(app, k_effectPath);
+		InitializeMaterial(app, "ColorFilter");
 		InitializeQuad(app, "grayscale_filter");
 
 		m_fullScreenQuad->SetMaterialUpdateFunction(

@@ -31,18 +31,6 @@ namespace demo
 		constexpr float k_byteMax = static_cast<float>(0xFF);
 		constexpr float k_lightModulationRate = 10.f;
 		constexpr float k_lightMovementRate = 10.f;
-
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-#if defined(DEBUG) || defined(DEBUG)
-			Path("../data/effects/TransparencyMapping_d.fxc")
-#else
-			Path("../data/effects/TransparencyMapping.fxc")
-#endif
-		);
-		const auto k_proxyModelPath = utils::GetExecutableDirectory().Join(Path("../data/models/PointLightProxy.obj"));
-
-		const auto k_texturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/Checkerboard.dds"));
-		const auto k_transparencyMapTexturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/AlphaMask_32bpp.dds"));
 	}
 
 	TransparencyMappingComponent::TransparencyMappingComponent()
@@ -50,7 +38,7 @@ namespace demo
 		, m_specularColor(1.f, 1.f, 1.f, 1.f)
 		, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 	{
-		SetTexturePath(k_texturePath);
+		SetTextureName("Checkerboard");
 	}
 
 	TransparencyMappingComponent::~TransparencyMappingComponent() = default;
@@ -84,16 +72,16 @@ namespace demo
 			);
 		}
 
-		InitializeMaterial(app, k_effectPath);
+		InitializeMaterial(app, "TransparencyMapping");
 		MaterialComponent::Initialize(app);
 
-		app.LoadTexture(k_transparencyMapTexturePath, m_transparencyMapShaderResourceView);
+		app.LoadTexture("AlphaMask_32bpp", m_transparencyMapShaderResourceView);
 
 		m_pointLight = std::make_unique<PointLightComponent>();
 		m_pointLight->SetRadius(50.f);
 		m_pointLight->SetPosition(math::Vector3(0.f, 0.f, 10.f));
 
-		m_proxyModel = std::make_unique<ProxyModelComponent>(k_proxyModelPath, 0.2f);
+		m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.2f);
 		m_proxyModel->SetPosition(m_pointLight->GetPosition());
 		m_proxyModel->Rotate(math::Vector3(0.f, math::Pi_Div_2, 0.f));
 		m_proxyModel->SetCamera(*GetCamera());

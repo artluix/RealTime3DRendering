@@ -12,24 +12,27 @@ namespace library
 {
 	std::map<std::string, std::weak_ptr<Effect>> Effect::s_effects;
 
-	Effect::Effect(const Application& app, const Path& path)
+	Effect::Effect(const Application& app, const std::string& name)
 		: m_app(app)
-		, m_path(path)
-		, m_name(path.GetBaseName().SplitExt()[0].GetString())
+		, m_name(name)
 	{
 	}
 
-	EffectPtr Effect::Create(const Application& app, const Path& path)
+	EffectPtr Effect::Create(const Application& app, const std::string& effectName, const bool compile /* = false */)
 	{
-		const auto effectName = path.GetBaseName().SplitExt()[0].GetString();
-
 		auto it = s_effects.find(effectName);
 		if (it != s_effects.end())
 			if (auto effect = it->second.lock())
 					return effect;
 
-		auto effect = std::make_shared<Effect>(app, path);
+		auto effect = EffectPtr(new Effect(app, effectName));
 		s_effects.emplace(effectName, effect);
+
+		if (compile)
+			effect->Compile();
+		else
+			effect->LoadCompiled();
+
 		return effect;
 	}
 
@@ -44,6 +47,8 @@ namespace library
 
 	void Effect::Compile()
 	{
+		m_path = m_app.GetEffectsPath() + Path(m_name + ".fx");
+
 		ComPtr<ID3DBlob> errorBlob;
 		ComPtr<ID3DBlob> shaderBlob;
 
@@ -85,6 +90,13 @@ namespace library
 
 	void Effect::LoadCompiled()
 	{
+		m_path = m_app.GetEffectsPath();
+#if defined(DEBUG) || defined(DEBUG)
+		m_path += Path(m_name + "_d.fxc");
+#else
+		m_path += Path(m_name + ".fxc");
+#endif
+
 		std::vector<library::byte> effectData;
 		utils::LoadBinaryFile(m_path, effectData);
 		if (effectData.empty())

@@ -1,8 +1,10 @@
 #pragma once
 #include "library/components/DrawableComponent.h"
 
-#include "library/Path.h"
+#include "library/CommonTypes.h"
 #include "library/DirectXForwardDeclarations.h"
+
+#include <string>
 
 namespace library
 {
@@ -13,11 +15,11 @@ namespace library
 		RTTI_CLASS(MaterialComponent, DrawableComponent)
 
 	public:
-		const Path& GetModelPath() const { return m_modelPath; }
-		void SetModelPath(const Path& path);
+		const std::string& GetModelName() const { return m_modelName; }
+		void SetModelName(const std::string& modelName);
 
-		const Path& GetTexturePath() const { return m_texturePath; }
-		void SetTexturePath(const Path& path);
+		const std::string& GetTextureName() const { return m_textureName; }
+		void SetTextureName(const std::string& textureName);
 
 		void Initialize(const Application& app) override;
 		void Draw(const Time& time) override;
@@ -34,7 +36,7 @@ namespace library
 		virtual void SetEffectData();
 		virtual void Render();
 
-		void LoadModel(const Path& modelPath);
+		void LoadModel(const std::string& modelName);
 
 		ComPtr<ID3D11Buffer> m_indexBuffer;
 		ComPtr<ID3D11Buffer> m_vertexBuffer;
@@ -45,7 +47,7 @@ namespace library
 		unsigned m_indicesCount = 0;
 
 	private:
-		Path m_modelPath;
-		Path m_texturePath;
+		std::string m_modelName;
+		std::string m_textureName;
 	};
 } // namespace library

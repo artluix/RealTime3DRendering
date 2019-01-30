@@ -23,9 +23,6 @@ namespace demo
 	{
 		constexpr float k_rotationAngle = math::Pi_Div_2;
 		constexpr float k_movementRate = 0.01f;
-
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(Path("../data/effects/Basic.fx"));
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
 	}
 
 	//-------------------------------------------------------------------------
@@ -41,14 +38,17 @@ namespace demo
 
 	void ModelComponent::Initialize(const Application& app)
 	{
+		DrawableComponent::Initialize(app);
 
 		// shader
 		{
+			const auto path = app.GetEffectsPath() + Path("Basic.fx");
+
 			ComPtr<ID3DBlob> errorBlob;
 			ComPtr<ID3DBlob> shaderBlob;
 
 			auto hr = D3DCompileFromFile(
-				k_effectPath.GetWideCString(),
+				path.GetWideCString(),
 				nullptr,
 				nullptr,
 				nullptr,
@@ -133,7 +133,7 @@ namespace demo
 		}
 
 		// Load the model
-		Model model(app, k_modelPath, true);
+		Model model(app, "Sphere", true);
 
 		// Create the vertex and index buffers
 		const auto& mesh = model.GetMesh(0);

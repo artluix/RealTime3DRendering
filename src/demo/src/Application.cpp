@@ -48,8 +48,6 @@ namespace demo
 	namespace
 	{
 		const auto k_backgroundColor = library::Color::Black;
-
-		const auto k_skyboxCubeMapPath = library::utils::GetExecutableDirectory().Join(library::Path("../data/textures/Maskonaive2_1024.dds"));
 	}
 
 	Application::Application(
@@ -65,6 +63,14 @@ namespace demo
 	}
 
 	Application::~Application() = default;
+
+	//-------------------------------------------------------------------------
+
+	const library::Path& Application::GetDataPath() const
+	{
+		static const auto s_dataPath = library::utils::GetExecutableDirectory() + library::Path("../data");
+		return s_dataPath;
+	}
 
 	void Application::Initialize()
 	{
@@ -119,7 +125,7 @@ namespace demo
 		auto fps = std::make_shared<FpsComponent>();
 
 		// skybox
-		auto skybox = std::make_shared<SkyboxComponent>(k_skyboxCubeMapPath, 100.f);
+		auto skybox = std::make_shared<SkyboxComponent>("Maskonaive2_1024", 100.f);
 		skybox->SetCamera(*camera);
 
 		// grid

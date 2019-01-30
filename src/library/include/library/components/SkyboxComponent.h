@@ -4,10 +4,10 @@
 #include "library/components/SceneComponent.h"
 #include "library/components/ConcreteMaterialComponent.hpp"
 
+#include <string>
+
 namespace library
 {
-	class Path;
-
 	class SkyboxComponent
 		: public SceneComponent
 		, public ConcreteMaterialComponent<SkyboxMaterial>
@@ -15,7 +15,7 @@ namespace library
 		RTTI_CLASS(SkyboxComponent, SceneComponent, MaterialComponent)
 
 	public:
-		explicit SkyboxComponent(const Path& cubeMapPath, const float scale);
+		explicit SkyboxComponent(const std::string& cubeMapName, const float scale);
 		~SkyboxComponent() = default;
 
 		void Initialize(const Application& app) override;

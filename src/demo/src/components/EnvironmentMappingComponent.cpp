@@ -23,35 +23,24 @@ namespace demo
 	namespace
 	{
 		const auto k_environmentColor = Color::White;
-
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-#if defined(DEBUG) || defined(DEBUG)
-			Path("../data/effects/EnvironmentMapping_d.fxc")
-#else
-			Path("../data/effects/EnvironmentMapping.fxc")
-#endif
-		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
-		const auto k_colorTexturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/Checkerboard.dds"));
-		const auto k_environmentMapTexturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/Maskonaive2_1024.dds"));
 	}
 
 	EnvironmentMappingComponent::EnvironmentMappingComponent()
 		: m_reflectionAmount(1.0f)
 		, m_ambientColor(1.0f, 1.0f, 1.0f, 1.0f)
 	{
-		SetModelPath(k_modelPath);
-		SetTexturePath(k_colorTexturePath);
+		SetModelName("Sphere");
+		SetTextureName("Checkerboard");
 	}
 
 	EnvironmentMappingComponent::~EnvironmentMappingComponent() = default;
 
 	void EnvironmentMappingComponent::Initialize(const Application& app)
 	{
-		InitializeMaterial(app, k_effectPath);
+		InitializeMaterial(app, "EnvironmentMapping");
 		MaterialComponent::Initialize(app);
 
-		app.LoadTexture(k_environmentMapTexturePath, m_environmentMapShaderResourceView);
+		app.LoadTexture("Maskonaive2_1024", m_environmentMapShaderResourceView);
 
 		m_text = std::make_unique<TextComponent>();
 		m_text->SetPosition(math::Vector2(0.f, 100.f));

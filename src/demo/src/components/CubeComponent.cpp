@@ -21,18 +21,21 @@ namespace demo
 		constexpr unsigned k_verticesCount = 8;
 		constexpr float k_rotationAngle = math::Pi_Div_2;
 		constexpr float k_movementRate = 0.01f;
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(Path("../data/effects/Basic.fx"));
 	}
 
 	void CubeComponent::Initialize(const Application& app)
 	{
+		DrawableComponent::Initialize(app);
+
 		// shader
 		{
+			const auto path = app.GetEffectsPath() + Path("Basic.fx");
+
 			ComPtr<ID3DBlob> errorBlob;
 			ComPtr<ID3DBlob> shaderBlob;
 
 			auto hr = D3DCompileFromFile(
-				k_effectPath.GetWideCString(),
+				path.GetWideCString(),
 				nullptr,
 				nullptr,
 				nullptr,

@@ -7,6 +7,8 @@
 
 namespace library
 {
+	class Path;
+
 	class KeyboardComponent;
 	class MouseComponent;
 
@@ -30,6 +32,8 @@ namespace demo
 		void Initialize() override;
 		void Update(const library::Time& time) override;
 		void Draw(const library::Time& time) override;
+
+		const library::Path& GetDataPath() const override;
 
 	protected:
 		void Shutdown() override;

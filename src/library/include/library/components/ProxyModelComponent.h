@@ -6,10 +6,10 @@
 
 #include "library/DirectXForwardDeclarations.h"
 
+#include <string>
+
 namespace library
 {
-	class Path;
-
 	class ProxyModelComponent
 		: public SceneComponent
 		, public ConcreteMaterialComponent<BasicMaterial>
@@ -17,7 +17,7 @@ namespace library
 		RTTI_CLASS(ProxyModelComponent, SceneComponent)
 
 	public:
-		explicit ProxyModelComponent(const Path& modelPath, const float scale);
+		explicit ProxyModelComponent(const std::string& modelName, const float scale);
 		~ProxyModelComponent();
 
 		bool IsWireframeVisible() const { return m_isWireframeVisible; }

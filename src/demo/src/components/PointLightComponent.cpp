@@ -27,17 +27,6 @@ namespace demo
 		constexpr float k_byteMax = static_cast<float>(0xFF);
 		constexpr float k_lightModulationRate = 10.f;
 		constexpr float k_lightMovementRate = 10.f;
-
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-#if defined(DEBUG) || defined(DEBUG)
-			Path("../data/effects/PointLight_d.fxc")
-#else
-			Path("../data/effects/PointLight.fxc")
-#endif
-		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
-		const auto k_proxyModelPath = utils::GetExecutableDirectory().Join(Path("../data/models/PointLightProxy.obj"));
-		const auto k_texturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/EarthAtDay.dds"));
 	}
 
 	PointLightComponent::PointLightComponent()
@@ -45,8 +34,8 @@ namespace demo
 		, m_specularColor(1.f, 1.f, 1.f, 1.f)
 		, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 	{
-		SetModelPath(k_modelPath);
-		SetTexturePath(k_texturePath);
+		SetModelName("Sphere");
+		SetTextureName("EarthAtDay");
 	}
 
 	PointLightComponent::~PointLightComponent() = default;
@@ -55,14 +44,14 @@ namespace demo
 	{
 		assert(!!GetCamera());
 
-		InitializeMaterial(app, k_effectPath);
+		InitializeMaterial(app, "PointLight");
 		MaterialComponent::Initialize(app);
 
 		m_pointLight = std::make_unique<library::PointLightComponent>();
 		m_pointLight->SetRadius(500.f);
 		m_pointLight->SetPosition(math::Vector3(0.f, 0.f, 10.f));
 
-		m_proxyModel = std::make_unique<ProxyModelComponent>(k_proxyModelPath, 0.5f);
+		m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.5f);
 		m_proxyModel->SetPosition(m_pointLight->GetPosition());
 		m_proxyModel->Rotate(math::Vector3(0.f, math::Pi_Div_2, 0.f));
 		m_proxyModel->SetCamera(*GetCamera());

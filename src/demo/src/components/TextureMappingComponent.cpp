@@ -20,27 +20,17 @@ namespace demo
 	{
 		constexpr float k_rotationAngle = math::Pi_Div_2;
 		constexpr float k_movementRate = 0.01f;
-
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-#if defined(DEBUG) || defined(DEBUG)
-			Path("../data/effects/TextureMapping_d.fxc")
-#else
-			Path("../data/effects/TextureMapping.fxc")
-#endif
-		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
-		const auto k_texturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/EarthComposite.dds"));
 	}
 
 	TextureMappingComponent::TextureMappingComponent()
 	{
-		SetModelPath(k_modelPath);
-		SetTexturePath(k_texturePath);
+		SetModelName("Sphere");
+		SetTextureName("EarthComposite");
 	}
 
 	void TextureMappingComponent::Initialize(const Application& app)
 	{
-		InitializeMaterial(app, k_effectPath);
+		InitializeMaterial(app, "TextureMapping");
 		MaterialComponent::Initialize(app);
 	}
 

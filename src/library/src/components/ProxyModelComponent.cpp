@@ -13,27 +13,18 @@
 
 namespace library
 {
-	namespace
-	{
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-#if defined(DEBUG) || defined(DEBUG)
-			Path("../data/effects/Basic_d.fxc")
-#else
-			Path("../data/effects/Basic.fxc")
-#endif
-		);
-	}
-
-	ProxyModelComponent::ProxyModelComponent(const Path& modelPath, const float scale)
+	ProxyModelComponent::ProxyModelComponent(const std::string& modelName, const float scale)
 		: m_direction(math::Vector3::Forward)
 		, m_up(math::Vector3::Up)
 		, m_right(math::Vector3::Right)
 	{
-		SetModelPath(modelPath);
+		SetModelName(modelName);
 		SetScaling(math::Vector3(scale));
 	}
 
 	ProxyModelComponent::~ProxyModelComponent() = default;
+
+	//-------------------------------------------------------------------------
 
 	void ProxyModelComponent::SetWireframeVisible(const bool visible)
 	{
@@ -42,7 +33,7 @@ namespace library
 
 	void ProxyModelComponent::Initialize(const Application& app)
 	{
-		InitializeMaterial(app, k_effectPath);
+		InitializeMaterial(app, "Basic");
 		MaterialComponent::Initialize(app);
 	}
 

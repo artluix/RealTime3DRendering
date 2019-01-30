@@ -14,24 +14,19 @@ namespace demo
 {
 	using namespace library;
 
-	namespace
-	{
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(Path("../data/effects/Basic.fx"));
-	}
-
-	TriangleComponent::TriangleComponent()
-	{
-	}
-
 	void TriangleComponent::Initialize(const Application& app)
 	{
+		DrawableComponent::Initialize(app);
+
 		// shader
 		{
+			const auto path = app.GetEffectsPath() + Path("Basic.fx");
+
 			ComPtr<ID3DBlob> errorBlob;
 			ComPtr<ID3DBlob> shaderBlob;
 
 			auto hr = D3DCompileFromFile(
-				k_effectPath.GetWideCString(),
+				path.GetWideCString(),
 				nullptr,
 				nullptr,
 				nullptr,

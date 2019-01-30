@@ -23,18 +23,14 @@ namespace library
 	class Effect : public NonCopyable<Effect>
 	{
 	public:
-		explicit Effect(const Application& app, const Path& path);
 		~Effect();
 
-		static EffectPtr Create(const Application& app, const Path& path);
+		static EffectPtr Create(const Application& app, const std::string& effectName, const bool compile = false);
 		static void ClearAll();
 
-		void Compile();
-		void LoadCompiled();
-
 		const Application& GetApp() const { return m_app; }
-		const Path& GetPath() const { return m_path; }
 		const std::string& GetName() const { return m_name; }
+		const Path& GetPath() const { return m_path; }
 
 		ID3DX11Effect* GetEffect() const { return m_effect.Get(); }
 		void SetEffect(const ComPtr<ID3DX11Effect>& effect);
@@ -56,8 +52,12 @@ namespace library
 	private:
 		using EffectTechniquePtr = std::unique_ptr<EffectTechnique>;
 		using EffectVariablePtr = std::unique_ptr<EffectVariable>;
-
 		using EffectWPtr = std::weak_ptr<Effect>;
+
+		explicit Effect(const Application& app, const std::string& name);
+
+		void Compile();
+		void LoadCompiled();
 
 		void Initialize();
 

@@ -55,6 +55,8 @@ namespace library
 		}
 	}
 
+	//-------------------------------------------------------------------------
+
 	Path& Path::Join(const Path& other)
 	{
 		const auto& otherString = other.GetString();
@@ -91,6 +93,22 @@ namespace library
 		return *this;
 	}
 
+	Path Path::Join(const Path& other) const
+	{
+		auto path = *this;
+		path.Join(other);
+		return path;
+	}
+
+	Path Path::Join(const std::vector<Path>& paths) const
+	{
+		auto path = *this;
+		path.Join(paths);
+		return path;
+	}
+
+	//-------------------------------------------------------------------------
+
 	Tuple2<Path> Path::SplitExt() const
 	{
 		if (m_string.empty())
@@ -117,6 +135,20 @@ namespace library
 	{
 		return SplitExt()[1];
 	}
+
+	//-------------------------------------------------------------------------
+
+	Path& Path::operator += (const Path& p)
+	{
+		return Join(p);
+	}
+
+	Path Path::operator + (const Path& p) const
+	{
+		return Join(p);
+	}
+
+	//-------------------------------------------------------------------------
 
 	void Path::FixSeparator()
 	{

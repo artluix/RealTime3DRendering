@@ -19,16 +19,7 @@ namespace library
 	{
 		constexpr unsigned k_defaultSize = 16;
 		constexpr unsigned k_defaultScale = 16;
-
 		const auto k_defaultColor = Color::White;
-
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-#if defined(DEBUG) || defined(DEBUG)
-			Path("../data/effects/Basic_d.fxc")
-#else
-			Path("../data/effects/Basic.fxc")
-#endif
-		);
 	}
 
 	GridComponent::GridComponent()
@@ -84,8 +75,7 @@ namespace library
 
 	void GridComponent::Initialize(const Application& app)
 	{
-		InitializeMaterial(app, k_effectPath);
-
+		InitializeMaterial(app, "Basic");
 		MaterialComponent::Initialize(app);
 
 		Build();

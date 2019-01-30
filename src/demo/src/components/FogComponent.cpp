@@ -35,17 +35,6 @@ namespace demo
 		constexpr float k_proxyModelDistanceOffset = 10.f;
 
 		constexpr auto k_rotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
-
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-#if defined(DEBUG) || defined(DEBUG)
-			Path("../data/effects/Fog_d.fxc")
-#else
-			Path("../data/effects/Fog.fxc")
-#endif
-		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
-		const auto k_proxyModelPath = utils::GetExecutableDirectory().Join(Path("../data/models/DirectionalLightProxy.obj"));
-		const auto k_texturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/EarthComposite.dds"));
 	}
 
 	//-------------------------------------------------------------------------
@@ -56,8 +45,8 @@ namespace demo
 		, m_fogRange(20.0f)
 		, m_fogEnabled(true)
 	{
-		SetModelPath(k_modelPath);
-		SetTexturePath(k_texturePath);
+		SetModelName("Sphere");
+		SetTextureName("EarthComposite");
 	}
 
 	FogComponent::~FogComponent() = default;
@@ -68,12 +57,12 @@ namespace demo
 	{
 		assert(!!GetCamera());
 
-		InitializeMaterial(app, k_effectPath);
+		InitializeMaterial(app, "Fog");
 		MaterialComponent::Initialize(app);
 
 		m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
-		m_proxyModel = std::make_unique<ProxyModelComponent>(k_proxyModelPath, 0.2f);
+		m_proxyModel = std::make_unique<ProxyModelComponent>("DirectionalLightProxy", 0.2f);
 		m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
 		m_proxyModel->SetRotation(GetRotation() + k_proxyModelRotationOffset);
 		m_proxyModel->SetCamera(*GetCamera());

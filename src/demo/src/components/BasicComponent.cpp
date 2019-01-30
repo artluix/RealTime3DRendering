@@ -18,25 +18,16 @@ namespace demo
 	{
 		constexpr float k_rotationAngle = math::Pi_Div_2;
 		constexpr float k_movementRate = 0.01f;
-
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-#if defined(DEBUG) || defined(DEBUG)
-			Path("../data/effects/Basic_d.fxc")
-#else
-			Path("../data/effects/Basic.fxc")
-#endif
-		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
 	}
 
 	BasicComponent::BasicComponent() 
 	{
-		SetModelPath(k_modelPath);
+		SetModelName("Sphere");
 	}
 
 	void BasicComponent::Initialize(const Application& app)
 	{
-		InitializeMaterial(app, k_effectPath);
+		InitializeMaterial(app, "Basic");
 		MaterialComponent::Initialize(app);
 	}
 

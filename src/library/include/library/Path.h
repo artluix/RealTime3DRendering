@@ -26,9 +26,14 @@ namespace library
 
 		Path& Join(const Path& other);
 		Path& Join(const std::vector<Path>& paths);
+		Path Join(const Path& other) const;
+		Path Join(const std::vector<Path>& paths) const;
 
 		Tuple2<Path> SplitExt() const;
 		Path GetExt() const;
+
+		Path& operator += (const Path& p);
+		Path operator + (const Path& p) const;
 
 		explicit operator bool() const { return !m_string.empty(); }
 

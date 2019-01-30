@@ -17,28 +17,16 @@
 
 namespace library
 {
-	namespace
+	SkyboxComponent::SkyboxComponent(const std::string& cubeMapName, const float scale)
 	{
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-#if defined(DEBUG) || defined(DEBUG)
-			Path("../data/effects/Skybox_d.fxc")
-#else
-			Path("../data/effects/Skybox.fxc")
-#endif
-		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
-	}
-
-	SkyboxComponent::SkyboxComponent(const Path& cubeMapPath, const float scale)
-	{
-		SetModelPath(k_modelPath);
-		SetTexturePath(cubeMapPath);
+		SetModelName("Sphere");
+		SetTextureName(cubeMapName);
 		SetScaling(math::Vector3(scale));
 	}
 
 	void SkyboxComponent::Initialize(const Application& app)
 	{
-		InitializeMaterial(app, k_effectPath);
+		InitializeMaterial(app, "Skybox");
 		MaterialComponent::Initialize(app);
 	}
 

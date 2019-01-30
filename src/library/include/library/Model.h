@@ -8,14 +8,13 @@
 namespace library
 {
 	class Application;
-	class Path;
 	class Mesh;
 	class ModelMaterial;
 
 	class Model : public NonCopyable<Model>
 	{
 	public:
-		explicit Model(const Application& app, const Path& filePath, const bool flipUVs = false);
+		explicit Model(const Application& app, const std::string& name, const bool flipUVs = false);
 		~Model();
 
 		const Application& GetApplication() const { return m_app; }

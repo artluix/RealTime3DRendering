@@ -34,24 +34,13 @@ namespace demo
 
 		constexpr float k_proxyModelDistance = 10.f;
 		constexpr auto k_rotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
-
-		const auto k_effectPath = utils::GetExecutableDirectory().Join(
-#if defined(DEBUG) || defined(DEBUG)
-			Path("../data/effects/DiffuseLighting_d.fxc")
-#else
-			Path("../data/effects/DiffuseLighting.fxc")
-#endif
-		);
-		const auto k_modelPath = utils::GetExecutableDirectory().Join(Path("../data/models/Sphere.obj"));
-		const auto k_proxyModelPath = utils::GetExecutableDirectory().Join(Path("../data/models/DirectionalLightProxy.obj"));
-		const auto k_texturePath = utils::GetExecutableDirectory().Join(Path("../data/textures/EarthComposite.dds"));
 	}
 
 	DiffuseLightingComponent::DiffuseLightingComponent()
 		: m_ambientColor(1.f, 1.f, 1.f, 0.f)
 	{
-		SetModelPath(k_modelPath);
-		SetTexturePath(k_texturePath);
+		SetModelName("Sphere");
+		SetTextureName("EarthComposite");
 	}
 
 	DiffuseLightingComponent::~DiffuseLightingComponent() = default;
@@ -60,12 +49,12 @@ namespace demo
 	{
 		assert(!!GetCamera());
 
-		InitializeMaterial(app, k_effectPath);
+		InitializeMaterial(app, "DiffuseLighting");
 		MaterialComponent::Initialize(app);
 
 		m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
-		m_proxyModel = std::make_unique<ProxyModelComponent>(k_proxyModelPath, 0.5f);
+		m_proxyModel = std::make_unique<ProxyModelComponent>("DirectionalLightProxy", 0.5f);
 		m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
 		m_proxyModel->SetRotation(GetRotation() + k_proxyModelRotationOffset);
 		m_proxyModel->SetCamera(*GetCamera());

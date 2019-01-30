@@ -11,22 +11,20 @@
 
 #include "library/Application.h"
 #include "library/Exception.h"
-#include "library/Path.h"
-#include "library/Utils.h"
 
 #include <cassert>
 
 namespace library
 {
-	void MaterialComponent::LoadModel(const Path& modelPath)
+	void MaterialComponent::LoadModel(const std::string& modelName)
 	{
-		if (!modelPath)
+		if (modelName.empty())
 			return;
 
 		const auto& material = GetMaterial();
 		assert(material.IsInitialized());
 
-		Model model(*m_app, modelPath, true);
+		Model model(*m_app, modelName, true);
 
 		const auto& mesh = model.GetMesh(0);
 		m_vertexBuffer = material.CreateVertexBuffer(m_app->GetDevice(), mesh);
@@ -38,16 +36,16 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void MaterialComponent::SetModelPath(const Path& path)
+	void MaterialComponent::SetModelName(const std::string& modelName)
 	{
-		if (m_modelPath != path)
-			m_modelPath = path;
+		if (m_modelName != modelName)
+			m_modelName = modelName;
 	}
 
-	void MaterialComponent::SetTexturePath(const Path& path)
+	void MaterialComponent::SetTextureName(const std::string& textureName)
 	{
-		if (m_texturePath != path)
-			m_texturePath = path;
+		if (m_textureName != textureName)
+			m_textureName = textureName;
 	}
 
 	//-------------------------------------------------------------------------
@@ -56,8 +54,8 @@ namespace library
 	{
 		DrawableComponent::Initialize(app);
 
-		LoadModel(m_modelPath);
-		app.LoadTexture(m_texturePath, m_textureShaderResourceView);
+		LoadModel(m_modelName);
+		app.LoadTexture(m_textureName, m_textureShaderResourceView);
 
 		// set default input layout
 		const auto& material = GetMaterial();
