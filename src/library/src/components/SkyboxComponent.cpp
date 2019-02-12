@@ -37,6 +37,8 @@ namespace library
 			const auto& position = camera->GetPosition();
 			SetPosition(position);
 		}
+
+		AddToRenderer();
 	}
 
 	void SkyboxComponent::SetEffectData()

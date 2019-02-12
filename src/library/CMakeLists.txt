@@ -8,6 +8,7 @@ if(APPLICATION)
             # components
                 include/library/components/Component.h
 
+                include/library/components/BloomComponent.h
                 include/library/components/CameraComponent.h
                 include/library/components/ConcreteMaterialComponent.hpp
                 include/library/components/ConcretePostProcessingComponent.hpp
@@ -16,6 +17,7 @@ if(APPLICATION)
                 include/library/components/FirstPersonCameraComponent.h
                 include/library/components/FpsComponent.h
                 include/library/components/FullScreenQuadComponent.h
+                include/library/components/GaussianBlurComponent.h
                 include/library/components/GridComponent.h
                 include/library/components/InputComponent.h
                 include/library/components/InputReceivableComponent.h
@@ -43,6 +45,7 @@ if(APPLICATION)
                 include/library/materials/Material.h
 
                 include/library/materials/BasicMaterial.h
+                include/library/materials/BloomMaterial.h
                 include/library/materials/ColorFilterMaterial.h
                 include/library/materials/DiffuseLightingMaterial.h
                 include/library/materials/DisplacementMappingMaterial.h
@@ -91,12 +94,14 @@ if(APPLICATION)
             # components
                 src/components/Component.cpp
 
+                src/components/BloomComponent.cpp
                 src/components/CameraComponent.cpp
                 src/components/DirectionalLightComponent.cpp
                 src/components/DrawableComponent.cpp
                 src/components/FirstPersonCameraComponent.cpp
                 src/components/FpsComponent.cpp
                 src/components/FullScreenQuadComponent.cpp
+                src/components/GaussianBlurComponent.cpp
                 src/components/GridComponent.cpp
                 src/components/InputComponent.cpp
                 src/components/InputReceivableComponent.cpp
@@ -124,6 +129,7 @@ if(APPLICATION)
                 src/materials/Material.cpp
 
                 src/materials/BasicMaterial.cpp
+                src/materials/BloomMaterial.cpp
                 src/materials/ColorFilterMaterial.cpp
                 src/materials/DiffuseLightingMaterial.cpp
                 src/materials/DisplacementMappingMaterial.cpp

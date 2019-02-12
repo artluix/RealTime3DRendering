@@ -240,7 +240,7 @@ namespace library
 		HRESULT hr;
 
 		unsigned createDeviceFlags = 0;
-#if (_WIN32_WINNT <= _WIN32_WINNT_WIN7) && (defined(DEBUG) || defined(_DEBUG))
+#if defined(DEBUG) || defined(_DEBUG)
 		createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 

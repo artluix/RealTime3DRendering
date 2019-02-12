@@ -11,8 +11,13 @@ namespace library
 		bool IsVisible() const { return m_visible; }
 		void SetVisible(const bool visible);
 
-		void Initialize(const Application& app) override;
+		using Component::Initialize;
+		using Component::Update;
+
 		virtual void Draw(const Time& time) {}
+
+		void AddToRenderer();
+		void RemoveFromRenderer();
 
 	protected:
 		explicit DrawableComponent() = default;

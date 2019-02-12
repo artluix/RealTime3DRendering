@@ -96,6 +96,8 @@ namespace library
 
 	FullScreenRenderTarget::~FullScreenRenderTarget() = default;
 
+	//-------------------------------------------------------------------------
+
 	void FullScreenRenderTarget::Begin()
 	{
 		m_app.GetDeviceContext()->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());

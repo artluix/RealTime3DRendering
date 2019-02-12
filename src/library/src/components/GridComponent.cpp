@@ -83,6 +83,7 @@ namespace library
 
 	void GridComponent::Update(const Time& time)
 	{
+		AddToRenderer();
 	}
 
 	void GridComponent::Draw(const Time& time)

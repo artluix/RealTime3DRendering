@@ -1,10 +1,12 @@
 #include "StdAfx.h"
 #include "library/components/PostProcessingComponent.h"
 
-#include "library/components/FullScreenQuadComponent.h"
-
 namespace library
 {
+	PostProcessingComponent::~PostProcessingComponent() = default;
+
+	//-------------------------------------------------------------------------
+
 	void PostProcessingComponent::SetSceneTexture(ID3D11ShaderResourceView& sceneTexture)
 	{
 		if (m_sceneTexture != &sceneTexture)
@@ -12,8 +14,6 @@ namespace library
 			m_sceneTexture = &sceneTexture;
 		}
 	}
-
-	PostProcessingComponent::~PostProcessingComponent() = default;
 
 	//-------------------------------------------------------------------------
 

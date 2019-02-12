@@ -5,60 +5,64 @@ if(APPLICATION)
 
     set(DEMO_SOURCES
         # src
+            src/DemoApplication.h
+            src/DemoApplication.cpp
             src/Program.cpp
-            src/Application.h
-            src/Application.cpp
 
-            # components
-                # without materials
-                src/components/CubeComponent.h
-                src/components/CubeComponent.cpp
+        # demo components
 
-                src/components/TriangleComponent.h
-                src/components/TriangleComponent.cpp
+        # without materials
+            src/CubeDemo.h
+            src/CubeDemo.cpp
 
-                src/components/ModelComponent.h
-                src/components/ModelComponent.cpp
+            src/TriangleDemo.h
+            src/TriangleDemo.cpp
 
-                src/components/TextureModelComponent.h
-                src/components/TextureModelComponent.cpp
+            src/ModelDemo.h
+            src/ModelDemo.cpp
 
-                # with materials
-                src/components/BasicComponent.h
-                src/components/BasicComponent.cpp
+            src/TextureModelDemo.h
+            src/TextureModelDemo.cpp
 
-                src/components/ColorFilterComponent.h
-                src/components/ColorFilterComponent.cpp
+        # with materials
+            src/BasicMaterialDemo.h
+            src/BasicMaterialDemo.cpp
 
-                src/components/DiffuseLightingComponent.h
-                src/components/DiffuseLightingComponent.cpp
+            src/BloomDemo.h
+            src/BloomDemo.cpp
 
-                src/components/DisplacementMappingComponent.h
-                src/components/DisplacementMappingComponent.cpp
+            src/ColorFilterDemo.h
+            src/ColorFilterDemo.cpp
 
-                src/components/EnvironmentMappingComponent.h
-                src/components/EnvironmentMappingComponent.cpp
+            src/DiffuseLightingDemo.h
+            src/DiffuseLightingDemo.cpp
 
-                src/components/FogComponent.h
-                src/components/FogComponent.cpp
+            src/DisplacementMappingDemo.h
+            src/DisplacementMappingDemo.cpp
 
-                src/components/GaussianBlurComponent.h
-                src/components/GaussianBlurComponent.cpp
+            src/EnvironmentMappingDemo.h
+            src/EnvironmentMappingDemo.cpp
 
-                src/components/NormalMappingComponent.h
-                src/components/NormalMappingComponent.cpp
+            src/FogDemo.h
+            src/FogDemo.cpp
 
-                src/components/PointLightComponent.h
-                src/components/PointLightComponent.cpp
+            src/GaussianBlurDemo.h
+            src/GaussianBlurDemo.cpp
 
-                src/components/SpotlightComponent.h
-                src/components/SpotlightComponent.cpp
+            src/NormalMappingDemo.h
+            src/NormalMappingDemo.cpp
 
-                src/components/TextureMappingComponent.h
-                src/components/TextureMappingComponent.cpp
+            src/PointLightDemo.h
+            src/PointLightDemo.cpp
 
-                src/components/TransparencyMappingComponent.h
-                src/components/TransparencyMappingComponent.cpp
+            src/SpotlightDemo.h
+            src/SpotlightDemo.cpp
+
+            src/TextureMappingDemo.h
+            src/TextureMappingDemo.cpp
+
+            src/TransparencyMappingDemo.h
+            src/TransparencyMappingDemo.cpp
     )
 
     add_executable(demo WIN32 ${DEMO_SOURCES})

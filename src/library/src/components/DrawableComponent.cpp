@@ -6,15 +6,20 @@
 
 namespace library
 {
-	void DrawableComponent::Initialize(const Application& app)
-	{
-		Component::Initialize(app);
-
-		app.GetRenderer()->RegisterForRender(this);
-	}
-
 	void DrawableComponent::SetVisible(const bool visible)
 	{
 		m_visible = visible;
+	}
+
+	//-------------------------------------------------------------------------
+
+	void DrawableComponent::AddToRenderer()
+	{
+		m_app->GetRenderer()->AddDrawable(this);
+	}
+
+	void DrawableComponent::RemoveFromRenderer()
+	{
+		m_app->GetRenderer()->RemoveDrawable(this);
 	}
 } // namespace library

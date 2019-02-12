@@ -31,11 +31,13 @@ namespace library
 		, m_stencilRef(k_defaultStencilRef)
 	{
 		m_blendFactor.fill(0.f);
+
+		m_drawables.reserve(50); // reserve some memory for drawables
 	}
 
 	//-------------------------------------------------------------------------
 
-	void Renderer::RegisterForRender(Drawable* const drawable)
+	void Renderer::AddDrawable(Drawable* const drawable)
 	{
 		auto it = std::find(m_drawables.begin(), m_drawables.end(), drawable);
 		if (it != m_drawables.end())
@@ -44,7 +46,7 @@ namespace library
 		m_drawables.push_back(drawable);
 	}
 
-	void Renderer::UnregisterForRender(Drawable* const drawable)
+	void Renderer::RemoveDrawable(Drawable* const drawable)
 	{
 		auto it = std::find(m_drawables.begin(), m_drawables.end(), drawable);
 		if (it == m_drawables.end())
@@ -57,19 +59,19 @@ namespace library
 
 	void Renderer::Render(const Time& time)
 	{
+		auto typeComp = [](const Drawable* lhs, const Drawable* rhs)
+		{
+			if (lhs->As<SceneComponent>() && rhs->As<TextComponent>())
+				return true;
+
+			return false;
+		};
+
 		auto effectComp = [](const Drawable* lhs, const Drawable* rhs)
 		{
 			if (const auto lhsMatComponent = lhs->As<MaterialComponent>())
 				if (const auto rhsMatComponent = rhs->As<MaterialComponent>())
 					return lhsMatComponent->GetMaterial().GetEffect().GetName() < rhsMatComponent->GetMaterial().GetEffect().GetName();
-
-			return false;
-		};
-
-		auto typeComp = [](const Drawable* lhs, const Drawable* rhs)
-		{
-			if (lhs->As<SceneComponent>() && rhs->As<TextComponent>())
-				return true;
 
 			return false;
 		};
@@ -86,29 +88,30 @@ namespace library
 
 		//-------------------------------------------------------------------------
 
-		// 1. copy all drawables (prevent modification of vector)
-		auto drawables = m_drawables;
-		
+		// 1. Copy all drawables (prevent modification of vector)
+		auto drawableNodes = m_drawables;
+		m_drawables.clear();
+
 		// 2. Separate 2D & 3D drawables
-		std::sort(drawables.begin(), drawables.end(), typeComp);
+		std::sort(drawableNodes.begin(), drawableNodes.end(), typeComp);
 
 		// 3. Find separate border
-		auto uiIt = std::find_if(drawables.begin(), drawables.end(), textPred);
+		auto uiIt = std::find_if(drawableNodes.begin(), drawableNodes.end(), textPred);
 
 		// 4. Sort by effect and draw scene components
-		if (uiIt != drawables.begin()) // has scene components
+		if (uiIt != drawableNodes.begin()) // has scene components
 		{
-			std::sort(drawables.begin(), uiIt, effectComp);
-			std::for_each(drawables.begin(), uiIt, drawPred);
+			std::sort(drawableNodes.begin(), uiIt, effectComp);
+			std::for_each(drawableNodes.begin(), uiIt, drawPred);
 		}
 
 		// 5. Sort by effect and draw ui components
-		if (uiIt != drawables.end()) // has ui components
+		if (uiIt != drawableNodes.end()) // has ui components
 		{
-			std::sort(uiIt, drawables.end(), effectComp);
+			std::sort(uiIt, drawableNodes.end(), effectComp);
 	
 			SaveRenderState(RenderState::All);
-			std::for_each(uiIt, drawables.end(), drawPred);
+			std::for_each(uiIt, drawableNodes.end(), drawPred);
 			RestoreRenderState(RenderState::All);
 		}
 	}

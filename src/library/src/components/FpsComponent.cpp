@@ -44,5 +44,7 @@ namespace library
 			L"Total Elapsed Time: " << time.total.GetSeconds();
 
 		SetText(woss.str());
+
+		AddToRenderer();
 	}
 } // namespace library

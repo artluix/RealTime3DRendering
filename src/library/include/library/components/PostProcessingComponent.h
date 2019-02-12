@@ -1,6 +1,10 @@
 #pragma once
 #include "library/components/MaterialComponent.h"
+#include "library/components/FullScreenQuadComponent.h"
+
 #include "library/DirectXForwardDeclarations.h"
+
+#include <memory>
 
 namespace library
 {
@@ -16,6 +20,12 @@ namespace library
 
 		ID3D11ShaderResourceView* GetSceneTexture() const { return m_sceneTexture; }
 		void SetSceneTexture(ID3D11ShaderResourceView& sceneTexture);
+
+		using Component::Initialize;
+
+		// we draw only manually
+		void AddToRenderer() = delete;
+		void RemoveFromRenderer() = delete;
 
 	protected:
 		explicit PostProcessingComponent() = default;

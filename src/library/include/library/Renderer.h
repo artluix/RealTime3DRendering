@@ -30,8 +30,8 @@ namespace library
 
 		explicit Renderer(const Application& app);
 
-		void RegisterForRender(Drawable* const drawable);
-		void UnregisterForRender(Drawable* const drawable);
+		void AddDrawable(Drawable* const drawable);
+		void RemoveDrawable(Drawable* const drawable);
 
 		void Render(const Time& time);
 
@@ -44,9 +44,7 @@ namespace library
 		ComPtr<ID3D11DepthStencilState> GetDepthStencilState() { return m_depthStencilState; }
 
 	private:
-		using Drawables = std::vector<Drawable*>;
-
-		Drawables m_drawables;
+		std::vector<Drawable*> m_drawables;
 
 		const Application& m_app;
 
