@@ -73,7 +73,7 @@ void TextureMappingDemo::Update(const Time& time)
 		}
 	}
 
-	AddToRenderer();
+	DrawableComponent::Update(time);
 }
 
 void TextureMappingDemo::Draw_SetData()

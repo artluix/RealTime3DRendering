@@ -20,6 +20,7 @@
 
 #include "ColorFilterDemo.h"
 #include "GaussianBlurDemo.h"
+#include "BloomDemo.h"
 
 //-------------------------------------------------------------------------
 
@@ -208,16 +209,29 @@ void DemoApplication::Initialize()
 
 	// render target
 	m_renderTarget = std::make_unique<FullScreenRenderTarget>(*this);
-		
-	// post processing
+
+	// post-processing
 	{
 		//auto postProcessing = new ColorFilter();
-		auto postProcessing = new GaussianBlurDemo();
+		//auto postProcessing = new GaussianBlurDemo();
+		auto postProcessing = new BloomDemo();
 		postProcessing->SetKeyboard(*m_keyboard);
 		postProcessing->SetSceneTexture(*(m_renderTarget->GetOutputTexture()));
 
 		m_postProcessing = std::unique_ptr<PostProcessingComponent>(postProcessing);
 	}
+
+	// post-processing text component
+	auto postProcessingText = std::make_shared<TextComponent>();
+	postProcessingText->SetTextGeneratorFunction(
+		[this]() -> std::wstring
+		{
+			std::wostringstream woss;
+			woss << L"Post-Processing: " << (m_postProcessingEnabled ? L"Enabled" : L"Disabled");
+			return woss.str();
+		}
+	);
+	postProcessingText->SetPosition(math::Vector2(0.f, 70.f));
 
 	// push needed components
 	m_components.push_back(m_keyboard);
@@ -227,6 +241,7 @@ void DemoApplication::Initialize()
 	m_components.push_back(fps);
 	m_components.push_back(skybox);
 	m_components.push_back(pointLight);
+	m_components.push_back(postProcessingText);
 
 	Application::Initialize();
 

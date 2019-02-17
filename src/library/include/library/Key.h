@@ -76,6 +76,7 @@ namespace library
 		Delete = DIK_DELETE,
 		Comma = DIK_COMMA,
 		Period = DIK_PERIOD,
+		Return = DIK_RETURN,
 
 		//# Count
 		Count

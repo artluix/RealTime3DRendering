@@ -45,6 +45,6 @@ namespace library
 
 		SetText(woss.str());
 
-		AddToRenderer();
+		DrawableComponent::Update(time);
 	}
 } // namespace library

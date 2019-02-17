@@ -69,7 +69,7 @@ void BasicMaterialDemo::Update(const Time& time)
 		}
 	}
 
-	AddToRenderer();
+	DrawableComponent::Update(time);
 }
 
 void BasicMaterialDemo::Draw_SetData()

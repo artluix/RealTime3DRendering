@@ -74,8 +74,7 @@ void EnvironmentMappingDemo::Update(const Time& time)
 
 	m_text->Update(time);
 
-	AddToRenderer();
-	m_text->AddToRenderer();
+	DrawableComponent::Update(time);
 }
 
 void EnvironmentMappingDemo::Draw_SetData()

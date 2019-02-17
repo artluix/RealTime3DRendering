@@ -201,7 +201,7 @@ void TextureModelDemo::Update(const Time& time)
 		}
 	}
 
-	AddToRenderer();
+	DrawableComponent::Update(time);
 }
 
 unsigned TextureModelDemo::GetVertexSize() const

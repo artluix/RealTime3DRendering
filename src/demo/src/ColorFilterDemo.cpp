@@ -108,8 +108,6 @@ void ColorFilterDemo::Update(const Time& time)
 		UpdateGenericFilter(time);
 
 	m_text->Update(time);
-
-	m_text->AddToRenderer();
 }
 
 void ColorFilterDemo::Draw(const Time& time)

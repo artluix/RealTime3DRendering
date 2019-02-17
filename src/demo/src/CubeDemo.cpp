@@ -229,7 +229,7 @@ void CubeDemo::Update(const Time& time)
 		}
 	}
 
-	AddToRenderer();
+	DrawableComponent::Update(time);
 }
 
 void CubeDemo::Draw(const Time& time)

@@ -14,11 +14,14 @@ namespace library
 		explicit GaussianBlurComponent();
 		~GaussianBlurComponent();
 
+		float GetBlurAmount() const { return m_blurAmount; }
+		void SetBlurAmount(const float blurAmount);
+
 		void Initialize(const Application& app) override;
 		void Draw(const Time& time) override;
 
-		float GetBlurAmount() const { return m_blurAmount; }
-		void SetBlurAmount(const float blurAmount);
+		void DrawToTexture(const Time& time);
+		ID3D11ShaderResourceView* GetOutputTexture() const { return m_outputTexture; }
 
 	private:
 		void InitializeSampleOffsets();
@@ -33,6 +36,8 @@ namespace library
 		std::unique_ptr<FullScreenRenderTarget> m_verticalBlurTarget;
 
 		float m_blurAmount;
+
+		ID3D11ShaderResourceView* m_outputTexture = nullptr;
 
 		struct
 		{

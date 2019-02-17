@@ -181,7 +181,7 @@ void ModelDemo::Update(const Time& time)
 		}
 	}
 
-	AddToRenderer();
+	DrawableComponent::Update(time);
 }
 
 void ModelDemo::Draw(const Time& time)

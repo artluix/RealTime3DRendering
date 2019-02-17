@@ -7,9 +7,9 @@ namespace library
 	struct BloomSettings
 	{
 		float bloomThreshold;
+		float blurAmount;
 		float bloomIntensity;
 		float bloomSaturation;
-		float blurAmount;
 		float sceneIntensity;
 		float sceneSaturation;
 	};
@@ -18,12 +18,13 @@ namespace library
 
 	enum class BloomDrawMode
 	{
-		None = -1,
-		ExtractedTexture = 0,
+		Normal = 0,
+		ExtractedTexture,
 		BlurredTexture,
 	};
 
 	std::string BloomDrawModeToString(const BloomDrawMode bloomDrawMode);
+	BloomDrawMode BloomDrawModeNext(const BloomDrawMode bloomDrawMode);
 
 	//-------------------------------------------------------------------------
 
@@ -50,6 +51,7 @@ namespace library
 		void UpdateExtractMaterial();
 		void UpdateCompositeMaterial();
 
+		void DrawNormal(const Time& time);
 		void DrawExtractedTexture(const Time& time);
 		void DrawBlurredTexture(const Time& time);
 

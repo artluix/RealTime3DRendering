@@ -75,6 +75,8 @@ namespace library
 		{
 			m_text = m_generatorFunction();
 		}
+
+		DrawableComponent::Update(time);
 	}
 
 	void TextComponent::Draw(const Time& time)

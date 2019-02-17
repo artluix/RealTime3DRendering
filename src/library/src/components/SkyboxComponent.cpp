@@ -30,7 +30,7 @@ namespace library
 			SetPosition(position);
 		}
 
-		AddToRenderer();
+		DrawableComponent::Update(time);
 	}
 
 	void SkyboxComponent::Draw_SetData()

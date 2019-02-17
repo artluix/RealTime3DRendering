@@ -35,7 +35,6 @@ namespace library
 		void SetColor(const Color& color);
 
 		void Initialize(const Application& app) override;
-		void Update(const Time& time) override;
 
 	protected:
 		void Draw_SetIA() override;

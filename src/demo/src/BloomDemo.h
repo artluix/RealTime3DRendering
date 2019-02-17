@@ -19,10 +19,9 @@ public:
 
 	void Initialize(const library::Application& app) override;
 	void Update(const library::Time& time) override;
-	void Draw(const library::Time& time) override;
 
 private:
-	void UpdateBloom(const library::Time& time);
+	void UpdateSettings(const library::Time& time);
 
 	std::unique_ptr<library::TextComponent> m_text;
 };

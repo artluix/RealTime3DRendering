@@ -81,11 +81,6 @@ namespace library
 		Build();
 	}
 
-	void GridComponent::Update(const Time& time)
-	{
-		AddToRenderer();
-	}
-
 	//-------------------------------------------------------------------------
 
 	void GridComponent::Draw_SetIA()

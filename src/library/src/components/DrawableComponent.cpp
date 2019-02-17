@@ -11,6 +11,19 @@ namespace library
 		m_visible = visible;
 	}
 
+	void DrawableComponent::SetAutoRenderable(const bool autoRenderable)
+	{
+		m_isAutoRenderable = autoRenderable;
+	}
+
+	void DrawableComponent::Update(const Time& time)
+	{
+		Component::Update(time);
+
+		if (m_isAutoRenderable)
+			AddToRenderer();
+	}
+
 	//-------------------------------------------------------------------------
 
 	void DrawableComponent::AddToRenderer()

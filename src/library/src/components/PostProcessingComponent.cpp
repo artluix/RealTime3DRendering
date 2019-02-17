@@ -3,6 +3,11 @@
 
 namespace library
 {
+	PostProcessingComponent::PostProcessingComponent()
+	{
+		SetAutoRenderable(false);
+	}
+
 	PostProcessingComponent::~PostProcessingComponent() = default;
 
 	//-------------------------------------------------------------------------

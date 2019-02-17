@@ -53,9 +53,8 @@ void GaussianBlurDemo::Initialize(const Application& app)
 void GaussianBlurDemo::Update(const Time& time)
 {
 	UpdateBlurAmount(time);
-	m_text->Update(time);
 
-	m_text->AddToRenderer();
+	m_text->Update(time);
 }
 
 void GaussianBlurDemo::UpdateBlurAmount(const Time& time)

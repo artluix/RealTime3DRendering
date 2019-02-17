@@ -28,7 +28,7 @@ namespace library
 		void RemoveFromRenderer() = delete;
 
 	protected:
-		explicit PostProcessingComponent() = default;
+		explicit PostProcessingComponent();
 		
 		void InitializeQuad(const Application& app, const std::string& techniqueName, const std::string& passName = "p0");
 

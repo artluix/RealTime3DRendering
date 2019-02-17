@@ -82,9 +82,7 @@ void DiffuseLightingDemo::Update(const Time& time)
 	m_text->Update(time);
 	m_proxyModel->Update(time);
 
-	AddToRenderer();
-	m_text->AddToRenderer();
-	m_proxyModel->AddToRenderer();
+	DrawableComponent::Update(time);
 }
 
 void DiffuseLightingDemo::UpdateAmbientLight(const Time& time)
