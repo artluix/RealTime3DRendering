@@ -39,8 +39,8 @@ SpotlightDemo::SpotlightDemo()
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
 	, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 {
-	SetModelName("Plane");
-	SetTextureName("Checkerboard");
+	SetDefaultModelName("Plane");
+	SetDefaultTextureName("Checkerboard");
 }
 
 SpotlightDemo::~SpotlightDemo() = default;
@@ -50,7 +50,7 @@ void SpotlightDemo::Initialize(const Application& app)
 	assert(!!GetCamera());
 
 	InitializeMaterial(app, "Spotlight");
-	MaterialComponent::Initialize(app);
+	DrawableInputMaterialComponent::Initialize(app);
 
 	m_spotlight = std::make_unique<SpotlightComponent>();
 	m_spotlight->SetRadius(10.f);
@@ -278,7 +278,7 @@ void SpotlightDemo::UpdateSpecularLight(const Time& time)
 	}
 }
 
-void SpotlightDemo::SetEffectData()
+void SpotlightDemo::Draw_SetData()
 {
 	auto world = GetWorldMatrix();
 	if (auto camera = GetCamera())
@@ -299,7 +299,7 @@ void SpotlightDemo::SetEffectData()
 	m_material->GetLightLookAt() << m_spotlight->GetDirection();
 	m_material->GetSpotlightInnerAngle() << m_spotlight->GetInnerAngle();
 	m_material->GetSpotlightOuterAngle() << m_spotlight->GetOuterAngle();
-	m_material->GetColorTexture() << m_textureShaderResourceView.Get();
+	m_material->GetColorTexture() << m_defaultTexture.Get();
 
-	MaterialComponent::SetEffectData();
+	DrawableInputMaterialComponent::Draw_SetData();
 }

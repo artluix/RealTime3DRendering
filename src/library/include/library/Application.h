@@ -58,7 +58,7 @@ namespace library
 		virtual void ResetRenderTargets() const;
 		virtual void UnbindPixelShaderResources(const unsigned startIdx, const unsigned count) const;
 
-		virtual void LoadTexture(const std::string& textureName, ComPtr<ID3D11ShaderResourceView>& textureShaderResourceView) const;
+		virtual ComPtr<ID3D11ShaderResourceView> LoadTexture(const std::string& textureName) const;
 
 		virtual const Path& GetDataPath() const = 0;
 		virtual const Path& GetTexturesPath() const;

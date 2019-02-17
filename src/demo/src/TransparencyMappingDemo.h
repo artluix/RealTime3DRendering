@@ -2,7 +2,7 @@
 #include <library/materials/TransparencyMappingMaterial.h>
 
 #include <library/components/SceneComponent.h>
-#include <library/components/ConcreteMaterialComponent.hpp>
+#include <library/components/ConcreteDrawableInputMaterialComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 #include <library/DirectXForwardDeclarations.h>
@@ -19,10 +19,10 @@ namespace library
 
 class TransparencyMappingDemo
 	: public library::SceneComponent
-	, public library::ConcreteMaterialComponent<library::TransparencyMappingMaterial>
+	, public library::ConcreteDrawableInputMaterialComponent<library::TransparencyMappingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(TransparencyMappingDemo, library::SceneComponent, library::MaterialComponent, library::InputReceivableComponent)
+	RTTI_CLASS(TransparencyMappingDemo, library::SceneComponent, library::DrawableInputMaterialComponent, library::InputReceivableComponent)
 
 public:
 	explicit TransparencyMappingDemo();
@@ -37,10 +37,10 @@ private:
 	void UpdatePointLight(const library::Time& time);
 	void UpdateSpecularLight(const library::Time& time);
 
-	void SetEffectData() override;
-	void Render() override;
+	void Draw_SetData() override;
+	void Draw_Render() override;
 
-	ComPtr<ID3D11ShaderResourceView> m_transparencyMapShaderResourceView;
+	ComPtr<ID3D11ShaderResourceView> m_transparencyMapTexture;
 
 	library::Color m_ambientColor;
 	library::Color m_specularColor;

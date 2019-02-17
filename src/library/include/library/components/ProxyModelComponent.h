@@ -2,7 +2,7 @@
 #include "library/materials/BasicMaterial.h"
 
 #include "library/components/SceneComponent.h"
-#include "library/components/ConcreteMaterialComponent.hpp"
+#include "library/components/ConcreteDrawableInputMaterialComponent.hpp"
 
 #include "library/DirectXForwardDeclarations.h"
 
@@ -12,7 +12,7 @@ namespace library
 {
 	class ProxyModelComponent
 		: public SceneComponent
-		, public ConcreteMaterialComponent<BasicMaterial>
+		, public ConcreteDrawableInputMaterialComponent<BasicMaterial>
 	{
 		RTTI_CLASS(ProxyModelComponent, SceneComponent)
 
@@ -31,8 +31,8 @@ namespace library
 		using DrawableComponent::Draw;
 
 	protected:
-		void SetEffectData() override;
-		void Render() override;
+		void Draw_SetData() override;
+		void Draw_Render() override;
 
 	private:
 		bool m_isWireframeVisible = true;

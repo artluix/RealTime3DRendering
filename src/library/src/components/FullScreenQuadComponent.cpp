@@ -60,10 +60,10 @@ namespace library
 				Vertex(DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f)),
 				Vertex(DirectX::XMFLOAT4(1.0f, -1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f)),
 			};
-			m_verticesCount = vertices.size();
+			m_vertexBufferData.count = vertices.size();
 
 			D3D11_BUFFER_DESC vertexBufferDesc{};
-			vertexBufferDesc.ByteWidth = sizeof(Vertex) * m_verticesCount;
+			vertexBufferDesc.ByteWidth = sizeof(Vertex) * m_vertexBufferData.count;
 			vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 			vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
@@ -73,7 +73,7 @@ namespace library
 			auto hr = app.GetDevice()->CreateBuffer(
 				&vertexBufferDesc,
 				&vertexSubResourceData,
-				m_vertexBuffer.GetAddressOf()
+				m_vertexBufferData.buffer.GetAddressOf()
 			);
 			if (FAILED(hr))
 			{
@@ -83,15 +83,17 @@ namespace library
 
 		// index buffer
 		{
+			m_indexBufferData = std::make_unique<BufferData>();
+
 			std::array<unsigned, 6> indices =
 			{
 				0, 1, 2,
 				0, 2, 3,
 			};
-			m_indicesCount = indices.size();
+			m_indexBufferData->count = indices.size();
 
 			D3D11_BUFFER_DESC indexBufferDesc{};
-			indexBufferDesc.ByteWidth = sizeof(unsigned) * m_indicesCount;
+			indexBufferDesc.ByteWidth = sizeof(unsigned) * m_indexBufferData->count;
 			indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 			indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
@@ -101,7 +103,7 @@ namespace library
 			auto hr = app.GetDevice()->CreateBuffer(
 				&indexBufferDesc,
 				&indexSubResourceData,
-				m_indexBuffer.GetAddressOf()
+				m_indexBufferData->buffer.GetAddressOf()
 			);
 			if (FAILED(hr))
 			{
@@ -110,7 +112,7 @@ namespace library
 		}
 	}
 
-	void FullScreenQuadComponent::SetEffectData()
+	void FullScreenQuadComponent::Draw_SetData()
 	{
 		if (!!m_materialUpdateFunction)
 		{

@@ -10,10 +10,14 @@ if(APPLICATION)
 
                 include/library/components/BloomComponent.h
                 include/library/components/CameraComponent.h
-                include/library/components/ConcreteMaterialComponent.hpp
+                include/library/components/ConcreteDrawableInputMaterialComponent.hpp
+                include/library/components/ConcreteDrawableMaterialComponent.hpp
                 include/library/components/ConcretePostProcessingComponent.hpp
                 include/library/components/DirectionalLightComponent.h
                 include/library/components/DrawableComponent.h
+                include/library/components/DrawableInputComponent.h
+                include/library/components/DrawableInputMaterialComponent.h
+                include/library/components/DrawableMaterialComponent.h
                 include/library/components/FirstPersonCameraComponent.h
                 include/library/components/FpsComponent.h
                 include/library/components/FullScreenQuadComponent.h
@@ -23,8 +27,6 @@ if(APPLICATION)
                 include/library/components/InputReceivableComponent.h
                 include/library/components/KeyboardComponent.h
                 include/library/components/LightComponent.h
-                include/library/components/IMaterialComponent.h
-                include/library/components/MaterialComponent.h
                 include/library/components/MouseComponent.h
                 include/library/components/PointLightComponent.h
                 include/library/components/PostProcessingComponent.h
@@ -98,6 +100,8 @@ if(APPLICATION)
                 src/components/CameraComponent.cpp
                 src/components/DirectionalLightComponent.cpp
                 src/components/DrawableComponent.cpp
+                src/components/DrawableInputComponent.cpp
+                src/components/DrawableInputMaterialComponent.cpp
                 src/components/FirstPersonCameraComponent.cpp
                 src/components/FpsComponent.cpp
                 src/components/FullScreenQuadComponent.cpp
@@ -107,7 +111,6 @@ if(APPLICATION)
                 src/components/InputReceivableComponent.cpp
                 src/components/KeyboardComponent.cpp
                 src/components/LightComponent.cpp
-                src/components/MaterialComponent.cpp
                 src/components/MouseComponent.cpp
                 src/components/PointLightComponent.cpp
                 src/components/PostProcessingComponent.cpp
@@ -116,7 +119,6 @@ if(APPLICATION)
                 src/components/SkyboxComponent.cpp
                 src/components/SpotLightComponent.cpp
                 src/components/TextComponent.cpp
-
 
             # effect
                 src/effect/Effect.cpp

@@ -36,7 +36,7 @@ TransparencyMappingDemo::TransparencyMappingDemo()
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
 	, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 {
-	SetTextureName("Checkerboard");
+	SetDefaultTextureName("Checkerboard");
 }
 
 TransparencyMappingDemo::~TransparencyMappingDemo() = default;
@@ -62,18 +62,18 @@ void TransparencyMappingDemo::Initialize(const Application& app)
 			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward),
 		};
 
-		m_verticesCount = vertices.size();
-		m_vertexBuffer = library::Material::CreateVertexBuffer(
+		m_vertexBufferData.count = vertices.size();
+		m_vertexBufferData.buffer = library::Material::CreateVertexBuffer(
 			app.GetDevice(),
 			vertices.data(),
-			m_verticesCount * sizeof(Vertex)
+			m_vertexBufferData.count * sizeof(Vertex)
 		);
 	}
 
 	InitializeMaterial(app, "TransparencyMapping");
-	MaterialComponent::Initialize(app);
+	DrawableInputMaterialComponent::Initialize(app);
 
-	app.LoadTexture("AlphaMask_32bpp", m_transparencyMapShaderResourceView);
+	m_transparencyMapTexture = app.LoadTexture("AlphaMask_32bpp");
 
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetRadius(50.f);
@@ -216,7 +216,7 @@ void TransparencyMappingDemo::UpdateSpecularLight(const Time& time)
 	}
 }
 
-void TransparencyMappingDemo::SetEffectData()
+void TransparencyMappingDemo::Draw_SetData()
 {
 	auto wvp = GetWorldMatrix();
 	if (auto camera = GetCamera())
@@ -236,19 +236,19 @@ void TransparencyMappingDemo::SetEffectData()
 	m_material->GetSpecularPower() << m_specularPower;
 	m_material->GetSpecularColor() << m_specularColor;
 
-	m_material->GetColorTexture() << m_textureShaderResourceView.Get();
-	m_material->GetTransparencyMap() << m_transparencyMapShaderResourceView.Get();
+	m_material->GetColorTexture() << m_defaultTexture.Get();
+	m_material->GetTransparencyMap() << m_transparencyMapTexture.Get();
 
-	MaterialComponent::SetEffectData();
+	DrawableInputMaterialComponent::Draw_SetData();
 }
 
-void TransparencyMappingDemo::Render()
+void TransparencyMappingDemo::Draw_Render()
 {
 	auto deviceContext = m_app->GetDeviceContext();
 	auto renderer = m_app->GetRenderer();
 
 	renderer->SaveRenderState(RenderState::Blend);
 	deviceContext->OMSetBlendState(BlendStateHolder::GetBlendState(BlendState::Alpha).Get(), 0, 0xFFFFFFFF);
-	deviceContext->Draw(m_verticesCount, 0);
+	deviceContext->Draw(m_vertexBufferData.count, 0);
 	renderer->RestoreRenderState(RenderState::Blend);
-	}
+}

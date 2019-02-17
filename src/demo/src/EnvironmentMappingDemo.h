@@ -2,7 +2,7 @@
 #include <library/materials/EnvironmentMappingMaterial.h>
 
 #include <library/components/SceneComponent.h>
-#include <library/components/ConcreteMaterialComponent.hpp>
+#include <library/components/ConcreteDrawableInputMaterialComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 #include <library/DirectXForwardDeclarations.h>
@@ -17,10 +17,10 @@ namespace library
 
 class EnvironmentMappingDemo
 	: public library::SceneComponent
-	, public library::ConcreteMaterialComponent<library::EnvironmentMappingMaterial>
+	, public library::ConcreteDrawableInputMaterialComponent<library::EnvironmentMappingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(EnvironmentMappingDemo, library::SceneComponent, library::InputReceivableComponent)
+	RTTI_CLASS(EnvironmentMappingDemo, library::SceneComponent, library::DrawableInputMaterialComponent, library::InputReceivableComponent)
 
 public:
 	explicit EnvironmentMappingDemo();
@@ -31,12 +31,12 @@ public:
 	using library::DrawableComponent::Draw;
 
 private:
-	void SetEffectData() override;
+	void Draw_SetData() override;
 
 	library::Color m_ambientColor;
 	float m_reflectionAmount;
 
-	ComPtr<ID3D11ShaderResourceView> m_environmentMapShaderResourceView;
+	ComPtr<ID3D11ShaderResourceView> m_environmentMapTexture;
 
 	std::unique_ptr<library::TextComponent> m_text;
 };

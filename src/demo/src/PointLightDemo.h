@@ -2,7 +2,7 @@
 #include <library/materials/PointLightMaterial.h>
 
 #include <library/components/SceneComponent.h>
-#include <library/components/ConcreteMaterialComponent.hpp>
+#include <library/components/ConcreteDrawableInputMaterialComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 #include <library/Color.h>
@@ -18,10 +18,10 @@ namespace library
 
 class PointLightDemo
 	: public library::SceneComponent
-	, public library::ConcreteMaterialComponent<library::PointLightMaterial>
+	, public library::ConcreteDrawableInputMaterialComponent<library::PointLightMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(PointLightDemo, library::SceneComponent, library::MaterialComponent, library::InputReceivableComponent)
+	RTTI_CLASS(PointLightDemo, library::SceneComponent, library::DrawableInputMaterialComponent, library::InputReceivableComponent)
 
 public:
 	explicit PointLightDemo();
@@ -36,7 +36,7 @@ private:
 	void UpdatePointLight(const library::Time& time);
 	void UpdateSpecularLight(const library::Time& time);
 
-	void SetEffectData() override;
+	void Draw_SetData() override;
 
 	float m_specularPower;
 	library::Color m_specularColor;

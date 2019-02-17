@@ -37,8 +37,8 @@ DisplacementMappingDemo::DisplacementMappingDemo()
 	, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 	, m_displacementScale(0.f)
 {
-	SetModelName("Plane");
-	SetTextureName("Blocks_COLOR_RGB");
+	SetDefaultModelName("Plane");
+	SetDefaultTextureName("Blocks_COLOR_RGB");
 }
 
 DisplacementMappingDemo::~DisplacementMappingDemo() = default;
@@ -48,9 +48,9 @@ void DisplacementMappingDemo::Initialize(const Application& app)
 	assert(!!GetCamera());
 
 	InitializeMaterial(app, "DisplacementMapping");
-	MaterialComponent::Initialize(app);
+	DrawableInputMaterialComponent::Initialize(app);
 
-	app.LoadTexture("Blocks_DISP", m_displacementMapShaderResourceView);
+	m_displacementMapTexture = app.LoadTexture("Blocks_DISP");
 
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetRadius(50.f);
@@ -190,7 +190,7 @@ void DisplacementMappingDemo::UpdateDisplacement(const Time& time)
 	}
 }
 
-void DisplacementMappingDemo::SetEffectData()
+void DisplacementMappingDemo::Draw_SetData()
 {
 	auto wvp = GetWorldMatrix();
 	if (auto camera = GetCamera())
@@ -211,8 +211,8 @@ void DisplacementMappingDemo::SetEffectData()
 	m_material->GetSpecularColor() << m_specularColor;
 	m_material->GetDisplacementScale() << m_displacementScale;
 
-	m_material->GetColorTexture() << m_textureShaderResourceView.Get();
-	m_material->GetDisplacementMap() << m_displacementMapShaderResourceView.Get();
+	m_material->GetColorTexture() << m_defaultTexture.Get();
+	m_material->GetDisplacementMap() << m_displacementMapTexture.Get();
 
-	MaterialComponent::SetEffectData();
+	DrawableInputMaterialComponent::Draw_SetData();
 }

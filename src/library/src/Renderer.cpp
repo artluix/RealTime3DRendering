@@ -4,7 +4,7 @@
 #include "library/components/DrawableComponent.h"
 #include "library/components/TextComponent.h"
 #include "library/components/SceneComponent.h"
-#include "library/components/MaterialComponent.h"
+#include "library/components/DrawableMaterialComponent.h"
 
 #include "library/effect/Effect.h"
 #include "library/materials/Material.h"
@@ -69,8 +69,8 @@ namespace library
 
 		auto effectComp = [](const Drawable* lhs, const Drawable* rhs)
 		{
-			if (const auto lhsMatComponent = lhs->As<MaterialComponent>())
-				if (const auto rhsMatComponent = rhs->As<MaterialComponent>())
+			if (const auto lhsMatComponent = lhs->As<DrawableMaterialComponent>())
+				if (const auto rhsMatComponent = rhs->As<DrawableMaterialComponent>())
 					return lhsMatComponent->GetMaterial().GetEffect().GetName() < rhsMatComponent->GetMaterial().GetEffect().GetName();
 
 			return false;

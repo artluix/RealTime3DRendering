@@ -4,30 +4,22 @@
 #include "library/components/CameraComponent.h"
 
 #include "library/Application.h"
-#include "library/Utils.h"
-#include "library/Exception.h"
 
-#include "library/effect/Effect.h"
-#include "library/effect/EffectPass.h"
-#include "library/effect/EffectTechnique.h"
 #include "library/effect/EffectVariable.h"
-#include "library/materials/SkyboxMaterial.h"
-
-#include <DDSTextureLoader.h>
 
 namespace library
 {
 	SkyboxComponent::SkyboxComponent(const std::string& cubeMapName, const float scale)
 	{
-		SetModelName("Sphere");
-		SetTextureName(cubeMapName);
+		SetDefaultModelName("Sphere");
+		SetDefaultTextureName(cubeMapName);
 		SetScaling(math::Vector3(scale));
 	}
 
 	void SkyboxComponent::Initialize(const Application& app)
 	{
 		InitializeMaterial(app, "Skybox");
-		MaterialComponent::Initialize(app);
+		DrawableInputMaterialComponent::Initialize(app);
 	}
 
 	void SkyboxComponent::Update(const Time& time)
@@ -41,15 +33,15 @@ namespace library
 		AddToRenderer();
 	}
 
-	void SkyboxComponent::SetEffectData()
+	void SkyboxComponent::Draw_SetData()
 	{
 		auto wvp = GetWorldMatrix();
 		if (auto camera = GetCamera())
 			wvp *= camera->GetViewProjectionMatrix();
 
 		m_material->GetWorldViewProjection() << wvp;
-		m_material->GetSkyboxTexture() << m_textureShaderResourceView.Get();
+		m_material->GetSkyboxTexture() << m_defaultTexture.Get();
 
-		MaterialComponent::SetEffectData();
+		DrawableInputMaterialComponent::Draw_SetData();
 	}
 } // namespace library

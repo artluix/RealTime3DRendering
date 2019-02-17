@@ -2,15 +2,15 @@
 #include <library/materials/TextureMappingMaterial.h>
 
 #include <library/components/SceneComponent.h>
-#include <library/components/ConcreteMaterialComponent.hpp>
+#include <library/components/ConcreteDrawableInputMaterialComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 class TextureMappingDemo
 	: public library::SceneComponent
-	, public library::ConcreteMaterialComponent<library::TextureMappingMaterial>
+	, public library::ConcreteDrawableInputMaterialComponent<library::TextureMappingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(TextureMappingDemo, library::SceneComponent, library::MaterialComponent, library::InputReceivableComponent)
+	RTTI_CLASS(TextureMappingDemo, library::SceneComponent, library::DrawableInputMaterialComponent, library::InputReceivableComponent)
 
 public:
 	explicit TextureMappingDemo();
@@ -20,5 +20,5 @@ public:
 	using DrawableComponent::Draw;
 
 protected:
-	void SetEffectData() override;
+	void Draw_SetData() override;
 };

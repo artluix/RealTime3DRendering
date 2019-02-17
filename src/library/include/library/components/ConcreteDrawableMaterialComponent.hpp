@@ -1,6 +1,6 @@
 #pragma once
 #include "library/materials/Material.h"
-#include "library/components/MaterialComponent.h"
+#include "library/components/DrawableMaterialComponent.h"
 #include "library/effect/Effect.h"
 
 #include <type_traits>
@@ -13,7 +13,7 @@ namespace library
 	class Path;
 
 	template<class MaterialType, typename = std::enable_if_t<std::is_base_of_v<Material, MaterialType>>>
-	class ConcreteMaterialComponent : public virtual MaterialComponent
+	class ConcreteDrawableMaterialComponent : public virtual DrawableMaterialComponent
 	{
 	public:
 		using Material = MaterialType;
@@ -21,7 +21,7 @@ namespace library
 		const Material& GetMaterial() const override { return *m_material; }
 
 	protected:
-		explicit ConcreteMaterialComponent() = default;
+		explicit ConcreteDrawableMaterialComponent() = default;
 
 		void InitializeMaterial(const Application& app, const std::string& effectName, const bool compile = false)
 		{

@@ -2,7 +2,7 @@
 #include "library/materials/BasicMaterial.h"
 
 #include "library/components/SceneComponent.h"
-#include "library/components/ConcreteMaterialComponent.hpp"
+#include "library/components/ConcreteDrawableInputMaterialComponent.hpp"
 #include "library/components/InputReceivableComponent.h"
 
 #include "library/Color.h"
@@ -12,10 +12,9 @@ namespace library
 {
 	class GridComponent
 		: public SceneComponent
-		, public ConcreteMaterialComponent<BasicMaterial>
-		, public InputReceivableComponent
+		, public ConcreteDrawableInputMaterialComponent<BasicMaterial>
 	{
-		RTTI_CLASS(GridComponent, SceneComponent, MaterialComponent, InputReceivableComponent)
+		RTTI_CLASS(GridComponent, SceneComponent, DrawableInputMaterialComponent)
 
 	public:
 		explicit GridComponent();
@@ -37,7 +36,10 @@ namespace library
 
 		void Initialize(const Application& app) override;
 		void Update(const Time& time) override;
-		void Draw(const Time& time) override;
+
+	protected:
+		void Draw_SetIA() override;
+		void Draw_SetData() override;
 
 	private:
 		void Build();

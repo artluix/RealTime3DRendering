@@ -105,7 +105,7 @@ void ColorFilterDemo::Update(const Time& time)
 	}
 
 	if (m_type == ColorFilterDemo::Generic)
-		UpdateGenericColorFilter(time);
+		UpdateGenericFilter(time);
 
 	m_text->Update(time);
 
@@ -117,7 +117,7 @@ void ColorFilterDemo::Draw(const Time& time)
 	m_fullScreenQuad->Draw(time);
 }
 
-void ColorFilterDemo::UpdateGenericColorFilter(const Time& time)
+void ColorFilterDemo::UpdateGenericFilter(const Time& time)
 {
 	static float brightness = 1.0f;
 

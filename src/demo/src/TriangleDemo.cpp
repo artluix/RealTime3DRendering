@@ -14,7 +14,7 @@ using namespace library;
 
 void TriangleDemo::Initialize(const Application& app)
 {
-	DrawableComponent::Initialize(app);
+	DrawableInputComponent::Initialize(app);
 
 	// shader
 	{
@@ -119,6 +119,8 @@ void TriangleDemo::Initialize(const Application& app)
 			VertexPositionColor(DirectX::XMFLOAT4(l, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f)), // right blue
 		};
 
+		m_vertexBufferData.count = vertices.size();
+
 		D3D11_BUFFER_DESC vertexBufferDesc{};
 		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 		vertexBufferDesc.ByteWidth = sizeof(VertexPositionColor) * vertices.size();
@@ -130,7 +132,7 @@ void TriangleDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
-			m_vertexBuffer.GetAddressOf()
+			m_vertexBufferData.buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
@@ -148,22 +150,16 @@ void TriangleDemo::Update(const Time& time)
 	AddToRenderer();
 }
 
-void TriangleDemo::Draw(const Time& time)
+unsigned TriangleDemo::GetVertexSize() const
 {
-	auto deviceContext = m_app->GetDeviceContext();
+	return sizeof(VertexPositionColor);
+}
 
+void TriangleDemo::Draw_SetData()
+{
 	auto wvp = GetWorldMatrix();
 	if (auto camera = GetCamera())
 		wvp *= camera->GetViewProjectionMatrix();
 
-	m_pass->Apply(0, deviceContext);
-
-	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	deviceContext->IASetInputLayout(m_inputLayout.Get());
-
-	unsigned stride = sizeof(VertexPositionColor);
-	unsigned offset = 0;
-	deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
-
-	deviceContext->Draw(3, 0);
+	m_pass->Apply(0, m_app->GetDeviceContext());
 }

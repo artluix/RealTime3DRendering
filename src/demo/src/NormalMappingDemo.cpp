@@ -37,7 +37,7 @@ NormalMappingDemo::NormalMappingDemo()
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
 	, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 {
-	SetTextureName("Blocks_COLOR_RGB");
+	SetDefaultTextureName("Blocks_COLOR_RGB");
 }
 
 NormalMappingDemo::~NormalMappingDemo() = default;
@@ -64,18 +64,18 @@ void NormalMappingDemo::Initialize(const Application& app)
 			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward, right),
 		};
 
-		m_verticesCount = vertices.size();
-		m_vertexBuffer = m_material->Material::CreateVertexBuffer(
+		m_vertexBufferData.count = vertices.size();
+		m_vertexBufferData.buffer = m_material->Material::CreateVertexBuffer(
 			app.GetDevice(),
 			vertices.data(),
-			m_verticesCount * sizeof(Vertex)
+			m_vertexBufferData.count * sizeof(Vertex)
 		);
 	}
 
 	InitializeMaterial(app, "NormalMapping");
-	MaterialComponent::Initialize(app);
+	DrawableInputMaterialComponent::Initialize(app);
 
-	app.LoadTexture("Blocks_NORM", m_normalMapShaderResourceView);
+	m_normalMapTexture = app.LoadTexture("Blocks_NORM");
 
 	m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
@@ -215,7 +215,7 @@ void NormalMappingDemo::UpdateSpecularLight(const Time& time)
 	}
 }
 
-void NormalMappingDemo::SetEffectData()
+void NormalMappingDemo::Draw_SetData()
 {
 	auto wvp = GetWorldMatrix();
 	if (auto camera = GetCamera())
@@ -232,8 +232,8 @@ void NormalMappingDemo::SetEffectData()
 	m_material->GetAmbientColor() << m_ambientColor;
 	m_material->GetLightColor() << m_directionalLight->GetColor();
 	m_material->GetLightDirection() << m_directionalLight->GetDirection();
-	m_material->GetColorTexture() << m_textureShaderResourceView.Get();
-	m_material->GetNormalMap() << m_normalMapShaderResourceView.Get();
+	m_material->GetColorTexture() << m_defaultTexture.Get();
+	m_material->GetNormalMap() << m_normalMapTexture.Get();
 
-	MaterialComponent::SetEffectData();
+	DrawableInputMaterialComponent::Draw_SetData();
 }

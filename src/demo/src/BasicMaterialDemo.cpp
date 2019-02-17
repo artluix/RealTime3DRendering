@@ -8,25 +8,24 @@
 
 #include <library/Application.h>
 #include <library/Utils.h>
-#include <library/Exception.h>
 
 using namespace library;
-	
+
 namespace
 {
 	constexpr float k_rotationAngle = math::Pi_Div_2;
 	constexpr float k_movementRate = 0.01f;
 }
 
-BasicMaterialDemo::BasicMaterialDemo() 
+BasicMaterialDemo::BasicMaterialDemo()
 {
-	SetModelName("Sphere");
+	SetDefaultModelName("Sphere");
 }
 
 void BasicMaterialDemo::Initialize(const Application& app)
 {
 	InitializeMaterial(app, "Basic");
-	MaterialComponent::Initialize(app);
+	DrawableMaterialComponent::Initialize(app);
 }
 
 void BasicMaterialDemo::Update(const Time& time)
@@ -73,7 +72,7 @@ void BasicMaterialDemo::Update(const Time& time)
 	AddToRenderer();
 }
 
-void BasicMaterialDemo::SetEffectData()
+void BasicMaterialDemo::Draw_SetData()
 {
 	auto wvp = GetWorldMatrix();
 	if (auto camera = GetCamera())
@@ -81,5 +80,5 @@ void BasicMaterialDemo::SetEffectData()
 
 	m_material->GetWorldViewProjection() << wvp;
 
-	MaterialComponent::SetEffectData();
+	DrawableInputMaterialComponent::Draw_SetData();
 }

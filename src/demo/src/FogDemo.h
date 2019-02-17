@@ -2,7 +2,7 @@
 #include <library/materials/FogMaterial.h>
 
 #include <library/components/SceneComponent.h>
-#include <library/components/ConcreteMaterialComponent.hpp>
+#include <library/components/ConcreteDrawableInputMaterialComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 #include <library/DirectXForwardDeclarations.h>
@@ -19,10 +19,10 @@ namespace library
 
 class FogDemo
 	: public library::SceneComponent
-	, public library::ConcreteMaterialComponent<library::FogMaterial>
+	, public library::ConcreteDrawableInputMaterialComponent<library::FogMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(FogDemo, library::SceneComponent, library::MaterialComponent, library::InputReceivableComponent)
+	RTTI_CLASS(FogDemo, library::SceneComponent, library::DrawableInputMaterialComponent, library::InputReceivableComponent)
 
 public:
 	explicit FogDemo();
@@ -37,7 +37,7 @@ private:
 	void UpdateDirectionalLight(const library::Time& time);
 	void SetActiveTechnique();
 
-	void SetEffectData() override;
+	void Draw_SetData() override;
 
 	library::Color m_ambientColor;
 

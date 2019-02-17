@@ -2,7 +2,7 @@
 #include <library/materials/DisplacementMappingMaterial.h>
 
 #include <library/components/SceneComponent.h>
-#include <library/components/ConcreteMaterialComponent.hpp>
+#include <library/components/ConcreteDrawableInputMaterialComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 #include <library/DirectXForwardDeclarations.h>
@@ -19,10 +19,10 @@ namespace library
 
 class DisplacementMappingDemo
 	: public library::SceneComponent
-	, public library::ConcreteMaterialComponent<library::DisplacementMappingMaterial>
+	, public library::ConcreteDrawableInputMaterialComponent<library::DisplacementMappingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(DisplacementMappingDemo, library::SceneComponent, library::MaterialComponent, library::InputReceivableComponent)
+	RTTI_CLASS(DisplacementMappingDemo, library::SceneComponent, library::DrawableInputMaterialComponent, library::InputReceivableComponent)
 
 public:
 	explicit DisplacementMappingDemo();
@@ -38,9 +38,9 @@ private:
 
 	void UpdateDisplacement(const library::Time& time);
 
-	void SetEffectData() override;
+	void Draw_SetData() override;
 
-	ComPtr<ID3D11ShaderResourceView> m_displacementMapShaderResourceView;
+	ComPtr<ID3D11ShaderResourceView> m_displacementMapTexture;
 
 	library::Color m_ambientColor;
 	library::Color m_specularColor;

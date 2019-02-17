@@ -2,7 +2,7 @@
 #include <library/materials/SpotlightMaterial.h>
 
 #include <library/components/SceneComponent.h>
-#include <library/components/ConcreteMaterialComponent.hpp>
+#include <library/components/ConcreteDrawableInputMaterialComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 #include <library/Color.h>
 
@@ -17,10 +17,10 @@ namespace library
 
 class SpotlightDemo
 	: public library::SceneComponent
-	, public library::ConcreteMaterialComponent<library::SpotlightMaterial>
+	, public library::ConcreteDrawableInputMaterialComponent<library::SpotlightMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(SpotlightDemo, library::SceneComponent, library::InputReceivableComponent)
+	RTTI_CLASS(SpotlightDemo, library::SceneComponent, library::DrawableInputMaterialComponent, library::InputReceivableComponent)
 
 public:
 	explicit SpotlightDemo();
@@ -35,7 +35,7 @@ private:
 	void UpdateSpotlight(const library::Time& time);
 	void UpdateSpecularLight(const library::Time& time);
 
-	void SetEffectData() override;
+	void Draw_SetData() override;
 
 	float m_specularPower;
 	library::Color m_specularColor;

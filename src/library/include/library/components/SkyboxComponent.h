@@ -2,17 +2,15 @@
 #include "library/materials/SkyboxMaterial.h"
 
 #include "library/components/SceneComponent.h"
-#include "library/components/ConcreteMaterialComponent.hpp"
-
-#include <string>
+#include "library/components/ConcreteDrawableInputMaterialComponent.hpp"
 
 namespace library
 {
 	class SkyboxComponent
 		: public SceneComponent
-		, public ConcreteMaterialComponent<SkyboxMaterial>
+		, public ConcreteDrawableInputMaterialComponent<SkyboxMaterial>
 	{
-		RTTI_CLASS(SkyboxComponent, SceneComponent, MaterialComponent)
+		RTTI_CLASS(SkyboxComponent, SceneComponent, DrawableInputMaterialComponent)
 
 	public:
 		explicit SkyboxComponent(const std::string& cubeMapName, const float scale);
@@ -20,9 +18,8 @@ namespace library
 
 		void Initialize(const Application& app) override;
 		void Update(const Time& time) override;
-		using DrawableComponent::Draw;
 
 	protected:
-		void SetEffectData() override;
+		void Draw_SetData() override;
 	};
 } // namespace library

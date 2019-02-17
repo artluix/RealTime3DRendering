@@ -139,10 +139,12 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void Application::LoadTexture(const std::string& textureName, ComPtr<ID3D11ShaderResourceView>& textureShaderResourceView) const
+	ComPtr<ID3D11ShaderResourceView> Application::LoadTexture(const std::string& textureName) const
 	{
+		ComPtr<ID3D11ShaderResourceView> texture;
+
 		if (textureName.empty())
-			return;
+			return texture;
 
 		const auto texturePath = GetTexturesPath() + Path(textureName + ".dds");
 
@@ -159,12 +161,14 @@ namespace library
 			reinterpret_cast<const std::uint8_t*>(textureData.data()),
 			textureData.size(),
 			nullptr,
-			textureShaderResourceView.GetAddressOf()
+			texture.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
 			throw Exception("CreateDDSTextureFromMemory() failed.", hr);
 		}
+
+		return texture;
 	}
 
 	//-------------------------------------------------------------------------

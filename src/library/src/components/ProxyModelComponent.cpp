@@ -18,7 +18,7 @@ namespace library
 		, m_up(math::Vector3::Up)
 		, m_right(math::Vector3::Right)
 	{
-		SetModelName(modelName);
+		SetDefaultModelName(modelName);
 		SetScaling(math::Vector3(scale));
 	}
 
@@ -34,32 +34,32 @@ namespace library
 	void ProxyModelComponent::Initialize(const Application& app)
 	{
 		InitializeMaterial(app, "Basic");
-		MaterialComponent::Initialize(app);
+		DrawableInputMaterialComponent::Initialize(app);
 	}
 
-	void ProxyModelComponent::SetEffectData()
+	void ProxyModelComponent::Draw_SetData()
 	{
 		auto wvp = GetWorldMatrix();
 		if (auto camera = GetCamera())
 			wvp *= camera->GetViewProjectionMatrix();
 		m_material->GetWorldViewProjection() << wvp;
 
-		MaterialComponent::SetEffectData();
+		DrawableInputMaterialComponent::Draw_SetData();
 	}
 
-	void ProxyModelComponent::Render()
+	void ProxyModelComponent::Draw_Render()
 	{
 		auto deviceContext = m_app->GetDeviceContext();
 
 		if (m_isWireframeVisible)
 		{
 			deviceContext->RSSetState(RasterizerStateHolder::GetRasterizerState(RasterizerState::Wireframe).Get());
-			deviceContext->DrawIndexed(m_indicesCount, 0, 0);
+			deviceContext->DrawIndexed(m_indexBufferData->count, 0, 0);
 			deviceContext->RSSetState(nullptr);
 		}
 		else
 		{
-			deviceContext->DrawIndexed(m_indicesCount, 0, 0);
+			deviceContext->DrawIndexed(m_indexBufferData->count, 0, 0);
 		}
 	}
 } // namespace library

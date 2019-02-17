@@ -37,8 +37,8 @@ namespace
 DiffuseLightingDemo::DiffuseLightingDemo()
 	: m_ambientColor(1.f, 1.f, 1.f, 0.f)
 {
-	SetModelName("Sphere");
-	SetTextureName("EarthComposite");
+	SetDefaultModelName("Sphere");
+	SetDefaultTextureName("EarthComposite");
 }
 
 DiffuseLightingDemo::~DiffuseLightingDemo() = default;
@@ -48,7 +48,7 @@ void DiffuseLightingDemo::Initialize(const Application& app)
 	assert(!!GetCamera());
 
 	InitializeMaterial(app, "DiffuseLighting");
-	MaterialComponent::Initialize(app);
+	DrawableInputMaterialComponent::Initialize(app);
 
 	m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
@@ -159,7 +159,7 @@ void DiffuseLightingDemo::UpdateDirectionalLight(const Time& time)
 	}
 }
 	
-void DiffuseLightingDemo::SetEffectData()
+void DiffuseLightingDemo::Draw_SetData()
 {
 	auto wvp = GetWorldMatrix();
 	if (auto camera = GetCamera())
@@ -170,7 +170,7 @@ void DiffuseLightingDemo::SetEffectData()
 	m_material->GetAmbientColor() << m_ambientColor;
 	m_material->GetLightColor() << m_directionalLight->GetColor();
 	m_material->GetLightDirection() << m_directionalLight->GetDirection();
-	m_material->GetColorTexture() << m_textureShaderResourceView.Get();
+	m_material->GetColorTexture() << m_defaultTexture.Get();
 
-	MaterialComponent::SetEffectData();
+	DrawableInputMaterialComponent::Draw_SetData();
 }

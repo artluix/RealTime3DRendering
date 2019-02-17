@@ -1,5 +1,5 @@
 #pragma once
-#include "library/components/MaterialComponent.h"
+#include "library/components/DrawableMaterialComponent.h"
 #include "library/components/FullScreenQuadComponent.h"
 
 #include "library/DirectXForwardDeclarations.h"
@@ -11,9 +11,9 @@ namespace library
 	class FullScreenRenderTarget;
 	class FullScreenQuadComponent;
 
-	class PostProcessingComponent : public virtual MaterialComponent
+	class PostProcessingComponent : public virtual DrawableMaterialComponent
 	{
-		RTTI_CLASS(PostProcessingComponent, MaterialComponent)
+		RTTI_CLASS(PostProcessingComponent, DrawableMaterialComponent)
 
 	public:
 		~PostProcessingComponent();

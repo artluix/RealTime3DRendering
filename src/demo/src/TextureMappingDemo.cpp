@@ -22,14 +22,14 @@ namespace
 
 TextureMappingDemo::TextureMappingDemo()
 {
-	SetModelName("Sphere");
-	SetTextureName("EarthComposite");
+	SetDefaultModelName("Sphere");
+	SetDefaultTextureName("EarthComposite");
 }
 
 void TextureMappingDemo::Initialize(const Application& app)
 {
 	InitializeMaterial(app, "TextureMapping");
-	MaterialComponent::Initialize(app);
+	DrawableInputMaterialComponent::Initialize(app);
 }
 
 void TextureMappingDemo::Update(const Time& time)
@@ -76,14 +76,14 @@ void TextureMappingDemo::Update(const Time& time)
 	AddToRenderer();
 }
 
-void TextureMappingDemo::SetEffectData()
+void TextureMappingDemo::Draw_SetData()
 {
 	auto wvp = GetWorldMatrix();
 	if (auto camera = GetCamera())
 		wvp *= camera->GetViewProjectionMatrix();
 	m_material->GetWVP() << wvp;
 
-	m_material->GetColorTexture() << m_textureShaderResourceView.Get();
+	m_material->GetColorTexture() << m_defaultTexture.Get();
 
-	MaterialComponent::SetEffectData();
+	DrawableInputMaterialComponent::Draw_SetData();
 }

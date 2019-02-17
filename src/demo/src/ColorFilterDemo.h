@@ -45,7 +45,7 @@ public:
 	void Draw(const library::Time& time) override;
 
 private:
-	void UpdateGenericColorFilter(const library::Time& time);
+	void UpdateGenericFilter(const library::Time& time);
 
 	Type m_type;
 	library::math::Matrix4 m_genericFilter;

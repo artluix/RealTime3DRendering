@@ -2,7 +2,7 @@
 #include <library/materials/DiffuseLightingMaterial.h>
 
 #include <library/components/SceneComponent.h>
-#include <library/components/ConcreteMaterialComponent.hpp>
+#include <library/components/ConcreteDrawableInputMaterialComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 #include <library/Color.h>
 
@@ -17,10 +17,10 @@ namespace library
 
 class DiffuseLightingDemo
 	: public library::SceneComponent
-	, public library::ConcreteMaterialComponent<library::DiffuseLightingMaterial>
+	, public library::ConcreteDrawableInputMaterialComponent<library::DiffuseLightingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(DiffuseLightingDemo, library::SceneComponent, library::MaterialComponent, library::InputReceivableComponent)
+	RTTI_CLASS(DiffuseLightingDemo, library::SceneComponent, library::DrawableInputMaterialComponent, library::InputReceivableComponent)
 
 public:
 	explicit DiffuseLightingDemo();
@@ -34,7 +34,7 @@ private:
 	void UpdateAmbientLight(const library::Time& time);
 	void UpdateDirectionalLight(const library::Time& time);
 
-	void SetEffectData() override;
+	void Draw_SetData() override;
 
 	library::Color m_ambientColor;
 
