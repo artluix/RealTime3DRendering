@@ -61,6 +61,10 @@ float4 bloom_extract_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 color = ColorTexture.Sample(TrilinearSampler, IN.textureCoordinate);
     return saturate((color - bloomThreshold) / (1.0f - bloomThreshold));
+    // alternate method
+    // static const float3 k_grayScaleIntensity = { 0.299f, 0.587f, 0.114f };
+    // float intensity = dot(color.rgb, k_grayScaleIntensity);
+    // return (intensity > bloomThreshold ? color :float4(0, 0, 0, 1));
 }
 
 float4 bloom_composite_pixel_shader(VS_OUTPUT IN) : SV_Target

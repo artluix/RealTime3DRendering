@@ -136,7 +136,6 @@ namespace library
 		m_fullScreenQuad->Draw(time);
 		m_horizontalBlurTarget->End();
 		m_app->UnbindPixelShaderResources(0, 1);
-		m_outputTexture = m_horizontalBlurTarget->GetOutputTexture();
 
 		// Vertical Blur
 		m_verticalBlurTarget->Begin();

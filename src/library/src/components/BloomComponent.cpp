@@ -78,13 +78,14 @@ namespace library
 		PostProcessingComponent::Initialize(app);
 		
 		InitializeMaterial(app, "Bloom");
-		InitializeQuad(app, "bloom_extract");
+		InitializeQuad(app);
 
 		m_renderTarget = std::make_unique<FullScreenRenderTarget>(app);
 
 		m_gaussianBlur = std::make_unique<GaussianBlurComponent>();
 		m_gaussianBlur->SetSceneTexture(*m_renderTarget->GetOutputTexture());
 		m_gaussianBlur->Initialize(app);
+		m_gaussianBlur->SetBlurAmount(m_settings.blurAmount);
 	}
 
 	void BloomComponent::Draw(const Time& time)

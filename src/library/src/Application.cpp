@@ -121,7 +121,8 @@ namespace library
 
 	void Application::Draw(const Time& time)
 	{
-		m_renderer->Render(time);
+		m_renderer->RenderScene(time);
+		m_renderer->RenderText(time);
 	}
 
 	//-------------------------------------------------------------------------

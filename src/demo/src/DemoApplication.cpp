@@ -62,6 +62,7 @@ DemoApplication::DemoApplication(
 	const int showCmd
 )
 	: Application(instanceHandle, windowClass, windowTitle, showCmd)
+	, m_postProcessingEnabled(true)
 {
 	m_depthStencilBufferEnabled = true;
 	m_multiSamplingEnabled = true;
@@ -277,7 +278,7 @@ void DemoApplication::Draw(const Time& time)
 		m_deviceContext->ClearRenderTargetView(m_renderTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
 		m_deviceContext->ClearDepthStencilView(m_renderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
-		Application::Draw(time);
+		m_renderer->RenderScene(time);
 
 		m_renderTarget->End();
 
@@ -286,6 +287,8 @@ void DemoApplication::Draw(const Time& time)
 		m_deviceContext->ClearDepthStencilView(m_depthStencilView.Get(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		m_postProcessing->Draw(time);
+
+		m_renderer->RenderText(time);
 	}
 	else
 	{

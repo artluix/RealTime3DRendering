@@ -43,7 +43,7 @@ private:
 
 	std::unique_ptr<library::FullScreenRenderTarget> m_renderTarget;
 	std::unique_ptr<library::PostProcessingComponent> m_postProcessing;
-	bool m_postProcessingEnabled = false;
+	bool m_postProcessingEnabled;
 
 	ComPtr<IDirectInput8> m_directInput;
 };

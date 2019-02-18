@@ -32,41 +32,42 @@ namespace library
 	{
 		m_blendFactor.fill(0.f);
 
-		m_drawables.reserve(50); // reserve some memory for drawables
+		m_sceneDrawables.reserve(20); // reserve some memory for drawables
+		m_textDrawables.reserve(20); // reserve some memory for drawables
 	}
 
 	//-------------------------------------------------------------------------
 
 	void Renderer::AddDrawable(Drawable* const drawable)
 	{
-		auto it = std::find(m_drawables.begin(), m_drawables.end(), drawable);
-		if (it != m_drawables.end())
+		if (!drawable->As<SceneComponent>() && !drawable->As<TextComponent>())
 			return;
 
-		m_drawables.push_back(drawable);
+		auto& drawables = drawable->As<TextComponent>() ? m_textDrawables : m_sceneDrawables;
+
+		auto it = std::find(drawables.begin(), drawables.end(), drawable);
+		if (it != drawables.end())
+			return;
+
+		drawables.push_back(drawable);
 	}
 
 	void Renderer::RemoveDrawable(Drawable* const drawable)
 	{
-		auto it = std::find(m_drawables.begin(), m_drawables.end(), drawable);
-		if (it == m_drawables.end())
+		if (!drawable->As<SceneComponent>() && !drawable->As<TextComponent>())
 			return;
 
-		m_drawables.erase(it);
+		auto& drawables = drawable->As<TextComponent>() ? m_textDrawables : m_sceneDrawables;
+
+		auto it = std::find(drawables.begin(), drawables.end(), drawable);
+		if (it == drawables.end())
+			return;
+
+		drawables.erase(it);
 	}
 
-	//-------------------------------------------------------------------------
-
-	void Renderer::Render(const Time& time)
+	void Renderer::RenderScene(const Time& time)
 	{
-		auto typeComp = [](const Drawable* lhs, const Drawable* rhs)
-		{
-			if (lhs->As<SceneComponent>() && rhs->As<TextComponent>())
-				return true;
-
-			return false;
-		};
-
 		auto effectComp = [](const Drawable* lhs, const Drawable* rhs)
 		{
 			if (const auto lhsMatComponent = lhs->As<DrawableMaterialComponent>())
@@ -76,44 +77,31 @@ namespace library
 			return false;
 		};
 
-		auto textPred = [](const Drawable* drawable)
-		{
-			return !!drawable->As<TextComponent>();
-		};
-
 		auto drawPred = [&time](Drawable* drawable)
 		{
 			drawable->Draw(time);
 		};
 
-		//-------------------------------------------------------------------------
+		auto drawables = m_sceneDrawables;
+		m_sceneDrawables.clear();
 
-		// 1. Copy all drawables (prevent modification of vector)
-		auto drawableNodes = m_drawables;
-		m_drawables.clear();
+		std::sort(drawables.begin(), drawables.end(), effectComp);
+		std::for_each(drawables.begin(), drawables.end(),drawPred);
+	}
 
-		// 2. Separate 2D & 3D drawables
-		std::sort(drawableNodes.begin(), drawableNodes.end(), typeComp);
-
-		// 3. Find separate border
-		auto uiIt = std::find_if(drawableNodes.begin(), drawableNodes.end(), textPred);
-
-		// 4. Sort by effect and draw scene components
-		if (uiIt != drawableNodes.begin()) // has scene components
+	void Renderer::RenderText(const Time& time)
+	{
+		auto drawPred = [&time](Drawable* drawable)
 		{
-			std::sort(drawableNodes.begin(), uiIt, effectComp);
-			std::for_each(drawableNodes.begin(), uiIt, drawPred);
-		}
+			drawable->Draw(time);
+		};
 
-		// 5. Sort by effect and draw ui components
-		if (uiIt != drawableNodes.end()) // has ui components
-		{
-			std::sort(uiIt, drawableNodes.end(), effectComp);
-	
-			SaveRenderState(RenderState::All);
-			std::for_each(uiIt, drawableNodes.end(), drawPred);
-			RestoreRenderState(RenderState::All);
-		}
+		auto drawables = m_textDrawables;
+		m_textDrawables.clear();
+
+		SaveRenderState(RenderState::All);
+		std::for_each(drawables.begin(), drawables.end(),drawPred);
+		RestoreRenderState(RenderState::All);
 	}
 
 	//-------------------------------------------------------------------------

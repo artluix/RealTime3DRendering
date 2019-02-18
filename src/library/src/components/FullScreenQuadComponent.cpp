@@ -16,16 +16,30 @@
 
 namespace library
 {
+	FullScreenQuadComponent::FullScreenQuadComponent()
+	{
+		SetAutoRenderable(false);
+	}
+
 	FullScreenQuadComponent::~FullScreenQuadComponent() = default;
 
-	void FullScreenQuadComponent::SetMaterial(Material& material, const std::string& techniqueName, const std::string& passName /* = "p0"*/)
+	//-------------------------------------------------------------------------
+
+	void FullScreenQuadComponent::SetMaterial(Material& material)
 	{
 		if (m_material != &material)
 		{
 			m_material = &material;
-			SetActiveTechnique(techniqueName, passName);
 		}
 	}
+
+	void FullScreenQuadComponent::SetMaterial(Material& material, const std::string& techniqueName, const std::string& passName /* = "p0"*/)
+	{
+		SetMaterial(material);
+		SetActiveTechnique(techniqueName, passName);
+	}
+
+	//-------------------------------------------------------------------------
 
 	void FullScreenQuadComponent::SetActiveTechnique(const std::string& techniqueName, const std::string& passName /* = "p0"*/)
 	{
@@ -45,9 +59,7 @@ namespace library
 
 	void FullScreenQuadComponent::Initialize(const Application& app)
 	{
-		Component::Initialize(app);
-
-		assert(!!m_material && !!m_pass);
+		DrawableMaterialComponent::Initialize(app);
 
 		// vertex buffer
 		{

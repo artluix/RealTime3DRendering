@@ -22,6 +22,13 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
+	void PostProcessingComponent::InitializeQuad(const Application& app)
+	{
+		m_fullScreenQuad = std::make_unique<FullScreenQuadComponent>();
+		m_fullScreenQuad->SetMaterial(GetMaterial());
+		m_fullScreenQuad->Initialize(app);
+	}
+
 	void PostProcessingComponent::InitializeQuad(
 		const Application& app,
 		const std::string& techniqueName,

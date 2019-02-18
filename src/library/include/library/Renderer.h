@@ -33,7 +33,8 @@ namespace library
 		void AddDrawable(Drawable* const drawable);
 		void RemoveDrawable(Drawable* const drawable);
 
-		void Render(const Time& time);
+		void RenderScene(const Time& time);
+		void RenderText(const Time& time);
 
 		void ResetRenderState(const RenderState rs = RenderState::All);
 		void SaveRenderState(const RenderState rs = RenderState::All);
@@ -44,7 +45,8 @@ namespace library
 		ComPtr<ID3D11DepthStencilState> GetDepthStencilState() { return m_depthStencilState; }
 
 	private:
-		std::vector<Drawable*> m_drawables;
+		std::vector<Drawable*> m_sceneDrawables;
+		std::vector<Drawable*> m_textDrawables;
 
 		const Application& m_app;
 

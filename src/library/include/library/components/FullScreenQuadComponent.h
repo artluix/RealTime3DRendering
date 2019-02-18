@@ -14,10 +14,12 @@ namespace library
 	public:
 		using MaterialUpdateFunction = std::function<void()>;
 
-		explicit FullScreenQuadComponent() = default;
+		explicit FullScreenQuadComponent();
 		~FullScreenQuadComponent();
 
+		void SetMaterial(Material& material);
 		void SetMaterial(Material& material, const std::string& techniqueName, const std::string& passName = "p0");
+		
 		void SetActiveTechnique(const std::string& techniqueName, const std::string& passName = "p0");
 		void SetMaterialUpdateFunction(const MaterialUpdateFunction& func);
 
