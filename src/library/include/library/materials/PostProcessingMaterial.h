@@ -14,7 +14,7 @@ namespace library
 		explicit PostProcessingMaterial(const Effect& effect);
 		~PostProcessingMaterial();
 
-		EffectVariable& GetColorTexture() const { return m_colorTexture; }
+		EffectVariable& GetSceneTexture() const { return m_sceneTexture; }
 
 		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }
@@ -22,6 +22,6 @@ namespace library
 	private:
 		void InitializeInternal() override;
 
-		EffectVariable& m_colorTexture;
+		EffectVariable& m_sceneTexture;
 	};
 } // namespace library

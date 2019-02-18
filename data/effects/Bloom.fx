@@ -1,6 +1,6 @@
 /************* Resources *************/
 
-Texture2D ColorTexture;
+Texture2D SceneTexture;
 Texture2D BloomTexture;
 
 cbuffer CBufferPerObject
@@ -59,7 +59,7 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 
 float4 bloom_extract_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
-    float4 color = ColorTexture.Sample(TrilinearSampler, IN.textureCoordinate);
+    float4 color = SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate);
     return saturate((color - bloomThreshold) / (1.0f - bloomThreshold));
     // alternate method
     // static const float3 k_grayScaleIntensity = { 0.299f, 0.587f, 0.114f };
@@ -69,7 +69,7 @@ float4 bloom_extract_pixel_shader(VS_OUTPUT IN) : SV_Target
 
 float4 bloom_composite_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
-    float4 sceneColor = ColorTexture.Sample(TrilinearSampler, IN.textureCoordinate);
+    float4 sceneColor = SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate);
     float4 bloomColor = BloomTexture.Sample(TrilinearSampler, IN.textureCoordinate);
 
     sceneColor = AdjustSaturation(sceneColor, sceneSaturation) * sceneIntensity;

@@ -12,6 +12,8 @@ namespace library
 	class KeyboardComponent;
 	class MouseComponent;
 
+	class GridComponent;
+
 	class FullScreenRenderTarget;
 	class PostProcessingComponent;
 } // namespace library
@@ -40,6 +42,8 @@ protected:
 private:
 	std::shared_ptr<library::KeyboardComponent> m_keyboard;
 	std::shared_ptr<library::MouseComponent> m_mouse;
+
+	std::shared_ptr<library::GridComponent> m_grid;
 
 	std::unique_ptr<library::FullScreenRenderTarget> m_renderTarget;
 	std::unique_ptr<library::PostProcessingComponent> m_postProcessing;

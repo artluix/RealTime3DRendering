@@ -21,6 +21,7 @@
 #include "ColorFilterDemo.h"
 #include "GaussianBlurDemo.h"
 #include "BloomDemo.h"
+#include "DistortionMappingDemo.h"
 
 //-------------------------------------------------------------------------
 
@@ -135,8 +136,8 @@ void DemoApplication::Initialize()
 	skybox->SetCamera(*camera);
 
 	// grid
-	auto grid = std::make_shared<GridComponent>();
-	grid->SetCamera(*camera);
+	m_grid = std::make_shared<GridComponent>();
+	m_grid->SetCamera(*camera);
 
 	// triangle
 	auto triangle = std::make_shared<TriangleDemo>();
@@ -215,7 +216,8 @@ void DemoApplication::Initialize()
 	{
 		//auto postProcessing = new ColorFilter();
 		//auto postProcessing = new GaussianBlurDemo();
-		auto postProcessing = new BloomDemo();
+		//auto postProcessing = new BloomDemo();
+		auto postProcessing = new DistortionMappingDemo();
 		postProcessing->SetKeyboard(*m_keyboard);
 		postProcessing->SetSceneTexture(*(m_renderTarget->GetOutputTexture()));
 
@@ -238,7 +240,7 @@ void DemoApplication::Initialize()
 	m_components.push_back(m_keyboard);
 	m_components.push_back(m_mouse);
 	m_components.push_back(camera);
-	m_components.push_back(grid);
+	m_components.push_back(m_grid);
 	m_components.push_back(fps);
 	m_components.push_back(skybox);
 	m_components.push_back(pointLight);
@@ -257,6 +259,9 @@ void DemoApplication::Update(const Time& time)
 	{
 		if (m_keyboard->WasKeyPressed(Key::Escape))
 			Exit();
+
+		if (m_keyboard->WasKeyPressed(Key::G))
+			m_grid->SetVisible(!m_grid->IsVisible());
 
 		if (m_keyboard->WasKeyPressed(Key::Tab))
 			m_postProcessingEnabled = !m_postProcessingEnabled;

@@ -51,6 +51,7 @@ if(APPLICATION)
                 include/library/materials/ColorFilterMaterial.h
                 include/library/materials/DiffuseLightingMaterial.h
                 include/library/materials/DisplacementMappingMaterial.h
+                include/library/materials/DistortionMappingMaterial.h
                 include/library/materials/EnvironmentMappingMaterial.h
                 include/library/materials/FogMaterial.h
                 include/library/materials/GaussianBlurMaterial.h
@@ -135,6 +136,7 @@ if(APPLICATION)
                 src/materials/ColorFilterMaterial.cpp
                 src/materials/DiffuseLightingMaterial.cpp
                 src/materials/DisplacementMappingMaterial.cpp
+                src/materials/DistortionMappingMaterial.cpp
                 src/materials/EnvironmentMappingMaterial.cpp
                 src/materials/FogMaterial.cpp
                 src/materials/GaussianBlurMaterial.cpp

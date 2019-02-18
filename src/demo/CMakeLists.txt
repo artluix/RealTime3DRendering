@@ -40,6 +40,9 @@ if(APPLICATION)
             src/DisplacementMappingDemo.h
             src/DisplacementMappingDemo.cpp
 
+            src/DistortionMappingDemo.h
+            src/DistortionMappingDemo.cpp
+
             src/EnvironmentMappingDemo.h
             src/EnvironmentMappingDemo.cpp
 

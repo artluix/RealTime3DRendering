@@ -30,7 +30,7 @@ std::string ColorFilterDemo::ToTechniqueName(const Type t)
 		case Inverse:		return "inverse_filter";
 		case Sepia:			return "sepia_filter";
 		case Generic:		return "generic_filter";
-		default:			return "";
+		default:				return "";
 	}
 }
 
@@ -42,7 +42,7 @@ std::string ColorFilterDemo::ToString(const Type t)
 		case Inverse:		return "Inverse";
 		case Sepia:			return "Sepia";
 		case Generic:		return "Generic";
-		default:			return "";
+		default:				return "";
 	}
 }
 
@@ -74,7 +74,7 @@ void ColorFilterDemo::Initialize(const Application& app)
 	m_fullScreenQuad->SetMaterialUpdateFunction(
 		[this]()
 		{
-			m_material->GetColorTexture() << GetSceneTexture();
+			m_material->GetSceneTexture() << GetSceneTexture();
 			m_material->GetColorFilter() << m_genericFilter;
 		}
 	);

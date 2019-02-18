@@ -10,7 +10,7 @@ cbuffer CBufferPerObject
     };
 };
 
-Texture2D ColorTexture;
+Texture2D SceneTexture;
 
 SamplerState TrilinearSampler
 {
@@ -51,7 +51,7 @@ float4 grayscale_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     static const float3 k_grayScaleIntensity = { 0.299f, 0.587f, 0.114f };
 
-    float4 color = ColorTexture.Sample(TrilinearSampler, IN.textureCoordinate);
+    float4 color = SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate);
     float intensity = dot(color.rgb, k_grayScaleIntensity);
 
     return float4(intensity.rrr, color.a);
@@ -59,7 +59,7 @@ float4 grayscale_pixel_shader(VS_OUTPUT IN) : SV_Target
 
 float4 inverse_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
-    float4 color = ColorTexture.Sample(TrilinearSampler, IN.textureCoordinate);
+    float4 color = SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate);
     return float4(1.0f - color.rgb, color.a);
 }
 
@@ -71,13 +71,13 @@ float4 sepia_pixel_shader(VS_OUTPUT IN) : SV_Target
         0.272f, 0.534f, 0.131f,
     };
 
-    float4 color = ColorTexture.Sample(TrilinearSampler, IN.textureCoordinate);
+    float4 color = SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate);
     return float4(mul(k_sepiaFilter, color.rgb), color.a);
 }
 
 float4 generic_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
-    float4 color = ColorTexture.Sample(TrilinearSampler, IN.textureCoordinate);
+    float4 color = SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate);
     return float4(mul(colorFilter, color).rgb, color.a);
 }
 

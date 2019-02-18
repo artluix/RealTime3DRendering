@@ -1,19 +1,18 @@
 /************* Resources *************/
-#define SAMPLE_COUNT 9
-
-cbuffer CBufferPerFrame
-{
-    float2 sampleOffsets[SAMPLE_COUNT];
-    float sampleWeights[SAMPLE_COUNT];
-};
 
 Texture2D SceneTexture;
+Texture2D DistortionMapTexture;
+
+cbuffer CBufferPerObject
+{
+    float displacementScale = 1.f;
+};
 
 SamplerState TrilinearSampler
 {
     Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = WRAP;
-    AddressV = WRAP;
+    AddressU = CLAMP;
+    AddressV = CLAMP;
 };
 
 /************* Data Structures *************/
@@ -32,7 +31,7 @@ struct VS_OUTPUT
 
 /************* Vertex Shader *************/
 
-VS_OUTPUT vertex_shader(VS_INPUT IN)
+VS_OUTPUT distortion_map_vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
 
@@ -44,26 +43,20 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 
 /************* Pixel Shader *************/
 
-float4 blur_pixel_shader(VS_OUTPUT IN) : SV_Target
+float4 distortion_map_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
-    float4 color = (float4)0;
-
-    for (int i = 0; i < SAMPLE_COUNT; i++)
-    {
-        color += SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate + sampleOffsets[i]) * sampleWeights[i];
-    }
-
-    return color;
+    float2 displacement = DistortionMapTexture.Sample(TrilinearSampler, IN.textureCoordinate).xy - 0.5f;
+    return SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate + (displacement * displacementScale));
 }
 
 /************* Techniques *************/
 
-technique11 blur
+technique11 distortion_map
 {
     pass p0
     {
-        SetVertexShader(CompileShader(vs_5_0, vertex_shader()));
+        SetVertexShader(CompileShader(vs_5_0, distortion_map_vertex_shader()));
         SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_5_0, blur_pixel_shader()));
+        SetPixelShader(CompileShader(ps_5_0, distortion_map_pixel_shader()));
     }
 }

@@ -113,13 +113,13 @@ namespace library
 
 	void BloomComponent::UpdateExtractMaterial()
 	{
-		m_material->GetColorTexture() << GetSceneTexture();
+		m_material->GetSceneTexture() << GetSceneTexture();
 		m_material->GetBloomThreshold() << m_settings.bloomThreshold;
 	}
 
 	void BloomComponent::UpdateCompositeMaterial()
 	{
-		m_material->GetColorTexture() << GetSceneTexture();
+		m_material->GetSceneTexture() << GetSceneTexture();
 		m_material->GetBloomTexture() << m_gaussianBlur->GetOutputTexture();
 		m_material->GetBloomIntensity() << m_settings.bloomIntensity;
 		m_material->GetBloomSaturation() << m_settings.bloomSaturation;

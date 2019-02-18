@@ -2,6 +2,7 @@
 #include "library/materials/BloomMaterial.h"
 
 #include "library/effect/Effect.h"
+#include "library/effect/EffectVariable.h"
 
 namespace library
 {

@@ -19,7 +19,7 @@ namespace library
 		constexpr float k_defaultBlurAmount = 1.f;
 		constexpr float k_blurModulationRate = 1.0f;
 
-		const auto k_backgroundColor = library::Color::Black;
+		const auto k_backgroundColor = Color::Black;
 	}
 
 	//-------------------------------------------------------------------------
@@ -164,14 +164,14 @@ namespace library
 
 	void GaussianBlurComponent::UpdateHorizontalOffsets()
 	{
-		m_material->GetColorTexture() << GetSceneTexture();
+		m_material->GetSceneTexture() << GetSceneTexture();
 		m_material->GetSampleWeights() << m_sample.weights;
 		m_material->GetSampleOffsets() << m_sample.offsets.horizontal;
 	}
 
 	void GaussianBlurComponent::UpdateVerticalOffsets()
 	{
-		m_material->GetColorTexture() << m_horizontalBlurTarget->GetOutputTexture();
+		m_material->GetSceneTexture() << m_horizontalBlurTarget->GetOutputTexture();
 		m_material->GetSampleWeights() << m_sample.weights;
 		m_material->GetSampleOffsets() << m_sample.offsets.vertical;
 	}

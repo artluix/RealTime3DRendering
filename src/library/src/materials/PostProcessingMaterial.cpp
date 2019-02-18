@@ -11,7 +11,7 @@ namespace library
 {
 	PostProcessingMaterial::PostProcessingMaterial(const Effect& effect)
 		: Material(effect, "main11")
-		, m_colorTexture(effect.GetVariable("ColorTexture"))
+		, m_sceneTexture(effect.GetVariable("SceneTexture"))
 	{
 	}
 
