@@ -1,18 +1,13 @@
 #include "StdAfx.h"
-#include "library/components/PostProcessingComponent.h"
+#include "library/components/MaterialPostProcessingComponent.h"
 
 namespace library
 {
-	PostProcessingComponent::PostProcessingComponent()
-	{
-		SetAutoRenderable(false);
-	}
-
-	PostProcessingComponent::~PostProcessingComponent() = default;
+	MaterialPostProcessingComponent::~MaterialPostProcessingComponent() = default;
 
 	//-------------------------------------------------------------------------
 
-	void PostProcessingComponent::SetSceneTexture(ID3D11ShaderResourceView& sceneTexture)
+	void MaterialPostProcessingComponent::SetSceneTexture(ID3D11ShaderResourceView& sceneTexture)
 	{
 		if (m_sceneTexture != &sceneTexture)
 		{
@@ -22,14 +17,14 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void PostProcessingComponent::InitializeQuad(const Application& app)
+	void MaterialPostProcessingComponent::InitializeQuad(const Application& app)
 	{
 		m_fullScreenQuad = std::make_unique<FullScreenQuadComponent>();
 		m_fullScreenQuad->SetMaterial(GetMaterial());
 		m_fullScreenQuad->Initialize(app);
 	}
 
-	void PostProcessingComponent::InitializeQuad(
+	void MaterialPostProcessingComponent::InitializeQuad(
 		const Application& app,
 		const std::string& techniqueName,
 		const std::string& passName /*= "p0"*/

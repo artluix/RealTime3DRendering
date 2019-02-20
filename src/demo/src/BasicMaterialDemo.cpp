@@ -19,13 +19,13 @@ namespace
 
 BasicMaterialDemo::BasicMaterialDemo()
 {
-	SetDefaultModelName("Sphere");
+	SetModelName("Sphere");
 }
 
 void BasicMaterialDemo::Initialize(const Application& app)
 {
 	InitializeMaterial(app, "Basic");
-	DrawableMaterialComponent::Initialize(app);
+	MaterialSceneComponent::Initialize(app);
 }
 
 void BasicMaterialDemo::Update(const Time& time)
@@ -69,7 +69,7 @@ void BasicMaterialDemo::Update(const Time& time)
 		}
 	}
 
-	DrawableComponent::Update(time);
+	MaterialSceneComponent::Update(time);
 }
 
 void BasicMaterialDemo::Draw_SetData()
@@ -80,5 +80,5 @@ void BasicMaterialDemo::Draw_SetData()
 
 	m_material->GetWorldViewProjection() << wvp;
 
-	DrawableInputMaterialComponent::Draw_SetData();
+	MaterialSceneComponent::Draw_SetData();
 }

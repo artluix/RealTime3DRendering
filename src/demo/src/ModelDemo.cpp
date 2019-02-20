@@ -25,15 +25,6 @@ namespace
 
 //-------------------------------------------------------------------------
 
-using VertexType = VertexPositionColor;
-
-//-------------------------------------------------------------------------
-
-ModelDemo::ModelDemo()
-	: m_indicesCount(0)
-{
-}
-
 void ModelDemo::Initialize(const Application& app)
 {
 	DrawableComponent::Initialize(app);
@@ -122,7 +113,7 @@ void ModelDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateInputLayout(
 			inputElementDescriptions.data(), inputElementDescriptions.size(),
 			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
-			m_inputLayout.GetAddressOf()
+			m_input.layout.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
@@ -133,11 +124,13 @@ void ModelDemo::Initialize(const Application& app)
 	// Load the model
 	Model model(app, "Sphere", true);
 
-	// Create the vertex and index buffers
+	// Create vertex and index buffers
 	const auto& mesh = model.GetMesh(0);
 	CreateVertexBuffer(app.GetDevice(), mesh);
-	m_indexBuffer = mesh.CreateIndexBuffer();
-	m_indicesCount = mesh.GetIndicesCount();
+
+	m_input.indices = std::make_unique<BufferData>();
+	m_input.indices->buffer = mesh.CreateIndexBuffer();
+	m_input.indices->count = mesh.GetIndicesCount();
 }
 
 void ModelDemo::Update(const Time& time)
@@ -181,37 +174,29 @@ void ModelDemo::Update(const Time& time)
 		}
 	}
 
-	DrawableComponent::Update(time);
+	SceneComponent::Update(time);
 }
 
-void ModelDemo::Draw(const Time& time)
+void ModelDemo::Draw_SetData()
 {
-	auto deviceContext = m_app->GetDeviceContext();
-
 	auto wvp = GetWorldMatrix();
 	if (auto camera = GetCamera())
 		wvp *= camera->GetViewProjectionMatrix();
 	m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
-	m_pass->Apply(0, deviceContext);
+	m_pass->Apply(0, m_app->GetDeviceContext());
+}
 
-	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	deviceContext->IASetInputLayout(m_inputLayout.Get());
-
-	deviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-	unsigned stride = sizeof(VertexType);
-	unsigned offset = 0;
-	deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
-
-	deviceContext->DrawIndexed(m_indicesCount, 0, 0);
+unsigned ModelDemo::GetVertexSize() const
+{
+	return sizeof(VertexPositionColor);
 }
 
 void ModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const Mesh& mesh)
 {
 	if (mesh.HasVertices())
 	{
-		std::vector<VertexType> vertices;
+		std::vector<VertexPositionColor> vertices;
 
 		const auto& meshVertices = mesh.GetVertices();
 		const auto verticesCount = meshVertices.size();
@@ -240,14 +225,14 @@ void ModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const Mes
 		}
 
 		D3D11_BUFFER_DESC vertexBufferDesc{};
-		vertexBufferDesc.ByteWidth = sizeof(VertexType) * verticesCount;
+		vertexBufferDesc.ByteWidth = sizeof(VertexPositionColor) * verticesCount;
 		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = vertices.data();
 
-		auto hr = device->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_vertexBuffer.GetAddressOf());
+		auto hr = device->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_input.vertices.buffer.GetAddressOf());
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateBuffer() failed.");

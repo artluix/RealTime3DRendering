@@ -31,18 +31,16 @@ DistortionMappingDemo::~DistortionMappingDemo() = default;
 
 void DistortionMappingDemo::Initialize(const Application& app)
 {
-	PostProcessingComponent::Initialize(app);
+	MaterialPostProcessingComponent::Initialize(app);
 
 	InitializeMaterial(app, "DistortionMapping");
-	InitializeQuad(app, "distortion_map");
+	InitializeQuad(app, "distortion");
 	m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&DistortionMappingDemo::UpdateDistortionMapMaterial, this));
 
 	m_distortionMapTexture = app.LoadTexture("DistortionGlass");
 
-	m_sceneRenderTarget = std::make_unique<FullScreenRenderTarget>(app);
-
 	m_text = std::make_unique<TextComponent>();
-	m_text->SetTextGeneratorFunction(
+	m_text->SetTextUpdateFunction(
 		[this]() -> std::wstring
 		{
 			std::wostringstream woss;
@@ -60,23 +58,24 @@ void DistortionMappingDemo::Update(const Time& time)
 	m_text->Update(time);
 
 	UpdateDisplacementScale(time);
-
-	DrawableComponent::Update(time);
 }
 
 void DistortionMappingDemo::Draw(const Time& time)
 {
-	/*auto deviceContext = m_app->GetDeviceContext();
+	auto deviceContext = m_app->GetDeviceContext();
 
-	m_sceneRenderTarget->Begin();
+	if (m_mode == Mode::Normal)
+	{
+		/*deviceContext->ClearRenderTargetView(m_sceneRenderTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
+		deviceContext->ClearDepthStencilView(m_sceneRenderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+*/
+		m_app->UnbindPixelShaderResources(0, 1);
+		m_fullScreenQuad->Draw(time);
+	}
+	else
+	{
 
-	deviceContext->ClearRenderTargetView(m_sceneRenderTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
-	deviceContext->ClearDepthStencilView(m_sceneRenderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-	m_sceneRenderTarget->End();
-
-	m_app->UnbindPixelShaderResources(0, 1);*/
-	m_fullScreenQuad->Draw(time);
+	}
 }
 
 void DistortionMappingDemo::UpdateDisplacementScale(const Time& time)
@@ -104,4 +103,14 @@ void DistortionMappingDemo::UpdateDistortionMapMaterial()
 	m_material->GetSceneTexture() << GetSceneTexture();
 	m_material->GetDistortionMapTexture() << m_distortionMapTexture.Get();
 	m_material->GetDisplacementScale() << m_displacementScale;
+}
+
+DistortionMappingDemo::Mode DistortionMappingDemo::NextMode(const Mode mode)
+{
+	switch (mode)
+	{
+		case Mode::Normal:		return Mode::Masking;
+		case Mode::Masking:
+		default:				return Mode::Normal;
+	}
 }

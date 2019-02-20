@@ -32,8 +32,8 @@ PointLightDemo::PointLightDemo()
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
 	, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 {
-	SetDefaultModelName("Sphere");
-	SetDefaultTextureName("EarthAtDay");
+	SetModelName("Sphere");
+	SetTextureName("EarthAtDay");
 }
 
 PointLightDemo::~PointLightDemo() = default;
@@ -43,7 +43,7 @@ void PointLightDemo::Initialize(const Application& app)
 	assert(!!GetCamera());
 
 	InitializeMaterial(app, "PointLight");
-	DrawableInputMaterialComponent::Initialize(app);
+	MaterialSceneComponent::Initialize(app);
 
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetRadius(500.f);
@@ -57,7 +57,7 @@ void PointLightDemo::Initialize(const Application& app)
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
-	m_text->SetTextGeneratorFunction(
+	m_text->SetTextUpdateFunction(
 		[this]() -> std::wstring
 		{
 			std::wostringstream woss;
@@ -81,7 +81,7 @@ void PointLightDemo::Update(const Time& time)
 	m_text->Update(time);
 	m_proxyModel->Update(time);
 
-	DrawableComponent::Update(time);
+	MaterialSceneComponent::Update(time);
 }
 
 void PointLightDemo::UpdateAmbientLight(const Time& time)
@@ -202,7 +202,7 @@ void PointLightDemo::Draw_SetData()
 	m_material->GetLightColor() << m_pointLight->GetColor();
 	m_material->GetLightPosition() << m_pointLight->GetPosition();
 	m_material->GetLightRadius() << m_pointLight->GetRadius();
-	m_material->GetColorTexture() << m_defaultTexture.Get();
+	m_material->GetColorTexture() << GetTexture();
 
-	DrawableInputMaterialComponent::Draw_SetData();
+	MaterialSceneComponent::Draw_SetData();
 }

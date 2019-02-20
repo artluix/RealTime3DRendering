@@ -1,8 +1,7 @@
 #pragma once
 #include <library/materials/SpotlightMaterial.h>
 
-#include <library/components/SceneComponent.h>
-#include <library/components/ConcreteDrawableInputMaterialComponent.hpp>
+#include <library/components/ConcreteMaterialSceneComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 #include <library/Color.h>
 
@@ -16,11 +15,10 @@ namespace library
 } // namespace library
 
 class SpotlightDemo
-	: public library::SceneComponent
-	, public library::ConcreteDrawableInputMaterialComponent<library::SpotlightMaterial>
+	: public library::ConcreteMaterialSceneComponent<library::SpotlightMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(SpotlightDemo, library::SceneComponent, library::DrawableInputMaterialComponent, library::InputReceivableComponent)
+	RTTI_CLASS(SpotlightDemo, library::MaterialSceneComponent, library::InputReceivableComponent)
 
 public:
 	explicit SpotlightDemo();
@@ -28,7 +26,6 @@ public:
 
 	void Initialize(const library::Application& app) override;
 	void Update(const library::Time& time) override;
-	using library::DrawableComponent::Draw;
 
 private:
 	void UpdateAmbientLight(const library::Time& time);

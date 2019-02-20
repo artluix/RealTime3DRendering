@@ -1,8 +1,7 @@
 #pragma once
 #include <library/materials/EnvironmentMappingMaterial.h>
 
-#include <library/components/SceneComponent.h>
-#include <library/components/ConcreteDrawableInputMaterialComponent.hpp>
+#include <library/components/ConcreteMaterialSceneComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 #include <library/DirectXForwardDeclarations.h>
@@ -16,11 +15,10 @@ namespace library
 } // namespace library
 
 class EnvironmentMappingDemo
-	: public library::SceneComponent
-	, public library::ConcreteDrawableInputMaterialComponent<library::EnvironmentMappingMaterial>
+	: public library::ConcreteMaterialSceneComponent<library::EnvironmentMappingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(EnvironmentMappingDemo, library::SceneComponent, library::DrawableInputMaterialComponent, library::InputReceivableComponent)
+	RTTI_CLASS(EnvironmentMappingDemo, library::MaterialSceneComponent, library::InputReceivableComponent)
 
 public:
 	explicit EnvironmentMappingDemo();

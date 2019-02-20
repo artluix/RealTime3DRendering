@@ -4,6 +4,7 @@
 #include "library/DirectXForwardDeclarations.h"
 
 #include <vector>
+#include <functional>
 
 namespace library
 {
@@ -19,21 +20,23 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	class DrawableComponent;
 	class Application;
 	struct Time;
+
+	class SceneComponent;
+	class TextComponent;
 
 	class Renderer : public NonCopyable<Renderer>
 	{
 	public:
-		using Drawable = DrawableComponent;
-
 		explicit Renderer(const Application& app);
 
-		void AddDrawable(Drawable* const drawable);
-		void RemoveDrawable(Drawable* const drawable);
-
+		void AddDrawable(SceneComponent& sceneDrawable);
+		void RemoveDrawable(SceneComponent& sceneDrawable);
 		void RenderScene(const Time& time);
+
+		void AddDrawable(TextComponent& textDrawable);
+		void RemoveDrawable(TextComponent& textDrawable);
 		void RenderText(const Time& time);
 
 		void ResetRenderState(const RenderState rs = RenderState::All);
@@ -45,8 +48,8 @@ namespace library
 		ComPtr<ID3D11DepthStencilState> GetDepthStencilState() { return m_depthStencilState; }
 
 	private:
-		std::vector<Drawable*> m_sceneDrawables;
-		std::vector<Drawable*> m_textDrawables;
+		std::vector<std::reference_wrapper<SceneComponent>> m_sceneDrawables;
+		std::vector<std::reference_wrapper<TextComponent>> m_textDrawables;
 
 		const Application& m_app;
 

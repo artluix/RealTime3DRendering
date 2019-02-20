@@ -1,8 +1,7 @@
 #pragma once
 #include <library/materials/PointLightMaterial.h>
 
-#include <library/components/SceneComponent.h>
-#include <library/components/ConcreteDrawableInputMaterialComponent.hpp>
+#include <library/components/ConcreteMaterialSceneComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 #include <library/Color.h>
@@ -17,11 +16,10 @@ namespace library
 } // namespace library
 
 class PointLightDemo
-	: public library::SceneComponent
-	, public library::ConcreteDrawableInputMaterialComponent<library::PointLightMaterial>
+	: public library::ConcreteMaterialSceneComponent<library::PointLightMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(PointLightDemo, library::SceneComponent, library::DrawableInputMaterialComponent, library::InputReceivableComponent)
+	RTTI_CLASS(PointLightDemo, library::MaterialSceneComponent, library::InputReceivableComponent)
 
 public:
 	explicit PointLightDemo();

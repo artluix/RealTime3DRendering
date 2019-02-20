@@ -19,7 +19,7 @@ namespace library
 		RTTI_CLASS(TextComponent, DrawableComponent)
 
 	public:
-		using TextGeneratorFunction = std::function<std::wstring(void)>;
+		using TextUpdateFunction = std::function<std::wstring(void)>;
 
 		explicit TextComponent();
 		~TextComponent();
@@ -37,14 +37,14 @@ namespace library
 		void SetFontPath(const Path& fontPath);
 		const Path& GetFontPath() const { return m_fontPath; }
 
-		void SetTextGeneratorFunction(const TextGeneratorFunction& generatorFunction);
+		void SetTextUpdateFunction(const TextUpdateFunction& textUpdateFunction);
 
 		void Initialize(const Application& app) override;
 		void Update(const Time& time) override;
 		void Draw(const Time& time) override;
 
 	private:
-		TextGeneratorFunction m_generatorFunction;
+		TextUpdateFunction m_textUpdateFunction;
 
 		math::Vector2 m_position;
 		std::wstring m_text;

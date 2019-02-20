@@ -37,8 +37,8 @@ namespace
 DiffuseLightingDemo::DiffuseLightingDemo()
 	: m_ambientColor(1.f, 1.f, 1.f, 0.f)
 {
-	SetDefaultModelName("Sphere");
-	SetDefaultTextureName("EarthComposite");
+	SetModelName("Sphere");
+	SetTextureName("EarthComposite");
 }
 
 DiffuseLightingDemo::~DiffuseLightingDemo() = default;
@@ -48,7 +48,7 @@ void DiffuseLightingDemo::Initialize(const Application& app)
 	assert(!!GetCamera());
 
 	InitializeMaterial(app, "DiffuseLighting");
-	DrawableInputMaterialComponent::Initialize(app);
+	MaterialSceneComponent::Initialize(app);
 
 	m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
@@ -60,7 +60,7 @@ void DiffuseLightingDemo::Initialize(const Application& app)
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
-	m_text->SetTextGeneratorFunction(
+	m_text->SetTextUpdateFunction(
 		[this]() -> std::wstring
 		{
 			std::wostringstream woss;
@@ -82,7 +82,7 @@ void DiffuseLightingDemo::Update(const Time& time)
 	m_text->Update(time);
 	m_proxyModel->Update(time);
 
-	DrawableComponent::Update(time);
+	MaterialSceneComponent::Update(time);
 }
 
 void DiffuseLightingDemo::UpdateAmbientLight(const Time& time)
@@ -168,7 +168,7 @@ void DiffuseLightingDemo::Draw_SetData()
 	m_material->GetAmbientColor() << m_ambientColor;
 	m_material->GetLightColor() << m_directionalLight->GetColor();
 	m_material->GetLightDirection() << m_directionalLight->GetDirection();
-	m_material->GetColorTexture() << m_defaultTexture.Get();
+	m_material->GetColorTexture() << GetTexture();
 
-	DrawableInputMaterialComponent::Draw_SetData();
+	MaterialSceneComponent::Draw_SetData();
 }

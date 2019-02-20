@@ -36,7 +36,7 @@ TransparencyMappingDemo::TransparencyMappingDemo()
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
 	, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 {
-	SetDefaultTextureName("Checkerboard");
+	SetTextureName("Checkerboard");
 }
 
 TransparencyMappingDemo::~TransparencyMappingDemo() = default;
@@ -62,16 +62,16 @@ void TransparencyMappingDemo::Initialize(const Application& app)
 			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward),
 		};
 
-		m_vertexBufferData.count = vertices.size();
-		m_vertexBufferData.buffer = library::Material::CreateVertexBuffer(
+		m_input.vertices.count = vertices.size();
+		m_input.vertices.buffer = library::Material::CreateVertexBuffer(
 			app.GetDevice(),
 			vertices.data(),
-			m_vertexBufferData.count * sizeof(Vertex)
+			m_input.vertices.count * sizeof(Vertex)
 		);
 	}
 
 	InitializeMaterial(app, "TransparencyMapping");
-	DrawableInputMaterialComponent::Initialize(app);
+	MaterialSceneComponent::Initialize(app);
 
 	m_transparencyMapTexture = app.LoadTexture("AlphaMask_32bpp");
 
@@ -87,7 +87,7 @@ void TransparencyMappingDemo::Initialize(const Application& app)
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
-	m_text->SetTextGeneratorFunction(
+	m_text->SetTextUpdateFunction(
 		[this]() -> std::wstring
 		{
 			std::wostringstream woss;
@@ -234,10 +234,10 @@ void TransparencyMappingDemo::Draw_SetData()
 	m_material->GetSpecularPower() << m_specularPower;
 	m_material->GetSpecularColor() << m_specularColor;
 
-	m_material->GetColorTexture() << m_defaultTexture.Get();
+	m_material->GetColorTexture() << GetTexture();
 	m_material->GetTransparencyMap() << m_transparencyMapTexture.Get();
 
-	DrawableInputMaterialComponent::Draw_SetData();
+	MaterialSceneComponent::Draw_SetData();
 }
 
 void TransparencyMappingDemo::Draw_Render()
@@ -247,6 +247,6 @@ void TransparencyMappingDemo::Draw_Render()
 
 	renderer->SaveRenderState(RenderState::Blend);
 	deviceContext->OMSetBlendState(BlendStateHolder::GetBlendState(BlendState::Alpha).Get(), 0, 0xFFFFFFFF);
-	deviceContext->Draw(m_vertexBufferData.count, 0);
+	MaterialSceneComponent::Draw_Render();
 	renderer->RestoreRenderState(RenderState::Blend);
 }

@@ -11,15 +11,15 @@ namespace library
 {
 	SkyboxComponent::SkyboxComponent(const std::string& cubeMapName, const float scale)
 	{
-		SetDefaultModelName("Sphere");
-		SetDefaultTextureName(cubeMapName);
+		SetModelName("Sphere");
+		SetTextureName(cubeMapName);
 		SetScaling(math::Vector3(scale));
 	}
 
 	void SkyboxComponent::Initialize(const Application& app)
 	{
 		InitializeMaterial(app, "Skybox");
-		DrawableInputMaterialComponent::Initialize(app);
+		MaterialSceneComponent::Initialize(app);
 	}
 
 	void SkyboxComponent::Update(const Time& time)
@@ -30,7 +30,7 @@ namespace library
 			SetPosition(position);
 		}
 
-		DrawableComponent::Update(time);
+		MaterialSceneComponent::Update(time);
 	}
 
 	void SkyboxComponent::Draw_SetData()
@@ -40,8 +40,8 @@ namespace library
 			wvp *= camera->GetViewProjectionMatrix();
 
 		m_material->GetWorldViewProjection() << wvp;
-		m_material->GetSkyboxTexture() << m_defaultTexture.Get();
+		m_material->GetSkyboxTexture() << GetTexture();
 
-		DrawableInputMaterialComponent::Draw_SetData();
+		MaterialSceneComponent::Draw_SetData();
 	}
 } // namespace library

@@ -27,6 +27,7 @@ namespace library
 		, m_scale(k_defaultScale)
 		, m_color(k_defaultColor)
 	{
+		m_input.topology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
 	}
 
 	GridComponent::GridComponent(
@@ -76,24 +77,12 @@ namespace library
 	void GridComponent::Initialize(const Application& app)
 	{
 		InitializeMaterial(app, "Basic");
-		DrawableInputMaterialComponent::Initialize(app);
+		MaterialSceneComponent::Initialize(app);
 
 		Build();
 	}
 
 	//-------------------------------------------------------------------------
-
-	void GridComponent::Draw_SetIA()
-	{
-		auto deviceContext = m_app->GetDeviceContext();
-
-		deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_LINELIST);
-		deviceContext->IASetInputLayout(m_inputLayout.Get());
-
-		unsigned stride = sizeof(VertexPositionColor);
-		unsigned offset = 0;
-		deviceContext->IASetVertexBuffers(0, 1, m_vertexBufferData.buffer.GetAddressOf(), &stride, &offset);
-	}
 
 	void GridComponent::Draw_SetData()
 	{
@@ -103,24 +92,24 @@ namespace library
 
 		m_material->GetWorldViewProjection() << wvp;
 
-		DrawableInputMaterialComponent::Draw_SetData();
+		MaterialSceneComponent::Draw_SetData();
 	}
 
 	//-------------------------------------------------------------------------
 
 	void GridComponent::Build()
 	{
-		m_vertexBufferData.buffer.Reset();
+		m_input.vertices.buffer.Reset();
 
 		const float adjustedScale = m_scale * 0.1f;
 		const float maxPosition = m_size * adjustedScale / 2;
 
-		m_vertexBufferData.count = 4 * (m_size + 1);
+		m_input.vertices.count = 4 * (m_size + 1);
 
-		const unsigned size = sizeof(VertexPositionColor) * m_vertexBufferData.count;
+		const unsigned size = sizeof(VertexPositionColor) * m_input.vertices.count;
 
 		std::vector<VertexPositionColor> vertices;
-		vertices.reserve(m_vertexBufferData.count);
+		vertices.reserve(m_input.vertices.count);
 
 		const DirectX::XMFLOAT4 color(m_color);
 
@@ -145,7 +134,7 @@ namespace library
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = vertices.data();
 
-		auto hr = m_app->GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_vertexBufferData.buffer.GetAddressOf());
+		auto hr = m_app->GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_input.vertices.buffer.GetAddressOf());
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateBuffer() failed.", hr);

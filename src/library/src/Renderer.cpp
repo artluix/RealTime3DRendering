@@ -1,10 +1,9 @@
 #include "StdAfx.h"
 #include "library/Renderer.h"
 
-#include "library/components/DrawableComponent.h"
 #include "library/components/TextComponent.h"
 #include "library/components/SceneComponent.h"
-#include "library/components/DrawableMaterialComponent.h"
+#include "library/components/MaterialSceneComponent.h"
 
 #include "library/effect/Effect.h"
 #include "library/materials/Material.h"
@@ -21,6 +20,24 @@ namespace library
 	{
 		constexpr unsigned k_defaultSampleMask = -1;
 		constexpr unsigned k_defaultStencilRef = -1;
+
+		template<class Drawable>
+		class Finder
+		{
+		public:
+			explicit Finder(Drawable& drawable)
+				: m_drawable(drawable)
+			{
+			}
+
+			bool operator () (Drawable& drawable) const
+			{
+				return &m_drawable == &drawable;
+			}
+
+		private:
+			Drawable& m_drawable;
+		};
 	}
 
 	//-------------------------------------------------------------------------
@@ -38,62 +55,72 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void Renderer::AddDrawable(Drawable* const drawable)
+	void Renderer::AddDrawable(SceneComponent& sceneDrawable)
 	{
-		if (!drawable->As<SceneComponent>() && !drawable->As<TextComponent>())
+		auto it = std::find_if(m_sceneDrawables.begin(), m_sceneDrawables.end(), Finder(sceneDrawable));
+		if (it != m_sceneDrawables.end())
 			return;
 
-		auto& drawables = drawable->As<TextComponent>() ? m_textDrawables : m_sceneDrawables;
-
-		auto it = std::find(drawables.begin(), drawables.end(), drawable);
-		if (it != drawables.end())
-			return;
-
-		drawables.push_back(drawable);
+		m_sceneDrawables.push_back(sceneDrawable);
 	}
 
-	void Renderer::RemoveDrawable(Drawable* const drawable)
+	void Renderer::RemoveDrawable(SceneComponent& sceneDrawable)
 	{
-		if (!drawable->As<SceneComponent>() && !drawable->As<TextComponent>())
+		auto it = std::find_if(m_sceneDrawables.begin(), m_sceneDrawables.end(), Finder(sceneDrawable));
+		if (it == m_sceneDrawables.end())
 			return;
 
-		auto& drawables = drawable->As<TextComponent>() ? m_textDrawables : m_sceneDrawables;
-
-		auto it = std::find(drawables.begin(), drawables.end(), drawable);
-		if (it == drawables.end())
-			return;
-
-		drawables.erase(it);
+		m_sceneDrawables.erase(it);
 	}
 
 	void Renderer::RenderScene(const Time& time)
 	{
-		auto effectComp = [](const Drawable* lhs, const Drawable* rhs)
+		auto effectComp = [](const SceneComponent& lhs, const SceneComponent& rhs)
 		{
-			if (const auto lhsMatComponent = lhs->As<DrawableMaterialComponent>())
-				if (const auto rhsMatComponent = rhs->As<DrawableMaterialComponent>())
+			if (const auto lhsMatComponent = lhs.As<MaterialSceneComponent>())
+				if (const auto rhsMatComponent = rhs.As<MaterialSceneComponent>())
 					return lhsMatComponent->GetMaterial().GetEffect().GetName() < rhsMatComponent->GetMaterial().GetEffect().GetName();
 
 			return false;
 		};
 
-		auto drawPred = [&time](Drawable* drawable)
+		auto drawPred = [&time](SceneComponent& sceneDrawable)
 		{
-			drawable->Draw(time);
+			sceneDrawable.Draw(time);
 		};
 
 		auto drawables = m_sceneDrawables;
 		m_sceneDrawables.clear();
 
 		std::sort(drawables.begin(), drawables.end(), effectComp);
-		std::for_each(drawables.begin(), drawables.end(),drawPred);
+		std::for_each(drawables.begin(), drawables.end(), drawPred);
+	}
+
+	//-------------------------------------------------------------------------
+
+	void Renderer::AddDrawable(TextComponent& textDrawable)
+	{
+		auto it = std::find_if(m_textDrawables.begin(), m_textDrawables.end(), Finder(textDrawable));
+		if (it != m_textDrawables.end())
+			return;
+
+		m_textDrawables.push_back(textDrawable);
+	}
+
+	void Renderer::RemoveDrawable(TextComponent& textDrawable)
+	{
+		auto it = std::find_if(m_textDrawables.begin(), m_textDrawables.end(), Finder(textDrawable));
+		if (it == m_textDrawables.end())
+			return;
+
+		m_textDrawables.erase(it);
 	}
 
 	void Renderer::RenderText(const Time& time)
 	{
-		auto drawPred = [&time](Drawable* drawable)
+		auto drawPred = [&time](TextComponent& textDrawable)
 		{
-			drawable->Draw(time);
+			textDrawable.Draw(time);
 		};
 
 		auto drawables = m_textDrawables;

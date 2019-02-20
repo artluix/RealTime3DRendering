@@ -37,7 +37,7 @@ NormalMappingDemo::NormalMappingDemo()
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
 	, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 {
-	SetDefaultTextureName("Blocks_COLOR_RGB");
+	SetTextureName("Blocks_COLOR_RGB");
 }
 
 NormalMappingDemo::~NormalMappingDemo() = default;
@@ -64,16 +64,16 @@ void NormalMappingDemo::Initialize(const Application& app)
 			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward, right),
 		};
 
-		m_vertexBufferData.count = vertices.size();
-		m_vertexBufferData.buffer = m_material->Material::CreateVertexBuffer(
+		m_input.vertices.count = vertices.size();
+		m_input.vertices.buffer = m_material->Material::CreateVertexBuffer(
 			app.GetDevice(),
 			vertices.data(),
-			m_vertexBufferData.count * sizeof(Vertex)
+			m_input.vertices.count * sizeof(Vertex)
 		);
 	}
 
 	InitializeMaterial(app, "NormalMapping");
-	DrawableInputMaterialComponent::Initialize(app);
+	MaterialSceneComponent::Initialize(app);
 
 	m_normalMapTexture = app.LoadTexture("Blocks_NORM");
 
@@ -87,7 +87,7 @@ void NormalMappingDemo::Initialize(const Application& app)
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
-	m_text->SetTextGeneratorFunction(
+	m_text->SetTextUpdateFunction(
 		[this]() -> std::wstring
 		{
 			std::wostringstream woss;
@@ -111,7 +111,7 @@ void NormalMappingDemo::Update(const Time& time)
 	m_text->Update(time);
 	m_proxyModel->Update(time);
 
-	DrawableComponent::Update(time);
+	MaterialSceneComponent::Update(time);
 }
 
 void NormalMappingDemo::UpdateAmbientLight(const Time& time)
@@ -230,8 +230,8 @@ void NormalMappingDemo::Draw_SetData()
 	m_material->GetAmbientColor() << m_ambientColor;
 	m_material->GetLightColor() << m_directionalLight->GetColor();
 	m_material->GetLightDirection() << m_directionalLight->GetDirection();
-	m_material->GetColorTexture() << m_defaultTexture.Get();
+	m_material->GetColorTexture() << GetTexture();
 	m_material->GetNormalMap() << m_normalMapTexture.Get();
 
-	DrawableInputMaterialComponent::Draw_SetData();
+	MaterialSceneComponent::Draw_SetData();
 }

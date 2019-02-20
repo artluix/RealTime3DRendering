@@ -11,7 +11,7 @@ class GaussianBlurDemo
 	: public library::GaussianBlurComponent
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(GaussianBlurDemo, library::PostProcessingComponent, library::InputReceivableComponent)
+	RTTI_CLASS(GaussianBlurDemo, library::InputReceivableComponent)
 
 public:
 	explicit GaussianBlurDemo();

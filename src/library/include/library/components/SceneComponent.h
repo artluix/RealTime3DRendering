@@ -1,14 +1,21 @@
 #pragma once
-#include "library/components/Component.h"
+#include "library/components/DrawableComponent.h"
 #include "library/math/Math.h"
+
+#include "library/CommonTypes.h"
+#include "library/DirectXForwardDeclarations.h"
+
+#include <d3dcommon.h>
+#include <string>
+#include <memory>
 
 namespace library
 {
 	class CameraComponent;
 
-	class SceneComponent : public virtual Component
+	class SceneComponent : public virtual DrawableComponent
 	{
-		RTTI_CLASS(SceneComponent, Component)
+		RTTI_CLASS(SceneComponent, DrawableComponent)
 
 	public:
 		const math::Vector3& GetPosition() const { return m_position; }
@@ -32,8 +39,40 @@ namespace library
 		const math::Vector3& GetUp() const { return m_up; }
 		const math::Vector3& GetRight() const { return m_right; }
 
+		//-------------------------------------------------------------------------
+
+		const std::string& GetTextureName() const { return m_textureName; }
+		void SetTextureName(const std::string& textureName);
+
+		ID3D11ShaderResourceView* GetTexture() const { return m_texture.Get(); }
+
+		void Initialize(const Application& app) override;
+		void Update(const Time& time) override;
+		void Draw(const Time& time) override;
+
 	protected:
+		struct BufferData
+		{
+			ComPtr<ID3D11Buffer> buffer;
+			unsigned count = 0;
+		};
+
 		explicit SceneComponent();
+
+		// draw stages
+		virtual void Draw_SetIA();
+		virtual void Draw_SetData();
+		virtual void Draw_Render();
+
+		virtual unsigned GetVertexSize() const = 0;
+
+		struct
+		{
+			D3D_PRIMITIVE_TOPOLOGY topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
+			BufferData vertices; // mandatory
+			std::unique_ptr<BufferData> indices; // optional
+			ComPtr<ID3D11InputLayout> layout;
+		} m_input;
 
 	private:
 		void UpdateWorldMatrix();
@@ -49,5 +88,8 @@ namespace library
 		math::Vector3 m_up;
 
 		math::Matrix4 m_worldMatrix;
+
+		std::string m_textureName;
+		ComPtr<ID3D11ShaderResourceView> m_texture;
 	};
 } // namespace library

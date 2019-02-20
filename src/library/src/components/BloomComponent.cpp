@@ -75,7 +75,7 @@ namespace library
 
 	void BloomComponent::Initialize(const Application& app)
 	{
-		PostProcessingComponent::Initialize(app);
+		MaterialPostProcessingComponent::Initialize(app);
 		
 		InitializeMaterial(app, "Bloom");
 		InitializeQuad(app);

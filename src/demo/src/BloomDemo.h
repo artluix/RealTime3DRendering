@@ -11,7 +11,7 @@ class BloomDemo
 	: public library::BloomComponent
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(BloomDemo, library::PostProcessingComponent, library::InputReceivableComponent)
+	RTTI_CLASS(BloomDemo, library::InputReceivableComponent)
 
 public:
 	explicit BloomDemo();

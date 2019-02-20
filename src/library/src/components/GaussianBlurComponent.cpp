@@ -35,7 +35,7 @@ namespace library
 
 	void GaussianBlurComponent::Initialize(const Application& app)
 	{
-		PostProcessingComponent::Initialize(app);
+		MaterialPostProcessingComponent::Initialize(app);
 
 		InitializeMaterial(app, "GaussianBlur");
 		InitializeQuad(app, "blur");

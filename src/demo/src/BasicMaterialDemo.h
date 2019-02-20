@@ -1,16 +1,14 @@
 #pragma once
 #include <library/materials/BasicMaterial.h>
 
-#include <library/components/SceneComponent.h>
-#include <library/components/ConcreteDrawableInputMaterialComponent.hpp>
+#include <library/components/ConcreteMaterialSceneComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 class BasicMaterialDemo
-	: public library::SceneComponent
-	, public library::ConcreteDrawableInputMaterialComponent<library::BasicMaterial>
+	: public library::ConcreteMaterialSceneComponent<library::BasicMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(BasicMaterialDemo, library::SceneComponent, library::DrawableInputMaterialComponent, library::InputReceivableComponent)
+	RTTI_CLASS(BasicMaterialDemo, library::MaterialSceneComponent, library::InputReceivableComponent)
 
 public:
 	explicit BasicMaterialDemo();

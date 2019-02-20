@@ -27,8 +27,8 @@ EnvironmentMappingDemo::EnvironmentMappingDemo()
 	: m_reflectionAmount(1.0f)
 	, m_ambientColor(1.0f, 1.0f, 1.0f, 1.0f)
 {
-	SetDefaultModelName("Sphere");
-	SetDefaultTextureName("Checkerboard");
+	SetModelName("Sphere");
+	SetTextureName("Checkerboard");
 }
 
 EnvironmentMappingDemo::~EnvironmentMappingDemo() = default;
@@ -36,13 +36,13 @@ EnvironmentMappingDemo::~EnvironmentMappingDemo() = default;
 void EnvironmentMappingDemo::Initialize(const Application& app)
 {
 	InitializeMaterial(app, "EnvironmentMapping");
-	DrawableInputMaterialComponent::Initialize(app);
+	MaterialSceneComponent::Initialize(app);
 
 	m_environmentMapTexture = app.LoadTexture("Maskonaive2_1024");
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
-	m_text->SetTextGeneratorFunction(
+	m_text->SetTextUpdateFunction(
 		[this]() -> std::wstring
 		{
 			std::wostringstream woss;
@@ -74,7 +74,7 @@ void EnvironmentMappingDemo::Update(const Time& time)
 
 	m_text->Update(time);
 
-	DrawableComponent::Update(time);
+	MaterialSceneComponent::Update(time);
 }
 
 void EnvironmentMappingDemo::Draw_SetData()
@@ -94,8 +94,8 @@ void EnvironmentMappingDemo::Draw_SetData()
 	m_material->GetWorld() << GetWorldMatrix();
 	m_material->GetReflectionAmount() << m_reflectionAmount;
 
-	m_material->GetColorTexture() << m_defaultTexture.Get();
+	m_material->GetColorTexture() << GetTexture();
 	m_material->GetEnvironmentMap() << m_environmentMapTexture.Get();
 
-	DrawableInputMaterialComponent::Draw_SetData();
+	MaterialSceneComponent::Draw_SetData();
 }

@@ -1,14 +1,14 @@
 #pragma once
 #include "library/materials/GaussianBlurMaterial.h"
-#include "library/components/ConcretePostProcessingComponent.hpp"
+#include "library/components/ConcreteMaterialPostProcessingComponent.hpp"
 
 #include "library/math/Vector.h"
 
 namespace library
 {
-	class GaussianBlurComponent : public ConcretePostProcessingComponent<GaussianBlurMaterial>
+	class GaussianBlurComponent : public ConcreteMaterialPostProcessingComponent<GaussianBlurMaterial>
 	{
-		RTTI_CLASS(GaussianBlurComponent, PostProcessingComponent)
+		RTTI_CLASS(GaussianBlurComponent, MaterialPostProcessingComponent)
 
 	public:
 		explicit GaussianBlurComponent();

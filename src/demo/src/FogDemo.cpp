@@ -43,8 +43,8 @@ FogDemo::FogDemo()
 	, m_fogRange(20.0f)
 	, m_fogEnabled(true)
 {
-	SetDefaultModelName("Sphere");
-	SetDefaultTextureName("EarthComposite");
+	SetModelName("Sphere");
+	SetTextureName("EarthComposite");
 }
 
 FogDemo::~FogDemo() = default;
@@ -56,7 +56,7 @@ void FogDemo::Initialize(const Application& app)
 	assert(!!GetCamera());
 
 	InitializeMaterial(app, "Fog");
-	DrawableInputMaterialComponent::Initialize(app);
+	MaterialSceneComponent::Initialize(app);
 
 	m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
@@ -68,7 +68,7 @@ void FogDemo::Initialize(const Application& app)
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
-	m_text->SetTextGeneratorFunction(
+	m_text->SetTextUpdateFunction(
 		[this]() -> std::wstring
 		{
 			std::wostringstream woss;
@@ -101,7 +101,7 @@ void FogDemo::Update(const Time& time)
 	m_text->Update(time);
 	m_proxyModel->Update(time);
 
-	DrawableComponent::Update(time);
+	MaterialSceneComponent::Update(time);
 }
 
 void FogDemo::UpdateAmbientLight(const Time& time)
@@ -183,7 +183,7 @@ void FogDemo::SetActiveTechnique()
 	const auto& technique = m_material->GetEffect().GetTechnique(techniqueName);
 	const auto& pass = technique.GetPass("p0");
 
-	m_inputLayout = m_material->GetInputLayout(pass);
+	m_input.layout = m_material->GetInputLayout(pass);
 }
 
 void FogDemo::Draw_SetData()
@@ -206,7 +206,7 @@ void FogDemo::Draw_SetData()
 	m_material->GetWVP() << wvp;
 	m_material->GetWorld() << GetWorldMatrix();
 
-	m_material->GetColorTexture() << m_defaultTexture.Get();
+	m_material->GetColorTexture() << GetTexture();
 
-	DrawableInputMaterialComponent::Draw_SetData();
+	MaterialSceneComponent::Draw_SetData();
 }

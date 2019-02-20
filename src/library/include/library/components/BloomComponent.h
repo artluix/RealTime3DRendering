@@ -1,6 +1,6 @@
 #pragma once
 #include "library/materials/BloomMaterial.h"
-#include "library/components/ConcretePostProcessingComponent.hpp"
+#include "library/components/ConcreteMaterialPostProcessingComponent.hpp"
 
 namespace library
 {
@@ -30,9 +30,9 @@ namespace library
 
 	class GaussianBlurComponent;
 
-	class BloomComponent : public ConcretePostProcessingComponent<BloomMaterial>
+	class BloomComponent : public ConcreteMaterialPostProcessingComponent<BloomMaterial>
 	{
-		RTTI_CLASS(BloomComponent, PostProcessingComponent)
+		RTTI_CLASS(BloomComponent, MaterialPostProcessingComponent)
 
 	public:
 		explicit BloomComponent();

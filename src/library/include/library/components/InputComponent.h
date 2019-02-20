@@ -1,6 +1,7 @@
 #pragma once
 #include "library/components/Component.h"
 #include "library/CommonTypes.h"
+
 #include <dinput.h>
 
 namespace library

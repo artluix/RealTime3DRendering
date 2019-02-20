@@ -27,7 +27,7 @@ BloomDemo::~BloomDemo() = default;
 void BloomDemo::Initialize(const Application& app)
 {
 	m_text = std::make_unique<TextComponent>();
-	m_text->SetTextGeneratorFunction(
+	m_text->SetTextUpdateFunction(
 		[this]() -> std::wstring
 		{
 			const auto& settings = GetSettings();
@@ -58,8 +58,6 @@ void BloomDemo::Update(const Time& time)
 	UpdateSettings(time);
 
 	m_text->Update(time);
-
-	DrawableComponent::Update(time);
 }
 
 void BloomDemo::UpdateSettings(const Time& time)

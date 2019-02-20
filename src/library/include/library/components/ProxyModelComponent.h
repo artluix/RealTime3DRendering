@@ -1,8 +1,6 @@
 #pragma once
 #include "library/materials/BasicMaterial.h"
-
-#include "library/components/SceneComponent.h"
-#include "library/components/ConcreteDrawableInputMaterialComponent.hpp"
+#include "library/components/ConcreteMaterialSceneComponent.hpp"
 
 #include "library/DirectXForwardDeclarations.h"
 
@@ -10,11 +8,9 @@
 
 namespace library
 {
-	class ProxyModelComponent
-		: public SceneComponent
-		, public ConcreteDrawableInputMaterialComponent<BasicMaterial>
+	class ProxyModelComponent : public ConcreteMaterialSceneComponent<BasicMaterial>
 	{
-		RTTI_CLASS(ProxyModelComponent, SceneComponent)
+		RTTI_CLASS(ProxyModelComponent, MaterialSceneComponent)
 
 	public:
 		explicit ProxyModelComponent(const std::string& modelName, const float scale);
@@ -28,7 +24,6 @@ namespace library
 		const math::Vector3& GetRight() const { return m_right; }
 
 		void Initialize(const Application& app) override;
-		using DrawableComponent::Draw;
 
 	protected:
 		void Draw_SetData() override;

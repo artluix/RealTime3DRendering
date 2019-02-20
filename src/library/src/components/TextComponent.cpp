@@ -2,6 +2,7 @@
 #include "library/components/TextComponent.h"
 
 #include "library/Application.h"
+#include "library/Renderer.h"
 #include "library/Utils.h"
 
 namespace library
@@ -56,9 +57,9 @@ namespace library
 		}
 	}
 
-	void TextComponent::SetTextGeneratorFunction(const TextGeneratorFunction& generatorFunction)
+	void TextComponent::SetTextUpdateFunction(const TextUpdateFunction& textUpdateFunction)
 	{
-		m_generatorFunction = generatorFunction;
+		m_textUpdateFunction = textUpdateFunction;
 	}
 
 	void TextComponent::Initialize(const Application& app)
@@ -71,12 +72,12 @@ namespace library
 
 	void TextComponent::Update(const Time& time)
 	{
-		if (!!m_generatorFunction)
+		if (!!m_textUpdateFunction)
 		{
-			m_text = m_generatorFunction();
+			m_text = m_textUpdateFunction();
 		}
 
-		DrawableComponent::Update(time);
+		m_app->GetRenderer()->AddDrawable(*this);
 	}
 
 	void TextComponent::Draw(const Time& time)

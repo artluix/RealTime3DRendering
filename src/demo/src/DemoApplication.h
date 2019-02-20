@@ -15,7 +15,7 @@ namespace library
 	class GridComponent;
 
 	class FullScreenRenderTarget;
-	class PostProcessingComponent;
+	class MaterialPostProcessingComponent;
 } // namespace library
 
 
@@ -45,8 +45,8 @@ private:
 
 	std::shared_ptr<library::GridComponent> m_grid;
 
-	std::unique_ptr<library::FullScreenRenderTarget> m_renderTarget;
-	std::unique_ptr<library::PostProcessingComponent> m_postProcessing;
+	std::unique_ptr<library::FullScreenRenderTarget> m_sceneRenderTarget;
+	std::unique_ptr<library::MaterialPostProcessingComponent> m_postProcessing;
 	bool m_postProcessingEnabled;
 
 	ComPtr<IDirectInput8> m_directInput;

@@ -1,15 +1,12 @@
 #pragma once
 #include <library/components/SceneComponent.h>
-#include <library/components/DrawableInputComponent.h>
 
 #include <library/CommonTypes.h>
 #include <library/DirectXForwardDeclarations.h>
 
-class TriangleDemo
-	: public library::SceneComponent
-	, public library::DrawableInputComponent
+class TriangleDemo : public library::SceneComponent
 {
-	RTTI_CLASS(TriangleDemo, library::SceneComponent, library::DrawableInputComponent)
+	RTTI_CLASS(TriangleDemo, library::SceneComponent)
 
 public:
 	explicit TriangleDemo() = default;

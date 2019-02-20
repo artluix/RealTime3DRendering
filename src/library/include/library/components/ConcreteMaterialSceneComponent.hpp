@@ -1,19 +1,14 @@
 #pragma once
 #include "library/materials/Material.h"
-#include "library/components/DrawableMaterialComponent.h"
+#include "library/components/MaterialSceneComponent.h"
 #include "library/effect/Effect.h"
 
 #include <type_traits>
-#include <string>
-#include <memory>
 
 namespace library
 {
-	class Application;
-	class Path;
-
 	template<class MaterialType, typename = std::enable_if_t<std::is_base_of_v<Material, MaterialType>>>
-	class ConcreteDrawableMaterialComponent : public virtual DrawableMaterialComponent
+	class ConcreteMaterialSceneComponent : public MaterialSceneComponent
 	{
 	public:
 		using Material = MaterialType;
@@ -21,7 +16,7 @@ namespace library
 		const Material& GetMaterial() const override { return *m_material; }
 
 	protected:
-		explicit ConcreteDrawableMaterialComponent() = default;
+		explicit ConcreteMaterialSceneComponent() = default;
 
 		void InitializeMaterial(const Application& app, const std::string& effectName, const bool compile = false)
 		{
@@ -31,6 +26,7 @@ namespace library
 			m_material->Initialize();
 		}
 
+		unsigned GetVertexSize() const override { return GetMaterial().GetVertexSize(); }
 		Material& GetMaterial() override { return *m_material; }
 
 		std::shared_ptr<Effect> m_effect;

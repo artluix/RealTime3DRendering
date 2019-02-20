@@ -1,6 +1,20 @@
 #include "StdAfx.h"
 #include "library/components/SceneComponent.h"
 
+#include "library/Application.h"
+#include "library/Renderer.h"
+
+#include "library/Model.h"
+#include "library/Mesh.h"
+
+#include "library/materials/Material.h"
+
+#include "library/effect/Effect.h"
+#include "library/effect/EffectTechnique.h"
+#include "library/effect/EffectPass.h"
+
+#include <cassert>
+
 namespace library
 {
 	SceneComponent::SceneComponent()
@@ -99,5 +113,75 @@ namespace library
 		m_direction = rotationMatrix.GetForward();
 		m_up = rotationMatrix.GetUp();
 		m_right = rotationMatrix.GetRight();
+	}
+
+	//-------------------------------------------------------------------------
+
+	void SceneComponent::SetTextureName(const std::string& textureName)
+	{
+		if (m_textureName != textureName)
+			m_textureName = textureName;
+	}
+
+	//-------------------------------------------------------------------------
+
+	void SceneComponent::Initialize(const Application& app)
+	{
+		DrawableComponent::Initialize(app);
+
+		// load texture
+		if (!m_textureName.empty())
+		{
+			m_texture = m_app->LoadTexture(m_textureName);
+		}
+	}
+
+	void SceneComponent::Update(const Time& time)
+	{
+		m_app->GetRenderer()->AddDrawable(*this);
+	}
+
+	void SceneComponent::Draw(const Time& time)
+	{
+		Draw_SetIA();
+		Draw_SetData();
+		Draw_Render();
+	}
+
+	//-------------------------------------------------------------------------
+
+	void SceneComponent::Draw_SetIA()
+	{
+		auto deviceContext = m_app->GetDeviceContext();
+
+		deviceContext->IASetPrimitiveTopology(m_input.topology);
+		deviceContext->IASetInputLayout(m_input.layout.Get());
+
+		// set vertex buffer
+		{
+			unsigned stride = GetVertexSize();
+			unsigned offset = 0;
+			deviceContext->IASetVertexBuffers(0, 1, m_input.vertices.buffer.GetAddressOf(), &stride, &offset);
+		}
+
+		// set index buffer (if needed)
+		if (!!m_input.indices)
+		{
+			deviceContext->IASetIndexBuffer(m_input.indices->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		}
+	}
+
+	void SceneComponent::Draw_SetData()
+	{
+	}
+
+	void SceneComponent::Draw_Render()
+	{
+		auto deviceContext = m_app->GetDeviceContext();
+
+		if (!!m_input.indices)
+			deviceContext->DrawIndexed(m_input.indices->count, 0, 0);
+		else
+			deviceContext->Draw(m_input.vertices.count, 0);
 	}
 } // namespace library

@@ -1,6 +1,5 @@
 #pragma once
 #include <library/components/SceneComponent.h>
-#include <library/components/DrawableInputComponent.h>
 #include <library/components/InputReceivableComponent.h>
 
 #include <library/CommonTypes.h>
@@ -15,10 +14,9 @@ namespace library
 
 class TextureModelDemo
 	: public library::SceneComponent
-	, public library::DrawableInputComponent
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(TextureModelDemo, library::SceneComponent, library::DrawableInputComponent, library::InputReceivableComponent)
+	RTTI_CLASS(TextureModelDemo, library::SceneComponent, library::InputReceivableComponent)
 
 public:
 	explicit TextureModelDemo();
@@ -39,7 +37,6 @@ private:
 	ComPtr<ID3DX11EffectPass> m_pass;
 	ComPtr<ID3DX11EffectMatrixVariable> m_wvpVariable;
 
-	// texture mapping specific
 	ComPtr<ID3DX11EffectShaderResourceVariable> m_colorTextureVariable;
 
 	long m_wheel;

@@ -14,7 +14,7 @@ using namespace library;
 
 void TriangleDemo::Initialize(const Application& app)
 {
-	DrawableInputComponent::Initialize(app);
+	SceneComponent::Initialize(app);
 
 	// shader
 	{
@@ -100,7 +100,7 @@ void TriangleDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateInputLayout(
 			inputElementDescriptions.data(), inputElementDescriptions.size(),
 			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
-			m_inputLayout.GetAddressOf()
+			m_input.layout.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
@@ -119,7 +119,7 @@ void TriangleDemo::Initialize(const Application& app)
 			VertexPositionColor(DirectX::XMFLOAT4(l, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f)), // right blue
 		};
 
-		m_vertexBufferData.count = vertices.size();
+		m_input.vertices.count = vertices.size();
 
 		D3D11_BUFFER_DESC vertexBufferDesc{};
 		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -132,7 +132,7 @@ void TriangleDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
-			m_vertexBufferData.buffer.GetAddressOf()
+			m_input.vertices.buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
@@ -147,7 +147,7 @@ void TriangleDemo::Update(const Time& time)
 	rotation.z += math::Pi_Div_2 * time.elapsed.GetSeconds();
 	SetRotation(rotation);
 
-	AddToRenderer();
+	SceneComponent::Update(time);
 }
 
 unsigned TriangleDemo::GetVertexSize() const

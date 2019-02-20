@@ -1,6 +1,7 @@
 #pragma once
 #include <library/materials/DistortionMappingMaterial.h>
-#include <library/components/ConcretePostProcessingComponent.hpp>
+
+#include <library/components/ConcreteMaterialPostProcessingComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 namespace library
@@ -9,10 +10,10 @@ namespace library
 } // namespace library
 
 class DistortionMappingDemo
-	: public library::ConcretePostProcessingComponent<library::DistortionMappingMaterial>
+	: public library::ConcreteMaterialPostProcessingComponent<library::DistortionMappingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(DistortionMappingDemo, library::PostProcessingComponent, library::InputReceivableComponent)
+	RTTI_CLASS(DistortionMappingDemo, library::MaterialPostProcessingComponent, library::InputReceivableComponent)
 public:
 	enum class Mode
 	{
@@ -32,7 +33,8 @@ private:
 
 	void UpdateDistortionMapMaterial();
 
-	std::unique_ptr<library::FullScreenRenderTarget> m_sceneRenderTarget;
+	static Mode NextMode(const Mode mode);
+
 	std::unique_ptr<library::FullScreenRenderTarget> m_cutoutRenderTarget;
 
 	std::unique_ptr<library::TextComponent> m_text;

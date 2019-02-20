@@ -1,7 +1,7 @@
 #pragma once
 #include <library/materials/ColorFilterMaterial.h>
 
-#include <library/components/ConcretePostProcessingComponent.hpp>
+#include <library/components/ConcreteMaterialPostProcessingComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 #include <library/math/Matrix.h>
@@ -13,10 +13,10 @@ namespace library
 } // namespace library
 
 class ColorFilterDemo
-	: public library::ConcretePostProcessingComponent<library::ColorFilterMaterial>
+	: public library::ConcreteMaterialPostProcessingComponent<library::ColorFilterMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(ColorFilterDemo, library::PostProcessingComponent, library::InputReceivableComponent)
+	RTTI_CLASS(ColorFilterDemo, library::InputReceivableComponent)
 
 public:
 	enum Type

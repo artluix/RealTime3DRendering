@@ -37,8 +37,8 @@ DisplacementMappingDemo::DisplacementMappingDemo()
 	, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 	, m_displacementScale(0.f)
 {
-	SetDefaultModelName("Plane");
-	SetDefaultTextureName("Blocks_COLOR_RGB");
+	SetModelName("Plane");
+	SetTextureName("Blocks_COLOR_RGB");
 }
 
 DisplacementMappingDemo::~DisplacementMappingDemo() = default;
@@ -48,7 +48,7 @@ void DisplacementMappingDemo::Initialize(const Application& app)
 	assert(!!GetCamera());
 
 	InitializeMaterial(app, "DisplacementMapping");
-	DrawableInputMaterialComponent::Initialize(app);
+	MaterialSceneComponent::Initialize(app);
 
 	m_displacementMapTexture = app.LoadTexture("Blocks_DISP");
 
@@ -64,7 +64,7 @@ void DisplacementMappingDemo::Initialize(const Application& app)
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
-	m_text->SetTextGeneratorFunction(
+	m_text->SetTextUpdateFunction(
 		[this]() -> std::wstring
 		{
 			std::wostringstream woss;
@@ -91,7 +91,7 @@ void DisplacementMappingDemo::Update(const Time& time)
 	m_text->Update(time);
 	m_proxyModel->Update(time);
 
-	DrawableComponent::Update(time);
+	MaterialSceneComponent::Update(time);
 }
 
 void DisplacementMappingDemo::UpdateAmbientLight(const Time& time)
@@ -209,8 +209,8 @@ void DisplacementMappingDemo::Draw_SetData()
 	m_material->GetSpecularColor() << m_specularColor;
 	m_material->GetDisplacementScale() << m_displacementScale;
 
-	m_material->GetColorTexture() << m_defaultTexture.Get();
+	m_material->GetColorTexture() << GetTexture();
 	m_material->GetDisplacementMap() << m_displacementMapTexture.Get();
 
-	DrawableInputMaterialComponent::Draw_SetData();
+	MaterialSceneComponent::Draw_SetData();
 }

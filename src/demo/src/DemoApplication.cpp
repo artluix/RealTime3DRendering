@@ -104,7 +104,7 @@ void DemoApplication::Initialize()
 
 	// mouse text component
 	auto mouseText = std::make_shared<TextComponent>();
-	mouseText->SetTextGeneratorFunction(
+	mouseText->SetTextUpdateFunction(
 		[this]() -> std::wstring
 		{
 			static const std::wstring empty;
@@ -210,7 +210,7 @@ void DemoApplication::Initialize()
 	fog->SetKeyboard(*m_keyboard);
 
 	// render target
-	m_renderTarget = std::make_unique<FullScreenRenderTarget>(*this);
+	m_sceneRenderTarget = std::make_unique<FullScreenRenderTarget>(*this);
 
 	// post-processing
 	{
@@ -219,14 +219,14 @@ void DemoApplication::Initialize()
 		//auto postProcessing = new BloomDemo();
 		auto postProcessing = new DistortionMappingDemo();
 		postProcessing->SetKeyboard(*m_keyboard);
-		postProcessing->SetSceneTexture(*(m_renderTarget->GetOutputTexture()));
+		postProcessing->SetSceneTexture(*(m_sceneRenderTarget->GetOutputTexture()));
 
-		m_postProcessing = std::unique_ptr<PostProcessingComponent>(postProcessing);
+		m_postProcessing = std::unique_ptr<MaterialPostProcessingComponent>(postProcessing);
 	}
 
 	// post-processing text component
 	auto postProcessingText = std::make_shared<TextComponent>();
-	postProcessingText->SetTextGeneratorFunction(
+	postProcessingText->SetTextUpdateFunction(
 		[this]() -> std::wstring
 		{
 			std::wostringstream woss;
@@ -278,14 +278,14 @@ void DemoApplication::Draw(const Time& time)
 	if (m_postProcessingEnabled)
 	{
 		// Render the scene to an off-screen texture
-		m_renderTarget->Begin();
+		m_sceneRenderTarget->Begin();
 
-		m_deviceContext->ClearRenderTargetView(m_renderTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
-		m_deviceContext->ClearDepthStencilView(m_renderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		m_deviceContext->ClearRenderTargetView(m_sceneRenderTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
+		m_deviceContext->ClearDepthStencilView(m_sceneRenderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 		m_renderer->RenderScene(time);
 
-		m_renderTarget->End();
+		m_sceneRenderTarget->End();
 
 		// Render a full-screen quad with a post-processing effect
 		m_deviceContext->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));

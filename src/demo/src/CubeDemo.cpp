@@ -12,11 +12,9 @@
 #include <d3dcompiler.h>
 
 using namespace library;
-	
+
 namespace
 {
-	constexpr unsigned k_indicesCount = 6 * 2 * 3;
-	constexpr unsigned k_verticesCount = 8;
 	constexpr float k_rotationAngle = math::Pi_Div_2;
 	constexpr float k_movementRate = 0.01f;
 }
@@ -109,7 +107,7 @@ void CubeDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateInputLayout(
 			inputElementDescriptions.data(), inputElementDescriptions.size(),
 			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
-			m_inputLayout.GetAddressOf()
+			m_input.layout.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
@@ -119,7 +117,7 @@ void CubeDemo::Initialize(const Application& app)
 
 	// index buffer
 	{
-		constexpr std::array<unsigned, k_indicesCount> k_indices =
+		constexpr std::array<unsigned, 2 * 3 * 6> k_indices =
 		{
 			0, 1, 2,
 			0, 2, 3,
@@ -140,6 +138,9 @@ void CubeDemo::Initialize(const Application& app)
 			1, 6, 2
 		};
 
+		m_input.indices = std::make_unique<BufferData>();
+		m_input.indices->count = k_indices.size();
+
 		D3D11_BUFFER_DESC indexBufferDesc{};
 		indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 		indexBufferDesc.ByteWidth = sizeof(unsigned) * k_indices.size();
@@ -148,7 +149,7 @@ void CubeDemo::Initialize(const Application& app)
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = k_indices.data();
 
-		auto hr = app.GetDevice()->CreateBuffer(&indexBufferDesc, &vertexSubResourceData, m_indexBuffer.GetAddressOf());
+		auto hr = app.GetDevice()->CreateBuffer(&indexBufferDesc, &vertexSubResourceData, m_input.indices->buffer.GetAddressOf());
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateBuffer() failed.", hr);
@@ -157,7 +158,7 @@ void CubeDemo::Initialize(const Application& app)
 
 	// vertex buffer
 	{
-		std::array<VertexPositionColor, k_verticesCount> vertices =
+		std::array<VertexPositionColor, 8> vertices =
 		{
 			// bottom
 			VertexPositionColor(DirectX::XMFLOAT4(-1.0f, -1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f)),
@@ -172,6 +173,8 @@ void CubeDemo::Initialize(const Application& app)
 			VertexPositionColor(DirectX::XMFLOAT4(1.0f, -1.0f, 1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.5f, 1.0f, 1.0f)),
 		};
 
+		m_input.vertices.count = vertices.size();
+
 		D3D11_BUFFER_DESC vertexBufferDesc{};
 		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 		vertexBufferDesc.ByteWidth = sizeof(VertexPositionColor) * vertices.size();
@@ -180,7 +183,7 @@ void CubeDemo::Initialize(const Application& app)
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = vertices.data();
 
-		auto hr = app.GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_vertexBuffer.GetAddressOf());
+		auto hr = app.GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_input.vertices.buffer.GetAddressOf());
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateBuffer() failed.", hr);
@@ -229,28 +232,20 @@ void CubeDemo::Update(const Time& time)
 		}
 	}
 
-	DrawableComponent::Update(time);
+	SceneComponent::Update(time);
 }
 
-void CubeDemo::Draw(const Time& time)
+void CubeDemo::Draw_SetData()
 {
-	auto deviceContext = m_app->GetDeviceContext();
-
 	auto wvp = GetWorldMatrix();
 	if (auto camera = GetCamera())
 		wvp *= camera->GetViewProjectionMatrix();
 	m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
-	m_pass->Apply(0, deviceContext);
+	m_pass->Apply(0, m_app->GetDeviceContext());
+}
 
-	deviceContext->IASetPrimitiveTopology(D3D11_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-	deviceContext->IASetInputLayout(m_inputLayout.Get());
-
-	deviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-	unsigned stride = sizeof(VertexPositionColor);
-	unsigned offset = 0;
-	deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
-
-	deviceContext->DrawIndexed(k_indicesCount, 0, 0);
+unsigned CubeDemo::GetVertexSize() const
+{
+	return sizeof(VertexPositionColor);
 }

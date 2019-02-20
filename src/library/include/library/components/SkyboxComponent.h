@@ -1,16 +1,12 @@
 #pragma once
 #include "library/materials/SkyboxMaterial.h"
-
-#include "library/components/SceneComponent.h"
-#include "library/components/ConcreteDrawableInputMaterialComponent.hpp"
+#include "library/components/ConcreteMaterialSceneComponent.hpp"
 
 namespace library
 {
-	class SkyboxComponent
-		: public SceneComponent
-		, public ConcreteDrawableInputMaterialComponent<SkyboxMaterial>
+	class SkyboxComponent : public ConcreteMaterialSceneComponent<SkyboxMaterial>
 	{
-		RTTI_CLASS(SkyboxComponent, SceneComponent, DrawableInputMaterialComponent)
+		RTTI_CLASS(SkyboxComponent, MaterialSceneComponent)
 
 	public:
 		explicit SkyboxComponent(const std::string& cubeMapName, const float scale);

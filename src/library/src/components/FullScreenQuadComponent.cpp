@@ -18,7 +18,6 @@ namespace library
 {
 	FullScreenQuadComponent::FullScreenQuadComponent()
 	{
-		SetAutoRenderable(false);
 	}
 
 	FullScreenQuadComponent::~FullScreenQuadComponent() = default;
@@ -49,7 +48,7 @@ namespace library
 		auto& pass = technique.GetPass(passName);
 
 		m_pass = &pass;
-		m_inputLayout = m_material->GetInputLayoutShared(pass);
+		m_input.layout = m_material->GetInputLayoutShared(pass);
 	}
 
 	void FullScreenQuadComponent::SetMaterialUpdateFunction(const MaterialUpdateFunction& func)
@@ -59,7 +58,7 @@ namespace library
 
 	void FullScreenQuadComponent::Initialize(const Application& app)
 	{
-		DrawableMaterialComponent::Initialize(app);
+		MaterialDrawableComponent::Initialize(app);
 
 		// vertex buffer
 		{
@@ -72,10 +71,10 @@ namespace library
 				Vertex(DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f)),
 				Vertex(DirectX::XMFLOAT4(1.0f, -1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f)),
 			};
-			m_vertexBufferData.count = vertices.size();
+			m_input.vertices.count = vertices.size();
 
 			D3D11_BUFFER_DESC vertexBufferDesc{};
-			vertexBufferDesc.ByteWidth = sizeof(Vertex) * m_vertexBufferData.count;
+			vertexBufferDesc.ByteWidth = sizeof(Vertex) * m_input.vertices.count;
 			vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 			vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
@@ -85,7 +84,7 @@ namespace library
 			auto hr = app.GetDevice()->CreateBuffer(
 				&vertexBufferDesc,
 				&vertexSubResourceData,
-				m_vertexBufferData.buffer.GetAddressOf()
+				m_input.vertices.buffer.GetAddressOf()
 			);
 			if (FAILED(hr))
 			{
@@ -95,17 +94,17 @@ namespace library
 
 		// index buffer
 		{
-			m_indexBufferData = std::make_unique<BufferData>();
+			m_input.indices = std::make_unique<BufferData>();
 
 			std::array<unsigned, 6> indices =
 			{
 				0, 1, 2,
 				0, 2, 3,
 			};
-			m_indexBufferData->count = indices.size();
+			m_input.indices->count = indices.size();
 
 			D3D11_BUFFER_DESC indexBufferDesc{};
-			indexBufferDesc.ByteWidth = sizeof(unsigned) * m_indexBufferData->count;
+			indexBufferDesc.ByteWidth = sizeof(unsigned) * m_input.indices->count;
 			indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 			indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
@@ -115,13 +114,17 @@ namespace library
 			auto hr = app.GetDevice()->CreateBuffer(
 				&indexBufferDesc,
 				&indexSubResourceData,
-				m_indexBufferData->buffer.GetAddressOf()
+				m_input.indices->buffer.GetAddressOf()
 			);
 			if (FAILED(hr))
 			{
 				throw Exception("ID3D11Device::CreateBuffer", hr);
 			}
 		}
+	}
+
+	void FullScreenQuadComponent::Update(const Time& time)
+	{
 	}
 
 	void FullScreenQuadComponent::Draw_SetData()
@@ -132,5 +135,10 @@ namespace library
 		}
 
 		m_pass->Apply(0, m_app->GetDeviceContext());
+	}
+
+	unsigned FullScreenQuadComponent::GetVertexSize() const
+	{
+		return sizeof(VertexPositionTexture);
 	}
 } // namespace library

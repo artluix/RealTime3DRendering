@@ -1,8 +1,7 @@
 #pragma once
 #include <library/materials/NormalMappingMaterial.h>
 
-#include <library/components/SceneComponent.h>
-#include <library/components/ConcreteDrawableInputMaterialComponent.hpp>
+#include <library/components/ConcreteMaterialSceneComponent.hpp>
 #include <library/components/InputReceivableComponent.h>
 
 #include <library/Color.h>
@@ -18,11 +17,10 @@ namespace library
 } // namespace library
 
 class NormalMappingDemo
-	: public library::SceneComponent
-	, public library::ConcreteDrawableInputMaterialComponent<library::NormalMappingMaterial>
+	: public library::ConcreteMaterialSceneComponent<library::NormalMappingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(NormalMappingDemo, library::SceneComponent, library::DrawableInputMaterialComponent, library::InputReceivableComponent)
+	RTTI_CLASS(NormalMappingDemo, library::MaterialSceneComponent , library::InputReceivableComponent)
 
 public:
 	explicit NormalMappingDemo();

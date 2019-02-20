@@ -1,20 +1,16 @@
 #pragma once
 #include "library/materials/BasicMaterial.h"
 
-#include "library/components/SceneComponent.h"
-#include "library/components/ConcreteDrawableInputMaterialComponent.hpp"
-#include "library/components/InputReceivableComponent.h"
+#include "library/components/ConcreteMaterialSceneComponent.hpp"
 
 #include "library/Color.h"
 #include "library/DirectXForwardDeclarations.h"
 
 namespace library
 {
-	class GridComponent
-		: public SceneComponent
-		, public ConcreteDrawableInputMaterialComponent<BasicMaterial>
+	class GridComponent : public ConcreteMaterialSceneComponent<BasicMaterial>
 	{
-		RTTI_CLASS(GridComponent, SceneComponent, DrawableInputMaterialComponent)
+		RTTI_CLASS(GridComponent, MaterialSceneComponent)
 
 	public:
 		explicit GridComponent();
@@ -37,7 +33,6 @@ namespace library
 		void Initialize(const Application& app) override;
 
 	protected:
-		void Draw_SetIA() override;
 		void Draw_SetData() override;
 
 	private:
