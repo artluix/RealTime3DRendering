@@ -71,7 +71,7 @@ void TransparencyMappingDemo::Initialize(const Application& app)
 	}
 
 	InitializeMaterial(app, "TransparencyMapping");
-	MaterialSceneComponent::Initialize(app);
+	SceneComponent::Initialize(app);
 
 	m_transparencyMapTexture = app.LoadTexture("AlphaMask_32bpp");
 
@@ -237,7 +237,7 @@ void TransparencyMappingDemo::Draw_SetData()
 	m_material->GetColorTexture() << GetTexture();
 	m_material->GetTransparencyMap() << m_transparencyMapTexture.Get();
 
-	MaterialSceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData();
 }
 
 void TransparencyMappingDemo::Draw_Render()
@@ -247,6 +247,6 @@ void TransparencyMappingDemo::Draw_Render()
 
 	renderer->SaveRenderState(RenderState::Blend);
 	deviceContext->OMSetBlendState(BlendStateHolder::GetBlendState(BlendState::Alpha).Get(), 0, 0xFFFFFFFF);
-	MaterialSceneComponent::Draw_Render();
+	SceneComponent::Draw_Render();
 	renderer->RestoreRenderState(RenderState::Blend);
 }

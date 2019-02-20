@@ -18,7 +18,7 @@ class SpotlightDemo
 	: public library::ConcreteMaterialSceneComponent<library::SpotlightMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(SpotlightDemo, library::MaterialSceneComponent, library::InputReceivableComponent)
+	RTTI_CLASS(SpotlightDemo, library::SceneComponent, library::InputReceivableComponent)
 
 public:
 	explicit SpotlightDemo();

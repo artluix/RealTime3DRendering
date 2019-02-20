@@ -24,6 +24,7 @@ namespace
 
 DistortionMappingDemo::DistortionMappingDemo()
 	: m_displacementScale(1.f)
+	, m_mode(Mode::Normal)
 {
 }
 
@@ -31,7 +32,7 @@ DistortionMappingDemo::~DistortionMappingDemo() = default;
 
 void DistortionMappingDemo::Initialize(const Application& app)
 {
-	MaterialPostProcessingComponent::Initialize(app);
+	PostProcessingComponent::Initialize(app);
 
 	InitializeMaterial(app, "DistortionMapping");
 	InitializeQuad(app, "distortion");
@@ -69,7 +70,7 @@ void DistortionMappingDemo::Draw(const Time& time)
 		/*deviceContext->ClearRenderTargetView(m_sceneRenderTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
 		deviceContext->ClearDepthStencilView(m_sceneRenderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 */
-		m_app->UnbindPixelShaderResources(0, 1);
+		//m_app->UnbindPixelShaderResources(0, 1);
 		m_fullScreenQuad->Draw(time);
 	}
 	else
@@ -105,12 +106,17 @@ void DistortionMappingDemo::UpdateDistortionMapMaterial()
 	m_material->GetDisplacementScale() << m_displacementScale;
 }
 
+//-------------------------------------------------------------------------
+
 DistortionMappingDemo::Mode DistortionMappingDemo::NextMode(const Mode mode)
 {
 	switch (mode)
 	{
-		case Mode::Normal:		return Mode::Masking;
+		case Mode::Normal:
+			return Mode::Masking;
+
 		case Mode::Masking:
-		default:				return Mode::Normal;
+		default:	
+			return Mode::Normal;
 	}
 }

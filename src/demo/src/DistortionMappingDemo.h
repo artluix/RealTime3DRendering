@@ -13,7 +13,7 @@ class DistortionMappingDemo
 	: public library::ConcreteMaterialPostProcessingComponent<library::DistortionMappingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(DistortionMappingDemo, library::MaterialPostProcessingComponent, library::InputReceivableComponent)
+	RTTI_CLASS(DistortionMappingDemo, library::PostProcessingComponent, library::InputReceivableComponent)
 public:
 	enum class Mode
 	{

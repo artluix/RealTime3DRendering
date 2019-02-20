@@ -29,7 +29,7 @@ TextureMappingDemo::TextureMappingDemo()
 void TextureMappingDemo::Initialize(const Application& app)
 {
 	InitializeMaterial(app, "TextureMapping");
-	MaterialSceneComponent::Initialize(app);
+	SceneComponent::Initialize(app);
 }
 
 void TextureMappingDemo::Update(const Time& time)
@@ -85,5 +85,5 @@ void TextureMappingDemo::Draw_SetData()
 
 	m_material->GetColorTexture() << GetTexture();
 
-	MaterialSceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData();
 }

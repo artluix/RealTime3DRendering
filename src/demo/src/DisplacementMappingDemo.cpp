@@ -48,7 +48,7 @@ void DisplacementMappingDemo::Initialize(const Application& app)
 	assert(!!GetCamera());
 
 	InitializeMaterial(app, "DisplacementMapping");
-	MaterialSceneComponent::Initialize(app);
+	SceneComponent::Initialize(app);
 
 	m_displacementMapTexture = app.LoadTexture("Blocks_DISP");
 
@@ -91,7 +91,7 @@ void DisplacementMappingDemo::Update(const Time& time)
 	m_text->Update(time);
 	m_proxyModel->Update(time);
 
-	MaterialSceneComponent::Update(time);
+	SceneComponent::Update(time);
 }
 
 void DisplacementMappingDemo::UpdateAmbientLight(const Time& time)
@@ -212,5 +212,5 @@ void DisplacementMappingDemo::Draw_SetData()
 	m_material->GetColorTexture() << GetTexture();
 	m_material->GetDisplacementMap() << m_displacementMapTexture.Get();
 
-	MaterialSceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData();
 }

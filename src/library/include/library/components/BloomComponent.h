@@ -32,7 +32,7 @@ namespace library
 
 	class BloomComponent : public ConcreteMaterialPostProcessingComponent<BloomMaterial>
 	{
-		RTTI_CLASS(BloomComponent, MaterialPostProcessingComponent)
+		RTTI_CLASS(BloomComponent, PostProcessingComponent)
 
 	public:
 		explicit BloomComponent();

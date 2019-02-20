@@ -20,7 +20,7 @@ class NormalMappingDemo
 	: public library::ConcreteMaterialSceneComponent<library::NormalMappingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(NormalMappingDemo, library::MaterialSceneComponent , library::InputReceivableComponent)
+	RTTI_CLASS(NormalMappingDemo, library::SceneComponent , library::InputReceivableComponent)
 
 public:
 	explicit NormalMappingDemo();
@@ -28,7 +28,6 @@ public:
 
 	void Initialize(const library::Application& app) override;
 	void Update(const library::Time& time) override;
-	using library::DrawableComponent::Draw;
 
 private:
 	void UpdateAmbientLight(const library::Time& time);

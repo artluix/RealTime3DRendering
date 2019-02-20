@@ -221,7 +221,7 @@ void DemoApplication::Initialize()
 		postProcessing->SetKeyboard(*m_keyboard);
 		postProcessing->SetSceneTexture(*(m_sceneRenderTarget->GetOutputTexture()));
 
-		m_postProcessing = std::unique_ptr<MaterialPostProcessingComponent>(postProcessing);
+		m_postProcessing = std::unique_ptr<PostProcessingComponent>(postProcessing);
 	}
 
 	// post-processing text component

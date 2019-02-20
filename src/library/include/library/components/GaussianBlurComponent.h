@@ -8,7 +8,7 @@ namespace library
 {
 	class GaussianBlurComponent : public ConcreteMaterialPostProcessingComponent<GaussianBlurMaterial>
 	{
-		RTTI_CLASS(GaussianBlurComponent, MaterialPostProcessingComponent)
+		RTTI_CLASS(GaussianBlurComponent, PostProcessingComponent)
 
 	public:
 		explicit GaussianBlurComponent();

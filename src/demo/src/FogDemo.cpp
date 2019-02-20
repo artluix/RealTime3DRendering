@@ -56,7 +56,7 @@ void FogDemo::Initialize(const Application& app)
 	assert(!!GetCamera());
 
 	InitializeMaterial(app, "Fog");
-	MaterialSceneComponent::Initialize(app);
+	SceneComponent::Initialize(app);
 
 	m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
@@ -101,7 +101,7 @@ void FogDemo::Update(const Time& time)
 	m_text->Update(time);
 	m_proxyModel->Update(time);
 
-	MaterialSceneComponent::Update(time);
+	SceneComponent::Update(time);
 }
 
 void FogDemo::UpdateAmbientLight(const Time& time)
@@ -208,5 +208,5 @@ void FogDemo::Draw_SetData()
 
 	m_material->GetColorTexture() << GetTexture();
 
-	MaterialSceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData();
 }

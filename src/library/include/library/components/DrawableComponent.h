@@ -3,6 +3,8 @@
 
 namespace library
 {
+	class Material;
+
 	class DrawableComponent : public virtual Component
 	{
 		RTTI_CLASS(DrawableComponent, Component)
@@ -13,8 +15,12 @@ namespace library
 
 		virtual void Draw(const Time& time) {}
 
+		virtual const Material* GetMaterial() const { return nullptr; }
+
 	protected:
 		explicit DrawableComponent() = default;
+
+		virtual Material* GetMaterial() { return nullptr; }
 
 	private:
 		bool m_visible = true;

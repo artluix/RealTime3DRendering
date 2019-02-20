@@ -6,7 +6,7 @@ namespace library
 {
 	class SkyboxComponent : public ConcreteMaterialSceneComponent<SkyboxMaterial>
 	{
-		RTTI_CLASS(SkyboxComponent, MaterialSceneComponent)
+		RTTI_CLASS(SkyboxComponent, SceneComponent)
 
 	public:
 		explicit SkyboxComponent(const std::string& cubeMapName, const float scale);

@@ -34,7 +34,7 @@ namespace library
 	void ProxyModelComponent::Initialize(const Application& app)
 	{
 		InitializeMaterial(app, "Basic");
-		MaterialSceneComponent::Initialize(app);
+		SceneComponent::Initialize(app);
 	}
 
 	void ProxyModelComponent::Draw_SetData()
@@ -44,7 +44,7 @@ namespace library
 			wvp *= camera->GetViewProjectionMatrix();
 		m_material->GetWorldViewProjection() << wvp;
 
-		MaterialSceneComponent::Draw_SetData();
+		SceneComponent::Draw_SetData();
 	}
 
 	void ProxyModelComponent::Draw_Render()
@@ -54,12 +54,12 @@ namespace library
 		if (m_isWireframeVisible)
 		{
 			deviceContext->RSSetState(RasterizerStateHolder::GetRasterizerState(RasterizerState::Wireframe).Get());
-			MaterialSceneComponent::Draw_Render();
+			SceneComponent::Draw_Render();
 			deviceContext->RSSetState(nullptr);
 		}
 		else
 		{
-			MaterialSceneComponent::Draw_Render();
+			SceneComponent::Draw_Render();
 		}
 	}
 } // namespace library

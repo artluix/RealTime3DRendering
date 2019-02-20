@@ -10,7 +10,7 @@ namespace library
 {
 	class GridComponent : public ConcreteMaterialSceneComponent<BasicMaterial>
 	{
-		RTTI_CLASS(GridComponent, MaterialSceneComponent)
+		RTTI_CLASS(GridComponent, SceneComponent)
 
 	public:
 		explicit GridComponent();

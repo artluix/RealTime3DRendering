@@ -25,7 +25,7 @@ BasicMaterialDemo::BasicMaterialDemo()
 void BasicMaterialDemo::Initialize(const Application& app)
 {
 	InitializeMaterial(app, "Basic");
-	MaterialSceneComponent::Initialize(app);
+	SceneComponent::Initialize(app);
 }
 
 void BasicMaterialDemo::Update(const Time& time)
@@ -69,7 +69,7 @@ void BasicMaterialDemo::Update(const Time& time)
 		}
 	}
 
-	MaterialSceneComponent::Update(time);
+	SceneComponent::Update(time);
 }
 
 void BasicMaterialDemo::Draw_SetData()
@@ -80,5 +80,5 @@ void BasicMaterialDemo::Draw_SetData()
 
 	m_material->GetWorldViewProjection() << wvp;
 
-	MaterialSceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData();
 }

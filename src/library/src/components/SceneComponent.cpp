@@ -117,6 +117,14 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
+	void SceneComponent::SetModelName(const std::string& modelName)
+	{
+		if (m_modelName != modelName)
+			m_modelName = modelName;
+	}
+
+	//-------------------------------------------------------------------------
+
 	void SceneComponent::SetTextureName(const std::string& textureName)
 	{
 		if (m_textureName != textureName)
@@ -128,6 +136,33 @@ namespace library
 	void SceneComponent::Initialize(const Application& app)
 	{
 		DrawableComponent::Initialize(app);
+
+		if (const auto material = GetMaterial())
+		{
+			assert(material->IsInitialized());
+
+			// set default layout from material
+			const auto& currentTechnique = material->GetCurrentTechnique();
+			const auto& pass = currentTechnique.GetPass(0);
+			m_input.layout = material->GetInputLayoutShared(pass);
+
+			// load model from file
+			if (!m_modelName.empty())
+			{
+				Model model(*m_app, m_modelName, true);
+				const auto& mesh = model.GetMesh(0);
+
+				m_input.vertices.buffer = material->CreateVertexBuffer(m_app->GetDevice(), mesh);
+				m_input.vertices.count = mesh.GetVerticesCount();
+
+				if (mesh.HasIndices())
+				{
+					m_input.indices = std::make_unique<BufferData>();
+					m_input.indices->buffer = mesh.CreateIndexBuffer();
+					m_input.indices->count = mesh.GetIndicesCount();
+				}
+			}
+		}
 
 		// load texture
 		if (!m_textureName.empty())
@@ -173,6 +208,13 @@ namespace library
 
 	void SceneComponent::Draw_SetData()
 	{
+		if (auto material = GetMaterial())
+		{
+			auto& currentTechnique = material->GetCurrentTechnique();
+			auto& pass = currentTechnique.GetPass(0);
+
+			pass.Apply(0, m_app->GetDeviceContext());
+		}
 	}
 
 	void SceneComponent::Draw_Render()

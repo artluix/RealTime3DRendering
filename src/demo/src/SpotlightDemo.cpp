@@ -50,7 +50,7 @@ void SpotlightDemo::Initialize(const Application& app)
 	assert(!!GetCamera());
 
 	InitializeMaterial(app, "Spotlight");
-	MaterialSceneComponent::Initialize(app);
+	SceneComponent::Initialize(app);
 
 	m_spotlight = std::make_unique<SpotlightComponent>();
 	m_spotlight->SetRadius(10.f);
@@ -96,7 +96,7 @@ void SpotlightDemo::Update(const Time& time)
 	m_text->Update(time);
 	m_proxyModel->Update(time);
 
-	MaterialSceneComponent::Update(time);
+	SceneComponent::Update(time);
 }
 
 void SpotlightDemo::UpdateAmbientLight(const Time& time)
@@ -299,5 +299,5 @@ void SpotlightDemo::Draw_SetData()
 	m_material->GetSpotlightOuterAngle() << m_spotlight->GetOuterAngle();
 	m_material->GetColorTexture() << GetTexture();
 
-	MaterialSceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData();
 }

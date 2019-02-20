@@ -20,7 +20,7 @@ class TransparencyMappingDemo
 	: public library::ConcreteMaterialSceneComponent<library::TransparencyMappingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(TransparencyMappingDemo, library::MaterialSceneComponent, library::InputReceivableComponent)
+	RTTI_CLASS(TransparencyMappingDemo, library::SceneComponent, library::InputReceivableComponent)
 
 public:
 	explicit TransparencyMappingDemo();
@@ -28,7 +28,6 @@ public:
 
 	void Initialize(const library::Application& app) override;
 	void Update(const library::Time& time) override;
-	using library::DrawableComponent::Draw;
 
 private:
 	void UpdateAmbientLight(const library::Time& time);

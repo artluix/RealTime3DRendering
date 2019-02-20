@@ -16,8 +16,8 @@ cbuffer CBufferPerObjectCutout
 SamplerState TrilinearSampler
 {
     Filter = MIN_MAG_MIP_LINEAR;
-    AddressU = WRAP;
-    AddressV = WRAP;
+    AddressU = CLAMP;
+    AddressV = CLAMP;
 };
 
 /************* Data Structures *************/
@@ -63,7 +63,7 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     static const float k_zeroCorrection = 0.5f / 255.0f;
 
     float2 displacement = DistortionMapTexture.Sample(TrilinearSampler, IN.textureCoordinate).xy;
-    if (all(displacement))
+    if (!all(displacement))
     {
         return SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate);
     }

@@ -20,7 +20,7 @@ class FogDemo
 	: public library::ConcreteMaterialSceneComponent<library::FogMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(FogDemo, library::MaterialSceneComponent, library::InputReceivableComponent)
+	RTTI_CLASS(FogDemo, library::SceneComponent, library::InputReceivableComponent)
 
 public:
 	explicit FogDemo();

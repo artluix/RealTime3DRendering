@@ -1,5 +1,5 @@
 #pragma once
-#include "library/components/MaterialSceneComponent.h"
+#include "library/components/SceneComponent.h"
 
 #include <functional>
 
@@ -7,9 +7,9 @@ namespace library
 {
 	class EffectPass;
 
-	class FullScreenQuadComponent : public MaterialSceneComponent
+	class FullScreenQuadComponent : public SceneComponent
 	{
-		RTTI_CLASS(FullScreenQuadComponent, MaterialSceneComponent)
+		RTTI_CLASS(FullScreenQuadComponent, SceneComponent)
 
 	public:
 		using MaterialUpdateFunction = std::function<void()>;
@@ -26,10 +26,10 @@ namespace library
 		void Initialize(const Application& app) override;
 		void Update(const Time& time) override;
 
-		const Material& GetMaterial() const override { return *m_material; }
+		const Material* GetMaterial() const override { return m_material; }
 
 	protected:
-		Material& GetMaterial() override { return *m_material; }
+		Material* GetMaterial() override { return m_material; }
 
 		void Draw_SetData() override;
 

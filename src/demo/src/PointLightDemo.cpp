@@ -43,7 +43,7 @@ void PointLightDemo::Initialize(const Application& app)
 	assert(!!GetCamera());
 
 	InitializeMaterial(app, "PointLight");
-	MaterialSceneComponent::Initialize(app);
+	SceneComponent::Initialize(app);
 
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetRadius(500.f);
@@ -81,7 +81,7 @@ void PointLightDemo::Update(const Time& time)
 	m_text->Update(time);
 	m_proxyModel->Update(time);
 
-	MaterialSceneComponent::Update(time);
+	SceneComponent::Update(time);
 }
 
 void PointLightDemo::UpdateAmbientLight(const Time& time)
@@ -204,5 +204,5 @@ void PointLightDemo::Draw_SetData()
 	m_material->GetLightRadius() << m_pointLight->GetRadius();
 	m_material->GetColorTexture() << GetTexture();
 
-	MaterialSceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData();
 }

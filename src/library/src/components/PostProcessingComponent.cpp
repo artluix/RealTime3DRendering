@@ -1,13 +1,15 @@
 #include "StdAfx.h"
-#include "library/components/MaterialPostProcessingComponent.h"
+#include "library/components/PostProcessingComponent.h"
+
+#include "library/components/FullScreenQuadComponent.h"
 
 namespace library
 {
-	MaterialPostProcessingComponent::~MaterialPostProcessingComponent() = default;
+	PostProcessingComponent::~PostProcessingComponent() = default;
 
 	//-------------------------------------------------------------------------
 
-	void MaterialPostProcessingComponent::SetSceneTexture(ID3D11ShaderResourceView& sceneTexture)
+	void PostProcessingComponent::SetSceneTexture(ID3D11ShaderResourceView& sceneTexture)
 	{
 		if (m_sceneTexture != &sceneTexture)
 		{
@@ -17,21 +19,27 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void MaterialPostProcessingComponent::InitializeQuad(const Application& app)
+	void PostProcessingComponent::InitializeQuad(const Application& app)
 	{
+		auto material = GetMaterial();
+		assert(!!material);
+
 		m_fullScreenQuad = std::make_unique<FullScreenQuadComponent>();
-		m_fullScreenQuad->SetMaterial(GetMaterial());
+		m_fullScreenQuad->SetMaterial(*material);
 		m_fullScreenQuad->Initialize(app);
 	}
 
-	void MaterialPostProcessingComponent::InitializeQuad(
+	void PostProcessingComponent::InitializeQuad(
 		const Application& app,
 		const std::string& techniqueName,
 		const std::string& passName /*= "p0"*/
 	)
 	{
+		auto material = GetMaterial();
+		assert(!!material);
+
 		m_fullScreenQuad = std::make_unique<FullScreenQuadComponent>();
-		m_fullScreenQuad->SetMaterial(GetMaterial(), techniqueName, passName);
+		m_fullScreenQuad->SetMaterial(*material, techniqueName, passName);
 		m_fullScreenQuad->Initialize(app);
 	}
 } // namespace library

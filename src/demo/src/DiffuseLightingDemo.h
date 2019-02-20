@@ -18,7 +18,7 @@ class DiffuseLightingDemo
 	: public library::ConcreteMaterialSceneComponent<library::DiffuseLightingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(DiffuseLightingDemo, library::MaterialSceneComponent, library::InputReceivableComponent)
+	RTTI_CLASS(DiffuseLightingDemo, library::SceneComponent, library::InputReceivableComponent)
 
 public:
 	explicit DiffuseLightingDemo();
@@ -26,7 +26,6 @@ public:
 
 	void Initialize(const library::Application& app) override;
 	void Update(const library::Time& time) override;
-	using library::DrawableComponent::Draw;
 
 private:
 	void UpdateAmbientLight(const library::Time& time);

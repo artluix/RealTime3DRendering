@@ -1,6 +1,5 @@
 #pragma once
-#include "library/components/MaterialDrawableComponent.h"
-#include "library/components/FullScreenQuadComponent.h"
+#include "library/components/DrawableComponent.h"
 #include "library/materials/PostProcessingMaterial.h"
 
 #include "library/DirectXForwardDeclarations.h"
@@ -12,25 +11,25 @@ namespace library
 	class FullScreenRenderTarget;
 	class FullScreenQuadComponent;
 
-	class MaterialPostProcessingComponent : public MaterialDrawableComponent
+	class PostProcessingComponent : public DrawableComponent
 	{
-		RTTI_CLASS(MaterialPostProcessingComponent, MaterialDrawableComponent)
+		RTTI_CLASS(PostProcessingComponent, DrawableComponent)
 
 	public:
-		~MaterialPostProcessingComponent();
+		~PostProcessingComponent();
 
 		ID3D11ShaderResourceView* GetSceneTexture() const { return m_sceneTexture; }
 		void SetSceneTexture(ID3D11ShaderResourceView& sceneTexture);
 
-		virtual const PostProcessingMaterial& GetMaterial() const = 0;
+		virtual const PostProcessingMaterial* GetMaterial() const = 0;
 
 	protected:
-		explicit MaterialPostProcessingComponent() = default;
+		explicit PostProcessingComponent() = default;
 		
 		void InitializeQuad(const Application& app);
 		void InitializeQuad(const Application& app, const std::string& techniqueName, const std::string& passName = "p0");
 
-		virtual PostProcessingMaterial& GetMaterial() = 0;
+		virtual PostProcessingMaterial* GetMaterial() = 0;
 
 		std::unique_ptr<FullScreenQuadComponent> m_fullScreenQuad;
 

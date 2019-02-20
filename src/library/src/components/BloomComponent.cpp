@@ -2,6 +2,7 @@
 #include "library/components/BloomComponent.h"
 
 #include "library/components/GaussianBlurComponent.h"
+#include "library/components/FullScreenQuadComponent.h"
 
 #include "library/effect/EffectVariable.h"
 
@@ -75,7 +76,7 @@ namespace library
 
 	void BloomComponent::Initialize(const Application& app)
 	{
-		MaterialPostProcessingComponent::Initialize(app);
+		PostProcessingComponent::Initialize(app);
 		
 		InitializeMaterial(app, "Bloom");
 		InitializeQuad(app);

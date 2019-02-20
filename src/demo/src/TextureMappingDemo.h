@@ -8,7 +8,7 @@ class TextureMappingDemo
 	: public library::ConcreteMaterialSceneComponent<library::TextureMappingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(TextureMappingDemo, library::MaterialSceneComponent, library::InputReceivableComponent)
+	RTTI_CLASS(TextureMappingDemo, library::SceneComponent, library::InputReceivableComponent)
 
 public:
 	explicit TextureMappingDemo();

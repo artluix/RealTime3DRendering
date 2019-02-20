@@ -23,11 +23,9 @@ if(APPLICATION)
                 include/library/components/InputReceivableComponent.h
                 include/library/components/KeyboardComponent.h
                 include/library/components/LightComponent.h
-                include/library/components/MaterialDrawableComponent.h
-                include/library/components/MaterialPostProcessingComponent.h
-                include/library/components/MaterialSceneComponent.h
                 include/library/components/MouseComponent.h
                 include/library/components/PointLightComponent.h
+                include/library/components/PostProcessingComponent.h
                 include/library/components/ProxyModelComponent.h
                 include/library/components/SceneComponent.h
                 include/library/components/SkyboxComponent.h
@@ -108,10 +106,9 @@ if(APPLICATION)
                 src/components/InputReceivableComponent.cpp
                 src/components/KeyboardComponent.cpp
                 src/components/LightComponent.cpp
-                src/components/MaterialPostProcessingComponent.cpp
-                src/components/MaterialSceneComponent.cpp
                 src/components/MouseComponent.cpp
                 src/components/PointLightComponent.cpp
+                src/components/PostProcessingComponent.cpp
                 src/components/ProxyModelComponent.cpp
                 src/components/SceneComponent.cpp
                 src/components/SkyboxComponent.cpp

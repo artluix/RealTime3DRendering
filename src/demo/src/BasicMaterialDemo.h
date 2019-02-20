@@ -8,7 +8,7 @@ class BasicMaterialDemo
 	: public library::ConcreteMaterialSceneComponent<library::BasicMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(BasicMaterialDemo, library::MaterialSceneComponent, library::InputReceivableComponent)
+	RTTI_CLASS(BasicMaterialDemo, library::SceneComponent, library::InputReceivableComponent)
 
 public:
 	explicit BasicMaterialDemo();

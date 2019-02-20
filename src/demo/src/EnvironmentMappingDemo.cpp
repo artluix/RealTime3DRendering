@@ -36,7 +36,7 @@ EnvironmentMappingDemo::~EnvironmentMappingDemo() = default;
 void EnvironmentMappingDemo::Initialize(const Application& app)
 {
 	InitializeMaterial(app, "EnvironmentMapping");
-	MaterialSceneComponent::Initialize(app);
+	SceneComponent::Initialize(app);
 
 	m_environmentMapTexture = app.LoadTexture("Maskonaive2_1024");
 
@@ -74,7 +74,7 @@ void EnvironmentMappingDemo::Update(const Time& time)
 
 	m_text->Update(time);
 
-	MaterialSceneComponent::Update(time);
+	SceneComponent::Update(time);
 }
 
 void EnvironmentMappingDemo::Draw_SetData()
@@ -97,5 +97,5 @@ void EnvironmentMappingDemo::Draw_SetData()
 	m_material->GetColorTexture() << GetTexture();
 	m_material->GetEnvironmentMap() << m_environmentMapTexture.Get();
 
-	MaterialSceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData();
 }

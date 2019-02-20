@@ -16,10 +16,7 @@
 
 namespace library
 {
-	FullScreenQuadComponent::FullScreenQuadComponent()
-	{
-	}
-
+	FullScreenQuadComponent::FullScreenQuadComponent() = default;
 	FullScreenQuadComponent::~FullScreenQuadComponent() = default;
 
 	//-------------------------------------------------------------------------
@@ -58,7 +55,8 @@ namespace library
 
 	void FullScreenQuadComponent::Initialize(const Application& app)
 	{
-		MaterialDrawableComponent::Initialize(app);
+		//MaterialDrawableComponent::Initialize(app);
+		DrawableComponent::Initialize(app);
 
 		// vertex buffer
 		{

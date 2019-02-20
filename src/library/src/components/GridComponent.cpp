@@ -77,7 +77,7 @@ namespace library
 	void GridComponent::Initialize(const Application& app)
 	{
 		InitializeMaterial(app, "Basic");
-		MaterialSceneComponent::Initialize(app);
+		SceneComponent::Initialize(app);
 
 		Build();
 	}
@@ -92,7 +92,7 @@ namespace library
 
 		m_material->GetWorldViewProjection() << wvp;
 
-		MaterialSceneComponent::Draw_SetData();
+		SceneComponent::Draw_SetData();
 	}
 
 	//-------------------------------------------------------------------------

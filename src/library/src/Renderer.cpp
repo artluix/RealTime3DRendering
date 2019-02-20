@@ -3,7 +3,7 @@
 
 #include "library/components/TextComponent.h"
 #include "library/components/SceneComponent.h"
-#include "library/components/MaterialSceneComponent.h"
+#include "library/components/SceneComponent.h"
 
 #include "library/effect/Effect.h"
 #include "library/materials/Material.h"
@@ -77,9 +77,9 @@ namespace library
 	{
 		auto effectComp = [](const SceneComponent& lhs, const SceneComponent& rhs)
 		{
-			if (const auto lhsMatComponent = lhs.As<MaterialSceneComponent>())
-				if (const auto rhsMatComponent = rhs.As<MaterialSceneComponent>())
-					return lhsMatComponent->GetMaterial().GetEffect().GetName() < rhsMatComponent->GetMaterial().GetEffect().GetName();
+			if (const auto lhsMat = lhs.GetMaterial())
+				if (const auto rhsMat = rhs.GetMaterial())
+					return lhsMat->GetEffect().GetName() < rhsMat->GetEffect().GetName();
 
 			return false;
 		};

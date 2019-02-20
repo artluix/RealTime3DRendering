@@ -19,7 +19,7 @@ namespace library
 	void SkyboxComponent::Initialize(const Application& app)
 	{
 		InitializeMaterial(app, "Skybox");
-		MaterialSceneComponent::Initialize(app);
+		SceneComponent::Initialize(app);
 	}
 
 	void SkyboxComponent::Update(const Time& time)
@@ -30,7 +30,7 @@ namespace library
 			SetPosition(position);
 		}
 
-		MaterialSceneComponent::Update(time);
+		SceneComponent::Update(time);
 	}
 
 	void SkyboxComponent::Draw_SetData()
@@ -42,6 +42,6 @@ namespace library
 		m_material->GetWorldViewProjection() << wvp;
 		m_material->GetSkyboxTexture() << GetTexture();
 
-		MaterialSceneComponent::Draw_SetData();
+		SceneComponent::Draw_SetData();
 	}
 } // namespace library

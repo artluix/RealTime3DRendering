@@ -19,7 +19,7 @@ class PointLightDemo
 	: public library::ConcreteMaterialSceneComponent<library::PointLightMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(PointLightDemo, library::MaterialSceneComponent, library::InputReceivableComponent)
+	RTTI_CLASS(PointLightDemo, library::SceneComponent, library::InputReceivableComponent)
 
 public:
 	explicit PointLightDemo();
@@ -27,7 +27,6 @@ public:
 
 	void Initialize(const library::Application& app) override;
 	void Update(const library::Time& time) override;
-	using library::DrawableComponent::Draw;
 
 private:
 	void UpdateAmbientLight(const library::Time& time);

@@ -73,7 +73,7 @@ void NormalMappingDemo::Initialize(const Application& app)
 	}
 
 	InitializeMaterial(app, "NormalMapping");
-	MaterialSceneComponent::Initialize(app);
+	SceneComponent::Initialize(app);
 
 	m_normalMapTexture = app.LoadTexture("Blocks_NORM");
 
@@ -111,7 +111,7 @@ void NormalMappingDemo::Update(const Time& time)
 	m_text->Update(time);
 	m_proxyModel->Update(time);
 
-	MaterialSceneComponent::Update(time);
+	SceneComponent::Update(time);
 }
 
 void NormalMappingDemo::UpdateAmbientLight(const Time& time)
@@ -233,5 +233,5 @@ void NormalMappingDemo::Draw_SetData()
 	m_material->GetColorTexture() << GetTexture();
 	m_material->GetNormalMap() << m_normalMapTexture.Get();
 
-	MaterialSceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData();
 }

@@ -20,7 +20,7 @@ class DisplacementMappingDemo
 	: public library::ConcreteMaterialSceneComponent<library::DisplacementMappingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(DisplacementMappingDemo, library::MaterialSceneComponent, library::InputReceivableComponent)
+	RTTI_CLASS(DisplacementMappingDemo, library::SceneComponent, library::InputReceivableComponent)
 
 public:
 	explicit DisplacementMappingDemo();
@@ -28,7 +28,6 @@ public:
 
 	void Initialize(const library::Application& app) override;
 	void Update(const library::Time& time) override;
-	using library::DrawableComponent::Draw;
 
 private:
 	void UpdateAmbientLight(const library::Time& time);

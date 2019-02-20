@@ -10,7 +10,7 @@ namespace library
 {
 	class ProxyModelComponent : public ConcreteMaterialSceneComponent<BasicMaterial>
 	{
-		RTTI_CLASS(ProxyModelComponent, MaterialSceneComponent)
+		RTTI_CLASS(ProxyModelComponent, SceneComponent)
 
 	public:
 		explicit ProxyModelComponent(const std::string& modelName, const float scale);

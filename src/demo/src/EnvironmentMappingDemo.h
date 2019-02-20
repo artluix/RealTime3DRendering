@@ -18,7 +18,7 @@ class EnvironmentMappingDemo
 	: public library::ConcreteMaterialSceneComponent<library::EnvironmentMappingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(EnvironmentMappingDemo, library::MaterialSceneComponent, library::InputReceivableComponent)
+	RTTI_CLASS(EnvironmentMappingDemo, library::SceneComponent, library::InputReceivableComponent)
 
 public:
 	explicit EnvironmentMappingDemo();
@@ -26,7 +26,6 @@ public:
 
 	void Initialize(const library::Application& app) override;
 	void Update(const library::Time& time) override;
-	using library::DrawableComponent::Draw;
 
 private:
 	void Draw_SetData() override;

@@ -13,7 +13,7 @@ namespace library
 {
 	class CameraComponent;
 
-	class SceneComponent : public virtual DrawableComponent
+	class SceneComponent : public DrawableComponent
 	{
 		RTTI_CLASS(SceneComponent, DrawableComponent)
 
@@ -40,6 +40,9 @@ namespace library
 		const math::Vector3& GetRight() const { return m_right; }
 
 		//-------------------------------------------------------------------------
+
+		const std::string& GetModelName() const { return m_modelName; }
+		void SetModelName(const std::string& modelName);
 
 		const std::string& GetTextureName() const { return m_textureName; }
 		void SetTextureName(const std::string& textureName);
@@ -89,6 +92,7 @@ namespace library
 
 		math::Matrix4 m_worldMatrix;
 
+		std::string m_modelName;
 		std::string m_textureName;
 		ComPtr<ID3D11ShaderResourceView> m_texture;
 	};
