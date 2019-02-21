@@ -66,7 +66,7 @@ if(APPLICATION)
                 include/library/math/Vector.h
 
             include/library/Application.h
-            include/library/BlendStateHolder.h
+            include/library/BlendStates.h
             include/library/Color.h
             include/library/CommonTypes.h
             include/library/DirectXForwardDeclarations.h
@@ -81,8 +81,9 @@ if(APPLICATION)
             include/library/NonConstructible.hpp
             include/library/Path.h
             include/library/Renderer.h
-            include/library/RasterizerStateHolder.h
+            include/library/RasterizerStates.h
             include/library/RTTI.hpp
+            include/library/SamplerStates.h
             include/library/ServiceContainer.h
             include/library/Stopwatch.h
             include/library/Time.h
@@ -147,7 +148,7 @@ if(APPLICATION)
                 src/math/Vector.cpp
 
             src/Application.cpp
-            src/BlendStateHolder.cpp
+            src/BlendStates.cpp
             src/Color.cpp
             src/Exception.cpp
             src/FullScreenRenderTarget.cpp
@@ -156,8 +157,9 @@ if(APPLICATION)
             src/Model.cpp
             src/ModelMaterial.cpp
             src/Path.cpp
-            src/RasterizerStateHolder.cpp
+            src/RasterizerStates.cpp
             src/Renderer.cpp
+            src/SamplerStates.cpp
             src/ServiceContainer.cpp
             src/Stopwatch.cpp
             src/Utils.cpp

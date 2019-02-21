@@ -17,7 +17,7 @@
 #include <library/effect/EffectTechnique.h>
 #include <library/effect/EffectVariable.h>
 
-#include <library/BlendStateHolder.h>
+#include <library/BlendStates.h>
 
 #include <sstream>
 #include <array>
@@ -246,7 +246,7 @@ void TransparencyMappingDemo::Draw_Render()
 	auto renderer = m_app->GetRenderer();
 
 	renderer->SaveRenderState(RenderState::Blend);
-	deviceContext->OMSetBlendState(BlendStateHolder::GetBlendState(BlendState::Alpha).Get(), 0, 0xFFFFFFFF);
+	deviceContext->OMSetBlendState(BlendStates::Alpha, 0, 0xFFFFFFFF);
 	SceneComponent::Draw_Render();
 	renderer->RestoreRenderState(RenderState::Blend);
 }

@@ -21,15 +21,11 @@ namespace library
 		ID3D11ShaderResourceView* GetSceneTexture() const { return m_sceneTexture; }
 		void SetSceneTexture(ID3D11ShaderResourceView& sceneTexture);
 
-		virtual const PostProcessingMaterial* GetMaterial() const = 0;
-
 	protected:
 		explicit PostProcessingComponent() = default;
 		
 		void InitializeQuad(const Application& app);
 		void InitializeQuad(const Application& app, const std::string& techniqueName, const std::string& passName = "p0");
-
-		virtual PostProcessingMaterial* GetMaterial() = 0;
 
 		std::unique_ptr<FullScreenQuadComponent> m_fullScreenQuad;
 

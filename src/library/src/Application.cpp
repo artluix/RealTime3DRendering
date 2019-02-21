@@ -7,8 +7,10 @@
 #include "library/components/DrawableComponent.h"
 
 #include "library/effect/Effect.h"
-#include "library/RasterizerStateHolder.h"
-#include "library/BlendStateHolder.h"
+
+#include "library/RasterizerStates.h"
+#include "library/BlendStates.h"
+#include "library/SamplerStates.h"
 
 #include <DDSTextureLoader.h>
 #include <thread>
@@ -431,14 +433,21 @@ namespace library
 			m_deviceContext->RSSetViewports(1, &m_viewport);
 		}
 
-		RasterizerStateHolder::Initialize(m_device.Get());
-		BlendStateHolder::Initialize(m_device.Get());
+		// states
+		{
+			auto const device = GetDevice();
+			RasterizerStates::Initialize(device);
+			BlendStates::Initialize(device);
+			SamplerStates::Initialize(device);
+		}
 	}
 
 	void Application::Shutdown()
 	{
-		BlendStateHolder::Reset();
-		RasterizerStateHolder::Reset();
+		SamplerStates::Clear();
+		BlendStates::Clear();
+		RasterizerStates::Clear();
+
 		Effect::ClearAll();
 
 		m_components.clear();

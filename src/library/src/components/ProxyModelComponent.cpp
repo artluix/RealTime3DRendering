@@ -6,10 +6,8 @@
 #include "library/effect/Effect.h"
 #include "library/effect/EffectVariable.h"
 
-#include "library/Path.h"
-#include "library/Utils.h"
 #include "library/Application.h"
-#include "library/RasterizerStateHolder.h"
+#include "library/RasterizerStates.h"
 
 namespace library
 {
@@ -53,7 +51,7 @@ namespace library
 
 		if (m_isWireframeVisible)
 		{
-			deviceContext->RSSetState(RasterizerStateHolder::GetRasterizerState(RasterizerState::Wireframe).Get());
+			deviceContext->RSSetState(RasterizerStates::Wireframe);
 			SceneComponent::Draw_Render();
 			deviceContext->RSSetState(nullptr);
 		}

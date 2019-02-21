@@ -5,10 +5,6 @@
 #include <array>
 #include <wrl/client.h>
 
-// types
-
-using Microsoft::WRL::ComPtr;
-
 namespace library
 {
 	using s8 = std::int8_t;
@@ -26,3 +22,5 @@ namespace library
 	template <typename T>
 	using Tuple2 = std::array<T, 2>;
 } // namespace library
+
+using Microsoft::WRL::ComPtr;

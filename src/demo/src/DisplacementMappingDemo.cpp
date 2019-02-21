@@ -17,8 +17,6 @@
 #include <library/effect/EffectTechnique.h>
 #include <library/effect/EffectVariable.h>
 
-#include <library/BlendStateHolder.h>
-
 #include <sstream>
 
 using namespace library;

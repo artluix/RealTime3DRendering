@@ -11,8 +11,6 @@
 #include <library/Path.h>
 #include <library/Exception.h>
 
-#include <library/RasterizerStateHolder.h>
-
 #include <library/effect/Effect.h>
 #include <library/effect/EffectPass.h>
 #include <library/effect/EffectTechnique.h>

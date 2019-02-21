@@ -40,6 +40,7 @@ private:
 	std::unique_ptr<library::TextComponent> m_text;
 
 	ComPtr<ID3D11ShaderResourceView> m_distortionMapTexture;
+	ComPtr<ID3DX11EffectPass> m_cutoutPass;
 
 	float m_displacementScale;
 	Mode m_mode;

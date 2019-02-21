@@ -1,6 +1,7 @@
 #include "StdAfx.h"
-#include "library/BlendStateHolder.h"
+#include "library/BlendStates.h"
 
+#include "library/Utils.h"
 #include "library/Exception.h"
 
 #include <cassert>
@@ -8,11 +9,26 @@
 
 namespace library
 {
-	std::array<BlendState::Ptr, BlendState::Count> BlendStateHolder::s_blendStates;
+	namespace
+	{
+		void CreateBlendState(ID3D11Device* const device, const D3D11_BLEND_DESC& blendStateDesc, ID3D11BlendState* blendState)
+		{
+			auto hr = device->CreateBlendState(&blendStateDesc, &blendState);
+			if (FAILED(hr))
+			{
+				throw Exception("ID3D11Device::CreateBlendState() failed.", hr);
+			}
+		}
+	}
 
 	//-------------------------------------------------------------------------
 
-	void BlendStateHolder::Initialize(ID3D11Device* const device)
+	ID3D11BlendState* BlendStates::Alpha = nullptr;
+	ID3D11BlendState* BlendStates::Multiplicative = nullptr;
+
+	//-------------------------------------------------------------------------
+
+	void BlendStates::Initialize(ID3D11Device* const device)
 	{
 		assert(!!device);
 
@@ -28,11 +44,7 @@ namespace library
 			blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 			blendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-			auto hr = device->CreateBlendState(&blendStateDesc, s_blendStates[BlendState::Alpha].GetAddressOf());
-			if (FAILED(hr))
-			{
-				throw Exception("ID3D11Device::CreateBlendState() failed.", hr);
-			}
+			CreateBlendState(device, blendStateDesc, Alpha);
 		}
 
 		// Multiplicative
@@ -47,21 +59,13 @@ namespace library
 			blendStateDesc.RenderTarget[0].BlendOpAlpha = D3D11_BLEND_OP_ADD;
 			blendStateDesc.RenderTarget[0].RenderTargetWriteMask = D3D11_COLOR_WRITE_ENABLE_ALL;
 
-			auto hr = device->CreateBlendState(&blendStateDesc, s_blendStates[BlendState::Multiplicative].GetAddressOf());
-			if (FAILED(hr))
-			{
-				throw Exception("ID3D11Device::CreateBlendState() failed.", hr);
-			}
+			CreateBlendState(device, blendStateDesc, Multiplicative);
 		}
 	}
 
-	void BlendStateHolder::Reset()
+	void BlendStates::Clear()
 	{
-		std::for_each(s_blendStates.begin(), s_blendStates.end(), [](BlendState::Ptr& rsp) { rsp.Reset(); });
-	}
-
-	BlendState::Ptr BlendStateHolder::GetBlendState(const BlendState::Type rs)
-	{
-		return s_blendStates[rs];
+		Release(Multiplicative);
+		Release(Alpha);
 	}
 } // namespace library
