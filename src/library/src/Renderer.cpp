@@ -57,6 +57,9 @@ namespace library
 
 	void Renderer::AddDrawable(SceneComponent& sceneDrawable)
 	{
+		if (!sceneDrawable.IsVisible())
+			return;
+
 		auto it = std::find_if(m_sceneDrawables.begin(), m_sceneDrawables.end(), Finder(sceneDrawable));
 		if (it != m_sceneDrawables.end())
 			return;
@@ -100,6 +103,9 @@ namespace library
 
 	void Renderer::AddDrawable(TextComponent& textDrawable)
 	{
+		if (!textDrawable.IsVisible())
+			return;
+
 		auto it = std::find_if(m_textDrawables.begin(), m_textDrawables.end(), Finder(textDrawable));
 		if (it != m_textDrawables.end())
 			return;

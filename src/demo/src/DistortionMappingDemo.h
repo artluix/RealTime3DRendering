@@ -7,6 +7,8 @@
 namespace library
 {
 	class TextComponent;
+
+	class EffectPass;
 } // namespace library
 
 class DistortionMappingDemo
@@ -17,8 +19,9 @@ class DistortionMappingDemo
 public:
 	enum class Mode
 	{
-		Normal,
-		Masking
+		Fullscreen,
+		Masking,
+		MaskOnly
 	};
 
 	explicit DistortionMappingDemo();
@@ -28,19 +31,26 @@ public:
 	void Update(const library::Time& time) override;
 	void Draw(const library::Time& time) override;
 
-private:
-	void UpdateDisplacementScale(const library::Time& time);
-
-	void UpdateDistortionMapMaterial();
-
+	static std::string ModeToString(const Mode mode);
 	static Mode NextMode(const Mode mode);
 
-	std::unique_ptr<library::FullScreenRenderTarget> m_cutoutRenderTarget;
+private:
+	void UpdateDisplacementScale(const library::Time& time);
+	void UpdateDistortion();
+	void UpdateDistortionMask();
+
+	void DrawMeshForDistortionCutout();
 
 	std::unique_ptr<library::TextComponent> m_text;
 
 	ComPtr<ID3D11ShaderResourceView> m_distortionMapTexture;
-	ComPtr<ID3DX11EffectPass> m_cutoutPass;
+	std::unique_ptr<library::FullScreenRenderTarget> m_cutoutRenderTarget;
+	library::EffectPass* m_cutoutPass;
+
+	ComPtr<ID3D11Buffer> m_vertexBuffer;
+	ComPtr<ID3D11Buffer> m_indexBuffer;
+
+	unsigned m_indicesCount;
 
 	float m_displacementScale;
 	Mode m_mode;

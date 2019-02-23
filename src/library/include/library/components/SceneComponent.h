@@ -11,8 +11,6 @@
 
 namespace library
 {
-	class CameraComponent;
-
 	class SceneComponent : public DrawableComponent
 	{
 		RTTI_CLASS(SceneComponent, DrawableComponent)
@@ -31,9 +29,6 @@ namespace library
 
 		void SetScaling(const math::Vector3& scaling);
 		void Scale(const math::Vector3& scaling);
-
-		const CameraComponent* GetCamera() const { return m_camera; }
-		void SetCamera(const CameraComponent& camera);
 
 		const math::Vector3& GetDirection() const { return m_direction; }
 		const math::Vector3& GetUp() const { return m_up; }
@@ -79,8 +74,6 @@ namespace library
 
 	private:
 		void UpdateWorldMatrix();
-
-		const CameraComponent* m_camera = nullptr;
 
 		math::Vector3 m_position;
 		math::Vector3 m_rotation;

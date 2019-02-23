@@ -219,6 +219,7 @@ void DemoApplication::Initialize()
 		//auto postProcessing = new BloomDemo();
 		auto postProcessing = new DistortionMappingDemo();
 		postProcessing->SetKeyboard(*m_keyboard);
+		postProcessing->SetCamera(*camera);
 		postProcessing->SetSceneTexture(*(m_sceneRenderTarget->GetOutputTexture()));
 
 		m_postProcessing = std::unique_ptr<PostProcessingComponent>(postProcessing);

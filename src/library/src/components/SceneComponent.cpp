@@ -90,14 +90,6 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void SceneComponent::SetCamera(const CameraComponent& camera)
-	{
-		if (m_camera != &camera)
-			m_camera = &camera;
-	}
-
-	//-------------------------------------------------------------------------
-
 	void SceneComponent::UpdateWorldMatrix()
 	{
 		const auto translationMatrix = math::Matrix4::Translation(m_position);

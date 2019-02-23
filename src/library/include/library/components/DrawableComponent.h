@@ -4,6 +4,7 @@
 namespace library
 {
 	class Material;
+	class CameraComponent;
 
 	class DrawableComponent : public virtual Component
 	{
@@ -12,6 +13,9 @@ namespace library
 	public:
 		bool IsVisible() const { return m_visible; }
 		void SetVisible(const bool visible);
+
+		const CameraComponent* GetCamera() const { return m_camera; }
+		void SetCamera(const CameraComponent& camera);
 
 		virtual void Draw(const Time& time) {}
 
@@ -24,5 +28,7 @@ namespace library
 
 	private:
 		bool m_visible = true;
+
+		const CameraComponent* m_camera = nullptr;
 	};
 } // namespace library

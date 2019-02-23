@@ -36,7 +36,7 @@ struct VS_OUTPUT
 
 /************* Vertex Shader *************/
 
-VS_OUTPUT vertex_shader(VS_INPUT IN)
+VS_OUTPUT distortion_vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
 
@@ -46,7 +46,7 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
     return OUT;
 }
 
-VS_OUTPUT cutout_vertex_shader(VS_INPUT IN)
+VS_OUTPUT distortion_cutout_vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT= (VS_OUTPUT)0;
 
@@ -58,12 +58,12 @@ VS_OUTPUT cutout_vertex_shader(VS_INPUT IN)
 
 /************* Pixel Shader *************/
 
-float4 pixel_shader(VS_OUTPUT IN) : SV_Target
+float4 distortion_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     static const float k_zeroCorrection = 0.5f / 255.0f;
 
     float2 displacement = DistortionMapTexture.Sample(TrilinearSampler, IN.textureCoordinate).xy;
-    if (!all(displacement))
+    if (displacement.x == 0.f && displacement.y == 0.f)
     {
         return SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate);
     }
@@ -74,10 +74,15 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     }
 }
 
-float4 cutout_pixel_shader(VS_OUTPUT IN) : SV_Target
+float4 distortion_cutout_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float2 displacement = DistortionMapTexture.Sample(TrilinearSampler, IN.textureCoordinate).xy;
     return float4(displacement.xy, 0, 1);
+}
+
+float4 no_distortion_pixel_shader(VS_OUTPUT IN) : SV_Target
+{
+    return SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate);
 }
 
 /************* Techniques *************/
@@ -86,19 +91,30 @@ technique11 distortion
 {
     pass p0
     {
-        SetVertexShader(CompileShader(vs_5_0, vertex_shader()));
+        SetVertexShader(CompileShader(vs_5_0, distortion_vertex_shader()));
         SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_5_0, pixel_shader()));
+        SetPixelShader(CompileShader(ps_5_0, distortion_pixel_shader()));
     }
 }
+
+technique11 no_distortion
+{
+    pass p0
+    {
+        SetVertexShader(CompileShader(vs_5_0, distortion_vertex_shader()));
+        SetGeometryShader(NULL);
+        SetPixelShader(CompileShader(ps_5_0, no_distortion_pixel_shader()));
+    }
+}
+
 
 technique11 distortion_cutout
 {
     pass p0
     {
-        SetVertexShader(CompileShader(vs_5_0, cutout_vertex_shader()));
+        SetVertexShader(CompileShader(vs_5_0, distortion_cutout_vertex_shader()));
         SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_5_0, cutout_pixel_shader()));
+        SetPixelShader(CompileShader(ps_5_0, distortion_cutout_pixel_shader()));
     }
 }
 

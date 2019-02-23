@@ -10,6 +10,7 @@ namespace library
 		: PostProcessingMaterial(effect)
 		, m_distortionMapTexture(effect.GetVariable("DistortionMapTexture"))
 		, m_displacementScale(effect.GetVariable("displacementScale"))
+		, m_wvp(effect.GetVariable("wvp"))
 	{
 	}
 
