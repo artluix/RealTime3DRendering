@@ -6,7 +6,10 @@
 
 namespace library
 {
-	template<class MaterialType, typename = std::enable_if_t<std::is_base_of_v<PostProcessingMaterial, MaterialType>>>
+	template<
+		class MaterialType,
+		typename = std::enable_if_t<std::is_base_of_v<PostProcessingMaterial, MaterialType>>
+	>
 	class ConcreteMaterialPostProcessingComponent : public PostProcessingComponent
 	{
 	public:
@@ -17,7 +20,11 @@ namespace library
 	protected:
 		explicit ConcreteMaterialPostProcessingComponent() = default;
 
-		void InitializeMaterial(const Application& app, const std::string& effectName, const bool compile = false)
+		void InitializeMaterial(
+			const Application& app,
+			const std::string& effectName,
+			const bool compile = false
+		)
 		{
 			m_effect = Effect::Create(app, effectName, compile);
 

@@ -99,8 +99,15 @@ void DistortionMappingDemo::Draw(const Time& time)
 		{
 			m_cutoutRenderTarget->Begin();
 
-			deviceContext->ClearRenderTargetView(m_cutoutRenderTarget->GetRenderTargetView(), static_cast<const float*>(k_emptyColor));
-			deviceContext->ClearDepthStencilView(m_cutoutRenderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.f, 0);
+			deviceContext->ClearRenderTargetView(
+				m_cutoutRenderTarget->GetRenderTargetView(),
+				static_cast<const float*>(k_emptyColor)
+			);
+			deviceContext->ClearDepthStencilView(
+				m_cutoutRenderTarget->GetDepthStencilView(),
+				D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
+				1.f, 0
+			);
 
 			DrawMeshForDistortionCutout();
 
@@ -110,14 +117,18 @@ void DistortionMappingDemo::Draw(const Time& time)
 		case Mode::Fullscreen:
 		{
 			m_fullScreenQuad->SetActiveTechnique("distortion");
-			m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&DistortionMappingDemo::UpdateDistortion, this));
+			m_fullScreenQuad->SetMaterialUpdateFunction(
+				std::bind(&DistortionMappingDemo::UpdateDistortion, this)
+			);
 			break;
 		};
 
 		case Mode::MaskOnly:
 		{
 			m_fullScreenQuad->SetActiveTechnique("no_distortion");
-			m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&DistortionMappingDemo::UpdateDistortionMask, this));
+			m_fullScreenQuad->SetMaterialUpdateFunction(
+				std::bind(&DistortionMappingDemo::UpdateDistortionMask, this)
+			);
 			break;
 		}
 

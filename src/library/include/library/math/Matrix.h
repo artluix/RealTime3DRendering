@@ -181,8 +181,16 @@ namespace library::math
 
 		//-------------------------------------------------------------------------
 
-		static Matrix PerspectiveFovLH(const float fovAngleY, const float aspectRatio, const float nearZ, const float farZ);
-		static Matrix PerspectiveFovRH(const float fovAngleY, const float aspectRatio, const float nearZ, const float farZ);
+		static Matrix PerspectiveFovLH(
+			const float fovAngleY,
+			const float aspectRatio,
+			const float nearZ, const float farZ
+		);
+		static Matrix PerspectiveFovRH(
+			const float fovAngleY,
+			const float aspectRatio,
+			const float nearZ, const float farZ
+		);
 
 		//-------------------------------------------------------------------------
 

@@ -368,7 +368,11 @@ namespace library
 		// create back buffer
 		{
 			ComPtr<ID3D11Texture2D> backBuffer;
-			hr = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(backBuffer.GetAddressOf()));
+			hr = m_swapChain->GetBuffer(
+				0,
+				__uuidof(ID3D11Texture2D),
+				reinterpret_cast<void**>(backBuffer.GetAddressOf())
+			);
 			if (FAILED(hr))
 			{
 				throw Exception("IDXGISwapChain::GetBuffer() failed.", hr);
@@ -376,7 +380,11 @@ namespace library
 
 			backBuffer->GetDesc(&m_backBufferDesc);
 
-			hr = m_device->CreateRenderTargetView(backBuffer.Get(), nullptr, m_renderTargetView.GetAddressOf());
+			hr = m_device->CreateRenderTargetView(
+				backBuffer.Get(),
+				nullptr,
+				m_renderTargetView.GetAddressOf()
+			);
 			if (FAILED(hr))
 			{
 				throw Exception("IDXGI::CreateRenderTargetView() failed.", hr);
@@ -404,7 +412,11 @@ namespace library
 					depthStencilDesc.SampleDesc.Quality = 0;
 				}
 
-				hr = m_device->CreateTexture2D(&depthStencilDesc, nullptr, m_depthStencilBuffer.GetAddressOf());
+				hr = m_device->CreateTexture2D(
+					&depthStencilDesc,
+					nullptr,
+					m_depthStencilBuffer.GetAddressOf()
+				);
 				if (FAILED(hr))
 				{
 					throw Exception("IDXGIDevice::CreateTexture2D() failed.", hr);
@@ -421,7 +433,11 @@ namespace library
 				}
 			}
 
-			m_deviceContext->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());
+			m_deviceContext->OMSetRenderTargets(
+				1,
+				m_renderTargetView.GetAddressOf(),
+				m_depthStencilView.Get()
+			);
 
 			m_viewport.TopLeftX = 0.0f;
 			m_viewport.TopLeftY = 0.0f;

@@ -29,7 +29,11 @@ namespace library
 		explicit Material(const Effect& effect, const std::string& defaultTechniqueName = "");
 		virtual ~Material() = default;
 
-		static ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const void* data, const std::size_t size);
+		static ComPtr<ID3D11Buffer> CreateVertexBuffer(
+			ID3D11Device* const device,
+			const void* data,
+			const std::size_t size
+		);
 
 		EffectVariable& operator[](const std::string& variableName) const;
 		const Effect& GetEffect() const { return m_effect; }
@@ -43,20 +47,26 @@ namespace library
 		void Initialize();
 		bool IsInitialized() const { return m_isInitialized; }
 
-		virtual std::vector<ComPtr<ID3D11Buffer>> CreateVertexBuffers(ID3D11Device* const device, const Model& model) const;
-		virtual ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const = 0;
+		virtual std::vector<ComPtr<ID3D11Buffer>> CreateVertexBuffers(
+			ID3D11Device* const device,
+			const Model& model
+		) const;
+		virtual ComPtr<ID3D11Buffer> CreateVertexBuffer(
+			ID3D11Device* const device,
+			const Mesh& mesh
+		) const = 0;
 		virtual unsigned GetVertexSize() const = 0;
 
 	protected:
 		virtual void CreateInputLayout(
-			const std::string& techniqueName,
-			const std::string& passName,
-			const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions
+			const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions,
+			const std::string& techniqueName = "main11",
+			const std::string& passName = "p0"
 		);
 
 		virtual void CreateInputLayout(
-			const EffectPass& pass,
-			const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions
+			const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions,
+			const EffectPass& pass
 		);
 
 		virtual void InitializeInternal() = 0;

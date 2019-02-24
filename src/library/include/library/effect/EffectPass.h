@@ -16,7 +16,11 @@ namespace library
 	class EffectPass : public NonCopyable<EffectPass>
 	{
 	public:
-		explicit EffectPass(const Application& app, const EffectTechnique& technique, ID3DX11EffectPass* const pass);
+		explicit EffectPass(
+			const Application& app,
+			const EffectTechnique& technique,
+			ID3DX11EffectPass* const pass
+		);
 		~EffectPass();
 
 		const EffectTechnique& GetTechnique() { return m_technique; }
@@ -25,7 +29,9 @@ namespace library
 		ID3DX11EffectPass* GetPass() const { return m_pass; }
 		const D3DX11_PASS_DESC& GetPassDesc() const { return m_passDesc; }
 
-		ComPtr<ID3D11InputLayout> CreateInputLayout(const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions) const;
+		ComPtr<ID3D11InputLayout> CreateInputLayout(
+			const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions
+		) const;
 		void Apply(const unsigned flags, ID3D11DeviceContext* const deviceContext);
 
 	private:

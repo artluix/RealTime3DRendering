@@ -212,8 +212,18 @@ namespace library::math
 		//-------------------------------------------------------------------------
 
 		constexpr Vector(const float value = 0.f) : x(value), y(value), z(value), w(value) {}
-		constexpr Vector(const float x, const float y, const float z, const float w) : x(x), y(y), z(z), w(w) {}
-		constexpr Vector(const DirectX::XMFLOAT4& xmFloat4) : x(xmFloat4.x), y(xmFloat4.y), z(xmFloat4.z), w(xmFloat4.w) {}
+		constexpr Vector(const float x, const float y, const float z, const float w)
+			: x(x)
+			, y(y)
+			, z(z)
+			, w(w)
+		{}
+		constexpr Vector(const DirectX::XMFLOAT4& xmFloat4)
+			: x(xmFloat4.x)
+			, y(xmFloat4.y)
+			, z(xmFloat4.z)
+			, w(xmFloat4.w)
+		{}
 		constexpr Vector(const Vector<3>& vec3) : x(vec3.x), y(vec3.y), z(vec3.z), w(0.f) {}
 
 		//-------------------------------------------------------------------------

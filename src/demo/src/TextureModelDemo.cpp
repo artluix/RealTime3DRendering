@@ -116,8 +116,24 @@ void TextureModelDemo::Initialize(const Application& app)
 
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "TEXCOORD", 0, DXGI_FORMAT_R32G32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{
+				"POSITION",
+				0,
+				DXGI_FORMAT_R32G32B32A32_FLOAT,
+				0,
+				0,
+				D3D11_INPUT_PER_VERTEX_DATA,
+				0
+			},
+			{
+				"TEXCOORD",
+				0,
+				DXGI_FORMAT_R32G32_FLOAT,
+				0,
+				D3D11_APPEND_ALIGNED_ELEMENT,
+				D3D11_INPUT_PER_VERTEX_DATA,
+				0
+			},
 		};
 
 		auto hr = app.GetDevice()->CreateInputLayout(
@@ -255,7 +271,11 @@ void TextureModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, co
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = vertices.data();
 
-		auto hr = device->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_input.vertices.buffer.GetAddressOf());
+		auto hr = device->CreateBuffer(
+			&vertexBufferDesc,
+			&vertexSubResourceData,
+			m_input.vertices.buffer.GetAddressOf()
+		);
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateBuffer() failed.");

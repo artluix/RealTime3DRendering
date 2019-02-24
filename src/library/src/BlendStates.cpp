@@ -11,7 +11,11 @@ namespace library
 {
 	namespace
 	{
-		void CreateBlendState(ID3D11Device* const device, const D3D11_BLEND_DESC& blendStateDesc, ID3D11BlendState* blendState)
+		void CreateBlendState(
+			ID3D11Device* const device,
+			const D3D11_BLEND_DESC& blendStateDesc,
+			ID3D11BlendState*& blendState
+		)
 		{
 			auto hr = device->CreateBlendState(&blendStateDesc, &blendState);
 			if (FAILED(hr))

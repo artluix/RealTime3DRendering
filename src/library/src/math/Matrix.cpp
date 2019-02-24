@@ -146,12 +146,20 @@ namespace library::math
 
 	//-------------------------------------------------------------------------
 
-	Matrix<4> Matrix<4>::PerspectiveFovLH(const float fovAngleY, const float aspectRatio, const float nearZ, const float farZ)
+	Matrix<4> Matrix<4>::PerspectiveFovLH(
+		const float fovAngleY,
+		const float aspectRatio,
+		const float nearZ, const float farZ
+	)
 	{
 		return Store(DirectX::XMMatrixPerspectiveFovLH(fovAngleY, aspectRatio, nearZ, farZ));
 	}
 
-	Matrix<4> Matrix<4>::PerspectiveFovRH(const float fovAngleY, const float aspectRatio, const float nearZ, const float farZ)
+	Matrix<4> Matrix<4>::PerspectiveFovRH(
+		const float fovAngleY,
+		const float aspectRatio,
+		const float nearZ, const float farZ
+	)
 	{
 		return Store(DirectX::XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, nearZ, farZ));
 	}

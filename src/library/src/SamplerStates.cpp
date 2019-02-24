@@ -13,7 +13,11 @@ namespace library
 {
 	namespace
 	{
-		void CreateSamplerState(ID3D11Device* const device, const D3D11_SAMPLER_DESC& samplerStateDesc, ID3D11SamplerState* samplerState)
+		void CreateSamplerState(
+			ID3D11Device* const device,
+			const D3D11_SAMPLER_DESC& samplerStateDesc,
+			ID3D11SamplerState*& samplerState
+		)
 		{
 			auto hr = device->CreateSamplerState(&samplerStateDesc, &samplerState);
 			if (FAILED(hr))
@@ -79,7 +83,11 @@ namespace library
 			samplerStateDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
 			samplerStateDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
 
-			std::copy(borderColor.data.begin(), borderColor.data.end(), std::begin(samplerStateDesc.BorderColor));
+			std::copy(
+				borderColor.data.begin(),
+				borderColor.data.end(),
+				std::begin(samplerStateDesc.BorderColor)
+			);
 
 			CreateSamplerState(device, samplerStateDesc, TrilinearBorder);
 		}

@@ -7,7 +7,15 @@ namespace library
 	{
 	public:
 		Color() = default;
-		constexpr Color(const float r, const float g, const float b, const float a) : math::Vector4(r, g, b, a) {}
+		constexpr Color(
+			const float r,
+			const float g,
+			const float b,
+			const float a
+		)
+			: math::Vector4(r, g, b, a)
+		{}
+
 		Color(const DirectX::XMFLOAT4& xmFloat4) : math::Vector4(xmFloat4) {}
 
 		void Transform(const math::Matrix4&) = delete;

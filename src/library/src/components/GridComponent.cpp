@@ -134,7 +134,11 @@ namespace library
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = vertices.data();
 
-		auto hr = m_app->GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_input.vertices.buffer.GetAddressOf());
+		auto hr = m_app->GetDevice()->CreateBuffer(
+			&vertexBufferDesc,
+			&vertexSubResourceData,
+			m_input.vertices.buffer.GetAddressOf()
+		);
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateBuffer() failed.", hr);

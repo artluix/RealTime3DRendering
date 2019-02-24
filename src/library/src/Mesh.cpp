@@ -65,7 +65,9 @@ namespace library
 
 				for (unsigned j = 0; j < mesh.mNumVertices; j++)
 				{
-					textureCoordinates.push_back(reinterpret_cast<const DirectX::XMFLOAT3&>(aiTextureCoords[j]));
+					textureCoordinates.push_back(
+						reinterpret_cast<const DirectX::XMFLOAT3&>(aiTextureCoords[j])
+					);
 				}
 
 				m_texturesCoordinates.push_back(textureCoordinates);

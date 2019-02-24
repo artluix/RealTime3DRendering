@@ -35,7 +35,10 @@ namespace library
 	{
 		DirectX::XMFLOAT2 textureCoordinates;
 
-		explicit VertexPositionTexture(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT2& textureCoordinates)
+		explicit VertexPositionTexture(
+			const DirectX::XMFLOAT4& position,
+			const DirectX::XMFLOAT2& textureCoordinates
+		)
 			: VertexPosition(position)
 			, textureCoordinates(textureCoordinates)
 		{

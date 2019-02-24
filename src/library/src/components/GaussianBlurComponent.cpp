@@ -111,15 +111,26 @@ namespace library
 
 		// Horizontal Blur
 		m_horizontalBlurTarget->Begin();
-		deviceContext->ClearRenderTargetView(m_horizontalBlurTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
-		deviceContext->ClearDepthStencilView(m_horizontalBlurTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		deviceContext->ClearRenderTargetView(
+			m_horizontalBlurTarget->GetRenderTargetView(),
+			static_cast<const float*>(k_backgroundColor)
+		);
+		deviceContext->ClearDepthStencilView(
+			m_horizontalBlurTarget->GetDepthStencilView(),
+			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
+			1.0f, 0
+		);
 
-		m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&GaussianBlurComponent::UpdateHorizontalOffsets, this));
+		m_fullScreenQuad->SetMaterialUpdateFunction(
+			std::bind(&GaussianBlurComponent::UpdateHorizontalOffsets, this)
+		);
 		m_fullScreenQuad->Draw(time);
 		m_horizontalBlurTarget->End();
 
 		// Vertical Blur for final image
-		m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&GaussianBlurComponent::UpdateVerticalOffsets, this));
+		m_fullScreenQuad->SetMaterialUpdateFunction(
+			std::bind(&GaussianBlurComponent::UpdateVerticalOffsets, this)
+		);
 		m_fullScreenQuad->Draw(time);
 	}
 
@@ -129,20 +140,38 @@ namespace library
 
 		// Horizontal Blur
 		m_horizontalBlurTarget->Begin();
-		deviceContext->ClearRenderTargetView(m_horizontalBlurTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
-		deviceContext->ClearDepthStencilView(m_horizontalBlurTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		deviceContext->ClearRenderTargetView(
+			m_horizontalBlurTarget->GetRenderTargetView(),
+			static_cast<const float*>(k_backgroundColor)
+		);
+		deviceContext->ClearDepthStencilView(
+			m_horizontalBlurTarget->GetDepthStencilView(),
+			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
+			1.0f, 0
+		);
 
-		m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&GaussianBlurComponent::UpdateHorizontalOffsets, this));
+		m_fullScreenQuad->SetMaterialUpdateFunction(
+			std::bind(&GaussianBlurComponent::UpdateHorizontalOffsets, this)
+		);
 		m_fullScreenQuad->Draw(time);
 		m_horizontalBlurTarget->End();
 		m_app->UnbindPixelShaderResources(0, 1);
 
 		// Vertical Blur
 		m_verticalBlurTarget->Begin();
-		deviceContext->ClearRenderTargetView(m_verticalBlurTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
-		deviceContext->ClearDepthStencilView(m_verticalBlurTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		deviceContext->ClearRenderTargetView(
+			m_verticalBlurTarget->GetRenderTargetView(),
+			static_cast<const float*>(k_backgroundColor)
+		);
+		deviceContext->ClearDepthStencilView(
+			m_verticalBlurTarget->GetDepthStencilView(),
+			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
+			1.0f, 0
+		);
 
-		m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&GaussianBlurComponent::UpdateVerticalOffsets, this));
+		m_fullScreenQuad->SetMaterialUpdateFunction(
+			std::bind(&GaussianBlurComponent::UpdateVerticalOffsets, this)
+		);
 		m_fullScreenQuad->Draw(time);
 		m_verticalBlurTarget->End();
 		m_app->UnbindPixelShaderResources(0, 1);

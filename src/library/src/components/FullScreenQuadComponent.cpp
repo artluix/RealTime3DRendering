@@ -29,7 +29,11 @@ namespace library
 		}
 	}
 
-	void FullScreenQuadComponent::SetMaterial(Material& material, const std::string& techniqueName, const std::string& passName /* = "p0"*/)
+	void FullScreenQuadComponent::SetMaterial(
+		Material& material,
+		const std::string& techniqueName,
+		const std::string& passName /* = "p0"*/
+	)
 	{
 		SetMaterial(material);
 		SetActiveTechnique(techniqueName, passName);
@@ -37,7 +41,10 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void FullScreenQuadComponent::SetActiveTechnique(const std::string& techniqueName, const std::string& passName /* = "p0"*/)
+	void FullScreenQuadComponent::SetActiveTechnique(
+		const std::string& techniqueName,
+		const std::string& passName /* = "p0"*/
+	)
 	{
 		assert(!!m_material);
 

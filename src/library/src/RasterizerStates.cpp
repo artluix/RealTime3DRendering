@@ -11,7 +11,11 @@ namespace library
 {
 	namespace
 	{
-		void CreateRasterizerState(ID3D11Device* const device, const D3D11_RASTERIZER_DESC& rasterizerStateDesc, ID3D11RasterizerState* rasterizerState)
+		void CreateRasterizerState(
+			ID3D11Device* const device,
+			const D3D11_RASTERIZER_DESC& rasterizerStateDesc,
+			ID3D11RasterizerState*& rasterizerState
+		)
 		{
 			auto hr = device->CreateRasterizerState(&rasterizerStateDesc, &rasterizerState);
 			if (FAILED(hr))

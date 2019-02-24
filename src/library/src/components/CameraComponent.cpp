@@ -11,7 +11,8 @@ namespace library
 		constexpr auto k_defaultFieldOfView = math::Pi_Div_4;
 		constexpr auto k_defaultNearPlaneDistance = 0.01f;
 		constexpr auto k_defaultFarPlaneDistance = 1000.f;
-		const auto k_defaultFontPath = utils::GetExecutableDirectory().Join(Path("data/fonts/Arial_14_Regular.spritefont"));
+		const auto k_defaultFontPath =
+			utils::GetExecutableDirectory().Join(Path("data/fonts/Arial_14_Regular.spritefont"));
 	}
 
 	CameraComponent::CameraComponent()

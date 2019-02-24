@@ -10,7 +10,8 @@ namespace library
 	namespace
 	{
 		const auto k_defaultColor = Color::White;
-		const auto k_defaultFontPath = utils::GetExecutableDirectory().Join(Path("../data/fonts/Arial_14_Regular.spritefont"));
+		const auto k_defaultFontPath =
+			utils::GetExecutableDirectory().Join(Path("../data/fonts/Arial_14_Regular.spritefont"));
 	}
 
 	//-------------------------------------------------------------------------
@@ -53,7 +54,10 @@ namespace library
 		if (!m_spriteFont || m_fontPath != fontPath)
 		{
 			m_fontPath = fontPath;
-			m_spriteFont = std::make_unique<DirectX::SpriteFont>(m_app->GetDevice(), m_fontPath.GetWideCString());
+			m_spriteFont = std::make_unique<DirectX::SpriteFont>(
+				m_app->GetDevice(),
+				m_fontPath.GetWideCString()
+			);
 		}
 	}
 

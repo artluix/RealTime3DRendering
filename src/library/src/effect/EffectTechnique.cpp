@@ -10,7 +10,11 @@
 
 namespace library
 {
-	EffectTechnique::EffectTechnique(const Application& app, const Effect& effect, ID3DX11EffectTechnique* const technique)
+	EffectTechnique::EffectTechnique(
+		const Application& app,
+		const Effect& effect,
+		ID3DX11EffectTechnique* const technique
+	)
 		: m_effect(effect)
 		, m_technique(technique)
 	{

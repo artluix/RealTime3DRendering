@@ -53,7 +53,9 @@ void DiffuseLightingDemo::Initialize(const Application& app)
 	m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
 	m_proxyModel = std::make_unique<ProxyModelComponent>("DirectionalLightProxy", 0.5f);
-	m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
+	m_proxyModel->SetPosition(
+		GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset
+	);
 	m_proxyModel->SetRotation(GetRotation() + k_proxyModelRotationOffset);
 	m_proxyModel->SetCamera(*GetCamera());
 	m_proxyModel->Initialize(app);
@@ -151,8 +153,12 @@ void DiffuseLightingDemo::UpdateDirectionalLight(const Time& time)
 
 			const auto dirLightRot = m_directionalLight->GetRotation();
 
-			m_proxyModel->SetPosition(GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
-			m_proxyModel->SetRotation(math::Vector3(dirLightRot.z, dirLightRot.y, dirLightRot.x) + k_proxyModelRotationOffset);
+			m_proxyModel->SetPosition(
+				GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset
+			);
+			m_proxyModel->SetRotation(
+				math::Vector3(dirLightRot.z, dirLightRot.y, dirLightRot.x) + k_proxyModelRotationOffset
+			);
 		}
 	}
 }

@@ -47,8 +47,11 @@ void CubeDemo::Initialize(const Application& app)
 		);
 		if (FAILED(hr))
 		{
-			std::string error = std::string("D3DX11CompileEffectFromFile() failed: ")
-				+ std::string(static_cast<const char*>(errorBlob->GetBufferPointer()), errorBlob->GetBufferSize());
+			std::string error =
+				std::string("D3DX11CompileEffectFromFile() failed: ") +
+				std::string(
+					static_cast<const char*>(errorBlob->GetBufferPointer()), errorBlob->GetBufferSize()
+				);
 			throw Exception(error.c_str(), hr);
 		}
 
@@ -100,8 +103,24 @@ void CubeDemo::Initialize(const Application& app)
 
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{
-			{ "POSITION", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, 0, D3D11_INPUT_PER_VERTEX_DATA, 0 },
-			{ "COLOR", 0, DXGI_FORMAT_R32G32B32A32_FLOAT, 0, D3D11_APPEND_ALIGNED_ELEMENT, D3D11_INPUT_PER_VERTEX_DATA, 0 },
+			{
+				"POSITION",
+				0,
+				DXGI_FORMAT_R32G32B32A32_FLOAT,
+				0,
+				0,
+				D3D11_INPUT_PER_VERTEX_DATA,
+				0
+			},
+			{
+				"COLOR",
+				0,
+				DXGI_FORMAT_R32G32B32A32_FLOAT,
+				0,
+				D3D11_APPEND_ALIGNED_ELEMENT,
+				D3D11_INPUT_PER_VERTEX_DATA,
+				0
+			},
 		};
 
 		auto hr = app.GetDevice()->CreateInputLayout(
@@ -149,7 +168,11 @@ void CubeDemo::Initialize(const Application& app)
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = k_indices.data();
 
-		auto hr = app.GetDevice()->CreateBuffer(&indexBufferDesc, &vertexSubResourceData, m_input.indices->buffer.GetAddressOf());
+		auto hr = app.GetDevice()->CreateBuffer(
+			&indexBufferDesc,
+			&vertexSubResourceData,
+			m_input.indices->buffer.GetAddressOf()
+		);
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateBuffer() failed.", hr);
@@ -158,19 +181,21 @@ void CubeDemo::Initialize(const Application& app)
 
 	// vertex buffer
 	{
+		using DirectX::XMFLOAT4;
+
 		std::array<VertexPositionColor, 8> vertices =
 		{
 			// bottom
-			VertexPositionColor(DirectX::XMFLOAT4(-1.0f, -1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f)),
-			VertexPositionColor(DirectX::XMFLOAT4(-1.0f, 1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(0.5f, 1.0f, 0.5f, 1.0f)),
-			VertexPositionColor(DirectX::XMFLOAT4(1.0f, 1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 0.5f, 1.0f)),
-			VertexPositionColor(DirectX::XMFLOAT4(1.0f, -1.0f, -1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f)),
+			VertexPositionColor(XMFLOAT4(-1.0f, -1.0f, -1.0f, 1.0f), XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f)),
+			VertexPositionColor(XMFLOAT4(-1.0f, 1.0f, -1.0f, 1.0f), XMFLOAT4(0.5f, 1.0f, 0.5f, 1.0f)),
+			VertexPositionColor(XMFLOAT4(1.0f, 1.0f, -1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 0.5f, 1.0f)),
+			VertexPositionColor(XMFLOAT4(1.0f, -1.0f, -1.0f, 1.0f), XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f)),
 
 			// top
-			VertexPositionColor(DirectX::XMFLOAT4(-1.0f, -1.0f, 1.0f, 1.0f), DirectX::XMFLOAT4(0.5f, 0.5f, 1.0f, 1.0f)),
-			VertexPositionColor(DirectX::XMFLOAT4(-1.0f, 1.0f, 1.0f, 1.0f), DirectX::XMFLOAT4(0.5f, 1.0f, 1.0f, 1.0f)),
-			VertexPositionColor(DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)),
-			VertexPositionColor(DirectX::XMFLOAT4(1.0f, -1.0f, 1.0f, 1.0f), DirectX::XMFLOAT4(1.0f, 0.5f, 1.0f, 1.0f)),
+			VertexPositionColor(XMFLOAT4(-1.0f, -1.0f, 1.0f, 1.0f), XMFLOAT4(0.5f, 0.5f, 1.0f, 1.0f)),
+			VertexPositionColor(XMFLOAT4(-1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT4(0.5f, 1.0f, 1.0f, 1.0f)),
+			VertexPositionColor(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)),
+			VertexPositionColor(XMFLOAT4(1.0f, -1.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 0.5f, 1.0f, 1.0f)),
 		};
 
 		m_input.vertices.count = vertices.size();
@@ -183,7 +208,11 @@ void CubeDemo::Initialize(const Application& app)
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = vertices.data();
 
-		auto hr = app.GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, m_input.vertices.buffer.GetAddressOf());
+		auto hr = app.GetDevice()->CreateBuffer(
+			&vertexBufferDesc,
+			&vertexSubResourceData,
+			m_input.vertices.buffer.GetAddressOf()
+		);
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateBuffer() failed.", hr);

@@ -25,7 +25,11 @@ namespace library
 	public:
 		~Effect();
 
-		static EffectPtr Create(const Application& app, const std::string& effectName, const bool compile = false);
+		static EffectPtr Create(
+			const Application& app,
+			const std::string& effectName,
+			const bool compile = false
+		);
 		static void ClearAll();
 
 		const Application& GetApp() const { return m_app; }

@@ -12,9 +12,6 @@
 namespace library
 {
 	ProxyModelComponent::ProxyModelComponent(const std::string& modelName, const float scale)
-		: m_direction(math::Vector3::Forward)
-		, m_up(math::Vector3::Up)
-		, m_right(math::Vector3::Right)
 	{
 		SetModelName(modelName);
 		SetScaling(math::Vector3(scale));

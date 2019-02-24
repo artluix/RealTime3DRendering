@@ -34,7 +34,9 @@ void BloomDemo::Initialize(const Application& app)
 
 			std::wostringstream woss;
 			woss <<
-				std::setprecision(2) << L"Draw Mode (Enter): " << utils::ToWideString(BloomDrawModeToString(GetDrawMode())) << "\n"
+				std::setprecision(2) << L"Draw Mode (Enter): " << 
+					utils::ToWideString(BloomDrawModeToString(GetDrawMode())) << "\n"
+
 				<< L"Bloom Threshold (+U/-I): " << settings.bloomThreshold << "\n"
 				<< L"Blur Amount (+J/-K): " << settings.blurAmount << "\n"
 				<< L"Bloom Intensity (+N/-M): " << settings.bloomIntensity << "\n"

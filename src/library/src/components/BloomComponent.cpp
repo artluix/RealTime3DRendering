@@ -137,8 +137,15 @@ namespace library
 		// Extract bright spots in the scene
 		m_renderTarget->Begin();
 
-		deviceContext->ClearRenderTargetView(m_renderTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
-		deviceContext->ClearDepthStencilView(m_renderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		deviceContext->ClearRenderTargetView(
+			m_renderTarget->GetRenderTargetView(),
+			static_cast<const float*>(k_backgroundColor)
+		);
+		deviceContext->ClearDepthStencilView(
+			m_renderTarget->GetDepthStencilView(),
+			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
+			1.0f, 0
+		);
 
 		m_fullScreenQuad->SetMaterial(*m_material, "bloom_extract", "p0");
 		m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&BloomComponent::UpdateExtractMaterial, this));
@@ -172,8 +179,15 @@ namespace library
 		// Extract bright spots in the scene
 		m_renderTarget->Begin();
 		
-		deviceContext->ClearRenderTargetView(m_renderTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
-		deviceContext->ClearDepthStencilView(m_renderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+		deviceContext->ClearRenderTargetView(
+			m_renderTarget->GetRenderTargetView(),
+			static_cast<const float*>(k_backgroundColor)
+		);
+		deviceContext->ClearDepthStencilView(
+			m_renderTarget->GetDepthStencilView(),
+			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
+			1.0f, 0
+		);
 		
 		m_fullScreenQuad->SetMaterial(*m_material, "bloom_extract", "p0");
 		m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&BloomComponent::UpdateExtractMaterial, this));

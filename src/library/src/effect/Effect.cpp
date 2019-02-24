@@ -18,7 +18,11 @@ namespace library
 	{
 	}
 
-	EffectPtr Effect::Create(const Application& app, const std::string& effectName, const bool compile /* = false */)
+	EffectPtr Effect::Create(
+		const Application& app,
+		const std::string& effectName,
+		const bool compile /* = false */
+	)
 	{
 		auto it = s_effects.find(effectName);
 		if (it != s_effects.end())
@@ -69,8 +73,11 @@ namespace library
 		);
 		if (FAILED(hr))
 		{
-			std::string error = std::string("D3DX11CompileEffectFromFile() failed: ")
-				+ std::string(static_cast<const char*>(errorBlob->GetBufferPointer()), errorBlob->GetBufferSize());
+			std::string error =
+				std::string("D3DX11CompileEffectFromFile() failed: ") +
+				std::string(
+					static_cast<const char*>(errorBlob->GetBufferPointer()), errorBlob->GetBufferSize()
+				);
 			throw Exception(error.c_str(), hr);
 		}
 
@@ -179,7 +186,11 @@ namespace library
 
 		for (unsigned i = 0; i < m_effectDesc.Techniques; i++)
 		{
-			auto technique = std::make_unique<EffectTechnique>(m_app, *this, m_effect->GetTechniqueByIndex(i));
+			auto technique = std::make_unique<EffectTechnique>(
+				m_app,
+				*this,
+				m_effect->GetTechniqueByIndex(i)
+			);
 			m_techniquesMap.emplace(technique->GetName(), technique.get());
 			m_techniques.push_back(std::move(technique));
 		}

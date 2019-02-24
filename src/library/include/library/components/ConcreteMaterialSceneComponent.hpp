@@ -18,7 +18,11 @@ namespace library
 	protected:
 		explicit ConcreteMaterialSceneComponent() = default;
 
-		void InitializeMaterial(const Application& app, const std::string& effectName, const bool compile = false)
+		void InitializeMaterial(
+			const Application& app,
+			const std::string& effectName,
+			const bool compile = false
+		)
 		{
 			m_effect = Effect::Create(app, effectName, compile);
 

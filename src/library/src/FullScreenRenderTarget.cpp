@@ -100,7 +100,11 @@ namespace library
 
 	void FullScreenRenderTarget::Begin()
 	{
-		m_app.GetDeviceContext()->OMSetRenderTargets(1, m_renderTargetView.GetAddressOf(), m_depthStencilView.Get());
+		m_app.GetDeviceContext()->OMSetRenderTargets(
+			1,
+			m_renderTargetView.GetAddressOf(),
+			m_depthStencilView.Get()
+		);
 	}
 
 	void FullScreenRenderTarget::End()

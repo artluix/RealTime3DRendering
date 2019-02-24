@@ -18,7 +18,11 @@ namespace library
 		~FullScreenQuadComponent();
 
 		void SetMaterial(Material& material);
-		void SetMaterial(Material& material, const std::string& techniqueName, const std::string& passName = "p0");
+		void SetMaterial(
+			Material& material,
+			const std::string& techniqueName,
+			const std::string& passName = "p0"
+		);
 		
 		void SetActiveTechnique(const std::string& techniqueName, const std::string& passName = "p0");
 		void SetMaterialUpdateFunction(const MaterialUpdateFunction& func);

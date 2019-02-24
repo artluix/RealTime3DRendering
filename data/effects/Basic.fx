@@ -21,7 +21,7 @@ struct VS_OUTPUT
 
 RasterizerState DisableCulling
 {
-    CullMode = NONE;
+    CullMode = None;
 };
 
 /************* Vertex Shader *************/

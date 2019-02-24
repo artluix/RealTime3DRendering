@@ -25,7 +25,11 @@ namespace library
 		explicit PostProcessingComponent() = default;
 		
 		void InitializeQuad(const Application& app);
-		void InitializeQuad(const Application& app, const std::string& techniqueName, const std::string& passName = "p0");
+		void InitializeQuad(
+			const Application& app,
+			const std::string& techniqueName,
+			const std::string& passName = "p0"
+		);
 
 		std::unique_ptr<FullScreenQuadComponent> m_fullScreenQuad;
 

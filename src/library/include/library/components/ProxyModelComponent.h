@@ -19,10 +19,6 @@ namespace library
 		bool IsWireframeVisible() const { return m_isWireframeVisible; }
 		void SetWireframeVisible(const bool visible);
 
-		const math::Vector3& GetDirection() const { return m_direction; }
-		const math::Vector3& GetUp() const { return m_up; }
-		const math::Vector3& GetRight() const { return m_right; }
-
 		void Initialize(const Application& app) override;
 
 	protected:
@@ -31,9 +27,5 @@ namespace library
 
 	private:
 		bool m_isWireframeVisible = true;
-
-		math::Vector3 m_direction;
-		math::Vector3 m_up;
-		math::Vector3 m_right;
 	};
 } // namespace library

@@ -133,7 +133,7 @@ namespace library
 		m_textDrawables.clear();
 
 		SaveRenderState(RenderState::All);
-		std::for_each(drawables.begin(), drawables.end(),drawPred);
+		std::for_each(drawables.begin(), drawables.end(), drawPred);
 		RestoreRenderState(RenderState::All);
 	}
 
@@ -186,7 +186,11 @@ namespace library
 
 			case RenderState::Blend:
 				m_blendState.Reset();
-				deviceContext->OMGetBlendState(m_blendState.GetAddressOf(), m_blendFactor.data(), &m_sampleMask);
+				deviceContext->OMGetBlendState(
+					m_blendState.GetAddressOf(),
+					m_blendFactor.data(),
+					&m_sampleMask
+				);
 				break;
 
 			case RenderState::DepthStencil:

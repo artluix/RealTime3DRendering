@@ -71,9 +71,9 @@ namespace library
 	}
 
 	void Material::CreateInputLayout(
-		const std::string& techniqueName,
-		const std::string& passName,
-		const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions
+		const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions,
+		const std::string& techniqueName /* = "main11" */,
+		const std::string& passName /* = "p0" */
 	)
 	{
 		const auto& technique = m_effect.GetTechnique(techniqueName);
@@ -83,14 +83,19 @@ namespace library
 		m_inputLayouts.emplace(&pass, inputLayout);
 	}
 
-
-	void Material::CreateInputLayout(const EffectPass& pass, const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions)
+	void Material::CreateInputLayout(
+		const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions,
+		const EffectPass& pass
+	)
 	{
 		auto inputLayout = pass.CreateInputLayout(inputElementDescriptions);
 		m_inputLayouts.emplace(&pass, inputLayout);
 	}
 
-	std::vector<ComPtr<ID3D11Buffer>> Material::CreateVertexBuffers(ID3D11Device* const device, const Model& model) const
+	std::vector<ComPtr<ID3D11Buffer>> Material::CreateVertexBuffers(
+		ID3D11Device* const device,
+		const Model& model
+	) const
 	{
 		std::vector<ComPtr<ID3D11Buffer>> vertexBuffers;
 
@@ -108,7 +113,11 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	ComPtr<ID3D11Buffer> Material::CreateVertexBuffer(ID3D11Device* const device, const void* data, const std::size_t size)
+	ComPtr<ID3D11Buffer> Material::CreateVertexBuffer(
+		ID3D11Device* const device,
+		const void* data,
+		const std::size_t size
+	)
 	{
 		ComPtr<ID3D11Buffer> vertexBuffer;
 
@@ -120,7 +129,11 @@ namespace library
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = data;
 
-		auto hr = device->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, vertexBuffer.GetAddressOf());
+		auto hr = device->CreateBuffer(
+			&vertexBufferDesc,
+			&vertexSubResourceData,
+			vertexBuffer.GetAddressOf()
+		);
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateBuffer() failed.");

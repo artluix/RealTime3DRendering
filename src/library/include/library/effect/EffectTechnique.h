@@ -17,7 +17,11 @@ namespace library
 	class EffectTechnique : public NonCopyable<EffectTechnique>
 	{
 	public:
-		explicit EffectTechnique(const Application& app, const Effect& effect, ID3DX11EffectTechnique* const technique);
+		explicit EffectTechnique(
+			const Application& app,
+			const Effect& effect,
+			ID3DX11EffectTechnique* const technique
+		);
 		~EffectTechnique();
 
 		const Effect& GetEffect() const { return m_effect; }

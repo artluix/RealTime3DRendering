@@ -17,7 +17,12 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, in
 	_CrtSetDbgFlag(_CRTDBG_ALLOC_MEM_DF | _CRTDBG_LEAK_CHECK_DF);
 #endif
 
-	auto app = std::make_unique<DemoApplication>(instance, L"RenderingClass", L"RealTime3DRendering", showCmd);
+	auto app = std::make_unique<DemoApplication>(
+		instance,
+		L"RenderingClass",
+		L"RealTime3DRendering",
+		showCmd
+	);
 
 	try
 	{
