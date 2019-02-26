@@ -136,7 +136,7 @@ void CubeDemo::Initialize(const Application& app)
 
 	// index buffer
 	{
-		constexpr std::array<unsigned, 2 * 3 * 6> k_indices =
+		constexpr std::array<short, 2 * 3 * 6> k_indices =
 		{
 			0, 1, 2,
 			0, 2, 3,
@@ -157,12 +157,12 @@ void CubeDemo::Initialize(const Application& app)
 			1, 6, 2
 		};
 
-		m_input.indices = std::make_unique<BufferData>();
+		m_input.indices = std::make_optional(BufferData());
 		m_input.indices->count = k_indices.size();
 
 		D3D11_BUFFER_DESC indexBufferDesc{};
 		indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-		indexBufferDesc.ByteWidth = sizeof(unsigned) * k_indices.size();
+		indexBufferDesc.ByteWidth = sizeof(short) * k_indices.size();
 		indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
@@ -183,7 +183,7 @@ void CubeDemo::Initialize(const Application& app)
 	{
 		using DirectX::XMFLOAT4;
 
-		std::array<VertexPositionColor, 8> vertices =
+		const std::array<VertexPositionColor, 8> vertices =
 		{
 			// bottom
 			VertexPositionColor(XMFLOAT4(-1.0f, -1.0f, -1.0f, 1.0f), XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f)),
@@ -267,11 +267,11 @@ void CubeDemo::Update(const Time& time)
 void CubeDemo::Draw_SetData()
 {
 	auto wvp = GetWorldMatrix();
-	if (auto camera = GetCamera())
-		wvp *= camera->GetViewProjectionMatrix();
+	if (!!m_camera)
+		wvp *= m_camera->GetViewProjectionMatrix();
 	m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
-	m_pass->Apply(0, m_app->GetDeviceContext());
+	m_pass->Apply(0, GetApp()->GetDeviceContext());
 }
 
 unsigned CubeDemo::GetVertexSize() const

@@ -187,11 +187,11 @@ void PointLightDemo::UpdateSpecularLight(const Time& time)
 void PointLightDemo::Draw_SetData()
 {
 	auto wvp = GetWorldMatrix();
-	if (auto camera = GetCamera())
+	if (!!m_camera)
 	{
-		wvp *= camera->GetViewProjectionMatrix();
+		wvp *= m_camera->GetViewProjectionMatrix();
 
-		m_material->GetCameraPosition() << camera->GetPosition();
+		m_material->GetCameraPosition() << m_camera->GetPosition();
 	}
 
 	m_material->GetWVP() << wvp;

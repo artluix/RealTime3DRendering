@@ -7,7 +7,7 @@
 
 #include <d3dcommon.h>
 #include <string>
-#include <memory>
+#include <optional>
 
 namespace library
 {
@@ -57,6 +57,8 @@ namespace library
 
 		explicit SceneComponent();
 
+		void UpdateWorldMatrix();
+
 		// draw stages
 		virtual void Draw_SetIA();
 		virtual void Draw_SetData();
@@ -68,12 +70,15 @@ namespace library
 		{
 			D3D_PRIMITIVE_TOPOLOGY topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 			BufferData vertices; // mandatory
-			std::unique_ptr<BufferData> indices; // optional
+			std::optional<BufferData> indices; // optional
 			ComPtr<ID3D11InputLayout> layout;
 		} m_input;
 
+		std::string m_modelName;
+		std::string m_textureName;
+
 	private:
-		void UpdateWorldMatrix();
+		ComPtr<ID3D11ShaderResourceView> m_texture;
 
 		math::Vector3 m_position;
 		math::Vector3 m_rotation;
@@ -84,9 +89,5 @@ namespace library
 		math::Vector3 m_up;
 
 		math::Matrix4 m_worldMatrix;
-
-		std::string m_modelName;
-		std::string m_textureName;
-		ComPtr<ID3D11ShaderResourceView> m_texture;
 	};
 } // namespace library

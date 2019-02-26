@@ -75,8 +75,8 @@ void BasicMaterialDemo::Update(const Time& time)
 void BasicMaterialDemo::Draw_SetData()
 {
 	auto wvp = GetWorldMatrix();
-	if (auto camera = GetCamera())
-		wvp *= camera->GetViewProjectionMatrix();
+	if (!!m_camera)
+		wvp *= m_camera->GetViewProjectionMatrix();
 
 	m_material->GetWorldViewProjection() << wvp;
 

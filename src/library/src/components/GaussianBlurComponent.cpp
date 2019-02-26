@@ -51,8 +51,8 @@ namespace library
 
 	void GaussianBlurComponent::InitializeSampleOffsets()
 	{
-		const float horizontalPixelSize = 1.f / m_app->GetScreenWidth();
-		const float verticalPixelSize = 1.f / m_app->GetScreenHeight();
+		const float horizontalPixelSize = 1.f / GetApp()->GetScreenWidth();
+		const float verticalPixelSize = 1.f / GetApp()->GetScreenHeight();
 
 		auto& offsets = m_sample.offsets;
 
@@ -107,7 +107,7 @@ namespace library
 	{
 		m_outputTexture = nullptr;
 
-		auto deviceContext = m_app->GetDeviceContext();
+		auto deviceContext = GetApp()->GetDeviceContext();
 
 		// Horizontal Blur
 		m_horizontalBlurTarget->Begin();
@@ -122,21 +122,21 @@ namespace library
 		);
 
 		m_fullScreenQuad->SetMaterialUpdateFunction(
-			std::bind(&GaussianBlurComponent::UpdateHorizontalOffsets, this)
+			std::bind(&GaussianBlurComponent::UpdateHorizontalOffsets, this, std::ref(*m_material))
 		);
 		m_fullScreenQuad->Draw(time);
 		m_horizontalBlurTarget->End();
 
 		// Vertical Blur for final image
 		m_fullScreenQuad->SetMaterialUpdateFunction(
-			std::bind(&GaussianBlurComponent::UpdateVerticalOffsets, this)
+			std::bind(&GaussianBlurComponent::UpdateVerticalOffsets, this, std::ref(*m_material))
 		);
 		m_fullScreenQuad->Draw(time);
 	}
 
 	void GaussianBlurComponent::DrawToTexture(const Time& time)
 	{
-		auto deviceContext = m_app->GetDeviceContext();
+		auto deviceContext = GetApp()->GetDeviceContext();
 
 		// Horizontal Blur
 		m_horizontalBlurTarget->Begin();
@@ -151,11 +151,11 @@ namespace library
 		);
 
 		m_fullScreenQuad->SetMaterialUpdateFunction(
-			std::bind(&GaussianBlurComponent::UpdateHorizontalOffsets, this)
+			std::bind(&GaussianBlurComponent::UpdateHorizontalOffsets, this, std::ref(*m_material))
 		);
 		m_fullScreenQuad->Draw(time);
 		m_horizontalBlurTarget->End();
-		m_app->UnbindPixelShaderResources(0, 1);
+		GetApp()->UnbindPixelShaderResources(0, 1);
 
 		// Vertical Blur
 		m_verticalBlurTarget->Begin();
@@ -170,11 +170,11 @@ namespace library
 		);
 
 		m_fullScreenQuad->SetMaterialUpdateFunction(
-			std::bind(&GaussianBlurComponent::UpdateVerticalOffsets, this)
+			std::bind(&GaussianBlurComponent::UpdateVerticalOffsets, this, std::ref(*m_material))
 		);
 		m_fullScreenQuad->Draw(time);
 		m_verticalBlurTarget->End();
-		m_app->UnbindPixelShaderResources(0, 1);
+		GetApp()->UnbindPixelShaderResources(0, 1);
 		m_outputTexture = m_verticalBlurTarget->GetOutputTexture();
 	}
 
@@ -191,18 +191,18 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void GaussianBlurComponent::UpdateHorizontalOffsets()
+	void GaussianBlurComponent::UpdateHorizontalOffsets(Material& material) const
 	{
-		m_material->GetSceneTexture() << GetSceneTexture();
-		m_material->GetSampleWeights() << m_sample.weights;
-		m_material->GetSampleOffsets() << m_sample.offsets.horizontal;
+		material.GetSceneTexture() << GetSceneTexture();
+		material.GetSampleWeights() << m_sample.weights;
+		material.GetSampleOffsets() << m_sample.offsets.horizontal;
 	}
 
-	void GaussianBlurComponent::UpdateVerticalOffsets()
+	void GaussianBlurComponent::UpdateVerticalOffsets(Material& material) const
 	{
-		m_material->GetSceneTexture() << m_horizontalBlurTarget->GetOutputTexture();
-		m_material->GetSampleWeights() << m_sample.weights;
-		m_material->GetSampleOffsets() << m_sample.offsets.vertical;
+		material.GetSceneTexture() << m_horizontalBlurTarget->GetOutputTexture();
+		material.GetSampleWeights() << m_sample.weights;
+		material.GetSampleOffsets() << m_sample.offsets.vertical;
 	}
 
 	//-------------------------------------------------------------------------

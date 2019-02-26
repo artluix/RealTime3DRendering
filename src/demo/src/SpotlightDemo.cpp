@@ -277,11 +277,11 @@ void SpotlightDemo::UpdateSpecularLight(const Time& time)
 void SpotlightDemo::Draw_SetData()
 {
 	auto world = GetWorldMatrix();
-	if (auto camera = GetCamera())
+	if (!!m_camera)
 	{
-		auto wvp = world * camera->GetViewProjectionMatrix();
+		auto wvp = world * m_camera->GetViewProjectionMatrix();
 
-		m_material->GetCameraPosition() << camera->GetPosition();
+		m_material->GetCameraPosition() << m_camera->GetPosition();
 		m_material->GetWVP() << wvp;
 	}
 

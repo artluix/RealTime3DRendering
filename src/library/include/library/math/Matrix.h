@@ -6,11 +6,26 @@ namespace library::math
 	using XMMatrix = DirectX::XMMATRIX;
 
 	//-------------------------------------------------------------------------
+	// MatrixDef
+	//-------------------------------------------------------------------------
+
+	template <std::size_t Size>
+	struct MatrixDef
+	{
+		static constexpr std::size_t Order = Size;
+		static constexpr std::size_t RowCount = Size;
+		static constexpr std::size_t ColCount = Size;
+
+		using Row = Vector<Size>;
+		using Col = Vector<Size>;
+	};
+
+	//-------------------------------------------------------------------------
 	// Matrix3
 	//-------------------------------------------------------------------------
 
 	template<>
-	struct Matrix<3>
+	struct Matrix<3> : public MatrixDef<3>
 	{
 		union
 		{
@@ -21,8 +36,8 @@ namespace library::math
 				float _31, _32, _33;
 			};
 
-			std::array<Vector3, 3> rows;
-			std::array<float, 3 * 3> data;
+			std::array<Row, RowCount> _rows;
+			std::array<float, RowCount * ColCount> _data;
 		};
 
 		//-------------------------------------------------------------------------
@@ -30,10 +45,10 @@ namespace library::math
 		//-------------------------------------------------------------------------
 
 		constexpr Matrix(const float value = 0.f)
-			: rows {
-				Vector3(value),
-				Vector3(value),
-				Vector3(value),
+			: _rows {
+				Row(value),
+				Row(value),
+				Row(value),
 			}
 		{
 		}
@@ -49,8 +64,8 @@ namespace library::math
 		{
 		}
 
-		constexpr Matrix(const Vector3& r1, const Vector3& r2, const Vector3& r3)
-			: rows{ r1, r2, r3 }
+		constexpr Matrix(const Row& r1, const Row& r2, const Row& r3)
+			: _rows{ r1, r2, r3 }
 		{
 		}
 
@@ -83,8 +98,19 @@ namespace library::math
 
 		//-------------------------------------------------------------------------
 
+		const Row& GetRow(const std::size_t rowIdx) const;
+		void SetRow(const std::size_t rowIdx, const Row& row);
+
+		const Col GetCol(const std::size_t colIdx) const;
+		void SetCol(const std::size_t colIdx, const Col& col);
+
+		//-------------------------------------------------------------------------
+
 		explicit operator DirectX::XMFLOAT3X3() const;
-		explicit operator const float* () const { return data.data(); }
+		explicit operator const float* () const { return _data.data(); }
+
+		const Row& operator[](const std::size_t rowIdx) const;
+		Row& operator[](const std::size_t rowIdx);
 
 		const float& operator() (const std::size_t rowIdx, const std::size_t colIdx) const;
 		float& operator() (const std::size_t rowIdx, const std::size_t colIdx);
@@ -100,7 +126,7 @@ namespace library::math
 	//-------------------------------------------------------------------------
 
 	template<>
-	struct Matrix<4>
+	struct Matrix<4> : public MatrixDef<4>
 	{
 		union
 		{
@@ -112,8 +138,8 @@ namespace library::math
 				float _41, _42, _43, _44;
 			};
 
-			std::array<Vector4, 4> rows;
-			std::array<float, 4 * 4> data;
+			std::array<Row, RowCount> _rows;
+			std::array<float, RowCount * ColCount> _data;
 		};
 
 		//-------------------------------------------------------------------------
@@ -121,11 +147,11 @@ namespace library::math
 		//-------------------------------------------------------------------------
 
 		constexpr Matrix(const float value = 0.f)
-			: rows {
-				Vector4(value),
-				Vector4(value),
-				Vector4(value),
-				Vector4(value),
+			: _rows {
+				Row(value),
+				Row(value),
+				Row(value),
+				Row(value),
 			}
 		{
 		}
@@ -143,8 +169,8 @@ namespace library::math
 		{
 		}
 
-		constexpr Matrix(const Vector4& r1, const Vector4& r2, const Vector4& r3, const Vector4& r4)
-			: rows{ r1, r2, r3, r4 }
+		constexpr Matrix(const Row& r1, const Row& r2, const Row& r3, const Row& r4)
+			: _rows{ r1, r2, r3, r4 }
 		{
 		}
 
@@ -233,8 +259,19 @@ namespace library::math
 
 		//-------------------------------------------------------------------------
 
+		const Row& GetRow(const std::size_t rowIdx) const;
+		void SetRow(const std::size_t rowIdx, const Row& row);
+
+		const Col GetCol(const std::size_t colIdx) const;
+		void SetCol(const std::size_t colIdx, const Col& col);
+
+		//-------------------------------------------------------------------------
+
 		explicit operator DirectX::XMFLOAT4X4() const;
-		explicit operator const float* () const { return data.data(); }
+		explicit operator const float* () const { return _data.data(); }
+
+		const Row& operator[](const std::size_t rowIdx) const;
+		Row& operator[](const std::size_t rowIdx);
 
 		const float& operator() (const std::size_t rowIdx, const std::size_t colIdx) const;
 		float& operator() (const std::size_t rowIdx, const std::size_t colIdx);

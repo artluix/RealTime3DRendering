@@ -53,7 +53,6 @@ namespace library
 		if (m_rotation != rotation)
 		{
 			m_rotation = rotation;
-
 			UpdateWorldMatrix();
 		}
 	}
@@ -111,16 +110,14 @@ namespace library
 
 	void SceneComponent::SetModelName(const std::string& modelName)
 	{
-		if (m_modelName != modelName)
-			m_modelName = modelName;
+		m_modelName = modelName;
 	}
 
 	//-------------------------------------------------------------------------
 
 	void SceneComponent::SetTextureName(const std::string& textureName)
 	{
-		if (m_textureName != textureName)
-			m_textureName = textureName;
+		m_textureName = textureName;
 	}
 
 	//-------------------------------------------------------------------------
@@ -141,17 +138,18 @@ namespace library
 			// load model from file
 			if (!m_modelName.empty())
 			{
-				Model model(*m_app, m_modelName, true);
+				Model model(*GetApp(), m_modelName, true);
 				const auto& mesh = model.GetMesh(0);
 
-				m_input.vertices.buffer = material->CreateVertexBuffer(m_app->GetDevice(), mesh);
+				m_input.vertices.buffer = material->CreateVertexBuffer(GetApp()->GetDevice(), mesh);
 				m_input.vertices.count = mesh.GetVerticesCount();
 
 				if (mesh.HasIndices())
 				{
-					m_input.indices = std::make_unique<BufferData>();
-					m_input.indices->buffer = mesh.CreateIndexBuffer();
-					m_input.indices->count = mesh.GetIndicesCount();
+					m_input.indices = std::make_optional(BufferData {
+						mesh.CreateIndexBuffer(),
+						mesh.GetIndicesCount()
+					});
 				}
 			}
 		}
@@ -159,13 +157,13 @@ namespace library
 		// load texture
 		if (!m_textureName.empty())
 		{
-			m_texture = m_app->LoadTexture(m_textureName);
+			m_texture = GetApp()->LoadTexture(m_textureName);
 		}
 	}
 
 	void SceneComponent::Update(const Time& time)
 	{
-		m_app->GetRenderer()->AddDrawable(*this);
+		GetApp()->GetRenderer()->AddDrawable(*this);
 	}
 
 	void SceneComponent::Draw(const Time& time)
@@ -179,7 +177,7 @@ namespace library
 
 	void SceneComponent::Draw_SetIA()
 	{
-		auto deviceContext = m_app->GetDeviceContext();
+		auto deviceContext = GetApp()->GetDeviceContext();
 
 		deviceContext->IASetPrimitiveTopology(m_input.topology);
 		deviceContext->IASetInputLayout(m_input.layout.Get());
@@ -200,18 +198,18 @@ namespace library
 
 	void SceneComponent::Draw_SetData()
 	{
-		if (auto material = GetMaterial())
+		if (const auto material = GetMaterial())
 		{
 			auto& currentTechnique = material->GetCurrentTechnique();
 			auto& pass = currentTechnique.GetPass(0);
 
-			pass.Apply(0, m_app->GetDeviceContext());
+			pass.Apply(0, GetApp()->GetDeviceContext());
 		}
 	}
 
 	void SceneComponent::Draw_Render()
 	{
-		auto deviceContext = m_app->GetDeviceContext();
+		auto deviceContext = GetApp()->GetDeviceContext();
 
 		if (!!m_input.indices)
 			deviceContext->DrawIndexed(m_input.indices->count, 0, 0);

@@ -33,20 +33,17 @@ namespace library
 
 	void TextComponent::SetText(const std::wstring& text)
 	{
-		if (m_text != text)
-			m_text = text;
+		m_text = text;
 	}
 
 	void TextComponent::SetPosition(const math::Vector2& position)
 	{
-		if (m_position != position)
-			m_position = position;
+		m_position = position;
 	}
 
 	void TextComponent::SetColor(const Color& color)
 	{
-		if (m_color != color)
-			m_color = color;
+		m_color = color;
 	}
 
 	void TextComponent::SetFontPath(const Path& fontPath)
@@ -55,7 +52,7 @@ namespace library
 		{
 			m_fontPath = fontPath;
 			m_spriteFont = std::make_unique<DirectX::SpriteFont>(
-				m_app->GetDevice(),
+				GetApp()->GetDevice(),
 				m_fontPath.GetWideCString()
 			);
 		}
@@ -81,7 +78,7 @@ namespace library
 			m_text = m_textUpdateFunction();
 		}
 
-		m_app->GetRenderer()->AddDrawable(*this);
+		GetApp()->GetRenderer()->AddDrawable(*this);
 	}
 
 	void TextComponent::Draw(const Time& time)

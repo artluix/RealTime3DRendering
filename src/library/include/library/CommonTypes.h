@@ -1,8 +1,8 @@
 #pragma once
 #include "library/Logger.h"
 
+#include <utility>
 #include <cstdint>
-#include <array>
 #include <wrl/client.h>
 
 namespace library
@@ -17,10 +17,8 @@ namespace library
 	using u32 = std::uint32_t;
 	using u64 = std::uint64_t;
 
-	enum class byte : std::uint8_t {};
-
-	template <typename T>
-	using Tuple2 = std::array<T, 2>;
+	template<typename T>
+	using Pair = std::pair<T, T>;
 } // namespace library
 
 using Microsoft::WRL::ComPtr;

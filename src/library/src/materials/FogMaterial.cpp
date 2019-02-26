@@ -6,7 +6,7 @@
 
 namespace library
 {
-	FogMaterial::FogMaterial(const Effect& effect)
+	FogMaterial::FogMaterial(Effect& effect)
 		: Material(effect, "fogEnabled")
 
 		, m_ambientColor(effect.GetVariable("ambientColor"))

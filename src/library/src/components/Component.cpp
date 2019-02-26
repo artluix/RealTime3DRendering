@@ -14,5 +14,6 @@ namespace library
 	{
 		assert(!m_app);
 		m_app = &app;
+		assert(!!m_app);
 	}
 } // namespace library

@@ -84,8 +84,8 @@ namespace library
 			samplerStateDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
 
 			std::copy(
-				borderColor.data.begin(),
-				borderColor.data.end(),
+				borderColor._data.begin(),
+				borderColor._data.end(),
 				std::begin(samplerStateDesc.BorderColor)
 			);
 

@@ -9,15 +9,15 @@ namespace library
 	FullScreenRenderTarget::FullScreenRenderTarget(const Application& app)
 		: m_app(app)
 	{
-		auto device = m_app.GetDevice();
+		auto device = app.GetDevice();
 
 		// output texture & render target view
 		{
 			ComPtr<ID3D11Texture2D> fullScreenTexture;
 
 			D3D11_TEXTURE2D_DESC fullScreenTextureDesc{};
-			fullScreenTextureDesc.Width = m_app.GetScreenWidth();
-			fullScreenTextureDesc.Height = m_app.GetScreenHeight();
+			fullScreenTextureDesc.Width = app.GetScreenWidth();
+			fullScreenTextureDesc.Height = app.GetScreenHeight();
 			fullScreenTextureDesc.MipLevels = 1;
 			fullScreenTextureDesc.ArraySize = 1;
 			fullScreenTextureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
@@ -62,8 +62,8 @@ namespace library
 			ComPtr<ID3D11Texture2D> depthStencilBuffer;
 
 			D3D11_TEXTURE2D_DESC depthStencilDesc{};
-			depthStencilDesc.Width = m_app.GetScreenWidth();
-			depthStencilDesc.Height = m_app.GetScreenHeight();
+			depthStencilDesc.Width = app.GetScreenWidth();
+			depthStencilDesc.Height = app.GetScreenHeight();
 			depthStencilDesc.MipLevels = 1;
 			depthStencilDesc.ArraySize = 1;
 			depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;

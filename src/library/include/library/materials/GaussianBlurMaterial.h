@@ -8,11 +8,11 @@ namespace library
 		RTTI_CLASS(GaussianBlurMaterial, PostProcessingMaterial)
 
 	public:
-		explicit GaussianBlurMaterial(const Effect& effect);
+		explicit GaussianBlurMaterial(Effect& effect);
 		~GaussianBlurMaterial();
 
-		EffectVariable& GetSampleOffsets() const { return m_sampleOffsets; }
-		EffectVariable& GetSampleWeights() const { return m_sampleWeights; }
+		EffectVariable& GetSampleOffsets() { return m_sampleOffsets; }
+		EffectVariable& GetSampleWeights() { return m_sampleWeights; }
 
 	private:
 		EffectVariable& m_sampleOffsets;

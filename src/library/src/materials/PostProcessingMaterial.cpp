@@ -9,8 +9,8 @@
 
 namespace library
 {
-	PostProcessingMaterial::PostProcessingMaterial(const Effect& effect)
-		: Material(effect, "main11")
+	PostProcessingMaterial::PostProcessingMaterial(Effect& effect)
+		: Material(effect)
 		, m_sceneTexture(effect.GetVariable("SceneTexture"))
 	{
 	}
@@ -41,7 +41,7 @@ namespace library
 			},
 		};
 
-		for (unsigned i = 0, techniquesCount = m_effect.GetTechniquesCount(); i < techniquesCount; i++)
+		for (unsigned i = 0, techniquesCount = GetEffect().GetTechniquesCount(); i < techniquesCount; i++)
 		{
 			const auto& technique = m_effect.GetTechnique(i);
 

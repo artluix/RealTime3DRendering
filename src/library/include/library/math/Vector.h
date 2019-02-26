@@ -43,7 +43,7 @@ namespace library::math
 				float x, y;
 			};
 
-			std::array<float, 2> data;
+			std::array<float, 2> _data;
 		};
 
 		//-------------------------------------------------------------------------
@@ -72,19 +72,21 @@ namespace library::math
 
 		//-------------------------------------------------------------------------
 
+		float Dot(const Vector& vector) const;
 		Vector Cross(const Vector& vector) const;
 
 		Vector Normalize() const;
 		float Length() const;
+		float LengthSq() const;
 
 		//-------------------------------------------------------------------------
 
 		explicit operator bool() const { return !IsZero(); }
 		explicit operator DirectX::XMFLOAT2() const { return DirectX::XMFLOAT2(x, y); }
-		explicit operator const float* () const { return data.data(); }
+		explicit operator const float* () const { return _data.data(); }
 
-		const float& operator[] (const std::size_t idx) const { return data[idx]; }
-		float& operator[] (const std::size_t idx) { return data[idx]; }
+		const float& operator[] (const std::size_t idx) const { return _data[idx]; }
+		float& operator[] (const std::size_t idx) { return _data[idx]; }
 	};
 
 	//-------------------------------------------------------------------------
@@ -110,7 +112,7 @@ namespace library::math
 				float x, y, z;
 			};
 
-			std::array<float, 3> data;
+			std::array<float, 3> _data;
 		};
 
 		constexpr Vector(const float value = 0.f) : x(value), y(value), z(value) {}
@@ -145,10 +147,12 @@ namespace library::math
 
 		//-------------------------------------------------------------------------
 
+		float Dot(const Vector& vector) const;
 		Vector Cross(const Vector& vector) const;
 
 		Vector Normalize() const;
 		float Length() const;
+		float LengthSq() const;
 
 		template <std::size_t Size>
 		Vector Transform(const Matrix<Size>& matrix) const;
@@ -160,10 +164,10 @@ namespace library::math
 
 		explicit operator bool() const { return !IsZero(); }
 		explicit operator DirectX::XMFLOAT3() const { return DirectX::XMFLOAT3(x, y, z); }
-		explicit operator const float* () const { return data.data(); }
+		explicit operator const float* () const { return _data.data(); }
 
-		const float& operator[] (const std::size_t idx) const { return data[idx]; }
-		float& operator[] (const std::size_t idx) { return data[idx]; }
+		const float& operator[] (const std::size_t idx) const { return _data[idx]; }
+		float& operator[] (const std::size_t idx) { return _data[idx]; }
 	};
 
 	//-------------------------------------------------------------------------
@@ -206,7 +210,7 @@ namespace library::math
 				float r, g, b, a;
 			};
 
-			std::array<float, 4> data;
+			std::array<float, 4> _data;
 		};
 
 		//-------------------------------------------------------------------------
@@ -246,10 +250,12 @@ namespace library::math
 
 		//-------------------------------------------------------------------------
 
+		float Dot(const Vector& vector) const;
 		Vector Cross(const Vector& vector1, const Vector& vector2) const;
 
 		Vector Normalize() const;
 		float Length() const;
+		float LengthSq() const;
 
 		Vector Transform(const Matrix4& matrix) const;
 
@@ -257,10 +263,11 @@ namespace library::math
 
 		explicit operator bool() const { return !IsZero(); }
 		explicit operator DirectX::XMFLOAT4() const { return DirectX::XMFLOAT4(x, y, z, w); }
-		explicit operator const float* () const { return data.data(); }
+		explicit operator Vector<3>() const { return Vector<3>(x, y, z); }
+		explicit operator const float* () const { return _data.data(); }
 
-		const float& operator[] (const std::size_t idx) const { return data[idx]; }
-		float& operator[] (const std::size_t idx) { return data[idx]; }
+		const float& operator[] (const std::size_t idx) const { return _data[idx]; }
+		float& operator[] (const std::size_t idx) { return _data[idx]; }
 	};
 
 	//-------------------------------------------------------------------------

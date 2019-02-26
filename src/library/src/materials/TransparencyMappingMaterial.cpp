@@ -6,7 +6,7 @@
 
 namespace library
 {
-	TransparencyMappingMaterial::TransparencyMappingMaterial(const Effect& effect)
+	TransparencyMappingMaterial::TransparencyMappingMaterial(Effect& effect)
 		: Material(effect, "alphaBlendingWithoutFog")
 
 		, m_ambientColor(effect.GetVariable("ambientColor"))

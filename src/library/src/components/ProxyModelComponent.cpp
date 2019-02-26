@@ -35,8 +35,8 @@ namespace library
 	void ProxyModelComponent::Draw_SetData()
 	{
 		auto wvp = GetWorldMatrix();
-		if (auto camera = GetCamera())
-			wvp *= camera->GetViewProjectionMatrix();
+		if (!!m_camera)
+			wvp *= m_camera->GetViewProjectionMatrix();
 		m_material->GetWorldViewProjection() << wvp;
 
 		SceneComponent::Draw_SetData();
@@ -44,7 +44,7 @@ namespace library
 
 	void ProxyModelComponent::Draw_Render()
 	{
-		auto deviceContext = m_app->GetDeviceContext();
+		auto deviceContext = GetApp()->GetDeviceContext();
 
 		if (m_isWireframeVisible)
 		{

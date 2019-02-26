@@ -10,9 +10,6 @@ namespace library
 
 	void LightComponent::SetColor(const Color& color)
 	{
-		if (m_color != color)
-		{
-			m_color = color;
-		}
+		m_color = color;
 	}
 } // namespace library

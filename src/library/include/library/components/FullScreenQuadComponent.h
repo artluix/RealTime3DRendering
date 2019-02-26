@@ -33,16 +33,15 @@ namespace library
 		const Material* GetMaterial() const override { return m_material; }
 
 	protected:
-		Material* GetMaterial() override { return m_material; }
-
 		void Draw_SetData() override;
 
+		Material* GetMaterial() override { return m_material; }
 		unsigned GetVertexSize() const override;
 
-	private:
-		Material* m_material = nullptr;
-		EffectPass* m_pass = nullptr;
-
 		MaterialUpdateFunction m_materialUpdateFunction;
+		Material* m_material = nullptr;
+
+	private:
+		EffectPass* m_pass = nullptr;
 	};
 } // namespace library

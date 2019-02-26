@@ -41,7 +41,7 @@ namespace library
 		}
 	}
 
-	constexpr std::array<TextureType::Type, TextureType::Count> TextureType::Values()
+	constexpr std::array<TextureType::Type, TextureType::Count> TextureType::GetValues()
 	{
 		return std::array<TextureType::Type, TextureType::Count>
 		{
@@ -71,7 +71,7 @@ namespace library
 		material.Get(AI_MATKEY_NAME, name);
 		m_name = name.C_Str();
 
-		for (const auto tt : TextureType::Values())
+		for (const auto tt : TextureType::GetValues())
 		{
 			const auto aiTextureType = TextureType::ToAiTextureType(tt);
 

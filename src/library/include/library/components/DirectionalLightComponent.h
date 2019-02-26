@@ -18,7 +18,7 @@ namespace library
 		void Rotate(const math::Vector3& rotation);
 		void SetRotation(const math::Vector3& rotation);
 
-	protected:
+	private:
 		math::Vector3 m_direction;
 		math::Vector3 m_up;
 		math::Vector3 m_right;

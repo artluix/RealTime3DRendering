@@ -29,12 +29,13 @@ public:
 	void Initialize(const library::Application& app) override;
 	void Update(const library::Time& time) override;
 
+protected:
+	void Draw_SetData() override;
+
 private:
 	void UpdateAmbientLight(const library::Time& time);
 	void UpdateDirectionalLight(const library::Time& time);
 	void UpdateSpecularLight(const library::Time& time);
-
-	void Draw_SetData() override;
 
 	float m_specularPower;
 	library::Color m_specularColor;

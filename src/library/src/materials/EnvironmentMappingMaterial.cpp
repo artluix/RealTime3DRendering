@@ -6,7 +6,7 @@
 
 namespace library
 {
-	EnvironmentMappingMaterial::EnvironmentMappingMaterial(const Effect& effect)
+	EnvironmentMappingMaterial::EnvironmentMappingMaterial(Effect& effect)
 		: Material(effect, "main10")
 
 		, m_ambientColor(effect.GetVariable("ambientColor"))

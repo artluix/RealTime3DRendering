@@ -5,7 +5,7 @@
 
 namespace library
 {
-	ColorFilterMaterial::ColorFilterMaterial(const Effect& effect)
+	ColorFilterMaterial::ColorFilterMaterial(Effect& effect)
 		: PostProcessingMaterial(effect)
 		, m_colorFilter(effect.GetVariable("colorFilter"))
 	{

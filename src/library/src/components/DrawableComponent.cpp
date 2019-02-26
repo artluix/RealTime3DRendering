@@ -10,7 +10,6 @@ namespace library
 
 	void DrawableComponent::SetCamera(const CameraComponent& camera)
 	{
-		if (m_camera != &camera)
-			m_camera = &camera;
+		m_camera = &camera;
 	}
 } // namespace library

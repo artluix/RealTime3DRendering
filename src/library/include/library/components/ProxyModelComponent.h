@@ -25,7 +25,6 @@ namespace library
 		void Draw_SetData() override;
 		void Draw_Render() override;
 
-	private:
 		bool m_isWireframeVisible = true;
 	};
 } // namespace library

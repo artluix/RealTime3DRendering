@@ -3,11 +3,6 @@
 
 namespace library
 {
-	namespace
-	{
-		constexpr unsigned k_bufferSize = 256;
-	}
-
 	void Logger::Log(const Level level, const char* fmt, ...)
 	{
 		va_list args;
@@ -18,6 +13,8 @@ namespace library
 
 	void Logger::Log(const Level level, const char* fmt, const va_list ap)
 	{
+		constexpr unsigned k_bufferSize = 256;
+
 		char buffer[k_bufferSize];
 		vsprintf_s(buffer, k_bufferSize, fmt, ap);
 

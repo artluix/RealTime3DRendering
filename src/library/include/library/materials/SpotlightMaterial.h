@@ -11,24 +11,24 @@ namespace library
 	public:
 		using Vertex = VertexPositionTextureNormal;
 
-		explicit SpotlightMaterial(const Effect& effect);
+		explicit SpotlightMaterial(Effect& effect);
 		~SpotlightMaterial();
 
-		EffectVariable& GetAmbientColor() const { return m_ambientColor; }
-		EffectVariable& GetLightColor() const { return m_lightColor; }
-		EffectVariable& GetLightPosition() const { return m_lightPosition; }
-		EffectVariable& GetLightLookAt() const { return m_lightLookAt; }
-		EffectVariable& GetLightRadius() const { return m_lightRadius; }
-		EffectVariable& GetSpotlightInnerAngle() const { return m_spotlightInnerAngle; }
-		EffectVariable& GetSpotlightOuterAngle() const { return m_spotlightOuterAngle; }
-		EffectVariable& GetCameraPosition() const { return m_cameraPosition; }
+		EffectVariable& GetAmbientColor() { return m_ambientColor; }
+		EffectVariable& GetLightColor() { return m_lightColor; }
+		EffectVariable& GetLightPosition() { return m_lightPosition; }
+		EffectVariable& GetLightLookAt() { return m_lightLookAt; }
+		EffectVariable& GetLightRadius() { return m_lightRadius; }
+		EffectVariable& GetSpotlightInnerAngle() { return m_spotlightInnerAngle; }
+		EffectVariable& GetSpotlightOuterAngle() { return m_spotlightOuterAngle; }
+		EffectVariable& GetCameraPosition() { return m_cameraPosition; }
 
-		EffectVariable& GetWVP() const { return m_wvp; }
-		EffectVariable& GetWorld() const { return m_world; }
-		EffectVariable& GetSpecularPower() const { return m_specularPower; }
-		EffectVariable& GetSpecularColor() const { return m_specularColor; }
+		EffectVariable& GetWVP() { return m_wvp; }
+		EffectVariable& GetWorld() { return m_world; }
+		EffectVariable& GetSpecularPower() { return m_specularPower; }
+		EffectVariable& GetSpecularColor() { return m_specularColor; }
 
-		EffectVariable& GetColorTexture() const { return m_colorTexture; }
+		EffectVariable& GetColorTexture() { return m_colorTexture; }
 
 		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }

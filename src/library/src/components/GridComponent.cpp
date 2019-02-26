@@ -87,10 +87,10 @@ namespace library
 	void GridComponent::Draw_SetData()
 	{
 		auto wvp = GetWorldMatrix();
-		if (auto camera = GetCamera())
-			wvp *= camera->GetViewProjectionMatrix();
+		if (!!m_camera)
+			wvp *= m_camera->GetViewProjectionMatrix();
 
-		m_material->GetWorldViewProjection() << wvp;
+		GetMaterial()->GetWorldViewProjection() << wvp;
 
 		SceneComponent::Draw_SetData();
 	}
@@ -134,7 +134,7 @@ namespace library
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = vertices.data();
 
-		auto hr = m_app->GetDevice()->CreateBuffer(
+		auto hr = GetApp()->GetDevice()->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
 			m_input.vertices.buffer.GetAddressOf()

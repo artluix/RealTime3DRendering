@@ -6,7 +6,7 @@
 
 namespace library
 {
-	BloomMaterial::BloomMaterial(const Effect& effect)
+	BloomMaterial::BloomMaterial(Effect& effect)
 		: PostProcessingMaterial(effect)
 		, m_bloomTexture(effect.GetVariable("BloomTexture"))
 		, m_bloomThreshold(effect.GetVariable("bloomThreshold"))

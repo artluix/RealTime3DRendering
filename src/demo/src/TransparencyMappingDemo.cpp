@@ -47,11 +47,11 @@ void TransparencyMappingDemo::Initialize(const Application& app)
 
 	// build vertices manually
 	{
-		using Vertex = TransparencyMappingMaterial::Vertex;
+		using Vertex = Material::Vertex;
 
 		const auto backward = DirectX::XMFLOAT3(math::Vector3::Backward);
 
-		std::array<Vertex, 6> vertices =
+		const std::array<Vertex, 6> vertices =
 		{
 			Vertex(DirectX::XMFLOAT4(-0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), backward),
 			Vertex(DirectX::XMFLOAT4(-0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f), backward),
@@ -217,11 +217,11 @@ void TransparencyMappingDemo::UpdateSpecularLight(const Time& time)
 void TransparencyMappingDemo::Draw_SetData()
 {
 	auto wvp = GetWorldMatrix();
-	if (auto camera = GetCamera())
+	if (!!m_camera)
 	{
-		wvp *= camera->GetViewProjectionMatrix();
+		wvp *= m_camera->GetViewProjectionMatrix();
 
-		m_material->GetCameraPosition() << camera->GetPosition();
+		m_material->GetCameraPosition() << m_camera->GetPosition();
 	}
 
 	m_material->GetAmbientColor() << m_ambientColor;
@@ -242,8 +242,8 @@ void TransparencyMappingDemo::Draw_SetData()
 
 void TransparencyMappingDemo::Draw_Render()
 {
-	auto deviceContext = m_app->GetDeviceContext();
-	auto renderer = m_app->GetRenderer();
+	auto deviceContext = GetApp()->GetDeviceContext();
+	auto renderer = GetApp()->GetRenderer();
 
 	renderer->SaveRenderState(RenderState::Blend);
 	deviceContext->OMSetBlendState(BlendStates::Alpha, 0, 0xFFFFFFFF);

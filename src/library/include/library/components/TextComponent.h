@@ -43,12 +43,14 @@ namespace library
 		void Update(const Time& time) override;
 		void Draw(const Time& time) override;
 
-	private:
+	protected:
 		TextUpdateFunction m_textUpdateFunction;
 
 		math::Vector2 m_position;
 		std::wstring m_text;
 		Color m_color;
+
+	private:
 		Path m_fontPath;
 		
 		std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;

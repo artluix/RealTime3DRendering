@@ -20,10 +20,14 @@ namespace library
 		virtual void Initialize(const Application& app);
 		virtual void Update(const Time& time) {}
 
+		const Application* GetApp() const { return m_app; }
+
 	protected:
 		explicit Component() = default;
 
-		const Application* m_app = nullptr;
 		bool m_enabled = true;
+
+	private:
+		const Application* m_app = nullptr;
 	};
 } // namespace library

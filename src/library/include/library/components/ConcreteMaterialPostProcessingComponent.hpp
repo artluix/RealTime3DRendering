@@ -16,6 +16,7 @@ namespace library
 		using Material = MaterialType;
 
 		const Material* GetMaterial() const override { return m_material.get(); }
+		const Effect* GetEffect() const override { return m_effect.get(); }
 
 	protected:
 		explicit ConcreteMaterialPostProcessingComponent() = default;
@@ -33,6 +34,7 @@ namespace library
 		}
 
 		Material* GetMaterial() override { return m_material.get(); }
+		Effect* GetEffect() override { return m_effect.get(); }
 
 		std::shared_ptr<Effect> m_effect;
 		std::unique_ptr<Material> m_material;

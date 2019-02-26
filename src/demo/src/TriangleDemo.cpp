@@ -133,7 +133,7 @@ void TriangleDemo::Initialize(const Application& app)
 
 		const float l = sqrt(3.f) / 2;
 
-		std::array<VertexPositionColor, 3> vertices =
+		const std::array<VertexPositionColor, 3> vertices =
 		{
 			// left red
 			VertexPositionColor(XMFLOAT4(-l, -0.5f, 0.0f, 1.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)),
@@ -182,8 +182,8 @@ unsigned TriangleDemo::GetVertexSize() const
 void TriangleDemo::Draw_SetData()
 {
 	auto wvp = GetWorldMatrix();
-	if (auto camera = GetCamera())
-		wvp *= camera->GetViewProjectionMatrix();
+	if (!!m_camera)
+		wvp *= m_camera->GetViewProjectionMatrix();
 
-	m_pass->Apply(0, m_app->GetDeviceContext());
+	m_pass->Apply(0, GetApp()->GetDeviceContext());
 }

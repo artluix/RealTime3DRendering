@@ -3,7 +3,7 @@
 
 namespace library
 {
-	std::map<library::rtti::TypeId, void*> ServiceContainer::s_services;
+	std::unordered_map<library::rtti::TypeId, void*> ServiceContainer::s_services;
 
 	void ServiceContainer::AddService(const rtti::TypeId typeId, void* const service)
 	{

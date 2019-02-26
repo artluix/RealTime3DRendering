@@ -6,7 +6,7 @@
 
 namespace library
 {
-	DiffuseLightingMaterial::DiffuseLightingMaterial(const Effect& effect)
+	DiffuseLightingMaterial::DiffuseLightingMaterial(Effect& effect)
 		: Material(effect, "main10")
 
 		, m_ambientColor(effect.GetVariable("ambientColor"))

@@ -6,7 +6,7 @@
 
 namespace library
 {
-	TextureMappingMaterial::TextureMappingMaterial(const Effect& effect)
+	TextureMappingMaterial::TextureMappingMaterial(Effect& effect)
 		: Material(effect, "main10")
 		, m_wvp(effect.GetVariable("wvp"))
 		, m_colorTexture(effect.GetVariable("ColorTexture"))

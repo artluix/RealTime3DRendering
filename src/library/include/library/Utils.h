@@ -11,7 +11,7 @@ namespace library::utils
 	Path GetCurrentDirectory();
 	Path GetExecutableDirectory();
 
-	void LoadBinaryFile(const Path& path, std::vector<byte>& data);
+	void LoadBinaryFile(const Path& path, std::vector<std::byte>& data);
 } // namespace library::utils
 
 //-------------------------------------------------------------------------

@@ -14,6 +14,7 @@ namespace library
 		using Material = MaterialType;
 
 		const Material* GetMaterial() const override { return m_material.get(); }
+		const Effect* GetEffect() const override { return m_effect.get(); }
 
 	protected:
 		explicit ConcreteMaterialSceneComponent() = default;
@@ -31,6 +32,7 @@ namespace library
 		}
 
 		Material* GetMaterial() override { return m_material.get(); }
+		Effect* GetEffect() override { return m_effect.get(); }
 		unsigned GetVertexSize() const override { return GetMaterial()->GetVertexSize(); }
 
 		std::shared_ptr<Effect> m_effect;

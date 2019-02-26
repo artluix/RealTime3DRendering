@@ -54,7 +54,7 @@ void BloomDemo::Update(const Time& time)
 {
 	if (!!m_keyboard && m_keyboard->WasKeyPressed(Key::Return))
 	{
-		SetDrawMode(BloomDrawModeNext(GetDrawMode()));
+		m_drawMode = BloomDrawModeNext(m_drawMode);
 	}
 
 	UpdateSettings(time);

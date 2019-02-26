@@ -2,7 +2,7 @@
 #include "library/NonConstructible.hpp"
 #include "library/RTTI.hpp"
 
-#include <map>
+#include <unordered_map>
 
 namespace library
 {
@@ -14,6 +14,6 @@ namespace library
 		static void* GetService(const rtti::TypeId typeId);
 
 	private:
-		static std::map<rtti::TypeId, void*> s_services;
+		static std::unordered_map<rtti::TypeId, void*> s_services;
 	};
 } // namespace library

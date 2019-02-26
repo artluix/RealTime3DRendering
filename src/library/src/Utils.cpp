@@ -31,7 +31,7 @@ namespace library::utils
 		return Path(buffer.data()).GetDirName();
 	}
 
-	void LoadBinaryFile(const Path& path, std::vector<byte>& data)
+	void LoadBinaryFile(const Path& path, std::vector<std::byte>& data)
 	{
 		std::ifstream file(path.GetWideString(), std::ios::binary);
 		if (file.bad())

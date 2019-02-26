@@ -27,8 +27,8 @@ namespace library
 		void InitializeSampleOffsets();
 		void InitializeSampleWeights();
 
-		void UpdateHorizontalOffsets();
-		void UpdateVerticalOffsets();
+		void UpdateHorizontalOffsets(Material& material) const;
+		void UpdateVerticalOffsets(Material& material) const;
 
 		float GetWeight(const float x);
 

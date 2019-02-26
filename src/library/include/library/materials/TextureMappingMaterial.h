@@ -11,11 +11,11 @@ namespace library
 	public:
 		using Vertex = VertexPositionTexture;
 
-		explicit TextureMappingMaterial(const Effect& effect);
+		explicit TextureMappingMaterial(Effect& effect);
 		~TextureMappingMaterial();
 
-		EffectVariable& GetWVP() const { return m_wvp; }
-		EffectVariable& GetColorTexture() const { return m_colorTexture; }
+		EffectVariable& GetWVP() { return m_wvp; }
+		EffectVariable& GetColorTexture() { return m_colorTexture; }
 
 		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }

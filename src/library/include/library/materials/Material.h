@@ -1,8 +1,8 @@
 #pragma once
 #include "library/CommonTypes.h"
-#include "library/DirectXForwardDeclarations.h"
 #include "library/RTTI.hpp"
 #include "library/NonCopyable.hpp"
+#include "library/DirectXForwardDeclarations.h"
 
 #include <string>
 #include <map>
@@ -16,6 +16,7 @@ namespace library
 {
 	class Model;
 	class Mesh;
+
 	class Effect;
 	class EffectVariable;
 	class EffectTechnique;
@@ -26,7 +27,7 @@ namespace library
 		RTTI_CLASS_BASE(Material)
 
 	public:
-		explicit Material(const Effect& effect, const std::string& defaultTechniqueName = "");
+		explicit Material(Effect& effect, const std::string& defaultTechniqueName = "");
 		virtual ~Material() = default;
 
 		static ComPtr<ID3D11Buffer> CreateVertexBuffer(
@@ -35,7 +36,7 @@ namespace library
 			const std::size_t size
 		);
 
-		EffectVariable& operator[](const std::string& variableName) const;
+		EffectVariable& operator[](const std::string& variableName);
 		const Effect& GetEffect() const { return m_effect; }
 
 		const EffectTechnique& GetCurrentTechnique() const { return m_currentTechnique; }
@@ -51,10 +52,12 @@ namespace library
 			ID3D11Device* const device,
 			const Model& model
 		) const;
+
 		virtual ComPtr<ID3D11Buffer> CreateVertexBuffer(
 			ID3D11Device* const device,
 			const Mesh& mesh
 		) const = 0;
+
 		virtual unsigned GetVertexSize() const = 0;
 
 	protected:
@@ -71,13 +74,14 @@ namespace library
 
 		virtual void InitializeInternal() = 0;
 
-		const Effect& m_effect;
+		Effect& m_effect;
 
-		std::reference_wrapper<const EffectTechnique> m_currentTechnique;
 		std::string m_defaultTechniqueName;
-
-		bool m_isInitialized = false;
+		std::reference_wrapper<const EffectTechnique> m_currentTechnique;
 
 		std::map<const EffectPass*, ComPtr<ID3D11InputLayout>> m_inputLayouts;
+
+	private:
+		bool m_isInitialized = false;
 	};
 } // namespace library

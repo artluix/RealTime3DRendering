@@ -8,9 +8,11 @@
 #include "library/effect/EffectTechnique.h"
 #include "library/effect/EffectVariable.h"
 
+#include "library/Logger.h"
+
 namespace library
 {
-	std::map<std::string, std::weak_ptr<Effect>> Effect::s_effects;
+	std::map<std::string, Effect::WeakPtr> Effect::s_effectsCache;
 
 	Effect::Effect(const Application& app, const std::string& name)
 		: m_app(app)
@@ -18,19 +20,23 @@ namespace library
 	{
 	}
 
-	EffectPtr Effect::Create(
+	Effect::~Effect() = default;
+
+	//-------------------------------------------------------------------------
+
+	Effect::SharedPtr Effect::Create(
 		const Application& app,
 		const std::string& effectName,
 		const bool compile /* = false */
 	)
 	{
-		auto it = s_effects.find(effectName);
-		if (it != s_effects.end())
+		auto it = s_effectsCache.find(effectName);
+		if (it != s_effectsCache.end())
 			if (auto effect = it->second.lock())
 					return effect;
 
-		auto effect = EffectPtr(new Effect(app, effectName));
-		s_effects.emplace(effectName, effect);
+		auto effect = SharedPtr(new Effect(app, effectName));
+		s_effectsCache.emplace(effectName, effect);
 
 		if (compile)
 			effect->Compile();
@@ -40,11 +46,10 @@ namespace library
 		return effect;
 	}
 
-	Effect::~Effect() = default;
 
 	void Effect::ClearAll()
 	{
-		s_effects.clear();
+		s_effectsCache.clear();
 	}
 
 	//-------------------------------------------------------------------------
@@ -104,7 +109,7 @@ namespace library
 		m_path += Path(m_name + ".fxc");
 #endif
 
-		std::vector<library::byte> effectData;
+		std::vector<std::byte> effectData;
 		utils::LoadBinaryFile(m_path, effectData);
 		if (effectData.empty())
 		{
@@ -129,24 +134,59 @@ namespace library
 
 	void Effect::SetEffect(const ComPtr<ID3DX11Effect>& effect)
 	{
-		if (m_effect != effect)
-			m_effect = effect;
+		//m_techniquesMap.clear();
+		m_techniquesIndexMap.clear();
+		m_techniques.clear();
+
+		//m_variablesMap.clear();
+		m_variablesIndexMap.clear();
+		m_variables.clear();
+
+		m_isInitialized = false;
+
+		m_effect = effect;
+
+		Initialize();
 	}
 
 	//-------------------------------------------------------------------------
 
 	bool Effect::HasTechnique(const std::string& techniqueName) const
 	{
-		return m_techniquesMap.find(techniqueName) != m_techniquesMap.end();
+		//return m_techniquesIndexMap.find(techniqueName) != m_techniquesIndexMap.end();
+
+		if (m_techniquesIndexMap.find(techniqueName) == m_techniquesIndexMap.end())
+		{
+			Logger::Error("Effect: %s\nTechnique not found: %s", m_name.c_str(), techniqueName.c_str());
+			return false;
+		}
+
+		return true;
 	}
 
-	EffectTechnique& Effect::GetTechnique(const std::string& techniqueName) const
+	//-------------------------------------------------------------------------
+
+	const Effect::Technique& Effect::GetTechnique(const std::string& techniqueName) const
 	{
 		assert(HasTechnique(techniqueName));
-		return *m_techniquesMap.at(techniqueName);
+		return GetTechnique(m_techniquesIndexMap.at(techniqueName));
 	}
 
-	EffectTechnique& Effect::GetTechnique(const unsigned techniqueIdx) const
+	Effect::Technique& Effect::GetTechnique(const std::string& techniqueName)
+	{
+		assert(HasTechnique(techniqueName));
+		return GetTechnique(m_techniquesIndexMap.at(techniqueName));
+	}
+
+	//-------------------------------------------------------------------------
+
+	const Effect::Technique& Effect::GetTechnique(const unsigned techniqueIdx) const
+	{
+		assert(techniqueIdx < m_techniques.size());
+		return *m_techniques[techniqueIdx];
+	}
+
+	Effect::Technique& Effect::GetTechnique(const unsigned techniqueIdx)
 	{
 		assert(techniqueIdx < m_techniques.size());
 		return *m_techniques[techniqueIdx];
@@ -156,16 +196,30 @@ namespace library
 
 	bool Effect::HasVariable(const std::string& variableName) const
 	{
-		return m_variablesMap.find(variableName) != m_variablesMap.end();
+		return m_variablesIndexMap.find(variableName) != m_variablesIndexMap.end();
 	}
 
-	EffectVariable& Effect::GetVariable(const std::string& variableName) const
+	const Effect::Variable& Effect::GetVariable(const std::string& variableName) const
 	{
 		assert(HasVariable(variableName));
-		return *m_variablesMap.at(variableName);
+		return GetVariable(m_variablesIndexMap.at(variableName));
 	}
 
-	EffectVariable& Effect::GetVariable(const unsigned variableIdx) const
+	Effect::Variable& Effect::GetVariable(const std::string& variableName)
+	{
+		assert(HasVariable(variableName));
+		return GetVariable(m_variablesIndexMap.at(variableName));
+	}
+
+	//-------------------------------------------------------------------------
+
+	const Effect::Variable& Effect::GetVariable(const unsigned variableIdx) const
+	{
+		assert(variableIdx < m_variables.size());
+		return *m_variables[variableIdx];
+	}
+
+	Effect::Variable& Effect::GetVariable(const unsigned variableIdx)
 	{
 		assert(variableIdx < m_variables.size());
 		return *m_variables[variableIdx];
@@ -186,19 +240,21 @@ namespace library
 
 		for (unsigned i = 0; i < m_effectDesc.Techniques; i++)
 		{
-			auto technique = std::make_unique<EffectTechnique>(
+			auto technique = std::make_unique<Technique>(
 				m_app,
 				*this,
 				m_effect->GetTechniqueByIndex(i)
 			);
-			m_techniquesMap.emplace(technique->GetName(), technique.get());
+
+			m_techniquesIndexMap.emplace(technique->GetName(), i);
 			m_techniques.push_back(std::move(technique));
 		}
 
 		for (unsigned i = 0; i < m_effectDesc.GlobalVariables; i++)
 		{
-			auto variable = std::make_unique<EffectVariable>(*this, m_effect->GetVariableByIndex(i));
-			m_variablesMap.emplace(variable->GetName(), variable.get());
+			auto variable = std::make_unique<Variable>(*this, m_effect->GetVariableByIndex(i));
+
+			m_variablesIndexMap.emplace(variable->GetName(), i);
 			m_variables.push_back(std::move(variable));
 		}
 

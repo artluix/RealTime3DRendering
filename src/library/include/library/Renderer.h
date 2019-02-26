@@ -5,6 +5,7 @@
 
 #include <vector>
 #include <functional>
+#include <array>
 
 namespace library
 {

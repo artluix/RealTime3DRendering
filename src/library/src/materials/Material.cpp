@@ -13,29 +13,26 @@
 
 namespace library
 {
-	Material::Material(const Effect& effect, const std::string& defaultTechniqueName /* = ""*/)
+	Material::Material(Effect& effect, const std::string& defaultTechniqueName /* = ""*/)
 		: m_effect(effect)
 		, m_defaultTechniqueName(defaultTechniqueName)
 		, m_currentTechnique(
 			!defaultTechniqueName.empty() ?
-			effect.GetTechnique(0) :
-			effect.GetTechnique(defaultTechniqueName)
+			effect.GetTechnique(defaultTechniqueName) :
+			effect.GetTechnique(0)
 		)
 	{
 		assert(effect.IsInitialized());
 	}
 
-	EffectVariable& Material::operator[](const std::string& variableName) const
+	EffectVariable& Material::operator[](const std::string& variableName)
 	{
 		return m_effect.GetVariable(variableName);
 	}
 
 	void Material::SetCurrentTechnique(const EffectTechnique& technique)
 	{
-		if (&m_currentTechnique.get() != &technique)
-		{
-			m_currentTechnique = technique;
-		}
+		m_currentTechnique = technique;
 	}
 
 	//-------------------------------------------------------------------------

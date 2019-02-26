@@ -7,7 +7,7 @@
 
 namespace library
 {
-	SkyboxMaterial::SkyboxMaterial(const Effect& effect)
+	SkyboxMaterial::SkyboxMaterial(Effect& effect)
 		: Material(effect, "main11")
 		, m_worldViewProjection(effect.GetVariable("WorldViewProjection"))
 		, m_skyboxTexture(effect.GetVariable("SkyboxTexture"))

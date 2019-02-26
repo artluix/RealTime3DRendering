@@ -10,12 +10,12 @@ namespace library::math
 	// Vector2
 	//-------------------------------------------------------------------------
 
-	XMVector Vector<2>::Load(const Vector & vector)
+	XMVector Vector<2>::Load(const Vector& vector)
 	{
 		return vector.Load();
 	}
 
-	Vector<2> Vector<2>::Store(const XMVector & xmVector)
+	Vector<2> Vector<2>::Store(const XMVector& xmVector)
 	{
 		DirectX::XMFLOAT2 xmFloat2;
 		DirectX::XMStoreFloat2(&xmFloat2, xmVector);
@@ -49,6 +49,11 @@ namespace library::math
 
 	//-------------------------------------------------------------------------
 
+	float Vector<2>::Dot(const Vector<2>& vector) const
+	{
+		return DirectX::XMVectorGetX(DirectX::XMVector2Dot(Load(), vector.Load()));
+	}
+
 	Vector<2> Vector<2>::Cross(const Vector<2>& vector) const
 	{
 		return Store(DirectX::XMVector2Cross(Load(), vector.Load()));
@@ -62,6 +67,11 @@ namespace library::math
 	float Vector<2>::Length() const
 	{
 		return DirectX::XMVectorGetX(DirectX::XMVector2Length(Load()));
+	}
+
+	float Vector<2>::LengthSq() const
+	{
+		return DirectX::XMVectorGetX(DirectX::XMVector2LengthSq(Load()));
 	}
 
 	//-------------------------------------------------------------------------
@@ -158,6 +168,16 @@ namespace library::math
 		return DirectX::XMVectorGetX(DirectX::XMVector3Length(Load()));
 	}
 
+	float Vector<3>::LengthSq() const
+	{
+		return DirectX::XMVectorGetX(DirectX::XMVector3LengthSq(Load()));
+	}
+
+	float Vector<3>::Dot(const Vector<3>& vector) const
+	{
+		return DirectX::XMVectorGetX(DirectX::XMVector3Dot(Load(), vector.Load()));
+	}
+
 	Vector<3> Vector<3>::Cross(const Vector<3>& vector) const
 	{
 		return Store(DirectX::XMVector3Cross(Load(), vector.Load()));
@@ -238,6 +258,11 @@ namespace library::math
 
 	//-------------------------------------------------------------------------
 
+	float Vector<4>::Dot(const Vector<4>& vector) const
+	{
+		return DirectX::XMVectorGetX(DirectX::XMVector4Dot(Load(), vector.Load()));
+	}
+
 	Vector<4> Vector<4>::Cross(const Vector<4>& vector1, const Vector<4>& vector2) const
 	{
 		return Store(DirectX::XMVector4Cross(Load(), vector1.Load(), vector2.Load()));
@@ -251,6 +276,11 @@ namespace library::math
 	float Vector<4>::Length() const
 	{
 		return DirectX::XMVectorGetX(DirectX::XMVector4Length(Load()));
+	}
+
+	float Vector<4>::LengthSq() const
+	{
+		return DirectX::XMVectorGetX(DirectX::XMVector4LengthSq(Load()));
 	}
 
 	Vector<4> Vector<4>::Transform(const Matrix4& matrix) const

@@ -15,7 +15,6 @@ namespace library
 	protected:
 		explicit LightComponent(const Color& color = Color::White);
 
-	private:
 		Color m_color;
 	};
 } // namespace library

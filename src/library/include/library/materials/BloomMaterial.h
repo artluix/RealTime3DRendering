@@ -8,16 +8,16 @@ namespace library
 		RTTI_CLASS(BloomMaterial, PostProcessingMaterial)
 
 	public:
-		explicit BloomMaterial(const Effect& effect);
+		explicit BloomMaterial(Effect& effect);
 		~BloomMaterial();
 
-		EffectVariable& GetBloomTexture() const { return m_bloomTexture; }
-		EffectVariable& GetBloomThreshold() const { return m_bloomThreshold; }
-		EffectVariable& GetBloomIntensity() const { return m_bloomIntensity; }
-		EffectVariable& GetBloomSaturation() const { return m_bloomSaturation; }
+		EffectVariable& GetBloomTexture() { return m_bloomTexture; }
+		EffectVariable& GetBloomThreshold() { return m_bloomThreshold; }
+		EffectVariable& GetBloomIntensity() { return m_bloomIntensity; }
+		EffectVariable& GetBloomSaturation() { return m_bloomSaturation; }
 
-		EffectVariable& GetSceneIntensity() const { return m_sceneIntensity; }
-		EffectVariable& GetSceneSaturation() const { return m_sceneSaturation; }
+		EffectVariable& GetSceneIntensity() { return m_sceneIntensity; }
+		EffectVariable& GetSceneSaturation() { return m_sceneSaturation; }
 
 	private:
 		EffectVariable& m_bloomTexture;

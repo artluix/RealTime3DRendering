@@ -20,6 +20,8 @@ namespace library
 
 		void Transform(const math::Matrix4&) = delete;
 		math::Vector4 Cross(const math::Vector4&) = delete;
+		math::Vector4 Dot(const math::Vector4&) = delete;
+		float LengthSq() = delete;
 
 		static const Color White;
 		static const Color Black;

@@ -30,7 +30,7 @@ namespace library
 
 		static constexpr Type FromAiTextureType(const aiTextureType aiTt);
 		static constexpr aiTextureType ToAiTextureType(const Type t);
-		static constexpr std::array<Type, Count> Values();
+		static constexpr std::array<Type, Count> GetValues();
 	};
 
 	//-------------------------------------------------------------------------

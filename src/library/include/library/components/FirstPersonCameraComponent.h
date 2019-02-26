@@ -33,10 +33,11 @@ namespace library
 		void Update(const Time& time) override;
 
 	protected:
-		math::Vector2 m_rotationStartPoint;
-
 		float m_mouseSensitivity;
 		float m_rotationRate;
 		float m_movementRate;
+
+	private:
+		math::Vector2 m_rotationStartPoint;
 	};
 } // namespace library

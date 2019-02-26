@@ -12,7 +12,7 @@ namespace library
 		explicit Path() = default;
 		explicit Path(const std::string& s);
 		explicit Path(std::string&& s);
-		
+
 		const std::string& GetString() const { return m_string; }
 		const char* GetCString() const { return m_string.c_str(); }
 
@@ -22,14 +22,14 @@ namespace library
 		Path GetBaseName() const;
 		Path GetDirName() const;
 
-		Tuple2<Path> Split() const;
+		Pair<Path> Split() const;
 
 		Path& Join(const Path& other);
 		Path& Join(const std::vector<Path>& paths);
 		Path Join(const Path& other) const;
 		Path Join(const std::vector<Path>& paths) const;
 
-		Tuple2<Path> SplitExt() const;
+		Pair<Path> SplitExt() const;
 		Path GetExt() const;
 
 		Path& operator += (const Path& p);

@@ -4,7 +4,8 @@
 #include "library/Path.h"
 #include "library/Utils.h"
 #include "library/Exception.h"
-#include "library/components/DrawableComponent.h"
+
+#include "library/components/Component.h"
 
 #include "library/effect/Effect.h"
 
@@ -151,7 +152,7 @@ namespace library
 
 		const auto texturePath = GetTexturesPath() + Path(textureName + ".dds");
 
-		std::vector<library::byte> textureData;
+		std::vector<std::byte> textureData;
 		utils::LoadBinaryFile(texturePath, textureData);
 		if (textureData.empty())
 		{
@@ -477,9 +478,9 @@ namespace library
 		if (!!m_deviceContext)
 		{
 			m_deviceContext->ClearState();
+			m_deviceContext.Reset();
 		}
 
-		m_deviceContext.Reset();
 		m_device.Reset();
 
 		UnregisterClass(m_windowClass.c_str(), m_instanceHandle);

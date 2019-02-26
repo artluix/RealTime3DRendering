@@ -22,10 +22,7 @@ namespace library
 
 	void PointLightComponent::SetPosition(const math::Vector3& position)
 	{
-		if (m_position != position)
-		{
-			m_position = position;
-		}
+		m_position = position;
 	}
 
 	void PointLightComponent::SetRadius(const float radius)

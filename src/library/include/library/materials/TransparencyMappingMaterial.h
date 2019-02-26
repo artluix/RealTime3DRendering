@@ -11,25 +11,25 @@ namespace library
 	public:
 		using Vertex = VertexPositionTextureNormal;
 
-		explicit TransparencyMappingMaterial(const Effect& effect);
+		explicit TransparencyMappingMaterial(Effect& effect);
 		~TransparencyMappingMaterial();
 
-		EffectVariable& GetAmbientColor() const { return m_ambientColor; }
-		EffectVariable& GetLightColor() const { return m_lightColor; }
-		EffectVariable& GetLightPosition() const { return m_lightPosition; }
-		EffectVariable& GetLightRadius() const { return m_lightRadius; }
-		EffectVariable& GetFogColor() const { return m_fogColor; }
-		EffectVariable& GetFogStart() const { return m_fogStart; }
-		EffectVariable& GetFogRange() const { return m_fogRange; }
-		EffectVariable& GetCameraPosition() const { return m_cameraPosition; }
+		EffectVariable& GetAmbientColor() { return m_ambientColor; }
+		EffectVariable& GetLightColor() { return m_lightColor; }
+		EffectVariable& GetLightPosition() { return m_lightPosition; }
+		EffectVariable& GetLightRadius() { return m_lightRadius; }
+		EffectVariable& GetFogColor() { return m_fogColor; }
+		EffectVariable& GetFogStart() { return m_fogStart; }
+		EffectVariable& GetFogRange() { return m_fogRange; }
+		EffectVariable& GetCameraPosition() { return m_cameraPosition; }
 
-		EffectVariable& GetWVP() const { return m_wvp; }
-		EffectVariable& GetWorld() const { return m_world; }
-		EffectVariable& GetSpecularColor() const { return m_specularColor; }
-		EffectVariable& GetSpecularPower() const { return m_specularPower; }
+		EffectVariable& GetWVP() { return m_wvp; }
+		EffectVariable& GetWorld() { return m_world; }
+		EffectVariable& GetSpecularColor() { return m_specularColor; }
+		EffectVariable& GetSpecularPower() { return m_specularPower; }
 
-		EffectVariable& GetColorTexture() const { return m_colorTexture; }
-		EffectVariable& GetTransparencyMap() const { return m_transparencyMap; }
+		EffectVariable& GetColorTexture() { return m_colorTexture; }
+		EffectVariable& GetTransparencyMap() { return m_transparencyMap; }
 
 		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }

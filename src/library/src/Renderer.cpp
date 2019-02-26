@@ -3,10 +3,8 @@
 
 #include "library/components/TextComponent.h"
 #include "library/components/SceneComponent.h"
-#include "library/components/SceneComponent.h"
 
 #include "library/effect/Effect.h"
-#include "library/materials/Material.h"
 
 #include "library/Application.h"
 #include "library/Time.h"
@@ -80,9 +78,9 @@ namespace library
 	{
 		auto effectComp = [](const SceneComponent& lhs, const SceneComponent& rhs)
 		{
-			if (const auto lhsMat = lhs.GetMaterial())
-				if (const auto rhsMat = rhs.GetMaterial())
-					return lhsMat->GetEffect().GetName() < rhsMat->GetEffect().GetName();
+			if (const auto lhsEffect = lhs.GetEffect())
+				if (const auto rhsEffect = rhs.GetEffect())
+					return lhsEffect->GetName() < rhsEffect->GetName();
 
 			return false;
 		};

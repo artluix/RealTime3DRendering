@@ -79,8 +79,8 @@ void TextureMappingDemo::Update(const Time& time)
 void TextureMappingDemo::Draw_SetData()
 {
 	auto wvp = GetWorldMatrix();
-	if (auto camera = GetCamera())
-		wvp *= camera->GetViewProjectionMatrix();
+	if (!!m_camera)
+		wvp *= m_camera->GetViewProjectionMatrix();
 	m_material->GetWVP() << wvp;
 
 	m_material->GetColorTexture() << GetTexture();

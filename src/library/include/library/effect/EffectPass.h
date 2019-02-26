@@ -23,7 +23,7 @@ namespace library
 		);
 		~EffectPass();
 
-		const EffectTechnique& GetTechnique() { return m_technique; }
+		const EffectTechnique& GetTechnique() const { return m_technique; }
 		const std::string& GetName() const { return m_name; }
 
 		ID3DX11EffectPass* GetPass() const { return m_pass; }

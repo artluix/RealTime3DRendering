@@ -112,27 +112,27 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void BloomComponent::UpdateExtractMaterial()
+	void BloomComponent::UpdateExtractMaterial(Material& material) const
 	{
-		m_material->GetSceneTexture() << GetSceneTexture();
-		m_material->GetBloomThreshold() << m_settings.bloomThreshold;
+		material.GetSceneTexture() << GetSceneTexture();
+		material.GetBloomThreshold() << m_settings.bloomThreshold;
 	}
 
-	void BloomComponent::UpdateCompositeMaterial()
+	void BloomComponent::UpdateCompositeMaterial(Material& material) const
 	{
-		m_material->GetSceneTexture() << GetSceneTexture();
-		m_material->GetBloomTexture() << m_gaussianBlur->GetOutputTexture();
-		m_material->GetBloomIntensity() << m_settings.bloomIntensity;
-		m_material->GetBloomSaturation() << m_settings.bloomSaturation;
-		m_material->GetSceneIntensity() << m_settings.sceneIntensity;
-		m_material->GetSceneSaturation() << m_settings.sceneSaturation;
+		material.GetSceneTexture() << GetSceneTexture();
+		material.GetBloomTexture() << m_gaussianBlur->GetOutputTexture();
+		material.GetBloomIntensity() << m_settings.bloomIntensity;
+		material.GetBloomSaturation() << m_settings.bloomSaturation;
+		material.GetSceneIntensity() << m_settings.sceneIntensity;
+		material.GetSceneSaturation() << m_settings.sceneSaturation;
 	}
 
 	//-------------------------------------------------------------------------
 	
 	void BloomComponent::DrawNormal(const Time& time)
 	{
-		auto deviceContext = m_app->GetDeviceContext();
+		auto deviceContext = GetApp()->GetDeviceContext();
 
 		// Extract bright spots in the scene
 		m_renderTarget->Begin();
@@ -147,34 +147,40 @@ namespace library
 			1.0f, 0
 		);
 
-		m_fullScreenQuad->SetMaterial(*m_material, "bloom_extract", "p0");
-		m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&BloomComponent::UpdateExtractMaterial, this));
+		m_fullScreenQuad->SetActiveTechnique("bloom_extract", "p0");
+		m_fullScreenQuad->SetMaterialUpdateFunction(
+			std::bind(&BloomComponent::UpdateExtractMaterial, this, std::ref(*m_material))
+		);
 		m_fullScreenQuad->Draw(time);
 
 		m_renderTarget->End();
-		m_app->UnbindPixelShaderResources(0, 1);
+		GetApp()->UnbindPixelShaderResources(0, 1);
 
 		// Blur the bright spots in the scene
 		m_gaussianBlur->DrawToTexture(time);
-		m_app->UnbindPixelShaderResources(0, 1);
+		GetApp()->UnbindPixelShaderResources(0, 1);
 
 		// Combine the original scene with the blurred bright spot image
-		m_fullScreenQuad->SetMaterial(*m_material, "bloom_composite", "p0");
-		m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&BloomComponent::UpdateCompositeMaterial, this));
+		m_fullScreenQuad->SetActiveTechnique("bloom_composite", "p0");
+		m_fullScreenQuad->SetMaterialUpdateFunction(
+			std::bind(&BloomComponent::UpdateCompositeMaterial, this, std::ref(*m_material))
+		);
 		m_fullScreenQuad->Draw(time);
-		m_app->UnbindPixelShaderResources(0, 1);
+		GetApp()->UnbindPixelShaderResources(0, 1);
 	}
 
 	void BloomComponent::DrawExtractedTexture(const Time& time)
 	{
-		m_fullScreenQuad->SetMaterial(*m_material, "bloom_extract", "p0");
-		m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&BloomComponent::UpdateExtractMaterial, this));
+		m_fullScreenQuad->SetActiveTechnique("bloom_extract", "p0");
+		m_fullScreenQuad->SetMaterialUpdateFunction(
+			std::bind(&BloomComponent::UpdateExtractMaterial, this, std::ref(*m_material))
+		);
 		m_fullScreenQuad->Draw(time);
 	}
 
 	void BloomComponent::DrawBlurredTexture(const Time& time)
 	{
-		auto deviceContext = m_app->GetDeviceContext();
+		auto deviceContext = GetApp()->GetDeviceContext();
 
 		// Extract bright spots in the scene
 		m_renderTarget->Begin();
@@ -189,13 +195,15 @@ namespace library
 			1.0f, 0
 		);
 		
-		m_fullScreenQuad->SetMaterial(*m_material, "bloom_extract", "p0");
-		m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&BloomComponent::UpdateExtractMaterial, this));
+		m_fullScreenQuad->SetActiveTechnique("bloom_extract", "p0");
+		m_fullScreenQuad->SetMaterialUpdateFunction(
+			std::bind(&BloomComponent::UpdateExtractMaterial, this, std::ref(*m_material))
+		);
 		m_fullScreenQuad->Draw(time);
 
 		m_renderTarget->End();
 
-		m_app->UnbindPixelShaderResources(0, 1);
+		GetApp()->UnbindPixelShaderResources(0, 1);
 
 		m_gaussianBlur->Draw(time);
 	}

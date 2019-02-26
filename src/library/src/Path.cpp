@@ -11,6 +11,8 @@ namespace library
 		constexpr char k_badSep = '\\';
 	}
 
+	//-------------------------------------------------------------------------
+
 	Path::Path(const std::string& s)
 		: m_string(s)
 	{
@@ -25,33 +27,33 @@ namespace library
 
 	Path Path::GetBaseName() const
 	{
-		return Split()[1];
+		return Split().second;
 	}
 
 	Path Path::GetDirName() const
 	{
-		return Split()[0];
+		return Split().first;
 	}
 
-	Tuple2<Path> Path::Split() const
+	Pair<Path> Path::Split() const
 	{
 		if (m_string.empty())
-			return {};
+			return Pair<Path>();
 
 		const auto lastSlashIdx = m_string.find_last_of('/');
 		if (lastSlashIdx != std::string::npos)
 		{
-			Tuple2<Path> result;
-			result[0] = Path(m_string.substr(0, lastSlashIdx));
+			Pair<Path> result;
+			result.first = Path(m_string.substr(0, lastSlashIdx));
 
 			if (lastSlashIdx < m_string.length() - 1)
-				result[1] = Path(m_string.substr(lastSlashIdx + 1));
+				result.second = Path(m_string.substr(lastSlashIdx + 1));
 
 			return result;
 		}
 		else
 		{
-			return { *this, };
+			return Pair<Path>(*this, Path());
 		}
 	}
 
@@ -59,16 +61,19 @@ namespace library
 
 	Path& Path::Join(const Path& other)
 	{
+		if (!other)
+			return *this;
+
 		const auto& otherString = other.GetString();
 
-		const bool haveEndSlash = (m_string.back() == '/');
-		const bool haveStartSlash = (otherString.front() == '/');
+		const bool hasEndSlash = (m_string.back() == '/');
+		const bool hasStartSlash = (otherString.front() == '/');
 
-		if (haveStartSlash && haveEndSlash)
+		if (hasStartSlash && hasEndSlash)
 		{
 			m_string.pop_back();
 		}
-		else if (!haveStartSlash && !haveEndSlash)
+		else if (!hasStartSlash && !hasEndSlash)
 		{
 			m_string += '/';
 		}
@@ -109,31 +114,31 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	Tuple2<Path> Path::SplitExt() const
+	Pair<Path> Path::SplitExt() const
 	{
 		if (m_string.empty())
-			return {};
+			return Pair<Path>();
 
 		const auto lastDotIdx = m_string.find_last_of('.');
 		if (lastDotIdx != std::string::npos)
 		{
-			Tuple2<Path> result;
-			result[0] = Path(m_string.substr(0, lastDotIdx));
+			Pair<Path> result;
+			result.first = Path(m_string.substr(0, lastDotIdx));
 
 			if (lastDotIdx < m_string.length() - 1)
-				result[1] = Path(m_string.substr(lastDotIdx + 1));
+				result.second = Path(m_string.substr(lastDotIdx + 1));
 
 			return result;
 		}
 		else
 		{
-			return { *this, };
+			return Pair<Path>(*this, Path());
 		}
 	}
 
 	Path Path::GetExt() const
 	{
-		return SplitExt()[1];
+		return SplitExt().second;
 	}
 
 	//-------------------------------------------------------------------------

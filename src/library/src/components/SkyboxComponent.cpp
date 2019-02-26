@@ -24,9 +24,9 @@ namespace library
 
 	void SkyboxComponent::Update(const Time& time)
 	{
-		if (auto camera = GetCamera())
+		if (!!m_camera)
 		{
-			const auto& position = camera->GetPosition();
+			const auto& position = m_camera->GetPosition();
 			SetPosition(position);
 		}
 
@@ -36,8 +36,8 @@ namespace library
 	void SkyboxComponent::Draw_SetData()
 	{
 		auto wvp = GetWorldMatrix();
-		if (auto camera = GetCamera())
-			wvp *= camera->GetViewProjectionMatrix();
+		if (!!m_camera)
+			wvp *= m_camera->GetViewProjectionMatrix();
 
 		m_material->GetWorldViewProjection() << wvp;
 		m_material->GetSkyboxTexture() << GetTexture();

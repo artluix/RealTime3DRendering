@@ -55,7 +55,7 @@ void NormalMappingDemo::Initialize(const Application& app)
 		const auto right = DirectX::XMFLOAT3(math::Vector3::Right);
 		const auto backward = DirectX::XMFLOAT3(math::Vector3::Backward);
 
-		std::array<Vertex, 6> vertices =
+		const std::array<Vertex, 6> vertices =
 		{
 			Vertex(XMFLOAT4(-0.5f, -0.5f, 0.0f, 1.0f), XMFLOAT2(0.0f, 1.0f), backward, right),
 			Vertex(XMFLOAT4(-0.5f, 0.5f, 0.0f, 1.0f), XMFLOAT2(0.0f, 0.0f), backward, right),
@@ -224,11 +224,11 @@ void NormalMappingDemo::UpdateSpecularLight(const Time& time)
 void NormalMappingDemo::Draw_SetData()
 {
 	auto wvp = GetWorldMatrix();
-	if (auto camera = GetCamera())
+	if (!!m_camera)
 	{
-		wvp *= camera->GetViewProjectionMatrix();
+		wvp *= m_camera->GetViewProjectionMatrix();
 
-		m_material->GetCameraPosition() << camera->GetPosition();
+		m_material->GetCameraPosition() << m_camera->GetPosition();
 	}
 
 	m_material->GetWVP() << wvp;

@@ -11,21 +11,21 @@ namespace library
 	public:
 		using Vertex = VertexPositionTextureNormal;
 
-		explicit PointLightMaterial(const Effect& effect);
+		explicit PointLightMaterial(Effect& effect);
 		~PointLightMaterial();
 
-		EffectVariable& GetAmbientColor() const { return m_ambientColor; }
-		EffectVariable& GetLightColor() const { return m_lightColor; }
-		EffectVariable& GetLightPosition() const { return m_lightPosition; }
-		EffectVariable& GetLightRadius() const { return m_lightRadius; }
-		EffectVariable& GetCameraPosition() const { return m_cameraPosition; }
+		EffectVariable& GetAmbientColor() { return m_ambientColor; }
+		EffectVariable& GetLightColor() { return m_lightColor; }
+		EffectVariable& GetLightPosition() { return m_lightPosition; }
+		EffectVariable& GetLightRadius() { return m_lightRadius; }
+		EffectVariable& GetCameraPosition() { return m_cameraPosition; }
 
-		EffectVariable& GetWVP() const { return m_wvp; }
-		EffectVariable& GetWorld() const { return m_world; }
-		EffectVariable& GetSpecularPower() const { return m_specularPower; }
-		EffectVariable& GetSpecularColor() const { return m_specularColor; }
+		EffectVariable& GetWVP() { return m_wvp; }
+		EffectVariable& GetWorld() { return m_world; }
+		EffectVariable& GetSpecularPower() { return m_specularPower; }
+		EffectVariable& GetSpecularColor() { return m_specularColor; }
 
-		EffectVariable& GetColorTexture() const { return m_colorTexture; }
+		EffectVariable& GetColorTexture() { return m_colorTexture; }
 
 		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }

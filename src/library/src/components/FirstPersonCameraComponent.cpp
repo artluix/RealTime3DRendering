@@ -76,13 +76,12 @@ namespace library
 
 				const auto rotation = rotationDelta * m_rotationRate * elapsedTime;
 
-				const auto pitchMatrix = math::Matrix4::RotationAxis(m_right, rotation.y);
+				const auto pitchMatrix = math::Matrix4::RotationAxis(GetRight(), rotation.y);
 				const auto yawMatrix = math::Matrix4::RotationY(rotation.x);
 
 				ApplyRotation(pitchMatrix * yawMatrix);
 			}
 		}
-
 
 		// compute movement
 		if (!!m_keyboard)
@@ -112,12 +111,12 @@ namespace library
 			if (movementAmount)
 			{
 				const auto movement = movementAmount * m_movementRate * elapsedTime;
-				auto position = m_position;
+				auto position = GetPosition();
 
-				const auto strafe = m_right * movement.x;
+				const auto strafe = GetRight() * movement.x;
 				position += strafe;
 
-				const auto forward = m_direction * movement.y;
+				const auto forward = GetDirection() * movement.y;
 				position += forward;
 
 				SetPosition(position);

@@ -16,7 +16,6 @@
 #include <d3dx11effect.h>
 
 using namespace library;
-using library::byte;
 
 namespace
 {
@@ -45,7 +44,7 @@ void TextureModelDemo::Initialize(const Application& app)
 	{
 		const auto path = app.GetTexturesPath() + Path("TextureMapping.fxc");
 
-		std::vector<byte> effectData;
+		std::vector<std::byte> effectData;
 		utils::LoadBinaryFile(path, effectData);
 		if (effectData.empty())
 		{
@@ -156,9 +155,10 @@ void TextureModelDemo::Initialize(const Application& app)
 
 	if (mesh.HasIndices())
 	{
-		m_input.indices = std::make_unique<BufferData>();
-		m_input.indices->buffer = mesh.CreateIndexBuffer();
-		m_input.indices->count = mesh.GetIndicesCount();
+		m_input.indices = std::make_optional(BufferData{
+			mesh.CreateIndexBuffer(),
+			mesh.GetIndicesCount()
+		});
 	}
 }
 
@@ -229,11 +229,11 @@ unsigned TextureModelDemo::GetVertexSize() const
 
 void TextureModelDemo::Draw_SetData()
 {
-	auto deviceContext = m_app->GetDeviceContext();
+	auto deviceContext = GetApp()->GetDeviceContext();
 
 	auto wvp = GetWorldMatrix();
-	if (auto camera = GetCamera())
-		wvp *= camera->GetViewProjectionMatrix();
+	if (!!m_camera)
+		wvp *= m_camera->GetViewProjectionMatrix();
 	m_wvpVariable->SetMatrix(static_cast<const float*>(wvp));
 
 	m_colorTextureVariable->SetResource(GetTexture());

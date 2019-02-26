@@ -11,21 +11,21 @@ namespace library
 	public:
 		using Vertex = VertexPositionTextureNormal;
 
-		explicit FogMaterial(const Effect& effect);
+		explicit FogMaterial(Effect& effect);
 		~FogMaterial();
 
-		EffectVariable& GetAmbientColor() const { return m_ambientColor; }
-		EffectVariable& GetLightColor() const { return m_lightColor; }
-		EffectVariable& GetLightDirection() const { return m_lightDirection; }
-		EffectVariable& GetFogColor() const { return m_fogColor; }
-		EffectVariable& GetFogStart() const { return m_fogStart; }
-		EffectVariable& GetFogRange() const { return m_fogRange; }
-		EffectVariable& GetCameraPosition() const { return m_cameraPosition; }
+		EffectVariable& GetAmbientColor() { return m_ambientColor; }
+		EffectVariable& GetLightColor() { return m_lightColor; }
+		EffectVariable& GetLightDirection() { return m_lightDirection; }
+		EffectVariable& GetFogColor() { return m_fogColor; }
+		EffectVariable& GetFogStart() { return m_fogStart; }
+		EffectVariable& GetFogRange() { return m_fogRange; }
+		EffectVariable& GetCameraPosition() { return m_cameraPosition; }
 
-		EffectVariable& GetWVP() const { return m_wvp; }
-		EffectVariable& GetWorld() const { return m_world; }
+		EffectVariable& GetWVP() { return m_wvp; }
+		EffectVariable& GetWorld() { return m_world; }
 
-		EffectVariable& GetColorTexture() const { return m_colorTexture; }
+		EffectVariable& GetColorTexture() { return m_colorTexture; }
 
 		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }

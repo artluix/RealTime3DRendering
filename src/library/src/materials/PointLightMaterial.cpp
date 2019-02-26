@@ -6,8 +6,8 @@
 
 namespace library
 {
-	PointLightMaterial::PointLightMaterial(const Effect& effect)
-		: Material(effect, "main10")
+	PointLightMaterial::PointLightMaterial(Effect& effect)
+		: Material(effect, "main11")
 
 		, m_ambientColor(effect.GetVariable("ambientColor"))
 		, m_lightColor(effect.GetVariable("lightColor"))

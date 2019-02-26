@@ -11,19 +11,19 @@ namespace library
 	public:
 		using Vertex = VertexPositionTextureNormal;
 
-		explicit EnvironmentMappingMaterial(const Effect& effect);
+		explicit EnvironmentMappingMaterial(Effect& effect);
 		~EnvironmentMappingMaterial();
 
-		EffectVariable& GetAmbientColor() const { return m_ambientColor; }
-		EffectVariable& GetEnvironmentColor() const { return m_environmentColor; }
-		EffectVariable& GetCameraPosition() const { return m_cameraPosition; }
+		EffectVariable& GetAmbientColor() { return m_ambientColor; }
+		EffectVariable& GetEnvironmentColor() { return m_environmentColor; }
+		EffectVariable& GetCameraPosition() { return m_cameraPosition; }
 
-		EffectVariable& GetWVP() const { return m_wvp; }
-		EffectVariable& GetWorld() const { return m_world; }
-		EffectVariable& GetReflectionAmount() const { return m_reflectionAmount; }
+		EffectVariable& GetWVP() { return m_wvp; }
+		EffectVariable& GetWorld() { return m_world; }
+		EffectVariable& GetReflectionAmount() { return m_reflectionAmount; }
 
-		EffectVariable& GetColorTexture() const { return m_colorTexture; }
-		EffectVariable& GetEnvironmentMap() const { return m_environmentMap; }
+		EffectVariable& GetColorTexture() { return m_colorTexture; }
+		EffectVariable& GetEnvironmentMap() { return m_environmentMap; }
 
 		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }

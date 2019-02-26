@@ -66,9 +66,9 @@ void DistortionMappingDemo::Initialize(const Application& app)
 	m_text->Initialize(app);
 
 	// Load model
-	Model model(*m_app, "Sphere", true);
+	Model model(app, "Sphere", true);
 	const auto& mesh = model.GetMesh(0);
-	m_vertexBuffer = m_material->CreateVertexBuffer(m_app->GetDevice(), mesh);
+	m_vertexBuffer = m_material->CreateVertexBuffer(app.GetDevice(), mesh);
 	m_indexBuffer = mesh.CreateIndexBuffer();
 	m_indicesCount = mesh.GetIndicesCount();
 
@@ -91,7 +91,7 @@ void DistortionMappingDemo::Update(const Time& time)
 
 void DistortionMappingDemo::Draw(const Time& time)
 {
-	auto deviceContext = m_app->GetDeviceContext();
+	auto deviceContext = GetApp()->GetDeviceContext();
 
 	switch (m_mode)
 	{
@@ -138,14 +138,14 @@ void DistortionMappingDemo::Draw(const Time& time)
 	
 	m_fullScreenQuad->Draw(time);
 
-	m_app->UnbindPixelShaderResources(0, 1);
+	GetApp()->UnbindPixelShaderResources(0, 1);
 }
 
 //-------------------------------------------------------------------------
 
 void DistortionMappingDemo::DrawMeshForDistortionCutout()
 {
-	auto deviceContext = m_app->GetDeviceContext();
+	auto deviceContext = GetApp()->GetDeviceContext();
 
 	// Set IA
 	{
@@ -162,9 +162,9 @@ void DistortionMappingDemo::DrawMeshForDistortionCutout()
 	{
 		auto wvp = math::Matrix4::Identity;
 		
-		if (auto camera = GetCamera())
+		if (!!m_camera)
 		{
-			wvp *= camera->GetViewProjectionMatrix();
+			wvp *= m_camera->GetViewProjectionMatrix();
 		}
 
 		m_material->GetWVP() << wvp;

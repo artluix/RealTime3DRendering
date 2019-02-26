@@ -31,9 +31,8 @@ namespace library
 			const std::string& passName = "p0"
 		);
 
-		std::unique_ptr<FullScreenQuadComponent> m_fullScreenQuad;
-
-	private:
+	protected:
 		ID3D11ShaderResourceView* m_sceneTexture = nullptr;
+		std::unique_ptr<FullScreenQuadComponent> m_fullScreenQuad;
 	};
 } // namespace library

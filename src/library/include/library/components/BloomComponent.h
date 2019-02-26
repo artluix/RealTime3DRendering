@@ -47,16 +47,18 @@ namespace library
 		void Initialize(const Application& app) override;
 		void Draw(const Time& time) override;
 
+	protected:
+		BloomDrawMode m_drawMode;
+
 	private:
-		void UpdateExtractMaterial();
-		void UpdateCompositeMaterial();
+		void UpdateExtractMaterial(Material& material) const;
+		void UpdateCompositeMaterial(Material& material) const;
 
 		void DrawNormal(const Time& time);
 		void DrawExtractedTexture(const Time& time);
 		void DrawBlurredTexture(const Time& time);
 
 		BloomSettings m_settings;
-		BloomDrawMode m_drawMode;
 
 		std::unique_ptr<FullScreenRenderTarget> m_renderTarget;
 		std::unique_ptr<GaussianBlurComponent> m_gaussianBlur;

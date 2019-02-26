@@ -8,7 +8,7 @@
 
 namespace library
 {
-	SpotlightMaterial::SpotlightMaterial(const Effect& effect)
+	SpotlightMaterial::SpotlightMaterial(Effect& effect)
 		: Material(effect, "main10")
 		, m_ambientColor(effect.GetVariable("ambientColor"))
 		, m_lightColor(effect.GetVariable("lightColor"))

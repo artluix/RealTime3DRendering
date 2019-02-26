@@ -23,10 +23,7 @@ namespace library
 
 	void FullScreenQuadComponent::SetMaterial(Material& material)
 	{
-		if (m_material != &material)
-		{
-			m_material = &material;
-		}
+		m_material = &material;
 	}
 
 	void FullScreenQuadComponent::SetMaterial(
@@ -48,7 +45,7 @@ namespace library
 	{
 		assert(!!m_material);
 
-		auto& technique = m_material->GetEffect().GetTechnique(techniqueName);
+		const auto& technique = m_material->GetEffect().GetTechnique(techniqueName);
 		auto& pass = technique.GetPass(passName);
 
 		m_pass = &pass;
@@ -62,8 +59,7 @@ namespace library
 
 	void FullScreenQuadComponent::Initialize(const Application& app)
 	{
-		//MaterialDrawableComponent::Initialize(app);
-		DrawableComponent::Initialize(app);
+		SceneComponent::Initialize(app);
 
 		// vertex buffer
 		{
@@ -99,7 +95,7 @@ namespace library
 
 		// index buffer
 		{
-			m_input.indices = std::make_unique<BufferData>();
+			m_input.indices = std::make_optional(BufferData());
 
 			std::array<unsigned, 6> indices =
 			{
@@ -135,11 +131,9 @@ namespace library
 	void FullScreenQuadComponent::Draw_SetData()
 	{
 		if (!!m_materialUpdateFunction)
-		{
 			m_materialUpdateFunction();
-		}
 
-		m_pass->Apply(0, m_app->GetDeviceContext());
+		m_pass->Apply(0, GetApp()->GetDeviceContext());
 	}
 
 	unsigned FullScreenQuadComponent::GetVertexSize() const

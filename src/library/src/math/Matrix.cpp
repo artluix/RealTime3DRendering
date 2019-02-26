@@ -52,6 +52,32 @@ namespace library::math
 		return Store(DirectX::XMMatrixTranspose(Load()));
 	}
 
+	//-------------------------------------------------------------------------
+
+	const Matrix<3>::Row& Matrix<3>::GetRow(const std::size_t rowIdx) const
+	{
+		return _rows[rowIdx];
+	}
+
+	void Matrix<3>::SetRow(const std::size_t rowIdx, const Row& row)
+	{
+		_rows[rowIdx] = row;
+	}
+
+	const Matrix<3>::Col Matrix<3>::GetCol(const std::size_t colIdx) const
+	{
+		return Col(_rows[0][colIdx], _rows[1][colIdx], _rows[2][colIdx]);
+	}
+
+	void Matrix<3>::SetCol(const std::size_t colIdx, const Matrix<3>::Col& col)
+	{
+		_rows[0][colIdx] = col[0];
+		_rows[1][colIdx] = col[1];
+		_rows[2][colIdx] = col[2];
+	}
+
+	//-------------------------------------------------------------------------
+
 	Matrix<3>::operator DirectX::XMFLOAT3X3() const
 	{
 		return DirectX::XMFLOAT3X3(
@@ -61,14 +87,24 @@ namespace library::math
 		);
 	}
 
+	Matrix<3>::Row& Matrix<3>::operator[](const std::size_t rowIdx)
+	{
+		return _rows[rowIdx];
+	}
+
+	const Matrix<3>::Row& Matrix<3>::operator[](const std::size_t rowIdx) const
+	{
+		return _rows[rowIdx];
+	}
+
 	const float& Matrix<3>::operator() (const std::size_t rowIdx, const std::size_t colIdx) const
 	{
-		return rows[rowIdx][colIdx];
+		return _rows[rowIdx][colIdx];
 	}
 
 	float& Matrix<3>::operator() (const std::size_t rowIdx, const std::size_t colIdx)
 	{
-		return rows[rowIdx][colIdx];
+		return _rows[rowIdx][colIdx];
 	}
 
 	//-------------------------------------------------------------------------
@@ -289,6 +325,33 @@ namespace library::math
 		return *this;
 	}
 
+	//-------------------------------------------------------------------------
+
+	const Matrix<4>::Row& Matrix<4>::GetRow(const std::size_t rowIdx) const
+	{
+		return _rows[rowIdx];
+	}
+
+	void Matrix<4>::SetRow(const std::size_t rowIdx, const Row& row)
+	{
+		_rows[rowIdx] = row;
+	}
+
+	const Matrix<4>::Col Matrix<4>::GetCol(const std::size_t colIdx) const
+	{
+		return Col(_rows[0][colIdx], _rows[1][colIdx], _rows[2][colIdx], _rows[3][colIdx]);
+	}
+
+	void Matrix<4>::SetCol(const std::size_t colIdx, const Matrix<4>::Col& col)
+	{
+		_rows[0][colIdx] = col[0];
+		_rows[1][colIdx] = col[1];
+		_rows[2][colIdx] = col[2];
+		_rows[3][colIdx] = col[3];
+	}
+
+	//-------------------------------------------------------------------------
+
 	Matrix<4>::operator DirectX::XMFLOAT4X4() const
 	{
 		return DirectX::XMFLOAT4X4(
@@ -299,14 +362,24 @@ namespace library::math
 		);
 	}
 
+	Matrix4::Row& Matrix<4>::operator[](const std::size_t rowIdx)
+	{
+		return _rows[rowIdx];
+	}
+
+	const Matrix4::Row& Matrix<4>::operator[](const std::size_t rowIdx) const
+	{
+		return _rows[rowIdx];
+	}
+
 	const float& Matrix<4>::operator() (const std::size_t rowIdx, const std::size_t colIdx) const
 	{
-		return rows[rowIdx][colIdx];
+		return _rows[rowIdx][colIdx];
 	}
 
 	float& Matrix<4>::operator() (const std::size_t rowIdx, const std::size_t colIdx)
 	{
-		return rows[rowIdx][colIdx];
+		return _rows[rowIdx][colIdx];
 	}
 
 	//-------------------------------------------------------------------------

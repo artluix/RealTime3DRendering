@@ -44,7 +44,7 @@ namespace library
 
 		void ApplyRotation(const math::Matrix4& transform);
 
-	protected:
+	private:
 		float m_fieldOfView;
 		float m_aspectRatio;
 		float m_nearPlaneDistance;

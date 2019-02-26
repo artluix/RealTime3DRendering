@@ -6,7 +6,7 @@
 
 namespace library
 {
-	DisplacementMappingMaterial::DisplacementMappingMaterial(const Effect& effect)
+	DisplacementMappingMaterial::DisplacementMappingMaterial(Effect& effect)
 		: Material(effect, "main10")
 
 		, m_ambientColor(effect.GetVariable("ambientColor"))

@@ -147,9 +147,13 @@ void ModelDemo::Initialize(const Application& app)
 	const auto& mesh = model.GetMesh(0);
 	CreateVertexBuffer(app.GetDevice(), mesh);
 
-	m_input.indices = std::make_unique<BufferData>();
-	m_input.indices->buffer = mesh.CreateIndexBuffer();
-	m_input.indices->count = mesh.GetIndicesCount();
+	if (mesh.HasIndices())
+	{
+		m_input.indices = std::make_optional(BufferData{
+			mesh.CreateIndexBuffer(),
+			mesh.GetIndicesCount()
+		});
+	}
 }
 
 void ModelDemo::Update(const Time& time)
@@ -199,11 +203,11 @@ void ModelDemo::Update(const Time& time)
 void ModelDemo::Draw_SetData()
 {
 	auto wvp = GetWorldMatrix();
-	if (auto camera = GetCamera())
-		wvp *= camera->GetViewProjectionMatrix();
+	if (!!m_camera)
+		wvp *= m_camera->GetViewProjectionMatrix();
 	m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
-	m_pass->Apply(0, m_app->GetDeviceContext());
+	m_pass->Apply(0, GetApp()->GetDeviceContext());
 }
 
 unsigned ModelDemo::GetVertexSize() const
