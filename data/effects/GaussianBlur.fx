@@ -1,4 +1,5 @@
 /************* Resources *************/
+
 #define SAMPLE_COUNT 9
 
 cbuffer CBufferPerFrame

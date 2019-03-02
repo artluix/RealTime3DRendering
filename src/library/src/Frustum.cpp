@@ -12,7 +12,7 @@ namespace library
 
 			const auto direction = plane1Vec3.Cross(plane2Vec3);
 			const auto position =
-				direction.Cross(plane1Vec3 * plane2.w - plane2Vec3 * plane1.w) / direction.LengthSq();
+				-direction.Cross(plane1Vec3 * plane2.w - plane2Vec3 * plane1.w) / direction.LengthSq();
 
 			return Ray(position, direction);
 		}
@@ -34,8 +34,6 @@ namespace library
 		return t < Count;
 	}
 
-	//-------------------------------------------------------------------------
-
 	bool Frustum::Corner::IsValid(const Type t)
 	{
 		return t < Count;
@@ -43,7 +41,7 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	Frustum::Frustum(const math::Matrix4& matrix)
+	Frustum::Frustum(const math::Matrix4& matrix /*= math::Matrix4::Identity*/)
 	{
 		SetMatrix(matrix);
 	}
@@ -73,7 +71,7 @@ namespace library
 
 		auto normalizePred = [](math::Vector4& plane)
 		{
-			plane = plane.Normalize();
+			plane = plane.PlaneNormalize();
 		};
 		std::for_each(m_planes.begin(), m_planes.end(), normalizePred);
 

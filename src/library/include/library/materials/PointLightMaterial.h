@@ -11,7 +11,7 @@ namespace library
 	public:
 		using Vertex = VertexPositionTextureNormal;
 
-		explicit PointLightMaterial(Effect& effect);
+		explicit PointLightMaterial(Effect& effect, const std::string& defaultTechniqueName = "main11");
 		~PointLightMaterial();
 
 		EffectVariable& GetAmbientColor() { return m_ambientColor; }

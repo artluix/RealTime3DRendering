@@ -24,7 +24,6 @@ namespace library
 		, m_up(math::Vector3::Up)
 		, m_right(math::Vector3::Right)
 	{
-		UpdateWorldMatrix();
 	}
 
 	//-------------------------------------------------------------------------
@@ -34,7 +33,7 @@ namespace library
 		if (m_position != position)
 		{
 			m_position = position;
-			UpdateWorldMatrix();
+			m_isWorldMatrixDirty = true;
 		}
 	}
 
@@ -53,7 +52,7 @@ namespace library
 		if (m_rotation != rotation)
 		{
 			m_rotation = rotation;
-			UpdateWorldMatrix();
+			m_isWorldMatrixDirty = true;
 		}
 	}
 
@@ -75,7 +74,7 @@ namespace library
 		if (m_scaling != scaling)
 		{
 			m_scaling = scaling;
-			UpdateWorldMatrix();
+			m_isWorldMatrixDirty = true;
 		}
 	}
 
@@ -91,6 +90,9 @@ namespace library
 
 	void SceneComponent::UpdateWorldMatrix()
 	{
+		if (!m_isWorldMatrixDirty)
+			return;
+
 		const auto translationMatrix = math::Matrix4::Translation(m_position);
 		const auto rotationMatrix = math::Matrix4::RotationPitchYawRoll(m_rotation);
 		const auto scalingMatrix = math::Matrix4::Scaling(m_scaling);
@@ -104,6 +106,8 @@ namespace library
 		m_direction = rotationMatrix.GetForward();
 		m_up = rotationMatrix.GetUp();
 		m_right = rotationMatrix.GetRight();
+
+		m_isWorldMatrixDirty = false;
 	}
 
 	//-------------------------------------------------------------------------
@@ -163,6 +167,8 @@ namespace library
 
 	void SceneComponent::Update(const Time& time)
 	{
+		UpdateWorldMatrix();
+
 		GetApp()->GetRenderer()->AddDrawable(*this);
 	}
 

@@ -35,6 +35,7 @@ namespace library
 	RenderableFrustumComponent::RenderableFrustumComponent(const Color& color)
 		: m_color(color)
 	{
+		m_input.topology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
 	}
 
 	//-------------------------------------------------------------------------
@@ -57,7 +58,7 @@ namespace library
 
 		GetMaterial()->GetWorldViewProjection() << wvp;
 
-		SceneComponent::Draw_SetIA();
+		SceneComponent::Draw_SetData();
 	}
 
 	void RenderableFrustumComponent::InitializeGeometry(const Frustum& frustum)
@@ -106,7 +107,7 @@ namespace library
 
 	void RenderableFrustumComponent::InitializeIndexBuffer()
 	{
-		constexpr std::array<short, k_indicesCount> k_indices =
+		constexpr std::array<unsigned, k_indicesCount> k_indices =
 		{
 			// Near plane lines
 			0, 1,
@@ -132,7 +133,7 @@ namespace library
 
 		D3D11_BUFFER_DESC indexBufferDesc{};
 		indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-		indexBufferDesc.ByteWidth = sizeof(short) * k_indicesCount;
+		indexBufferDesc.ByteWidth = sizeof(unsigned) * k_indicesCount;
 		indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};

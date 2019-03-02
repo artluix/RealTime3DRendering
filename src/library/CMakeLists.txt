@@ -26,7 +26,9 @@ if(APPLICATION)
                 include/library/components/MouseComponent.h
                 include/library/components/PointLightComponent.h
                 include/library/components/PostProcessingComponent.h
+                include/library/components/ProjectorComponent.h
                 include/library/components/ProxyModelComponent.h
+                include/library/components/RenderableFrustumComponent.h
                 include/library/components/SceneComponent.h
                 include/library/components/SkyboxComponent.h
                 include/library/components/SpotLightComponent.h
@@ -54,6 +56,7 @@ if(APPLICATION)
                 include/library/materials/NormalMappingMaterial.h
                 include/library/materials/PointLightMaterial.h
                 include/library/materials/PostProcessingMaterial.h
+                include/library/materials/ProjectiveTextureMappingMaterial.h
                 include/library/materials/SkyboxMaterial.h
                 include/library/materials/SpotlightMaterial.h
                 include/library/materials/TextureMappingMaterial.h
@@ -71,6 +74,7 @@ if(APPLICATION)
             include/library/CommonTypes.h
             include/library/DirectXForwardDeclarations.h
             include/library/Exception.h
+            include/library/Frustum.h
             include/library/FullScreenRenderTarget.h
             include/library/Key.h
             include/library/Logger.h
@@ -80,6 +84,7 @@ if(APPLICATION)
             include/library/NonCopyable.hpp
             include/library/NonConstructible.hpp
             include/library/Path.h
+            include/library/Ray.h
             include/library/Renderer.h
             include/library/RasterizerStates.h
             include/library/RTTI.hpp
@@ -110,7 +115,9 @@ if(APPLICATION)
                 src/components/MouseComponent.cpp
                 src/components/PointLightComponent.cpp
                 src/components/PostProcessingComponent.cpp
+                src/components/ProjectorComponent.cpp
                 src/components/ProxyModelComponent.cpp
+                src/components/RenderableFrustumComponent.cpp
                 src/components/SceneComponent.cpp
                 src/components/SkyboxComponent.cpp
                 src/components/SpotLightComponent.cpp
@@ -138,6 +145,7 @@ if(APPLICATION)
                 src/materials/NormalMappingMaterial.cpp
                 src/materials/PointLightMaterial.cpp
                 src/materials/PostProcessingMaterial.cpp
+                src/materials/ProjectiveTextureMappingMaterial.cpp
                 src/materials/SkyboxMaterial.cpp
                 src/materials/SpotlightMaterial.cpp
                 src/materials/TextureMappingMaterial.cpp
@@ -151,6 +159,7 @@ if(APPLICATION)
             src/BlendStates.cpp
             src/Color.cpp
             src/Exception.cpp
+            src/Frustum.cpp
             src/FullScreenRenderTarget.cpp
             src/Logger.cpp
             src/Mesh.cpp

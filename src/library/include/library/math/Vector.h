@@ -254,6 +254,8 @@ namespace library::math
 		Vector Cross(const Vector& vector1, const Vector& vector2) const;
 
 		Vector Normalize() const;
+		Vector PlaneNormalize() const;
+
 		float Length() const;
 		float LengthSq() const;
 
@@ -414,7 +416,7 @@ namespace library::math
 	}
 
 	template<std::size_t Size>
-	inline Vector<Size> operator /= (const Vector<Size>& lhs, const Vector<Size>& rhs)
+	inline Vector<Size> operator /= (Vector<Size>& lhs, const Vector<Size>& rhs)
 	{
 		lhs = Vector<Size>::Store(DirectX::XMVectorDivide(lhs.Load(), rhs.Load()));
 		return lhs;

@@ -72,7 +72,7 @@ namespace library
 				m_rotationStartPoint.y = m_mouse->GetY() * m_mouseSensitivity;
 
 				const auto rotationDelta = m_rotationStartPoint - prevPoint;
-				Logger::Info("Rotation delta: %s", rotationDelta.ToString().c_str());
+				//Logger::Info("Rotation delta: %s", rotationDelta.ToString().c_str());
 
 				const auto rotation = rotationDelta * m_rotationRate * elapsedTime;
 
@@ -124,5 +124,15 @@ namespace library
 		}
 
 		CameraComponent::Update(time);
+	}
+
+	void FirstPersonCameraComponent::Reset()
+	{
+		CameraComponent::Reset();
+
+		m_rotationStartPoint = math::Vector2();
+		m_mouseSensitivity = k_defaultMouseSensitivity;
+		m_movementRate = k_defaultMovementRate;
+		m_rotationRate = k_defaultRotationRate;
 	}
 } // namespace library

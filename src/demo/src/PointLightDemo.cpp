@@ -150,10 +150,11 @@ void PointLightDemo::UpdatePointLight(const Time& time)
 
 		if (movementAmount)
 		{
-			auto movement = movementAmount * k_lightMovementRate * elapsedTime;
+			const auto movement = movementAmount * k_lightMovementRate * elapsedTime;
+			const auto position = m_pointLight->GetPosition() + movement;
 
-			m_pointLight->SetPosition(m_pointLight->GetPosition() + movement);
-			m_proxyModel->Translate(movement);
+			m_pointLight->SetPosition(position);
+			m_proxyModel->SetPosition(position);
 		}
 	}
 }

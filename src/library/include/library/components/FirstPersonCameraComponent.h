@@ -32,6 +32,8 @@ namespace library
 
 		void Update(const Time& time) override;
 
+		void Reset() override;
+
 	protected:
 		float m_mouseSensitivity;
 		float m_rotationRate;

@@ -37,6 +37,7 @@ namespace library
 				NearTopRight,
 				NearBottomRight,
 				NearBottomLeft,
+
 				FarTopLeft,
 				FarTopRight,
 				FarBottomRight,
@@ -56,7 +57,7 @@ namespace library
 
 		//-------------------------------------------------------------------------
 
-		explicit Frustum(const math::Matrix4& matrix);
+		explicit Frustum(const math::Matrix4& matrix = math::Matrix4::Identity);
 
 		const math::Vector4& GetPlane(const Plane::Type planeType);
 		const math::Vector3& GetCorner(const Corner::Type cornerType);

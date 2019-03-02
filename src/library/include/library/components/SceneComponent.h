@@ -19,7 +19,7 @@ namespace library
 		const math::Vector3& GetPosition() const { return m_position; }
 		const math::Vector3& GetRotation() const { return m_rotation; }
 		const math::Vector3& GetScaling() const { return m_scaling; }
-		const math::Matrix4& GetWorldMatrix() const { return m_worldMatrix; }
+		const math::Matrix4& GetWorldMatrix() const { assert(!m_isWorldMatrixDirty); return m_worldMatrix; }
 
 		void SetPosition(const math::Vector3& position);
 		void Translate(const math::Vector3& translation);
@@ -89,5 +89,6 @@ namespace library
 		math::Vector3 m_up;
 
 		math::Matrix4 m_worldMatrix;
+		bool m_isWorldMatrixDirty = true;
 	};
 } // namespace library

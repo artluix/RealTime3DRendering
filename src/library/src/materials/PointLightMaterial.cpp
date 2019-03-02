@@ -6,8 +6,11 @@
 
 namespace library
 {
-	PointLightMaterial::PointLightMaterial(Effect& effect)
-		: Material(effect, "main11")
+	PointLightMaterial::PointLightMaterial(
+		Effect& effect,
+		const std::string& defaultTechniqueName /*= "main11"*/
+	)
+		: Material(effect, defaultTechniqueName)
 
 		, m_ambientColor(effect.GetVariable("ambientColor"))
 		, m_lightColor(effect.GetVariable("lightColor"))
@@ -25,6 +28,8 @@ namespace library
 	}
 
 	PointLightMaterial::~PointLightMaterial() = default;
+
+	//-------------------------------------------------------------------------
 
 	void PointLightMaterial::InitializeInternal()
 	{

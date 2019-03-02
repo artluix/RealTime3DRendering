@@ -23,6 +23,8 @@
 #include "BloomDemo.h"
 #include "DistortionMappingDemo.h"
 
+#include "ProjectiveTextureMappingDemo.h"
+
 //-------------------------------------------------------------------------
 
 #include <library/components/FpsComponent.h>
@@ -63,7 +65,7 @@ DemoApplication::DemoApplication(
 	const int showCmd
 )
 	: Application(instanceHandle, windowClass, windowTitle, showCmd)
-	, m_postProcessingEnabled(true)
+	, m_postProcessingEnabled(false)
 {
 	m_depthStencilBufferEnabled = true;
 	m_multiSamplingEnabled = true;
@@ -127,6 +129,7 @@ void DemoApplication::Initialize()
 	auto camera = std::make_shared<FirstPersonCameraComponent>();
 	camera->SetMouse(*m_mouse);
 	camera->SetKeyboard(*m_keyboard);
+	camera->SetPosition(math::Vector3(0.0f, 0.0f, 50.0f));
 
 	// fps
 	auto fps = std::make_shared<FpsComponent>();
@@ -237,21 +240,23 @@ void DemoApplication::Initialize()
 	);
 	postProcessingText->SetPosition(math::Vector2(0.f, 70.f));
 
+	auto projectiveTextureMapping = std::make_shared<ProjectiveTextureMappingDemo>();
+	projectiveTextureMapping->SetCamera(*camera);
+	projectiveTextureMapping->SetKeyboard(*m_keyboard);
+
 	// push needed components
 	m_components.push_back(m_keyboard);
 	m_components.push_back(m_mouse);
 	m_components.push_back(camera);
 	m_components.push_back(m_grid);
 	m_components.push_back(fps);
-	m_components.push_back(skybox);
-	m_components.push_back(pointLight);
+	//m_components.push_back(skybox);
 	m_components.push_back(postProcessingText);
+	m_components.push_back(projectiveTextureMapping);
 
 	Application::Initialize();
 
 	m_postProcessing->Initialize(*this);
-
-	camera->SetPosition(math::Vector3(0.0f, 0.0f, 50.0f));
 }
 
 void DemoApplication::Update(const Time& time)

@@ -58,6 +58,9 @@ if(APPLICATION)
             src/PointLightDemo.h
             src/PointLightDemo.cpp
 
+            src/ProjectiveTextureMappingDemo.h
+            src/ProjectiveTextureMappingDemo.cpp
+
             src/SpotlightDemo.h
             src/SpotlightDemo.cpp
 

@@ -76,7 +76,6 @@ namespace library
 
 		Effect& m_effect;
 
-		std::string m_defaultTechniqueName;
 		std::reference_wrapper<const EffectTechnique> m_currentTechnique;
 
 		std::map<const EffectPass*, ComPtr<ID3D11InputLayout>> m_inputLayouts;

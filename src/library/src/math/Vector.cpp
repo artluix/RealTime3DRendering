@@ -268,10 +268,19 @@ namespace library::math
 		return Store(DirectX::XMVector4Cross(Load(), vector1.Load(), vector2.Load()));
 	}
 
+	//-------------------------------------------------------------------------
+
 	Vector<4> Vector<4>::Normalize() const
 	{
 		return Store(DirectX::XMVector4Normalize(Load()));
 	}
+
+	Vector<4> Vector<4>::PlaneNormalize() const
+	{
+		return Store(DirectX::XMPlaneNormalize(Load()));
+	}
+
+	//-------------------------------------------------------------------------
 
 	float Vector<4>::Length() const
 	{
