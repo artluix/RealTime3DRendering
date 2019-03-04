@@ -1,11 +1,11 @@
 #include "BloomDemo.h"
 
-#include <library/components/TextComponent.h>
-#include <library/components/KeyboardComponent.h>
+#include <library/Components/TextComponent.h>
+#include <library/Components/KeyboardComponent.h>
 
 #include <library/Utils.h>
 #include <library/Time.h>
-#include <library/math/Math.h>
+#include <library/Math/Math.h>
 
 #include <sstream>
 #include <iomanip>

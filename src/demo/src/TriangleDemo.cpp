@@ -1,6 +1,6 @@
 #include "TriangleDemo.h"
 
-#include <library/components/CameraComponent.h>
+#include <library/Components/CameraComponent.h>
 
 #include <library/VertexTypes.h>
 #include <library/Application.h>

@@ -1,9 +1,6 @@
 #pragma once
-#include "library/components/DrawableComponent.h"
-#include "library/math/Math.h"
-
-#include "library/CommonTypes.h"
-#include "library/DirectXForwardDeclarations.h"
+#include "library/Components/DrawableComponent.h"
+#include "library/Math/Math.h"
 
 #include <d3dcommon.h>
 #include <string>
@@ -49,12 +46,6 @@ namespace library
 		void Draw(const Time& time) override;
 
 	protected:
-		struct BufferData
-		{
-			ComPtr<ID3D11Buffer> buffer;
-			unsigned count = 0;
-		};
-
 		explicit SceneComponent();
 
 		void UpdateWorldMatrix();

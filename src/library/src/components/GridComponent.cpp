@@ -1,17 +1,17 @@
 #include "StdAfx.h"
-#include "library/components/GridComponent.h"
+#include "library/Components/GridComponent.h"
 
-#include "library/components/CameraComponent.h"
+#include "library/Components/CameraComponent.h"
 
 #include "library/Application.h"
 #include "library/Utils.h"
 #include "library/Exception.h"
 #include "library/VertexTypes.h"
 
-#include "library/effect/Effect.h"
-#include "library/effect/EffectTechnique.h"
-#include "library/effect/EffectVariable.h"
-#include "library/effect/EffectPass.h"
+#include "library/Effect/Effect.h"
+#include "library/Effect/EffectTechnique.h"
+#include "library/Effect/EffectVariable.h"
+#include "library/Effect/EffectPass.h"
 
 namespace library
 {

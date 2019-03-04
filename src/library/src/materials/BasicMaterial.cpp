@@ -1,7 +1,7 @@
 #include "StdAfx.h"
-#include "library/materials/BasicMaterial.h"
+#include "library/Materials/BasicMaterial.h"
 
-#include "library/effect/Effect.h"
+#include "library/Effect/Effect.h"
 #include "library/Mesh.h"
 #include "library/Color.h"
 
@@ -77,6 +77,6 @@ namespace library
 			}
 		}
 
-		return Material::CreateVertexBuffer(device, vertices.data(), vertices.size() * sizeof(Vertex));
+		return Material::CreateVertexBuffer(device, vertices);
 	}
 } // namespace library

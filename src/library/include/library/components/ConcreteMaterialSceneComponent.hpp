@@ -1,7 +1,7 @@
 #pragma once
-#include "library/materials/Material.h"
-#include "library/components/SceneComponent.h"
-#include "library/effect/Effect.h"
+#include "library/Materials/Material.h"
+#include "library/Components/SceneComponent.h"
+#include "library/Effect/Effect.h"
 
 #include <type_traits>
 

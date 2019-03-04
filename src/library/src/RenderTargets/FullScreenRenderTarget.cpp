@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "library/FullScreenRenderTarget.h"
+#include "library/RenderTargets/FullScreenRenderTarget.h"
 
 #include "library/Application.h"
 #include "library/Exception.h"
@@ -100,15 +100,14 @@ namespace library
 
 	void FullScreenRenderTarget::Begin()
 	{
-		m_app.GetDeviceContext()->OMSetRenderTargets(
-			1,
-			m_renderTargetView.GetAddressOf(),
-			m_depthStencilView.Get()
+		RenderTarget::Begin(
+			m_app.GetDeviceContext(),
+			Data(m_renderTargetView.Get(), m_depthStencilView.Get(), m_app.GetViewport())
 		);
 	}
 
 	void FullScreenRenderTarget::End()
 	{
-		m_app.ResetRenderTargets();
+		RenderTarget::End(m_app.GetDeviceContext());
 	}
 } // namespace library

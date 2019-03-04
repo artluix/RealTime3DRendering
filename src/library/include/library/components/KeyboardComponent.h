@@ -1,5 +1,5 @@
 #pragma once
-#include "library/components/InputComponent.h"
+#include "library/Components/InputComponent.h"
 #include "library/Key.h"
 
 #include <array>

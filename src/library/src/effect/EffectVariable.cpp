@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "library/effect/EffectVariable.h"
+#include "library/Effect/EffectVariable.h"
 
 namespace library
 {

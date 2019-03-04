@@ -1,7 +1,7 @@
 #include "StdAfx.h"
-#include "library/math/Vector.h"
+#include "library/Math/Vector.h"
 
-#include "library/math/Matrix.h"
+#include "library/Math/Matrix.h"
 
 namespace library::math
 {

@@ -1,8 +1,8 @@
 #pragma once
-#include "library/materials/PostProcessingMaterial.h"
-#include "library/components/PostProcessingComponent.h"
+#include "library/Materials/PostProcessingMaterial.h"
+#include "library/Components/PostProcessingComponent.h"
 
-#include "library/effect/Effect.h"
+#include "library/Effect/Effect.h"
 
 namespace library
 {

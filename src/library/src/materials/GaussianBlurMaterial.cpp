@@ -1,7 +1,7 @@
 #include "StdAfx.h"
-#include "library/materials/GaussianBlurMaterial.h"
+#include "library/Materials/GaussianBlurMaterial.h"
 
-#include "library/effect/Effect.h"
+#include "library/Effect/Effect.h"
 
 namespace library
 {

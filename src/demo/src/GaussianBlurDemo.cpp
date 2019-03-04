@@ -1,10 +1,10 @@
 #include "GaussianBlurDemo.h"
 
-#include <library/components/KeyboardComponent.h>
-#include <library/components/TextComponent.h>
-#include <library/components/GaussianBlurComponent.h>
+#include <library/Components/KeyboardComponent.h>
+#include <library/Components/TextComponent.h>
+#include <library/Components/GaussianBlurComponent.h>
 
-#include <library/math/Math.h>
+#include <library/Math/Math.h>
 #include <library/Application.h>
 #include <library/Utils.h>
 #include <library/Path.h>

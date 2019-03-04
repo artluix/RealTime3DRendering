@@ -1,10 +1,10 @@
 #include "StdAfx.h"
-#include "library/components/ProxyModelComponent.h"
+#include "library/Components/ProxyModelComponent.h"
 
-#include "library/components/CameraComponent.h"
+#include "library/Components/CameraComponent.h"
 
-#include "library/effect/Effect.h"
-#include "library/effect/EffectVariable.h"
+#include "library/Effect/Effect.h"
+#include "library/Effect/EffectVariable.h"
 
 #include "library/Application.h"
 #include "library/RasterizerStates.h"

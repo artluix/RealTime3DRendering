@@ -1,12 +1,14 @@
 #pragma once
-#include <library/materials/ProjectiveTextureMappingMaterial.h>
+#include <library/Materials/ProjectiveTextureMappingMaterial.h>
 
-#include <library/components/ConcreteMaterialSceneComponent.hpp>
-#include <library/components/InputReceivableComponent.h>
+#include <library/Components/ConcreteMaterialSceneComponent.hpp>
+#include <library/Components/InputReceivableComponent.h>
 
 #include <library/Frustum.h>
 #include <library/Color.h>
-#include <library/math/Math.h>
+#include <library/Math/Math.h>
+
+#include <library/DirectXForwardDeclarations.h>
 
 #include <memory>
 
@@ -36,7 +38,6 @@ protected:
 	void Draw_SetData() override;
 
 private:
-	void UpdateTechnique();
 	void UpdateAmbientLight(const library::Time& time);
 	void UpdatePointLightAndProjector(const library::Time& time);
 	void UpdateSpecularLight(const library::Time& time);
@@ -50,6 +51,7 @@ private:
 
 	std::unique_ptr<library::PointLightComponent> m_pointLight;
 	std::unique_ptr<library::ProxyModelComponent> m_proxyModel;
+
 	std::unique_ptr<library::ProjectorComponent> m_projector;
 	std::unique_ptr<library::RenderableFrustumComponent> m_renderableProjectorFrustum;
 	library::Frustum m_projectorFrustum;

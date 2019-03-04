@@ -1,13 +1,13 @@
 #include "StdAfx.h"
-#include "library/components/BloomComponent.h"
+#include "library/Components/BloomComponent.h"
 
-#include "library/components/GaussianBlurComponent.h"
-#include "library/components/FullScreenQuadComponent.h"
+#include "library/Components/GaussianBlurComponent.h"
+#include "library/Components/FullScreenQuadComponent.h"
 
-#include "library/effect/EffectVariable.h"
+#include "library/Effect/EffectVariable.h"
 
 #include "library/Application.h"
-#include "library/FullScreenRenderTarget.h"
+#include "library/RenderTargets/FullScreenRenderTarget.h"
 #include "library/Color.h"
 
 namespace library

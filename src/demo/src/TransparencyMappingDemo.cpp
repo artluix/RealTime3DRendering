@@ -1,10 +1,10 @@
 #include "TransparencyMappingDemo.h"
 
-#include <library/components/CameraComponent.h>
-#include <library/components/KeyboardComponent.h>
-#include <library/components/PointLightComponent.h>
-#include <library/components/ProxyModelComponent.h>
-#include <library/components/TextComponent.h>
+#include <library/Components/CameraComponent.h>
+#include <library/Components/KeyboardComponent.h>
+#include <library/Components/PointLightComponent.h>
+#include <library/Components/ProxyModelComponent.h>
+#include <library/Components/TextComponent.h>
 
 #include <library/Application.h>
 #include <library/Utils.h>
@@ -12,10 +12,10 @@
 #include <library/Exception.h>
 #include <library/Renderer.h>
 
-#include <library/effect/Effect.h>
-#include <library/effect/EffectPass.h>
-#include <library/effect/EffectTechnique.h>
-#include <library/effect/EffectVariable.h>
+#include <library/Effect/Effect.h>
+#include <library/Effect/EffectPass.h>
+#include <library/Effect/EffectTechnique.h>
+#include <library/Effect/EffectVariable.h>
 
 #include <library/BlendStates.h>
 
@@ -65,8 +65,7 @@ void TransparencyMappingDemo::Initialize(const Application& app)
 		m_input.vertices.count = vertices.size();
 		m_input.vertices.buffer = library::Material::CreateVertexBuffer(
 			app.GetDevice(),
-			vertices.data(),
-			m_input.vertices.count * sizeof(Vertex)
+			vertices
 		);
 	}
 

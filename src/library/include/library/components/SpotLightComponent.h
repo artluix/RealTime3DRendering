@@ -1,6 +1,6 @@
 #pragma once
-#include "library/components/DirectionalLightComponent.h"
-#include "library/components/PointLightComponent.h"
+#include "library/Components/DirectionalLightComponent.h"
+#include "library/Components/PointLightComponent.h"
 
 namespace library
 {

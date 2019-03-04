@@ -1,8 +1,8 @@
 #include "TextureModelDemo.h"
 
-#include <library/components/CameraComponent.h>
-#include <library/components/KeyboardComponent.h>
-#include <library/components/MouseComponent.h>
+#include <library/Components/CameraComponent.h>
+#include <library/Components/KeyboardComponent.h>
+#include <library/Components/MouseComponent.h>
 
 #include <library/VertexTypes.h>
 #include <library/Application.h>

@@ -1,16 +1,18 @@
 #include "StdAfx.h"
-#include "library/components/GaussianBlurComponent.h"
+#include "library/Components/GaussianBlurComponent.h"
 
-#include "library/effect/Effect.h"
-#include "library/effect/EffectVariable.h"
+#include "library/Components/FullScreenQuadComponent.h"
+
+#include "library/Effect/Effect.h"
+#include "library/Effect/EffectVariable.h"
 
 #include "library/Application.h"
 #include "library/Utils.h"
 #include "library/Path.h"
 #include "library/Color.h"
 #include "library/Application.h"
-#include "library/FullScreenRenderTarget.h"
-#include "library/components/FullScreenQuadComponent.h"
+
+#include "library/RenderTargets/FullScreenRenderTarget.h"
 
 namespace library
 {

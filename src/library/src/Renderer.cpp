@@ -1,10 +1,10 @@
 #include "StdAfx.h"
 #include "library/Renderer.h"
 
-#include "library/components/TextComponent.h"
-#include "library/components/SceneComponent.h"
+#include "library/Components/UIComponent.h"
+#include "library/Components/SceneComponent.h"
 
-#include "library/effect/Effect.h"
+#include "library/Effect/Effect.h"
 
 #include "library/Application.h"
 #include "library/Time.h"
@@ -48,7 +48,7 @@ namespace library
 		m_blendFactor.fill(0.f);
 
 		m_sceneDrawables.reserve(20); // reserve some memory for drawables
-		m_textDrawables.reserve(20); // reserve some memory for drawables
+		m_uiDrawables.reserve(20); // reserve some memory for drawables
 	}
 
 	//-------------------------------------------------------------------------
@@ -99,36 +99,36 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void Renderer::AddDrawable(TextComponent& textDrawable)
+	void Renderer::AddDrawable(UIComponent& uiDrawable)
 	{
-		if (!textDrawable.IsVisible())
+		if (!uiDrawable.IsVisible())
 			return;
 
-		auto it = std::find_if(m_textDrawables.begin(), m_textDrawables.end(), Finder(textDrawable));
-		if (it != m_textDrawables.end())
+		auto it = std::find_if(m_uiDrawables.begin(), m_uiDrawables.end(), Finder(uiDrawable));
+		if (it != m_uiDrawables.end())
 			return;
 
-		m_textDrawables.push_back(textDrawable);
+		m_uiDrawables.push_back(uiDrawable);
 	}
 
-	void Renderer::RemoveDrawable(TextComponent& textDrawable)
+	void Renderer::RemoveDrawable(UIComponent& uiDrawable)
 	{
-		auto it = std::find_if(m_textDrawables.begin(), m_textDrawables.end(), Finder(textDrawable));
-		if (it == m_textDrawables.end())
+		auto it = std::find_if(m_uiDrawables.begin(), m_uiDrawables.end(), Finder(uiDrawable));
+		if (it == m_uiDrawables.end())
 			return;
 
-		m_textDrawables.erase(it);
+		m_uiDrawables.erase(it);
 	}
 
-	void Renderer::RenderText(const Time& time)
+	void Renderer::RenderUI(const Time& time)
 	{
-		auto drawPred = [&time](TextComponent& textDrawable)
+		auto drawPred = [&time](UIComponent& uiDrawable)
 		{
-			textDrawable.Draw(time);
+			uiDrawable.Draw(time);
 		};
 
-		auto drawables = m_textDrawables;
-		m_textDrawables.clear();
+		auto drawables = m_uiDrawables;
+		m_uiDrawables.clear();
 
 		SaveRenderState(RenderState::All);
 		std::for_each(drawables.begin(), drawables.end(), drawPred);

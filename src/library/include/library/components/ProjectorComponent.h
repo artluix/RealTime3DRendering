@@ -1,6 +1,6 @@
 #pragma once
-#include "library/components/Component.h"
-#include "library/math/Math.h"
+#include "library/Components/Component.h"
+#include "library/Math/Math.h"
 
 namespace library
 {

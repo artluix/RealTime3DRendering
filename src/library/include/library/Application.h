@@ -1,11 +1,11 @@
 #pragma once
-#include "library/NonCopyable.hpp"
+#include "library/RenderTargets/RenderTarget.h"
+
 #include "library/Stopwatch.h"
 #include "library/CommonTypes.h"
 #include "library/Renderer.h"
 
 #include <Windows.h>
-#include <d3d11_1.h>
 #include <vector>
 #include <string>
 
@@ -16,7 +16,7 @@ namespace library
 	class Component;
 	using ComponentPtr = std::shared_ptr<Component>;
 
-	class Application : public NonCopyable<Application>
+	class Application : public RenderTarget
 	{
 	public:
 		explicit Application(
@@ -68,7 +68,11 @@ namespace library
 	protected:
 		virtual void InitializeWindow();
 		virtual void InitializeDirectX();
+
 		virtual void Shutdown();
+
+		void Begin() override;
+		void End() override;
 
 		HINSTANCE m_instanceHandle;
 		std::wstring m_windowClass;

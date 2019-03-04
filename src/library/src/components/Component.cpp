@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "library/components/Component.h"
+#include "library/Components/Component.h"
 
 #include <cassert>
 

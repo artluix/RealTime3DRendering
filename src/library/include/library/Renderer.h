@@ -25,7 +25,7 @@ namespace library
 	struct Time;
 
 	class SceneComponent;
-	class TextComponent;
+	class UIComponent;
 
 	class Renderer : public NonCopyable<Renderer>
 	{
@@ -36,9 +36,9 @@ namespace library
 		void RemoveDrawable(SceneComponent& sceneDrawable);
 		void RenderScene(const Time& time);
 
-		void AddDrawable(TextComponent& textDrawable);
-		void RemoveDrawable(TextComponent& textDrawable);
-		void RenderText(const Time& time);
+		void AddDrawable(UIComponent& uiDrawable);
+		void RemoveDrawable(UIComponent& uiDrawable);
+		void RenderUI(const Time& time);
 
 		void ResetRenderState(const RenderState rs = RenderState::All);
 		void SaveRenderState(const RenderState rs = RenderState::All);
@@ -50,7 +50,7 @@ namespace library
 
 	private:
 		std::vector<std::reference_wrapper<SceneComponent>> m_sceneDrawables;
-		std::vector<std::reference_wrapper<TextComponent>> m_textDrawables;
+		std::vector<std::reference_wrapper<UIComponent>> m_uiDrawables;
 
 		const Application& m_app;
 

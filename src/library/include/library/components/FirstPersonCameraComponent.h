@@ -1,6 +1,6 @@
 #pragma once
-#include "library/components/CameraComponent.h"
-#include "library/components/InputReceivableComponent.h"
+#include "library/Components/CameraComponent.h"
+#include "library/Components/InputReceivableComponent.h"
 
 namespace library
 {

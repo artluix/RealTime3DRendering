@@ -1,5 +1,5 @@
 #pragma once
-#include "library/components/Component.h"
+#include "library/Components/Component.h"
 #include "library/Color.h"
 
 namespace library

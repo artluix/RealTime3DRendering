@@ -1,12 +1,12 @@
 #include "StdAfx.h"
-#include "library/effect/Effect.h"
+#include "library/Effect/Effect.h"
 
 #include "library/Application.h"
 #include "library/Utils.h"
 #include "library/Exception.h"
 
-#include "library/effect/EffectTechnique.h"
-#include "library/effect/EffectVariable.h"
+#include "library/Effect/EffectTechnique.h"
+#include "library/Effect/EffectVariable.h"
 
 #include "library/Logger.h"
 

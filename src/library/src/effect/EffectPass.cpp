@@ -1,7 +1,7 @@
 #include "StdAfx.h"
-#include "library/effect/EffectPass.h"
+#include "library/Effect/EffectPass.h"
 
-#include "library/effect/EffectTechnique.h"
+#include "library/Effect/EffectTechnique.h"
 #include "library/Application.h"
 #include "library/Exception.h"
 

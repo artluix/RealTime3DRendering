@@ -1,14 +1,14 @@
 #include "StdAfx.h"
-#include "library/components/RenderableFrustumComponent.h"
+#include "library/Components/RenderableFrustumComponent.h"
 
-#include "library/components/CameraComponent.h"
+#include "library/Components/CameraComponent.h"
 
 #include "library/Application.h"
 #include "library/Exception.h"
 
 #include "library/Frustum.h"
 
-#include "library/effect/EffectVariable.h"
+#include "library/Effect/EffectVariable.h"
 
 #include <array>
 

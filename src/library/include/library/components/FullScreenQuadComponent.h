@@ -1,5 +1,5 @@
 #pragma once
-#include "library/components/SceneComponent.h"
+#include "library/Components/SceneComponent.h"
 
 #include <functional>
 

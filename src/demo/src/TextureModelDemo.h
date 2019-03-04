@@ -1,6 +1,6 @@
 #pragma once
-#include <library/components/SceneComponent.h>
-#include <library/components/InputReceivableComponent.h>
+#include <library/Components/SceneComponent.h>
+#include <library/Components/InputReceivableComponent.h>
 
 #include <library/CommonTypes.h>
 #include <library/DirectXForwardDeclarations.h>

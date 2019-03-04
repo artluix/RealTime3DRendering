@@ -1,7 +1,7 @@
 #pragma once
 #include "library/CommonTypes.h"
 #include "library/NonCopyable.hpp"
-#include "library/math/Math.h"
+#include "library/Math/Math.h"
 #include "library/Exception.h"
 
 #include <d3dx11effect.h>

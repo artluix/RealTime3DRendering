@@ -1,5 +1,5 @@
 #pragma once
-#include "library/components/DrawableComponent.h"
+#include "library/Components/UIComponent.h"
 #include "library/Color.h"
 #include "library/Path.h"
 
@@ -8,15 +8,14 @@
 
 namespace DirectX
 {
-	class SpriteBatch;
 	class SpriteFont;
 } // namespace DirectX
 
 namespace library
 {
-	class TextComponent : public DrawableComponent
+	class TextComponent : public UIComponent
 	{
-		RTTI_CLASS(TextComponent, DrawableComponent)
+		RTTI_CLASS(TextComponent, UIComponent)
 
 	public:
 		using TextUpdateFunction = std::function<std::wstring(void)>;
@@ -30,9 +29,6 @@ namespace library
 
 		void SetPosition(const math::Vector2& position);
 		const math::Vector2& GetPosition() const { return m_position; }
-
-		void SetColor(const Color& color);
-		const Color& GetColor() const { return m_color; }
 
 		void SetFontPath(const Path& fontPath);
 		const Path& GetFontPath() const { return m_fontPath; }
@@ -48,12 +44,9 @@ namespace library
 
 		math::Vector2 m_position;
 		std::wstring m_text;
-		Color m_color;
 
 	private:
 		Path m_fontPath;
-		
-		std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
 		std::unique_ptr<DirectX::SpriteFont> m_spriteFont;
 	};
 } // namespace library

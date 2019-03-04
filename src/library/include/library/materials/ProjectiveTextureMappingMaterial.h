@@ -1,5 +1,5 @@
 #pragma once
-#include "library/materials/PointLightMaterial.h"
+#include "library/Materials/PointLightMaterial.h"
 
 namespace library
 {
@@ -13,10 +13,16 @@ namespace library
 		EffectVariable& GetProjectedTexture() { return m_projectedTexture; }
 		EffectVariable& GetProjectiveTextureMatrix() { return m_projectiveTextureMatrix; }
 
+		EffectVariable& GetDepthBias() { return m_depthBias; }
+		EffectVariable& GetDepthMapTexture() { return m_depthMapTextureMatrix; }
+
 	private:
 		void InitializeInternal() override;
 
 		EffectVariable& m_projectedTexture;
 		EffectVariable& m_projectiveTextureMatrix;
+
+		EffectVariable& m_depthBias;
+		EffectVariable& m_depthMapTextureMatrix;
 	};
 } // namespace library

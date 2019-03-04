@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "library/components/LightComponent.h"
+#include "library/Components/LightComponent.h"
 
 namespace library
 {

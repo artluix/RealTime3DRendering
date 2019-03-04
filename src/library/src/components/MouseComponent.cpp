@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "library/components/MouseComponent.h"
+#include "library/Components/MouseComponent.h"
 
 namespace library
 {

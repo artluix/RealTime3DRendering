@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "library/components/FpsComponent.h"
+#include "library/Components/FpsComponent.h"
 
 namespace library
 {

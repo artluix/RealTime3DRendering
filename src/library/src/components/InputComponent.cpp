@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "library/components/InputComponent.h"
+#include "library/Components/InputComponent.h"
 
 #include "library/Application.h"
 #include "library/Exception.h"

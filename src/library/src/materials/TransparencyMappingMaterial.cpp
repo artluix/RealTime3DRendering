@@ -1,7 +1,7 @@
 #include "StdAfx.h"
-#include "library/materials/TransparencyMappingMaterial.h"
+#include "library/Materials/TransparencyMappingMaterial.h"
 
-#include "library/effect/Effect.h"
+#include "library/Effect/Effect.h"
 #include "library/Mesh.h"
 
 namespace library
@@ -97,6 +97,6 @@ namespace library
 			);
 		}
 
-		return Material::CreateVertexBuffer(device, vertices.data(), vertices.size() * sizeof(Vertex));
+		return Material::CreateVertexBuffer(device, vertices);
 	}
 } // namespace library

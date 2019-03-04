@@ -1,8 +1,8 @@
 #include "StdAfx.h"
-#include "library/materials/DistortionMappingMaterial.h"
+#include "library/Materials/DistortionMappingMaterial.h"
 
-#include "library/effect/Effect.h"
-#include "library/effect/EffectVariable.h"
+#include "library/Effect/Effect.h"
+#include "library/Effect/EffectVariable.h"
 
 namespace library
 {

@@ -1,15 +1,15 @@
 #include "ProjectiveTextureMappingDemo.h"
 
-#include <library/components/CameraComponent.h>
-#include <library/components/KeyboardComponent.h>
+#include <library/Components/CameraComponent.h>
+#include <library/Components/KeyboardComponent.h>
 
-#include <library/components/TextComponent.h>
-#include <library/components/ProjectorComponent.h>
-#include <library/components/ProxyModelComponent.h>
-#include <library/components/RenderableFrustumComponent.h>
-#include <library/components/PointLightComponent.h>
+#include <library/Components/TextComponent.h>
+#include <library/Components/ProjectorComponent.h>
+#include <library/Components/ProxyModelComponent.h>
+#include <library/Components/RenderableFrustumComponent.h>
+#include <library/Components/PointLightComponent.h>
 
-#include <library/effect/EffectVariable.h>
+#include <library/Effect/EffectVariable.h>
 
 #include <library/Application.h>
 
@@ -49,7 +49,7 @@ void ProjectiveTextureMappingDemo::Initialize(const Application& app)
 
 	assert(camera);
 
-	// build vertices manually
+	// build plane vertices manually
 	{
 		using Vertex = Material::Vertex;
 
@@ -69,8 +69,7 @@ void ProjectiveTextureMappingDemo::Initialize(const Application& app)
 		m_input.vertices.count = vertices.size();
 		m_input.vertices.buffer = library::Material::CreateVertexBuffer(
 			app.GetDevice(),
-			vertices.data(),
-			m_input.vertices.count * sizeof(Vertex)
+			vertices
 		);
 	}
 
@@ -180,8 +179,6 @@ void ProjectiveTextureMappingDemo::Draw_SetData()
 
 void ProjectiveTextureMappingDemo::Update(const Time& time)
 {
-	UpdateTechnique();
-
 	UpdateAmbientLight(time);
 	UpdatePointLightAndProjector(time);
 	UpdateSpecularLight(time);
@@ -192,11 +189,6 @@ void ProjectiveTextureMappingDemo::Update(const Time& time)
 	m_renderableProjectorFrustum->Update(time);
 
 	SceneComponent::Update(time);
-}
-
-void ProjectiveTextureMappingDemo::UpdateTechnique()
-{
-
 }
 
 void ProjectiveTextureMappingDemo::UpdateAmbientLight(const Time& time)

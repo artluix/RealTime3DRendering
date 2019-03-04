@@ -1,7 +1,7 @@
 #include "StdAfx.h"
-#include "library/components/PostProcessingComponent.h"
+#include "library/Components/PostProcessingComponent.h"
 
-#include "library/components/FullScreenQuadComponent.h"
+#include "library/Components/FullScreenQuadComponent.h"
 
 namespace library
 {

@@ -1,11 +1,11 @@
 #include "StdAfx.h"
-#include "library/components/FullScreenQuadComponent.h"
+#include "library/Components/FullScreenQuadComponent.h"
 
-#include "library/effect/Effect.h"
-#include "library/effect/EffectTechnique.h"
-#include "library/effect/EffectPass.h"
+#include "library/Effect/Effect.h"
+#include "library/Effect/EffectTechnique.h"
+#include "library/Effect/EffectPass.h"
 
-#include "library/materials/Material.h"
+#include "library/Materials/Material.h"
 
 #include "library/VertexTypes.h"
 #include "library/Application.h"

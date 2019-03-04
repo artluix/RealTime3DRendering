@@ -1,8 +1,8 @@
 #pragma once
-#include <library/materials/DiffuseLightingMaterial.h>
+#include <library/Materials/DiffuseLightingMaterial.h>
 
-#include <library/components/ConcreteMaterialSceneComponent.hpp>
-#include <library/components/InputReceivableComponent.h>
+#include <library/Components/ConcreteMaterialSceneComponent.hpp>
+#include <library/Components/InputReceivableComponent.h>
 #include <library/Color.h>
 
 #include <memory>

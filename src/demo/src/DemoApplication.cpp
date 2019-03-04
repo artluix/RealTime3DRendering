@@ -24,23 +24,24 @@
 #include "DistortionMappingDemo.h"
 
 #include "ProjectiveTextureMappingDemo.h"
+#include "ProjectiveTextureMappingDepthMapDemo.h"
 
 //-------------------------------------------------------------------------
 
-#include <library/components/FpsComponent.h>
-#include <library/components/KeyboardComponent.h>
-#include <library/components/MouseComponent.h>
-#include <library/components/GridComponent.h>
-#include <library/components/FirstPersonCameraComponent.h>
-#include <library/components/SkyboxComponent.h>
+#include <library/Components/FpsComponent.h>
+#include <library/Components/KeyboardComponent.h>
+#include <library/Components/MouseComponent.h>
+#include <library/Components/GridComponent.h>
+#include <library/Components/FirstPersonCameraComponent.h>
+#include <library/Components/SkyboxComponent.h>
+#include <library/Components/FullScreenQuadComponent.h>
 
-#include <library/components/FullScreenQuadComponent.h>
-#include <library/FullScreenRenderTarget.h>
+#include <library/RenderTargets/FullScreenRenderTarget.h>
 
-#include <library/effect/Effect.h>
-#include <library/effect/EffectVariable.h>
-#include <library/effect/EffectPass.h>
-#include <library/effect/EffectTechnique.h>
+#include <library/Effect/Effect.h>
+#include <library/Effect/EffectVariable.h>
+#include <library/Effect/EffectPass.h>
+#include <library/Effect/EffectTechnique.h>
 
 #include <library/Path.h>
 #include <library/Utils.h>
@@ -244,6 +245,10 @@ void DemoApplication::Initialize()
 	projectiveTextureMapping->SetCamera(*camera);
 	projectiveTextureMapping->SetKeyboard(*m_keyboard);
 
+	auto projectiveTextureDepthMapMapping = std::make_shared<ProjectiveTextureMappingDepthMapDemo>();
+	projectiveTextureDepthMapMapping->SetCamera(*camera);
+	projectiveTextureDepthMapMapping->SetKeyboard(*m_keyboard);
+
 	// push needed components
 	m_components.push_back(m_keyboard);
 	m_components.push_back(m_mouse);
@@ -252,7 +257,7 @@ void DemoApplication::Initialize()
 	m_components.push_back(fps);
 	//m_components.push_back(skybox);
 	m_components.push_back(postProcessingText);
-	m_components.push_back(projectiveTextureMapping);
+	m_components.push_back(projectiveTextureDepthMapMapping);
 
 	Application::Initialize();
 
@@ -313,7 +318,7 @@ void DemoApplication::Draw(const Time& time)
 
 		m_postProcessing->Draw(time);
 
-		m_renderer->RenderText(time);
+		m_renderer->RenderUI(time);
 	}
 	else
 	{

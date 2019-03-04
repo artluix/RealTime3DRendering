@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "library/components/InputReceivableComponent.h"
+#include "library/Components/InputReceivableComponent.h"
 
 namespace library
 {

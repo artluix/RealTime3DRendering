@@ -1,7 +1,7 @@
 #include "StdAfx.h"
-#include "library/materials/ProjectiveTextureMappingMaterial.h"
+#include "library/Materials/ProjectiveTextureMappingMaterial.h"
 
-#include "library/effect/Effect.h"
+#include "library/Effect/Effect.h"
 #include "library/Mesh.h"
 
 namespace library
@@ -10,6 +10,8 @@ namespace library
 		: PointLightMaterial(effect, "project_texture")
 		, m_projectedTexture(effect.GetVariable("ProjectedTexture"))
 		, m_projectiveTextureMatrix(effect.GetVariable("projectiveTextureMatrix"))
+		, m_depthMapTextureMatrix(effect.GetVariable("DepthMapTexture"))
+		, m_depthBias(effect.GetVariable("depthBias"))
 	{
 	}
 
@@ -47,7 +49,6 @@ namespace library
 		};
 
 		CreateInputLayout(inputElementDescriptions, "project_texture");
-		//CreateInputLayout(inputElementDescriptions, "project_texture_no_reverse");
-		//CreateInputLayout(inputElementDescriptions, "project_texture_w_depthmap");
+		CreateInputLayout(inputElementDescriptions, "project_texture_depth_map");
 	}
 } // namespace library

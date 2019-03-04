@@ -1,7 +1,7 @@
 #include "ModelDemo.h"
 
-#include <library/components/CameraComponent.h>
-#include <library/components/KeyboardComponent.h>
+#include <library/Components/CameraComponent.h>
+#include <library/Components/KeyboardComponent.h>
 
 #include <library/VertexTypes.h>
 #include <library/Application.h>

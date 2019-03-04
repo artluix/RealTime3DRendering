@@ -1,14 +1,15 @@
 #pragma once
+#include "library/RenderTargets/RenderTarget.h"
 #include "library/CommonTypes.h"
-#include "library/NonCopyable.hpp"
-#include "library/DirectXForwardDeclarations.h"
 
 namespace library
 {
 	class Application;
 
-	class FullScreenRenderTarget : public NonCopyable<FullScreenRenderTarget>
+	class FullScreenRenderTarget : public RenderTarget
 	{
+		RTTI_CLASS(FullScreenRenderTarget, RenderTarget)
+
 	public:
 		explicit FullScreenRenderTarget(const Application& app);
 		~FullScreenRenderTarget();
@@ -17,8 +18,8 @@ namespace library
 		ID3D11DepthStencilView* GetDepthStencilView() const { return m_depthStencilView.Get(); }
 		ID3D11ShaderResourceView* GetOutputTexture() const { return m_outputTexture.Get(); }
 
-		void Begin();
-		void End();
+		void Begin() override;
+		void End() override;
 
 	private:
 		const Application& m_app;

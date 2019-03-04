@@ -1,5 +1,5 @@
 #pragma once
-#include "library/components/TextComponent.h"
+#include "library/Components/TextComponent.h"
 #include "library/Time.h"
 
 namespace DirectX

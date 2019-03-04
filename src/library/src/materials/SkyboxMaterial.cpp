@@ -1,7 +1,7 @@
 #include "StdAfx.h"
-#include "library/materials/SkyboxMaterial.h"
+#include "library/Materials/SkyboxMaterial.h"
 
-#include "library/effect/Effect.h"
+#include "library/Effect/Effect.h"
 #include "library/Mesh.h"
 #include "library/Color.h"
 
@@ -47,6 +47,6 @@ namespace library
 			vertices.emplace_back(DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f));
 		}
 
-		return Material::CreateVertexBuffer(device, vertices.data(), vertices.size() * sizeof(Vertex));
+		return Material::CreateVertexBuffer(device, vertices);
 	}
 } // namespace library

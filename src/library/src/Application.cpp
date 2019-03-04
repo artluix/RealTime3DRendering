@@ -5,9 +5,9 @@
 #include "library/Utils.h"
 #include "library/Exception.h"
 
-#include "library/components/Component.h"
+#include "library/Components/Component.h"
 
-#include "library/effect/Effect.h"
+#include "library/Effect/Effect.h"
 
 #include "library/RasterizerStates.h"
 #include "library/BlendStates.h"
@@ -125,7 +125,7 @@ namespace library
 	void Application::Draw(const Time& time)
 	{
 		m_renderer->RenderScene(time);
-		m_renderer->RenderText(time);
+		m_renderer->RenderUI(time);
 	}
 
 	//-------------------------------------------------------------------------
@@ -137,8 +137,8 @@ namespace library
 
 	void Application::UnbindPixelShaderResources(const unsigned startIdx, const unsigned count) const
 	{
-		static ID3D11ShaderResourceView* const emptySRV = nullptr;
-		m_deviceContext->PSSetShaderResources(startIdx, count, &emptySRV);
+		std::vector<ID3D11ShaderResourceView*> emptySrv(count, nullptr);
+		m_deviceContext->PSSetShaderResources(startIdx, count, emptySrv.data());
 	}
 
 	//-------------------------------------------------------------------------
@@ -450,6 +450,9 @@ namespace library
 			m_deviceContext->RSSetViewports(1, &m_viewport);
 		}
 
+		// Set render targets and viewport through render target stack
+		Begin();
+
 		// states
 		{
 			auto const device = GetDevice();
@@ -484,6 +487,21 @@ namespace library
 		m_device.Reset();
 
 		UnregisterClass(m_windowClass.c_str(), m_instanceHandle);
+	}
+
+	//-------------------------------------------------------------------------
+
+	void Application::Begin()
+	{
+		RenderTarget::Begin(
+			m_deviceContext.Get(),
+			Data(m_renderTargetView.Get(), m_depthStencilView.Get(), m_viewport)
+		);
+	}
+
+	void Application::End()
+	{
+		RenderTarget::End(m_deviceContext.Get());
 	}
 
 	//-------------------------------------------------------------------------

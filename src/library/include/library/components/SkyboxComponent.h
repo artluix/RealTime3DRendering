@@ -1,6 +1,6 @@
 #pragma once
-#include "library/materials/SkyboxMaterial.h"
-#include "library/components/ConcreteMaterialSceneComponent.hpp"
+#include "library/Materials/SkyboxMaterial.h"
+#include "library/Components/ConcreteMaterialSceneComponent.hpp"
 
 namespace library
 {

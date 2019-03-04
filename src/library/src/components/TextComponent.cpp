@@ -1,15 +1,13 @@
 #include "StdAfx.h"
-#include "library/components/TextComponent.h"
+#include "library/Components/TextComponent.h"
 
 #include "library/Application.h"
-#include "library/Renderer.h"
 #include "library/Utils.h"
 
 namespace library
 {
 	namespace
 	{
-		const auto k_defaultColor = Color::White;
 		const auto k_defaultFontPath =
 			utils::GetExecutableDirectory().Join(Path("../data/fonts/Arial_14_Regular.spritefont"));
 	}
@@ -17,8 +15,7 @@ namespace library
 	//-------------------------------------------------------------------------
 
 	TextComponent::TextComponent()
-		: m_color(k_defaultColor)
-		, m_fontPath(k_defaultFontPath)
+		: m_fontPath(k_defaultFontPath)
 	{
 	}
 
@@ -41,11 +38,6 @@ namespace library
 		m_position = position;
 	}
 
-	void TextComponent::SetColor(const Color& color)
-	{
-		m_color = color;
-	}
-
 	void TextComponent::SetFontPath(const Path& fontPath)
 	{
 		if (!m_spriteFont || m_fontPath != fontPath)
@@ -65,9 +57,8 @@ namespace library
 
 	void TextComponent::Initialize(const Application& app)
 	{
-		DrawableComponent::Initialize(app);
+		UIComponent::Initialize(app);
 
-		m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(app.GetDeviceContext());
 		SetFontPath(m_fontPath);
 	}
 
@@ -78,13 +69,20 @@ namespace library
 			m_text = m_textUpdateFunction();
 		}
 
-		GetApp()->GetRenderer()->AddDrawable(*this);
+		UIComponent::Update(time);
 	}
 
 	void TextComponent::Draw(const Time& time)
 	{
-		m_spriteBatch->Begin();
-		m_spriteFont->DrawString(m_spriteBatch.get(), m_text.c_str(), GetPosition().Load(), m_color.Load());
-		m_spriteBatch->End();
+		Begin();
+		
+		m_spriteFont->DrawString(
+			m_spriteBatch.get(),
+			m_text.c_str(),
+			m_position.Load(),
+			m_color.Load()
+		);
+		
+		End();
 	}
 } // namespace library

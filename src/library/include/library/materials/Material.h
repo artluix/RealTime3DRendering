@@ -7,6 +7,7 @@
 #include <string>
 #include <map>
 #include <vector>
+#include <array>
 #include <memory>
 #include <functional>
 
@@ -30,11 +31,21 @@ namespace library
 		explicit Material(Effect& effect, const std::string& defaultTechniqueName = "");
 		virtual ~Material() = default;
 
+		//-------------------------------------------------------------------------
+
+		template<typename VertexType>
 		static ComPtr<ID3D11Buffer> CreateVertexBuffer(
 			ID3D11Device* const device,
-			const void* data,
-			const std::size_t size
+			const std::vector<VertexType>& vertices
 		);
+
+		template<typename VertexType, std::size_t VerticesCount>
+		static ComPtr<ID3D11Buffer> CreateVertexBuffer(
+			ID3D11Device* const device,
+			const std::array<VertexType, VerticesCount>& vertices
+		);
+
+		//-------------------------------------------------------------------------
 
 		EffectVariable& operator[](const std::string& variableName);
 		const Effect& GetEffect() const { return m_effect; }
@@ -61,6 +72,12 @@ namespace library
 		virtual unsigned GetVertexSize() const = 0;
 
 	protected:
+		static ComPtr<ID3D11Buffer> CreateVertexBuffer(
+			ID3D11Device* const device,
+			const void* data,
+			const std::size_t size
+		);
+
 		virtual void CreateInputLayout(
 			const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions,
 			const std::string& techniqueName = "main11",
@@ -83,4 +100,24 @@ namespace library
 	private:
 		bool m_isInitialized = false;
 	};
+
+	//-------------------------------------------------------------------------
+
+	template<typename VertexType>
+	inline ComPtr<ID3D11Buffer> Material::CreateVertexBuffer(
+		ID3D11Device* const device,
+		const std::vector<VertexType>& vertices
+	)
+	{
+		return CreateVertexBuffer(device, vertices.data(), vertices.size() * sizeof(VertexType));
+	}
+
+	template<typename VertexType, std::size_t VerticesCount>
+	inline ComPtr<ID3D11Buffer> Material::CreateVertexBuffer(
+		ID3D11Device* const device,
+		const std::array<VertexType, VerticesCount>& vertices
+	)
+	{
+		return CreateVertexBuffer(device, vertices.data(), VerticesCount * sizeof(VertexType));
+	}
 } // namespace library

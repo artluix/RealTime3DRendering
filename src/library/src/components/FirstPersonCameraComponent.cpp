@@ -1,12 +1,12 @@
 #include "StdAfx.h"
-#include "library/components/FirstPersonCameraComponent.h"
+#include "library/Components/FirstPersonCameraComponent.h"
 
 #include "library/Application.h"
 #include "library/Logger.h"
-#include "library/math/Math.h"
+#include "library/Math/Math.h"
 
-#include "library/components/KeyboardComponent.h"
-#include "library/components/MouseComponent.h"
+#include "library/Components/KeyboardComponent.h"
+#include "library/Components/MouseComponent.h"
 
 namespace library
 {
@@ -72,8 +72,6 @@ namespace library
 				m_rotationStartPoint.y = m_mouse->GetY() * m_mouseSensitivity;
 
 				const auto rotationDelta = m_rotationStartPoint - prevPoint;
-				//Logger::Info("Rotation delta: %s", rotationDelta.ToString().c_str());
-
 				const auto rotation = rotationDelta * m_rotationRate * elapsedTime;
 
 				const auto pitchMatrix = math::Matrix4::RotationAxis(GetRight(), rotation.y);

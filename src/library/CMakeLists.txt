@@ -5,68 +5,76 @@ if(APPLICATION)
 
     set(LIBRARY_SOURCES
         # include
-            # components
-                include/library/components/Component.h
+            # Components
+                include/library/Components/Component.h
 
-                include/library/components/BloomComponent.h
-                include/library/components/CameraComponent.h
-                include/library/components/ConcreteMaterialPostProcessingComponent.hpp
-                include/library/components/ConcreteMaterialSceneComponent.hpp
-                include/library/components/DirectionalLightComponent.h
-                include/library/components/DrawableComponent.h
-                include/library/components/FirstPersonCameraComponent.h
-                include/library/components/FpsComponent.h
-                include/library/components/FullScreenQuadComponent.h
-                include/library/components/GaussianBlurComponent.h
-                include/library/components/GridComponent.h
-                include/library/components/InputComponent.h
-                include/library/components/InputReceivableComponent.h
-                include/library/components/KeyboardComponent.h
-                include/library/components/LightComponent.h
-                include/library/components/MouseComponent.h
-                include/library/components/PointLightComponent.h
-                include/library/components/PostProcessingComponent.h
-                include/library/components/ProjectorComponent.h
-                include/library/components/ProxyModelComponent.h
-                include/library/components/RenderableFrustumComponent.h
-                include/library/components/SceneComponent.h
-                include/library/components/SkyboxComponent.h
-                include/library/components/SpotLightComponent.h
-                include/library/components/TextComponent.h
+                include/library/Components/BloomComponent.h
+                include/library/Components/CameraComponent.h
+                include/library/Components/ConcreteMaterialPostProcessingComponent.hpp
+                include/library/Components/ConcreteMaterialSceneComponent.hpp
+                include/library/Components/DirectionalLightComponent.h
+                include/library/Components/DrawableComponent.h
+                include/library/Components/FirstPersonCameraComponent.h
+                include/library/Components/FpsComponent.h
+                include/library/Components/FullScreenQuadComponent.h
+                include/library/Components/GaussianBlurComponent.h
+                include/library/Components/GridComponent.h
+                include/library/Components/InputComponent.h
+                include/library/Components/InputReceivableComponent.h
+                include/library/Components/KeyboardComponent.h
+                include/library/Components/LightComponent.h
+                include/library/Components/MouseComponent.h
+                include/library/Components/PointLightComponent.h
+                include/library/Components/PostProcessingComponent.h
+                include/library/Components/ProjectorComponent.h
+                include/library/Components/ProxyModelComponent.h
+                include/library/Components/RenderableFrustumComponent.h
+                include/library/Components/SceneComponent.h
+                include/library/Components/SkyboxComponent.h
+                include/library/Components/SpotLightComponent.h
+                include/library/Components/TextComponent.h
+                include/library/Components/UIComponent.h
 
-            # effect
-                include/library/effect/Effect.h
+            # Effect
+                include/library/Effect/Effect.h
 
-                include/library/effect/EffectPass.h
-                include/library/effect/EffectTechnique.h
-                include/library/effect/EffectVariable.h
+                include/library/Effect/EffectPass.h
+                include/library/Effect/EffectTechnique.h
+                include/library/Effect/EffectVariable.h
 
-            # materials
-                include/library/materials/Material.h
+            # Materials
+                include/library/Materials/Material.h
 
-                include/library/materials/BasicMaterial.h
-                include/library/materials/BloomMaterial.h
-                include/library/materials/ColorFilterMaterial.h
-                include/library/materials/DiffuseLightingMaterial.h
-                include/library/materials/DisplacementMappingMaterial.h
-                include/library/materials/DistortionMappingMaterial.h
-                include/library/materials/EnvironmentMappingMaterial.h
-                include/library/materials/FogMaterial.h
-                include/library/materials/GaussianBlurMaterial.h
-                include/library/materials/NormalMappingMaterial.h
-                include/library/materials/PointLightMaterial.h
-                include/library/materials/PostProcessingMaterial.h
-                include/library/materials/ProjectiveTextureMappingMaterial.h
-                include/library/materials/SkyboxMaterial.h
-                include/library/materials/SpotlightMaterial.h
-                include/library/materials/TextureMappingMaterial.h
-                include/library/materials/TransparencyMappingMaterial.h
+                include/library/Materials/BasicMaterial.h
+                include/library/Materials/BloomMaterial.h
+                include/library/Materials/ColorFilterMaterial.h
+                include/library/Materials/DepthMapMaterial.h
+                include/library/Materials/DiffuseLightingMaterial.h
+                include/library/Materials/DisplacementMappingMaterial.h
+                include/library/Materials/DistortionMappingMaterial.h
+                include/library/Materials/EnvironmentMappingMaterial.h
+                include/library/Materials/FogMaterial.h
+                include/library/Materials/GaussianBlurMaterial.h
+                include/library/Materials/NormalMappingMaterial.h
+                include/library/Materials/PointLightMaterial.h
+                include/library/Materials/PostProcessingMaterial.h
+                include/library/Materials/ProjectiveTextureMappingMaterial.h
+                include/library/Materials/SkyboxMaterial.h
+                include/library/Materials/SpotlightMaterial.h
+                include/library/Materials/TextureMappingMaterial.h
+                include/library/Materials/TransparencyMappingMaterial.h
 
-            # math
-                include/library/math/Math.h
+            # Math
+                include/library/Math/Math.h
 
-                include/library/math/Matrix.h
-                include/library/math/Vector.h
+                include/library/Math/Matrix.h
+                include/library/Math/Vector.h
+
+            # RenderTargets
+                include/library/RenderTargets/RenderTarget.h
+
+                include/library/RenderTargets/DepthMapRenderTarget.h
+                include/library/RenderTargets/FullScreenRenderTarget.h
 
             include/library/Application.h
             include/library/BlendStates.h
@@ -75,7 +83,6 @@ if(APPLICATION)
             include/library/DirectXForwardDeclarations.h
             include/library/Exception.h
             include/library/Frustum.h
-            include/library/FullScreenRenderTarget.h
             include/library/Key.h
             include/library/Logger.h
             include/library/Mesh.h
@@ -96,71 +103,78 @@ if(APPLICATION)
             include/library/VertexTypes.h
 
         # src
-            # components
-                src/components/Component.cpp
+            # Components
+                src/Components/Component.cpp
 
-                src/components/BloomComponent.cpp
-                src/components/CameraComponent.cpp
-                src/components/DirectionalLightComponent.cpp
-                src/components/DrawableComponent.cpp
-                src/components/FirstPersonCameraComponent.cpp
-                src/components/FpsComponent.cpp
-                src/components/FullScreenQuadComponent.cpp
-                src/components/GaussianBlurComponent.cpp
-                src/components/GridComponent.cpp
-                src/components/InputComponent.cpp
-                src/components/InputReceivableComponent.cpp
-                src/components/KeyboardComponent.cpp
-                src/components/LightComponent.cpp
-                src/components/MouseComponent.cpp
-                src/components/PointLightComponent.cpp
-                src/components/PostProcessingComponent.cpp
-                src/components/ProjectorComponent.cpp
-                src/components/ProxyModelComponent.cpp
-                src/components/RenderableFrustumComponent.cpp
-                src/components/SceneComponent.cpp
-                src/components/SkyboxComponent.cpp
-                src/components/SpotLightComponent.cpp
-                src/components/TextComponent.cpp
+                src/Components/BloomComponent.cpp
+                src/Components/CameraComponent.cpp
+                src/Components/DirectionalLightComponent.cpp
+                src/Components/DrawableComponent.cpp
+                src/Components/FirstPersonCameraComponent.cpp
+                src/Components/FpsComponent.cpp
+                src/Components/FullScreenQuadComponent.cpp
+                src/Components/GaussianBlurComponent.cpp
+                src/Components/GridComponent.cpp
+                src/Components/InputComponent.cpp
+                src/Components/InputReceivableComponent.cpp
+                src/Components/KeyboardComponent.cpp
+                src/Components/LightComponent.cpp
+                src/Components/MouseComponent.cpp
+                src/Components/PointLightComponent.cpp
+                src/Components/PostProcessingComponent.cpp
+                src/Components/ProjectorComponent.cpp
+                src/Components/ProxyModelComponent.cpp
+                src/Components/RenderableFrustumComponent.cpp
+                src/Components/SceneComponent.cpp
+                src/Components/SkyboxComponent.cpp
+                src/Components/SpotLightComponent.cpp
+                src/Components/TextComponent.cpp
+                src/Components/UIComponent.cpp
 
-            # effect
-                src/effect/Effect.cpp
+            # Effect
+                src/Effect/Effect.cpp
 
-                src/effect/EffectPass.cpp
-                src/effect/EffectTechnique.cpp
-                src/effect/EffectVariable.cpp
+                src/Effect/EffectPass.cpp
+                src/Effect/EffectTechnique.cpp
+                src/Effect/EffectVariable.cpp
 
-            # materials
-                src/materials/Material.cpp
+            # Materials
+                src/Materials/Material.cpp
 
-                src/materials/BasicMaterial.cpp
-                src/materials/BloomMaterial.cpp
-                src/materials/ColorFilterMaterial.cpp
-                src/materials/DiffuseLightingMaterial.cpp
-                src/materials/DisplacementMappingMaterial.cpp
-                src/materials/DistortionMappingMaterial.cpp
-                src/materials/EnvironmentMappingMaterial.cpp
-                src/materials/FogMaterial.cpp
-                src/materials/GaussianBlurMaterial.cpp
-                src/materials/NormalMappingMaterial.cpp
-                src/materials/PointLightMaterial.cpp
-                src/materials/PostProcessingMaterial.cpp
-                src/materials/ProjectiveTextureMappingMaterial.cpp
-                src/materials/SkyboxMaterial.cpp
-                src/materials/SpotlightMaterial.cpp
-                src/materials/TextureMappingMaterial.cpp
-                src/materials/TransparencyMappingMaterial.cpp
+                src/Materials/BasicMaterial.cpp
+                src/Materials/BloomMaterial.cpp
+                src/Materials/ColorFilterMaterial.cpp
+                src/Materials/DepthMapMaterial.cpp
+                src/Materials/DiffuseLightingMaterial.cpp
+                src/Materials/DisplacementMappingMaterial.cpp
+                src/Materials/DistortionMappingMaterial.cpp
+                src/Materials/EnvironmentMappingMaterial.cpp
+                src/Materials/FogMaterial.cpp
+                src/Materials/GaussianBlurMaterial.cpp
+                src/Materials/NormalMappingMaterial.cpp
+                src/Materials/PointLightMaterial.cpp
+                src/Materials/PostProcessingMaterial.cpp
+                src/Materials/ProjectiveTextureMappingMaterial.cpp
+                src/Materials/SkyboxMaterial.cpp
+                src/Materials/SpotlightMaterial.cpp
+                src/Materials/TextureMappingMaterial.cpp
+                src/Materials/TransparencyMappingMaterial.cpp
 
-            # math
-                src/math/Matrix.cpp
-                src/math/Vector.cpp
+            # Math
+                src/Math/Matrix.cpp
+                src/Math/Vector.cpp
+
+            # RenderTargets
+                src/RenderTargets/RenderTarget.cpp
+
+                src/RenderTargets/DepthMapRenderTarget.cpp
+                src/RenderTargets/FullScreenRenderTarget.cpp
 
             src/Application.cpp
             src/BlendStates.cpp
             src/Color.cpp
             src/Exception.cpp
             src/Frustum.cpp
-            src/FullScreenRenderTarget.cpp
             src/Logger.cpp
             src/Mesh.cpp
             src/Model.cpp

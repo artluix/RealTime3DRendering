@@ -1,10 +1,10 @@
 #pragma once
-#include <library/materials/ColorFilterMaterial.h>
+#include <library/Materials/ColorFilterMaterial.h>
 
-#include <library/components/ConcreteMaterialPostProcessingComponent.hpp>
-#include <library/components/InputReceivableComponent.h>
+#include <library/Components/ConcreteMaterialPostProcessingComponent.hpp>
+#include <library/Components/InputReceivableComponent.h>
 
-#include <library/math/Matrix.h>
+#include <library/Math/Matrix.h>
 #include <library/DirectXForwardDeclarations.h>
 
 namespace library

@@ -61,6 +61,9 @@ if(APPLICATION)
             src/ProjectiveTextureMappingDemo.h
             src/ProjectiveTextureMappingDemo.cpp
 
+            src/ProjectiveTextureMappingDepthMapDemo.h
+            src/ProjectiveTextureMappingDepthMapDemo.cpp
+
             src/SpotlightDemo.h
             src/SpotlightDemo.cpp
 

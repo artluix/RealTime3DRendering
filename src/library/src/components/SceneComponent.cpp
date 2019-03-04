@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "library/components/SceneComponent.h"
+#include "library/Components/SceneComponent.h"
 
 #include "library/Application.h"
 #include "library/Renderer.h"
@@ -7,11 +7,11 @@
 #include "library/Model.h"
 #include "library/Mesh.h"
 
-#include "library/materials/Material.h"
+#include "library/Materials/Material.h"
 
-#include "library/effect/Effect.h"
-#include "library/effect/EffectTechnique.h"
-#include "library/effect/EffectPass.h"
+#include "library/Effect/Effect.h"
+#include "library/Effect/EffectTechnique.h"
+#include "library/Effect/EffectPass.h"
 
 #include <cassert>
 

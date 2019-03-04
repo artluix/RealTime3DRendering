@@ -1,8 +1,8 @@
 #pragma once
-#include <library/materials/BasicMaterial.h>
+#include <library/Materials/BasicMaterial.h>
 
-#include <library/components/ConcreteMaterialSceneComponent.hpp>
-#include <library/components/InputReceivableComponent.h>
+#include <library/Components/ConcreteMaterialSceneComponent.hpp>
+#include <library/Components/InputReceivableComponent.h>
 
 class BasicMaterialDemo
 	: public library::ConcreteMaterialSceneComponent<library::BasicMaterial>

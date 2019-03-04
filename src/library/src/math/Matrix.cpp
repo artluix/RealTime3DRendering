@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "library/math/Matrix.h"
+#include "library/Math/Matrix.h"
 
 namespace library::math
 {

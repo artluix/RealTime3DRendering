@@ -11,6 +11,7 @@ cbuffer CBufferPerFrame
     float3 lightPosition = { 0.0f, 0.0f, 0.0f };
     float lightRadius = 10.0f;
     float3 cameraPosition;
+    float depthBias = 0.005f;
 }
 
 cbuffer CBufferPerObject
@@ -31,10 +32,19 @@ RasterizerState BackCulling
 
 Texture2D ColorTexture;
 Texture2D ProjectedTexture;
+Texture2D DepthMapTexture;
 
 SamplerState ProjectedTextureSampler
 {
     Filter = MIN_MAG_MIP_LINEAR;
+    AddressU = BORDER;
+    AddressV = BORDER;
+    BorderColor = WhiteColor;
+};
+
+SamplerState DepthMapSampler
+{
+    Filter = MIN_MAG_MIP_POINT;
     AddressU = BORDER;
     AddressV = BORDER;
     BorderColor = WhiteColor;
@@ -109,10 +119,48 @@ float4 project_texture_pixel_shader(VS_OUTPUT IN) : SV_Target
     OUT.rgb = ambient + diffuse + specular;
     OUT.a = 1.0f;
 
-    IN.projectedTextureCoordinate.xy /= IN.projectedTextureCoordinate.w;
-    float3 projectedColor = ProjectedTexture.Sample(ProjectedTextureSampler, IN.projectedTextureCoordinate.xy).rgb;
+    if (IN.projectedTextureCoordinate.w >= 0.f)
+    {
+        IN.projectedTextureCoordinate.xy /= IN.projectedTextureCoordinate.w;
+        float3 projectedColor = ProjectedTexture.Sample(ProjectedTextureSampler, IN.projectedTextureCoordinate.xy).rgb;
 
-    OUT.rgb *= projectedColor;
+        OUT.rgb *= projectedColor;
+    }
+
+    return OUT;
+}
+
+float4 project_texture_depth_map_pixel_shader(VS_OUTPUT IN) : SV_Target
+{
+    float4 OUT = (float4)0;
+
+    float3 lightDirection = normalize(lightPosition - IN.worldPosition);
+    float3 viewDirection = normalize(cameraPosition - IN.worldPosition);
+
+    float3 normal = normalize(IN.normal);
+    float n_dot_l = dot(normal, lightDirection);
+    float3 halfVector = normalize(lightDirection + viewDirection);
+    float n_dot_h = dot(normal, halfVector);
+
+    float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
+    float4 lightCoefficients = lit(n_dot_l, n_dot_h, specularPower);
+
+    float3 ambient = get_color_contribution(ambientColor, color.rgb);
+    float3 diffuse = get_color_contribution(lightColor, lightCoefficients.y * color.rgb) * IN.attenuation;
+    float3 specular = get_color_contribution(specularColor, min(lightCoefficients.z, color.w)) * IN.attenuation;
+
+    OUT.rgb = ambient + diffuse + specular;
+    OUT.a = 1.0f;
+
+    if (IN.projectedTextureCoordinate.w >= 0.f)
+    {
+        IN.projectedTextureCoordinate.xyz /= IN.projectedTextureCoordinate.w;
+        float pixelDepth = IN.projectedTextureCoordinate.z;
+        float sampledDepth = DepthMapTexture.Sample(DepthMapSampler, IN.projectedTextureCoordinate.xy).x + depthBias;
+
+        float3 projectedColor = (pixelDepth > sampledDepth ? WhiteColor.rgb : ProjectedTexture.Sample(ProjectedTextureSampler, IN.projectedTextureCoordinate.xy).rgb);
+        OUT.rgb *= projectedColor;
+    }
 
     return OUT;
 }
@@ -126,6 +174,18 @@ technique11 project_texture
         SetVertexShader(CompileShader(vs_5_0, project_texture_vertex_shader()));
         SetGeometryShader(NULL);
         SetPixelShader(CompileShader(ps_5_0, project_texture_pixel_shader()));
+
+        SetRasterizerState(BackCulling);
+    }
+}
+
+technique11 project_texture_depth_map
+{
+    pass p0
+    {
+        SetVertexShader(CompileShader(vs_5_0, project_texture_vertex_shader()));
+        SetGeometryShader(NULL);
+        SetPixelShader(CompileShader(ps_5_0, project_texture_depth_map_pixel_shader()));
 
         SetRasterizerState(BackCulling);
     }

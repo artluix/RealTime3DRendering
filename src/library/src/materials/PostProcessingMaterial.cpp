@@ -1,9 +1,9 @@
 #include "StdAfx.h"
-#include "library/materials/PostProcessingMaterial.h"
+#include "library/Materials/PostProcessingMaterial.h"
 
-#include "library/effect/Effect.h"
-#include "library/effect/EffectTechnique.h"
-#include "library/effect/EffectPass.h"
+#include "library/Effect/Effect.h"
+#include "library/Effect/EffectTechnique.h"
+#include "library/Effect/EffectPass.h"
 
 #include "library/Mesh.h"
 
@@ -80,6 +80,6 @@ namespace library
 			);
 		}
 
-		return Material::CreateVertexBuffer(device, vertices.data(), vertices.size() * sizeof(Vertex));
+		return Material::CreateVertexBuffer(device, vertices);
 	}
 } // namespace library

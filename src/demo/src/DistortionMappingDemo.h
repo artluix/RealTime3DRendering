@@ -1,8 +1,10 @@
 #pragma once
-#include <library/materials/DistortionMappingMaterial.h>
+#include <library/Materials/DistortionMappingMaterial.h>
 
-#include <library/components/ConcreteMaterialPostProcessingComponent.hpp>
-#include <library/components/InputReceivableComponent.h>
+#include <library/Components/ConcreteMaterialPostProcessingComponent.hpp>
+#include <library/Components/InputReceivableComponent.h>
+
+#include <optional>
 
 namespace library
 {
@@ -47,10 +49,8 @@ private:
 	std::unique_ptr<library::FullScreenRenderTarget> m_cutoutRenderTarget;
 	library::EffectPass* m_cutoutPass;
 
-	ComPtr<ID3D11Buffer> m_vertexBuffer;
-	ComPtr<ID3D11Buffer> m_indexBuffer;
-
-	unsigned m_indicesCount;
+	library::BufferData m_vertices;
+	std::optional<library::BufferData> m_indices;
 
 	float m_displacementScale;
 	Mode m_mode;

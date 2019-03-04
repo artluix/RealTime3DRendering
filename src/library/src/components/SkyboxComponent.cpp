@@ -1,11 +1,11 @@
 #include "StdAfx.h"
-#include "library/components/SkyboxComponent.h"
+#include "library/Components/SkyboxComponent.h"
 
-#include "library/components/CameraComponent.h"
+#include "library/Components/CameraComponent.h"
 
 #include "library/Application.h"
 
-#include "library/effect/EffectVariable.h"
+#include "library/Effect/EffectVariable.h"
 
 namespace library
 {

@@ -1,8 +1,8 @@
 #pragma once
-#include "library/materials/GaussianBlurMaterial.h"
-#include "library/components/ConcreteMaterialPostProcessingComponent.hpp"
+#include "library/Materials/GaussianBlurMaterial.h"
+#include "library/Components/ConcreteMaterialPostProcessingComponent.hpp"
 
-#include "library/math/Vector.h"
+#include "library/Math/Vector.h"
 
 namespace library
 {

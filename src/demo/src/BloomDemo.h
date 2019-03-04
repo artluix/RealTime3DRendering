@@ -1,6 +1,6 @@
 #pragma once
-#include <library/components/BloomComponent.h>
-#include <library/components/InputReceivableComponent.h>
+#include <library/Components/BloomComponent.h>
+#include <library/Components/InputReceivableComponent.h>
 
 namespace library
 {

@@ -1,6 +1,6 @@
 #pragma once
 #include "library/Ray.h"
-#include "library/math/Matrix.h"
+#include "library/Math/Matrix.h"
 
 #include <array>
 

@@ -1,10 +1,10 @@
 #include "BasicMaterialDemo.h"
 
-#include <library/components/CameraComponent.h>
-#include <library/components/KeyboardComponent.h>
+#include <library/Components/CameraComponent.h>
+#include <library/Components/KeyboardComponent.h>
 
-#include <library/effect/Effect.h>
-#include <library/effect/EffectVariable.h>
+#include <library/Effect/Effect.h>
+#include <library/Effect/EffectVariable.h>
 
 #include <library/Application.h>
 #include <library/Utils.h>

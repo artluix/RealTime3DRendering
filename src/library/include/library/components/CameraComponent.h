@@ -1,5 +1,5 @@
 #pragma once
-#include "library/components/ProjectorComponent.h"
+#include "library/Components/ProjectorComponent.h"
 
 namespace library
 {

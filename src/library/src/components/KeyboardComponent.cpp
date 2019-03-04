@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "library/components/KeyboardComponent.h"
+#include "library/Components/KeyboardComponent.h"
 
 namespace library
 {

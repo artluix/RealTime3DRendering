@@ -1,11 +1,11 @@
 #include "ColorFilterDemo.h"
 
-#include <library/components/FullScreenQuadComponent.h>
-#include <library/components/TextComponent.h>
-#include <library/components/KeyboardComponent.h>
+#include <library/Components/FullScreenQuadComponent.h>
+#include <library/Components/TextComponent.h>
+#include <library/Components/KeyboardComponent.h>
 
-#include <library/effect/Effect.h>
-#include <library/effect/EffectVariable.h>
+#include <library/Effect/Effect.h>
+#include <library/Effect/EffectVariable.h>
 
 #include <library/Utils.h>
 #include <library/Path.h>

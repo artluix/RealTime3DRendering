@@ -1,10 +1,10 @@
 #include "StdAfx.h"
-#include "library/materials/Material.h"
+#include "library/Materials/Material.h"
 
-#include "library/effect/Effect.h"
-#include "library/effect/EffectTechnique.h"
-#include "library/effect/EffectVariable.h"
-#include "library/effect/EffectPass.h"
+#include "library/Effect/Effect.h"
+#include "library/Effect/EffectTechnique.h"
+#include "library/Effect/EffectVariable.h"
+#include "library/Effect/EffectPass.h"
 
 #include "library/Model.h"
 #include "library/Mesh.h"

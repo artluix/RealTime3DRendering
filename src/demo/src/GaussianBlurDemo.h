@@ -1,6 +1,6 @@
 #pragma once
-#include <library/components/GaussianBlurComponent.h>
-#include <library/components/InputReceivableComponent.h>
+#include <library/Components/GaussianBlurComponent.h>
+#include <library/Components/InputReceivableComponent.h>
 
 namespace library
 {

@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "library/components/DrawableComponent.h"
+#include "library/Components/DrawableComponent.h"
 
 namespace library
 {

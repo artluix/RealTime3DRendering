@@ -1,8 +1,8 @@
 #pragma once
-#include <library/materials/DisplacementMappingMaterial.h>
+#include <library/Materials/DisplacementMappingMaterial.h>
 
-#include <library/components/ConcreteMaterialSceneComponent.hpp>
-#include <library/components/InputReceivableComponent.h>
+#include <library/Components/ConcreteMaterialSceneComponent.hpp>
+#include <library/Components/InputReceivableComponent.h>
 
 #include <library/DirectXForwardDeclarations.h>
 #include <library/Color.h>

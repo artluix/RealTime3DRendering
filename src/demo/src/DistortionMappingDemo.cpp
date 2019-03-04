@@ -1,24 +1,25 @@
 #include "DistortionMappingDemo.h"
 
-#include <library/components/FullScreenQuadComponent.h>
-#include <library/components/TextComponent.h>
-#include <library/components/KeyboardComponent.h>
-#include <library/components/CameraComponent.h>
+#include <library/Components/FullScreenQuadComponent.h>
+#include <library/Components/TextComponent.h>
+#include <library/Components/KeyboardComponent.h>
+#include <library/Components/CameraComponent.h>
 
 #include <library/Application.h>
 #include <library/Utils.h>
 #include <library/Time.h>
-#include <library/FullScreenRenderTarget.h>
+
+#include <library/RenderTargets/FullScreenRenderTarget.h>
 
 #include <library/Model.h>
 #include <library/Mesh.h>
 
-#include <library/effect/Effect.h>
-#include <library/effect/EffectTechnique.h>
-#include <library/effect/EffectPass.h>
-#include <library/effect/EffectVariable.h>
+#include <library/Effect/Effect.h>
+#include <library/Effect/EffectTechnique.h>
+#include <library/Effect/EffectPass.h>
+#include <library/Effect/EffectVariable.h>
 
-#include <library/math/Math.h>
+#include <library/Math/Math.h>
 
 #include <sstream>
 #include <iomanip>
@@ -68,9 +69,15 @@ void DistortionMappingDemo::Initialize(const Application& app)
 	// Load model
 	Model model(app, "Sphere", true);
 	const auto& mesh = model.GetMesh(0);
-	m_vertexBuffer = m_material->CreateVertexBuffer(app.GetDevice(), mesh);
-	m_indexBuffer = mesh.CreateIndexBuffer();
-	m_indicesCount = mesh.GetIndicesCount();
+	m_vertices.buffer = m_material->CreateVertexBuffer(app.GetDevice(), mesh);
+	m_vertices.count = mesh.GetVerticesCount();
+
+	if (mesh.HasIndices())
+	{
+		m_indices = std::make_optional(
+			BufferData{ mesh.CreateIndexBuffer(), mesh.GetIndicesCount() }
+		);
+	}
 
 	m_cutoutPass = &m_effect->GetTechnique("distortion_cutout").GetPass("p0");
 	m_cutoutRenderTarget = std::make_unique<FullScreenRenderTarget>(app);
@@ -138,7 +145,7 @@ void DistortionMappingDemo::Draw(const Time& time)
 	
 	m_fullScreenQuad->Draw(time);
 
-	GetApp()->UnbindPixelShaderResources(0, 1);
+	GetApp()->UnbindPixelShaderResources(0, 2);
 }
 
 //-------------------------------------------------------------------------
@@ -154,8 +161,12 @@ void DistortionMappingDemo::DrawMeshForDistortionCutout()
 
 		const auto stride = m_material->GetVertexSize();
 		unsigned offset = 0;
-		deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.GetAddressOf(), &stride, &offset);
-		deviceContext->IASetIndexBuffer(m_indexBuffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		deviceContext->IASetVertexBuffers(0, 1, m_vertices.buffer.GetAddressOf(), &stride, &offset);
+
+		if (m_indices)
+		{
+			deviceContext->IASetIndexBuffer(m_indices->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		}
 	}
 
 	// SetData
@@ -174,7 +185,10 @@ void DistortionMappingDemo::DrawMeshForDistortionCutout()
 	}
 
 	// Render
-	deviceContext->DrawIndexed(m_indicesCount, 0, 0);
+	if (m_indices)
+		deviceContext->DrawIndexed(m_indices->count, 0, 0);
+	else
+		deviceContext->Draw(m_vertices.count, 0);
 }
 
 //-------------------------------------------------------------------------
