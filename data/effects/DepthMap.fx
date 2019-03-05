@@ -5,6 +5,11 @@ cbuffer CBufferPerObject
     float4x4 worldLightViewProjection;
 };
 
+// RasterizerState DepthBias
+// {
+//     DepthBias = 84000;
+// };
+
 /************* Data Structures *************/
 
 struct VS_OUTPUT
@@ -15,12 +20,12 @@ struct VS_OUTPUT
 
 /************* Vertex Shader *************/
 
-float4 create_depth_map_vertex_shader(float4 objectPosition : POSITION) : SV_Position
+float4 vertex_shader(float4 objectPosition : POSITION) : SV_Position
 {
     return mul(objectPosition, worldLightViewProjection);
 }
 
-VS_OUTPUT create_depth_map_render_target_vertex_shader(float4 objectPosition : POSITION)
+VS_OUTPUT render_target_vertex_shader(float4 objectPosition : POSITION)
 {
     VS_OUTPUT OUT= (VS_OUTPUT)0;
 
@@ -32,7 +37,7 @@ VS_OUTPUT create_depth_map_render_target_vertex_shader(float4 objectPosition : P
 
 /************* Pixel Shader *************/
 
-float4 create_depth_map_render_target_pixel_shader(VS_OUTPUT IN) : SV_Target
+float4 render_target_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     IN.depth.x /= IN.depth.y;
 
@@ -45,30 +50,32 @@ technique11 create_depth_map
 {
     pass p0
     {
-        SetVertexShader(CompileShader(vs_5_0, create_depth_map_vertex_shader()));
+        SetVertexShader(CompileShader(vs_5_0, vertex_shader()));
         SetGeometryShader(NULL);
         SetPixelShader(NULL);
     }
 }
 
-technique11 create_depth_map_bias
+technique11 depth_map_render_target
 {
     pass p0
     {
-        SetVertexShader(CompileShader(vs_5_0, create_depth_map_vertex_shader()));
+        SetVertexShader(CompileShader(vs_5_0, render_target_vertex_shader()));
+        SetGeometryShader(NULL);
+        SetPixelShader(CompileShader(ps_5_0, render_target_pixel_shader()));
+    }
+}
+
+technique11 depth_map_bias
+{
+    pass p0
+    {
+        SetVertexShader(CompileShader(vs_5_0, vertex_shader()));
         SetGeometryShader(NULL);
         SetPixelShader(NULL);
+
+        // SetRasterizerState(DepthBias);
     }
 }
 
-
-technique11 create_depth_map_render_target
-{
-    pass p0
-    {
-        SetVertexShader(CompileShader(vs_5_0, create_depth_map_render_target_vertex_shader()));
-        SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_5_0, create_depth_map_render_target_pixel_shader()));
-    }
-}
 

@@ -33,8 +33,8 @@ namespace library
 		};
 
 		CreateInputLayout(inputElementDescriptions, "create_depth_map");
-		CreateInputLayout(inputElementDescriptions, "create_depth_map_bias");
-		CreateInputLayout(inputElementDescriptions, "create_depth_map_render_target");
+		CreateInputLayout(inputElementDescriptions, "depth_map_render_target");
+		CreateInputLayout(inputElementDescriptions, "depth_map_bias");
 	}
 	
 	ComPtr<ID3D11Buffer> DepthMapMaterial::CreateVertexBuffer(

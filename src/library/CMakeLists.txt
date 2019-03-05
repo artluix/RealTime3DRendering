@@ -59,6 +59,7 @@ if(APPLICATION)
                 include/library/Materials/PointLightMaterial.h
                 include/library/Materials/PostProcessingMaterial.h
                 include/library/Materials/ProjectiveTextureMappingMaterial.h
+                include/library/Materials/ShadowMappingMaterial.h
                 include/library/Materials/SkyboxMaterial.h
                 include/library/Materials/SpotlightMaterial.h
                 include/library/Materials/TextureMappingMaterial.h
@@ -155,6 +156,7 @@ if(APPLICATION)
                 src/Materials/PointLightMaterial.cpp
                 src/Materials/PostProcessingMaterial.cpp
                 src/Materials/ProjectiveTextureMappingMaterial.cpp
+                src/Materials/ShadowMappingMaterial.cpp
                 src/Materials/SkyboxMaterial.cpp
                 src/Materials/SpotlightMaterial.cpp
                 src/Materials/TextureMappingMaterial.cpp

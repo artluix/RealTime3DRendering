@@ -25,6 +25,7 @@
 
 #include "ProjectiveTextureMappingDemo.h"
 #include "ProjectiveTextureMappingDepthMapDemo.h"
+#include "ShadowMappingDemo.h"
 
 //-------------------------------------------------------------------------
 
@@ -249,6 +250,10 @@ void DemoApplication::Initialize()
 	projectiveTextureDepthMapMapping->SetCamera(*camera);
 	projectiveTextureDepthMapMapping->SetKeyboard(*m_keyboard);
 
+	auto shadowMapping = std::make_shared<ShadowMappingDemo>();
+	shadowMapping->SetCamera(*camera);
+	shadowMapping->SetKeyboard(*m_keyboard);
+
 	// push needed components
 	m_components.push_back(m_keyboard);
 	m_components.push_back(m_mouse);
@@ -257,7 +262,7 @@ void DemoApplication::Initialize()
 	m_components.push_back(fps);
 	//m_components.push_back(skybox);
 	m_components.push_back(postProcessingText);
-	m_components.push_back(projectiveTextureDepthMapMapping);
+	m_components.push_back(shadowMapping);
 
 	Application::Initialize();
 

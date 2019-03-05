@@ -74,7 +74,7 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
     VS_OUTPUT OUT = (VS_OUTPUT)0;
 
     OUT.position = mul(IN.objectPosition, wvp);
-    OUT.worldPosition = mul(IN.objectPosition, world);
+    OUT.worldPosition = mul(IN.objectPosition, world).xyz;
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
     OUT.normal = normalize(mul(float4(IN.normal, 0), world).xyz);
 

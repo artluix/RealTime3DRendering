@@ -1,20 +1,19 @@
 #include "StdAfx.h"
-#include "library/Materials/ProjectiveTextureMappingMaterial.h"
+#include "library/Materials/ShadowMappingMaterial.h"
 
 #include "library/Effect/Effect.h"
 
 namespace library
 {
-	ProjectiveTextureMappingMaterial::ProjectiveTextureMappingMaterial(Effect& effect)
-		: PointLightMaterial(effect, "project_texture")
-		, m_projectedTexture(effect.GetVariable("ProjectedTexture"))
+	ShadowMappingMaterial::ShadowMappingMaterial(Effect& effect)
+		: PointLightMaterial(effect, "shadow_mapping")
 		, m_projectiveTextureMatrix(effect.GetVariable("projectiveTextureMatrix"))
-		, m_depthMapTextureMatrix(effect.GetVariable("DepthMapTexture"))
-		, m_depthBias(effect.GetVariable("depthBias"))
+		, m_shadowMapTexture(effect.GetVariable("ShadowMapTexture"))
+		, m_shadowMapSize(effect.GetVariable("shadowMapSize"))
 	{
 	}
 
-	void ProjectiveTextureMappingMaterial::InitializeInternal()
+	void ShadowMappingMaterial::InitializeInternal()
 	{
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{
@@ -47,7 +46,8 @@ namespace library
 			},
 		};
 
-		CreateInputLayout(inputElementDescriptions, "project_texture");
-		CreateInputLayout(inputElementDescriptions, "project_texture_depth_map");
+		CreateInputLayout(inputElementDescriptions, "shadow_mapping");
+		CreateInputLayout(inputElementDescriptions, "shadow_mapping_manual_pcf");
+		CreateInputLayout(inputElementDescriptions, "shadow_mapping_pcf");
 	}
 } // namespace library

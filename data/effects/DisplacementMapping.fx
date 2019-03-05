@@ -108,7 +108,7 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 
     if (displacementScale > 0.0f)
     {
-        float displacement = DisplacementMap.SampleLevel(TrilinearSampler, textureCoordinate, 0);
+        float displacement = DisplacementMap.SampleLevel(TrilinearSampler, textureCoordinate, 0).x;
         IN.objectPosition.xyz += IN.normal * displacementScale * (displacement - 1);
     }
 

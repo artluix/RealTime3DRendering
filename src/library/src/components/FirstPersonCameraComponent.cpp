@@ -14,7 +14,7 @@ namespace library
 	{
 		constexpr float k_defaultMouseSensitivity = 0.1f;
 		constexpr float k_defaultRotationRate = math::ToRadians(0.5f);
-		constexpr float k_defaultMovementRate = 0.1f;
+		constexpr float k_defaultMovementRate = 0.02f;
 	}
 
 	//-------------------------------------------------------------------------
