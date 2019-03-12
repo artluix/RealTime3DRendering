@@ -17,7 +17,7 @@ namespace library
 
 	void TextureMappingMaterial::InitializeInternal()
 	{
-		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
+		m_inputElementDescriptions =
 		{
 			{
 				"POSITION",
@@ -39,7 +39,7 @@ namespace library
 			},
 		};
 
-		CreateInputLayout(inputElementDescriptions, "main10");
+		Material::InitializeInternal();
 	}
 
 	ComPtr<ID3D11Buffer> TextureMappingMaterial::CreateVertexBuffer(

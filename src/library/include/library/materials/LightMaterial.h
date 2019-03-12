@@ -4,22 +4,23 @@
 
 namespace library
 {
-	class DiffuseLightingMaterial : public Material
+	class LightMaterial : public Material
 	{
-		RTTI_CLASS(DiffuseLightingMaterial, Material)
+		RTTI_CLASS(LightMaterial, Material)
 
 	public:
 		using Vertex = VertexPositionTextureNormal;
 
-		explicit DiffuseLightingMaterial(Effect& effect);
-		~DiffuseLightingMaterial();
+		~LightMaterial();
 
 		EffectVariable& GetAmbientColor() { return m_ambientColor; }
 		EffectVariable& GetLightColor() { return m_lightColor; }
-		EffectVariable& GetLightDirection() { return m_lightDirection; }
+		EffectVariable& GetCameraPosition() { return m_cameraPosition; }
 
 		EffectVariable& GetWVP() { return m_wvp; }
 		EffectVariable& GetWorld() { return m_world; }
+		EffectVariable& GetSpecularPower() { return m_specularPower; }
+		EffectVariable& GetSpecularColor() { return m_specularColor; }
 
 		EffectVariable& GetColorTexture() { return m_colorTexture; }
 
@@ -27,15 +28,19 @@ namespace library
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }
 
 	protected:
+		explicit LightMaterial(Effect& effect, const std::string& defaultTechniqueName = "main11");
+
 		void InitializeInternal() override;
 
 	private:
 		EffectVariable& m_ambientColor;
 		EffectVariable& m_lightColor;
-		EffectVariable& m_lightDirection;
+		EffectVariable& m_cameraPosition;
 
 		EffectVariable& m_wvp;
 		EffectVariable& m_world;
+		EffectVariable& m_specularPower;
+		EffectVariable& m_specularColor;
 
 		EffectVariable& m_colorTexture;
 	};

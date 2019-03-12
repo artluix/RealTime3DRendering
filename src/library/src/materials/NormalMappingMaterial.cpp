@@ -7,28 +7,19 @@
 namespace library
 {
 	NormalMappingMaterial::NormalMappingMaterial(Effect& effect)
-		: Material(effect, "main10")
+		: DirectionalLightMaterial(effect, "main10")
 
-		, m_ambientColor(effect.GetVariable("ambientColor"))
-		, m_lightColor(effect.GetVariable("lightColor"))
-		, m_lightDirection(effect.GetVariable("lightDirection"))
-		, m_cameraPosition(effect.GetVariable("cameraPosition"))
-
-		, m_wvp(effect.GetVariable("wvp"))
-		, m_world(effect.GetVariable("world"))
-		, m_specularPower(effect.GetVariable("specularPower"))
-		, m_specularColor(effect.GetVariable("specularColor"))
-
-		, m_colorTexture(effect.GetVariable("ColorTexture"))
 		, m_normalMap(effect.GetVariable("NormalMap"))
 	{
 	}
 
 	NormalMappingMaterial::~NormalMappingMaterial() = default;
 
+	//-------------------------------------------------------------------------
+
 	void NormalMappingMaterial::InitializeInternal()
 	{
-		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
+		m_inputElementDescriptions =
 		{
 			{
 				"POSITION",
@@ -68,7 +59,7 @@ namespace library
 			},
 		};
 
-		CreateInputLayout(inputElementDescriptions, "main10");
+		DirectionalLightMaterial::InitializeInternal();
 	}
 
 	ComPtr<ID3D11Buffer> NormalMappingMaterial::CreateVertexBuffer(
@@ -109,5 +100,3 @@ namespace library
 		return Material::CreateVertexBuffer(device, vertices);
 	}
 } // namespace library
-
-

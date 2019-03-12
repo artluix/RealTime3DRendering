@@ -19,9 +19,10 @@ namespace library
 		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
 		unsigned GetVertexSize() const override { return sizeof(Vertex); }
 
-	private:
+	protected:
 		void InitializeInternal() override;
 
+	private:
 		EffectVariable& m_sceneTexture;
 	};
 } // namespace library

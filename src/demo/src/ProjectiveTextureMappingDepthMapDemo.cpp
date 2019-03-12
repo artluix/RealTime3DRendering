@@ -5,7 +5,7 @@
 
 #include <library/Components/UIComponent.h>
 #include <library/Components/TextComponent.h>
-#include <library/Components/ProjectorComponent.h>
+#include <library/Components/PerspectiveProjectorComponent.h>
 #include <library/Components/ProxyModelComponent.h>
 #include <library/Components/RenderableFrustumComponent.h>
 #include <library/Components/PointLightComponent.h>
@@ -140,7 +140,7 @@ void ProjectiveTextureMappingDepthMapDemo::Initialize(const Application& app)
 	// specific
 	SetScaling(math::Vector3(10.f));
 
-	m_projector = std::make_unique<ProjectorComponent>();
+	m_projector = std::make_unique<PerspectiveProjectorComponent>();
 	m_projector->SetPosition(m_pointLight->GetPosition());
 	m_projector->Initialize(app);
 

@@ -1,30 +1,37 @@
 #include "StdAfx.h"
-#include "library/Materials/DiffuseLightingMaterial.h"
+#include "library/Materials/LightMaterial.h"
 
 #include "library/Effect/Effect.h"
 #include "library/Mesh.h"
 
 namespace library
 {
-	DiffuseLightingMaterial::DiffuseLightingMaterial(Effect& effect)
-		: Material(effect, "main10")
+	LightMaterial::LightMaterial(
+		Effect& effect,
+		const std::string& defaultTechniqueName /*= "main11"*/
+	)
+		: Material(effect, defaultTechniqueName)
 
 		, m_ambientColor(effect.GetVariable("ambientColor"))
 		, m_lightColor(effect.GetVariable("lightColor"))
-		, m_lightDirection(effect.GetVariable("lightDirection"))
+		, m_cameraPosition(effect.GetVariable("cameraPosition"))
 
 		, m_wvp(effect.GetVariable("wvp"))
 		, m_world(effect.GetVariable("world"))
+		, m_specularPower(effect.GetVariable("specularPower"))
+		, m_specularColor(effect.GetVariable("specularColor"))
 
 		, m_colorTexture(effect.GetVariable("ColorTexture"))
 	{
 	}
 
-	DiffuseLightingMaterial::~DiffuseLightingMaterial() = default;
+	LightMaterial::~LightMaterial() = default;
 
-	void DiffuseLightingMaterial::InitializeInternal()
+	//-------------------------------------------------------------------------
+
+	void LightMaterial::InitializeInternal()
 	{
-		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
+		m_inputElementDescriptions =
 		{
 			{
 				"POSITION",
@@ -33,7 +40,7 @@ namespace library
 				0,
 				0,
 				D3D11_INPUT_PER_VERTEX_DATA,
-				0 
+				0
 			},
 			{
 				"TEXCOORD",
@@ -42,7 +49,7 @@ namespace library
 				0,
 				D3D11_APPEND_ALIGNED_ELEMENT,
 				D3D11_INPUT_PER_VERTEX_DATA,
-				0 
+				0
 			},
 			{
 				"NORMAL",
@@ -51,14 +58,14 @@ namespace library
 				0,
 				D3D11_APPEND_ALIGNED_ELEMENT,
 				D3D11_INPUT_PER_VERTEX_DATA,
-				0 
+				0
 			},
 		};
 
-		Material::InitializeInternal();
+		CreateInputLayout();
 	}
 
-	ComPtr<ID3D11Buffer> DiffuseLightingMaterial::CreateVertexBuffer(
+	ComPtr<ID3D11Buffer> LightMaterial::CreateVertexBuffer(
 		ID3D11Device* const device,
 		const Mesh& mesh
 	) const

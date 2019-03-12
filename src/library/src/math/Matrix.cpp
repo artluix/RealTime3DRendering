@@ -202,6 +202,24 @@ namespace library::math
 
 	//-------------------------------------------------------------------------
 
+	Matrix<4> Matrix<4>::OrthographicLH(
+		const float viewWidth, const float viewHeight,
+		const float nearZ, const float farZ
+	)
+	{
+		return Store(DirectX::XMMatrixOrthographicLH(viewWidth, viewHeight, nearZ, farZ));
+	}
+
+	Matrix<4> Matrix<4>::OrthographicRH(
+		const float viewWidth, const float viewHeight,
+		const float nearZ, const float farZ
+	)
+	{
+		return Store(DirectX::XMMatrixOrthographicRH(viewWidth, viewHeight, nearZ, farZ));
+	}
+
+	//-------------------------------------------------------------------------
+
 	Matrix<4> Matrix<4>::RotationAxis(const Vector3& axis, const float angle)
 	{
 		return Store(DirectX::XMMatrixRotationAxis(axis.Load(), angle));

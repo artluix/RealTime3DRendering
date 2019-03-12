@@ -17,9 +17,11 @@ namespace library
 
 	PostProcessingMaterial::~PostProcessingMaterial() = default;
 
+	//-------------------------------------------------------------------------
+
 	void PostProcessingMaterial::InitializeInternal()
 	{
-		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
+		m_inputElementDescriptions =
 		{
 			{
 				"POSITION",
@@ -48,7 +50,7 @@ namespace library
 			for (unsigned j = 0, passesCount = technique.GetPassesCount(); j < passesCount; j++)
 			{
 				const auto& pass = technique.GetPass(j);
-				CreateInputLayout(inputElementDescriptions, pass);
+				CreateInputLayout(pass);
 			}
 		}
 	}

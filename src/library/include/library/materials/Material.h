@@ -78,23 +78,18 @@ namespace library
 			const std::size_t size
 		);
 
-		virtual void CreateInputLayout(
-			const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions,
-			const std::string& techniqueName = "main11",
-			const std::string& passName = "p0"
-		);
+		virtual void CreateInputLayout(const std::string& techniqueName, const std::string& passName = "p0");
+		virtual void CreateInputLayout(const EffectPass& pass);
+		void CreateInputLayout();
 
-		virtual void CreateInputLayout(
-			const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions,
-			const EffectPass& pass
-		);
-
-		virtual void InitializeInternal() = 0;
+		virtual void InitializeInternal();
 
 		Effect& m_effect;
+		std::string m_defaultTechniqueName;
 
 		std::reference_wrapper<const EffectTechnique> m_currentTechnique;
 
+		std::vector<D3D11_INPUT_ELEMENT_DESC> m_inputElementDescriptions;
 		std::map<const EffectPass*, ComPtr<ID3D11InputLayout>> m_inputLayouts;
 
 	private:

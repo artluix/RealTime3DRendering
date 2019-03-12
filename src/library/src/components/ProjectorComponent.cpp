@@ -5,8 +5,6 @@ namespace library
 {
 	namespace
 	{
-		constexpr auto k_defaultFieldOfView = math::Pi_Div_4;
-		constexpr auto k_defaultAspectRatio = 4.f / 3.f;
 		constexpr auto k_defaultNearPlaneDistance = 0.5f;
 		constexpr auto k_defaultFarPlaneDistance = 100.f;
 	}
@@ -15,8 +13,6 @@ namespace library
 
 	ProjectorComponent::ProjectorComponent()
 		: ProjectorComponent(
-			k_defaultFieldOfView,
-			k_defaultAspectRatio,
 			k_defaultNearPlaneDistance,
 			k_defaultFarPlaneDistance
 		)
@@ -24,21 +20,17 @@ namespace library
 	}
 
 	ProjectorComponent::ProjectorComponent(
-		const float fieldOfView,
-		const float aspectRatio,
 		const float nearPlaneDistance,
 		const float farPlaneDistance
 	)
 		: m_position(math::Vector3::Zero)
 
+		, m_nearPlaneDistance(nearPlaneDistance)
+		, m_farPlaneDistance(farPlaneDistance)
+
 		, m_direction(math::Vector3::Forward)
 		, m_up(math::Vector3::Up)
 		, m_right(math::Vector3::Right)
-
-		, m_fieldOfView(fieldOfView)
-		, m_aspectRatio(aspectRatio)
-		, m_nearPlaneDistance(nearPlaneDistance)
-		, m_farPlaneDistance(farPlaneDistance)
 
 		, m_viewMatrix(math::Matrix4::Identity)
 		, m_projectionMatrix(math::Matrix4::Identity)
@@ -49,33 +41,6 @@ namespace library
 	ProjectorComponent::~ProjectorComponent() = default;
 
 	//-------------------------------------------------------------------------
-
-	void ProjectorComponent::SetPosition(const math::Vector3& position)
-	{
-		if (m_position != position)
-		{
-			m_position = position;
-			m_isViewMatrixDirty = true;
-		}
-	}
-
-	void ProjectorComponent::SetAspectRatio(const float aspectRatio)
-	{
-		if (m_aspectRatio != aspectRatio)
-		{
-			m_aspectRatio = aspectRatio;
-			m_isProjectionMatrixDirty = true;
-		}
-	}
-
-	void ProjectorComponent::SetFieldOfView(const float fieldOfView)
-	{
-		if (m_fieldOfView != fieldOfView)
-		{
-			m_fieldOfView = fieldOfView;
-			m_isProjectionMatrixDirty = true;
-		}
-	}
 
 	void ProjectorComponent::SetNearPlaneDistance(const float nearPlaneDistance)
 	{
@@ -95,10 +60,47 @@ namespace library
 		}
 	}
 
+	void ProjectorComponent::SetPosition(const math::Vector3& position)
+	{
+		if (m_position != position)
+		{
+			m_position = position;
+			m_isViewMatrixDirty = true;
+		}
+	}
+
+	//-------------------------------------------------------------------------
+
+	const math::Matrix4& ProjectorComponent::GetViewMatrix() const
+	{
+		assert(!m_isViewMatrixDirty);
+		return m_viewMatrix;
+	}
+
+	const math::Matrix4& ProjectorComponent::GetProjectionMatrix() const
+	{
+		assert(!m_isProjectionMatrixDirty);
+		return m_projectionMatrix;
+	}
+
+	const math::Matrix4& ProjectorComponent::GetViewProjectionMatrix() const
+	{
+		assert(!m_isViewMatrixDirty && !m_isProjectionMatrixDirty);
+		return m_viewProjectionMatrix;
+	}
 	//-------------------------------------------------------------------------
 
 	void ProjectorComponent::Reset()
 	{
+		// projection
+		{
+			m_nearPlaneDistance = k_defaultNearPlaneDistance;
+			m_farPlaneDistance = k_defaultFarPlaneDistance;
+
+			m_projectionMatrix = math::Matrix4::Identity;
+			m_isProjectionMatrixDirty = true;
+		}
+
 		// view
 		{
 			m_position = math::Vector3::Zero;
@@ -109,17 +111,6 @@ namespace library
 
 			m_viewMatrix = math::Matrix4::Identity;
 			m_isViewMatrixDirty = true;
-		}
-
-		// projection
-		{
-			m_fieldOfView = k_defaultFieldOfView;
-			m_aspectRatio = k_defaultAspectRatio;
-			m_nearPlaneDistance = k_defaultNearPlaneDistance;
-			m_farPlaneDistance = k_defaultFarPlaneDistance;
-
-			m_projectionMatrix = math::Matrix4::Identity;
-			m_isProjectionMatrixDirty = true;
 		}
 
 		m_viewProjectionMatrix = math::Matrix4::Identity;
@@ -157,22 +148,6 @@ namespace library
 
 		m_viewMatrix = math::Matrix4::LookToRH(m_position, m_direction, m_up);
 		m_isViewMatrixDirty = false;
-
-		return true;
-	}
-
-	bool ProjectorComponent::UpdateProjectionMatrix()
-	{
-		if (!m_isProjectionMatrixDirty)
-			return false;
-
-		m_projectionMatrix = math::Matrix4::PerspectiveFovRH(
-			m_fieldOfView,
-			m_aspectRatio,
-			m_nearPlaneDistance,
-			m_farPlaneDistance
-		);
-		m_isProjectionMatrixDirty = false;
 
 		return true;
 	}

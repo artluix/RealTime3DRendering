@@ -14,7 +14,7 @@
 namespace library
 {
 	class PointLightComponent;
-	class ProjectorComponent;
+	class PerspectiveProjectorComponent;
 	class ProxyModelComponent;
 	class RenderableFrustumComponent;
 	class UIComponent;
@@ -102,7 +102,7 @@ private:
 	std::unique_ptr<library::PointLightComponent> m_pointLight;
 	std::unique_ptr<library::ProxyModelComponent> m_proxyModel;
 
-	std::unique_ptr<library::ProjectorComponent> m_projector;
+	std::unique_ptr<library::PerspectiveProjectorComponent> m_projector;
 	std::unique_ptr<library::RenderableFrustumComponent> m_renderableProjectorFrustum;
 	library::Frustum m_projectorFrustum;
 	library::math::Matrix4 m_projectedTextureScalingMatrix;

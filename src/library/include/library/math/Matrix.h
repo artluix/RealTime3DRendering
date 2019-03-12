@@ -220,6 +220,17 @@ namespace library::math
 
 		//-------------------------------------------------------------------------
 
+		static Matrix OrthographicLH(
+			const float width, const float height,
+			const float nearZ, const float farZ
+		);
+		static Matrix OrthographicRH(
+			const float width, const float height,
+			const float nearZ, const float farZ
+		);
+
+		//-------------------------------------------------------------------------
+
 		static Matrix RotationAxis(const Vector3& axis, const float angle);
 
 		static Matrix RotationPitchYawRoll(const float pitch, const float yaw, const float roll);

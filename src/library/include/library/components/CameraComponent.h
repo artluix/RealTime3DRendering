@@ -1,15 +1,15 @@
 #pragma once
-#include "library/Components/ProjectorComponent.h"
+#include "library/Components/PerspectiveProjectorComponent.h"
 
 namespace library
 {
-	class CameraComponent : public ProjectorComponent
+	class CameraComponent : public PerspectiveProjectorComponent
 	{
 		RTTI_CLASS(CameraComponent, Component)
 
 	public:
 		explicit CameraComponent();
-		using ProjectorComponent::ProjectorComponent;
+		using PerspectiveProjectorComponent::PerspectiveProjectorComponent;
 
 		void Initialize(const Application& app) override;
 

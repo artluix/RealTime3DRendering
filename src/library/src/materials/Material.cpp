@@ -15,6 +15,7 @@ namespace library
 {
 	Material::Material(Effect& effect, const std::string& defaultTechniqueName /* = ""*/)
 		: m_effect(effect)
+		, m_defaultTechniqueName(defaultTechniqueName)
 		, m_currentTechnique(
 			!defaultTechniqueName.empty() ?
 			effect.GetTechnique(defaultTechniqueName) :
@@ -66,27 +67,42 @@ namespace library
 		m_isInitialized = true;
 	}
 
+	//-------------------------------------------------------------------------
+
 	void Material::CreateInputLayout(
-		const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions,
-		const std::string& techniqueName /* = "main11" */,
+		const std::string& techniqueName,
 		const std::string& passName /* = "p0" */
 	)
 	{
 		const auto& technique = m_effect.GetTechnique(techniqueName);
 		const auto& pass = technique.GetPass(passName);
-		auto inputLayout = pass.CreateInputLayout(inputElementDescriptions);
+		auto inputLayout = pass.CreateInputLayout(m_inputElementDescriptions);
 
 		m_inputLayouts.emplace(&pass, inputLayout);
 	}
 
-	void Material::CreateInputLayout(
-		const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions,
-		const EffectPass& pass
-	)
+	void Material::CreateInputLayout(const EffectPass& pass)
 	{
-		auto inputLayout = pass.CreateInputLayout(inputElementDescriptions);
+		auto inputLayout = pass.CreateInputLayout(m_inputElementDescriptions);
 		m_inputLayouts.emplace(&pass, inputLayout);
 	}
+
+	void Material::CreateInputLayout()
+	{
+		CreateInputLayout(m_defaultTechniqueName);
+	}
+
+	//-------------------------------------------------------------------------
+
+	void Material::InitializeInternal()
+	{
+		assert(!m_defaultTechniqueName.empty());
+		assert(!m_inputElementDescriptions.empty());
+
+		CreateInputLayout();
+	}
+
+	//-------------------------------------------------------------------------
 
 	std::vector<ComPtr<ID3D11Buffer>> Material::CreateVertexBuffers(
 		ID3D11Device* const device,

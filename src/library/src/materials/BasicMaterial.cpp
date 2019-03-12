@@ -19,7 +19,7 @@ namespace library
 
 	void BasicMaterial::InitializeInternal()
 	{
-		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
+		m_inputElementDescriptions =
 		{
 			{
 				"POSITION",
@@ -41,7 +41,7 @@ namespace library
 			},
 		};
 
-		CreateInputLayout(inputElementDescriptions);
+		CreateInputLayout();
 	}
 
 	ComPtr<ID3D11Buffer> BasicMaterial::CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const

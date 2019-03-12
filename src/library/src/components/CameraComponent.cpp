@@ -15,7 +15,6 @@ namespace library
 	//-------------------------------------------------------------------------
 
 	CameraComponent::CameraComponent()
-		: ProjectorComponent()
 	{
 		m_fieldOfView = k_defaultFieldOfView;
 		m_nearPlaneDistance = k_defaultNearPlaneDistance;
@@ -26,16 +25,16 @@ namespace library
 	{
 		SetAspectRatio(app.GetAspectRatio());
 
-		ProjectorComponent::Initialize(app);
+		PerspectiveProjectorComponent::Initialize(app);
 	}
 
 	void CameraComponent::Reset()
 	{
-		ProjectorComponent::Reset();
+		PerspectiveProjectorComponent::Reset();
 
-		SetAspectRatio(GetApp()->GetAspectRatio());
-		SetFieldOfView(k_defaultFieldOfView);
-		SetNearPlaneDistance(k_defaultNearPlaneDistance);
-		SetFarPlaneDistance(k_defaultFarPlaneDistance);
+		m_aspectRatio = GetApp()->GetAspectRatio();
+		m_fieldOfView = k_defaultFieldOfView;
+		m_nearPlaneDistance = k_defaultNearPlaneDistance;
+		m_farPlaneDistance = k_defaultFarPlaneDistance;
 	}
 } // namespace library

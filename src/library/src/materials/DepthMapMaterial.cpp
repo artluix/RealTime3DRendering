@@ -20,7 +20,7 @@ namespace library
 
 	void DepthMapMaterial::InitializeInternal()
 	{
-		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
+		m_inputElementDescriptions =
 		{
 			{
 				"POSITION",
@@ -32,9 +32,10 @@ namespace library
 			}
 		};
 
-		CreateInputLayout(inputElementDescriptions, "create_depth_map");
-		CreateInputLayout(inputElementDescriptions, "depth_map_render_target");
-		CreateInputLayout(inputElementDescriptions, "depth_map_bias");
+		Material::InitializeInternal();
+
+		CreateInputLayout("depth_map_render_target");
+		CreateInputLayout("depth_map_bias");
 	}
 	
 	ComPtr<ID3D11Buffer> DepthMapMaterial::CreateVertexBuffer(

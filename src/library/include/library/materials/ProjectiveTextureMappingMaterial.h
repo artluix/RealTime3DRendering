@@ -5,7 +5,7 @@ namespace library
 {
 	class ProjectiveTextureMappingMaterial : public PointLightMaterial
 	{
-		RTTI_CLASS(ProjectiveTextureMappingMaterial, Material)
+		RTTI_CLASS(ProjectiveTextureMappingMaterial, PointLightMaterial)
 
 	public:
 		explicit ProjectiveTextureMappingMaterial(Effect& effect);
@@ -16,9 +16,10 @@ namespace library
 		EffectVariable& GetDepthBias() { return m_depthBias; }
 		EffectVariable& GetDepthMapTexture() { return m_depthMapTextureMatrix; }
 
-	private:
+	protected:
 		void InitializeInternal() override;
 
+	private:
 		EffectVariable& m_projectedTexture;
 		EffectVariable& m_projectiveTextureMatrix;
 

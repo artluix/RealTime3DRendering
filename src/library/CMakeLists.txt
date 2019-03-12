@@ -24,8 +24,10 @@ if(APPLICATION)
                 include/library/Components/KeyboardComponent.h
                 include/library/Components/LightComponent.h
                 include/library/Components/MouseComponent.h
+                include/library/Components/OrthographicProjectorComponent.h
                 include/library/Components/PointLightComponent.h
                 include/library/Components/PostProcessingComponent.h
+                include/library/Components/PerspectiveProjectorComponent.h
                 include/library/Components/ProjectorComponent.h
                 include/library/Components/ProxyModelComponent.h
                 include/library/Components/RenderableFrustumComponent.h
@@ -50,11 +52,14 @@ if(APPLICATION)
                 include/library/Materials/ColorFilterMaterial.h
                 include/library/Materials/DepthMapMaterial.h
                 include/library/Materials/DiffuseLightingMaterial.h
+                include/library/Materials/DirectionalLightMaterial.h
+                include/library/Materials/DirectionalShadowMappingMaterial.h
                 include/library/Materials/DisplacementMappingMaterial.h
                 include/library/Materials/DistortionMappingMaterial.h
                 include/library/Materials/EnvironmentMappingMaterial.h
                 include/library/Materials/FogMaterial.h
                 include/library/Materials/GaussianBlurMaterial.h
+                include/library/Materials/LightMaterial.h
                 include/library/Materials/NormalMappingMaterial.h
                 include/library/Materials/PointLightMaterial.h
                 include/library/Materials/PostProcessingMaterial.h
@@ -121,8 +126,10 @@ if(APPLICATION)
                 src/Components/KeyboardComponent.cpp
                 src/Components/LightComponent.cpp
                 src/Components/MouseComponent.cpp
+                src/Components/OrthographicProjectorComponent.cpp
                 src/Components/PointLightComponent.cpp
                 src/Components/PostProcessingComponent.cpp
+                src/Components/PerspectiveProjectorComponent.cpp
                 src/Components/ProjectorComponent.cpp
                 src/Components/ProxyModelComponent.cpp
                 src/Components/RenderableFrustumComponent.cpp
@@ -147,11 +154,14 @@ if(APPLICATION)
                 src/Materials/ColorFilterMaterial.cpp
                 src/Materials/DepthMapMaterial.cpp
                 src/Materials/DiffuseLightingMaterial.cpp
+                src/Materials/DirectionalLightMaterial.cpp
+                src/Materials/DirectionalShadowMappingMaterial.cpp
                 src/Materials/DisplacementMappingMaterial.cpp
                 src/Materials/DistortionMappingMaterial.cpp
                 src/Materials/EnvironmentMappingMaterial.cpp
                 src/Materials/FogMaterial.cpp
                 src/Materials/GaussianBlurMaterial.cpp
+                src/Materials/LightMaterial.cpp
                 src/Materials/NormalMappingMaterial.cpp
                 src/Materials/PointLightMaterial.cpp
                 src/Materials/PostProcessingMaterial.cpp
