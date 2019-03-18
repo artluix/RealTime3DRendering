@@ -5,10 +5,10 @@ namespace library
 {
 	namespace
 	{
-		constexpr unsigned k_defaultWidth = 800;
-		constexpr unsigned k_defaultHeight = 600;
-		constexpr auto k_defaultNearPlaneDistance = 0.5f;
-		constexpr auto k_defaultFarPlaneDistance = 100.f;
+		constexpr unsigned k_defaultWidth = 5;
+		constexpr unsigned k_defaultHeight = 5;
+		constexpr auto k_defaultNearPlaneDistance = 1.f;
+		constexpr auto k_defaultFarPlaneDistance = 20.f;
 	}
 
 	//-------------------------------------------------------------------------

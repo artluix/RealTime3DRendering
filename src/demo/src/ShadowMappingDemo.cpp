@@ -10,7 +10,6 @@
 #include <library/Components/RenderableFrustumComponent.h>
 #include <library/Components/PointLightComponent.h>
 
-#include <library/Materials/DepthMapMaterial.h>
 #include <library/RenderTargets/DepthMapRenderTarget.h>
 
 #include <library/Effect/Effect.h>
@@ -58,7 +57,7 @@ ShadowMappingDemo::ShadowMappingDemo()
 	, m_depthBias(0.0005f)
 	, m_slopeScaledDepthBias(2.f)
 
-	, m_techniqueType(Technique::Simple)
+	, m_techniqueType(ShadowMappingTechnique::Simple)
 
 	, m_specularPower(25.f)
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
@@ -144,7 +143,7 @@ void ShadowMappingDemo::Initialize(const Application& app)
 	m_projector->SetPosition(m_pointLight->GetPosition());
 	m_projector->Initialize(app);
 
-	m_projectorFrustum.SetMatrix(m_projector->GetProjectionMatrix());
+	m_projectorFrustum.SetProjectionMatrix(m_projector->GetProjectionMatrix());
 
 	m_renderableProjectorFrustum = std::make_unique<RenderableFrustumComponent>();
 	m_renderableProjectorFrustum->SetCamera(*camera);
@@ -199,14 +198,13 @@ void ShadowMappingDemo::Initialize(const Application& app)
 				L"Move Projector/Light (Numpad: 8/2, 4/6, 3/9)\n" <<
 				L"Rotate Projector (Arrow Keys)\n" <<
 				L"Show Depth Map (Enter): " << (m_drawDepthMap ? "Yes" : "No") << '\n' <<
-				L"Active Technique (Space): " << Technique::ToDisplayString(m_techniqueType) << '\n';
+				L"Active Technique (Space): " << ShadowMappingTechnique::ToDisplayString(m_techniqueType) << '\n';
 
-				if (m_techniqueType == Technique::PCF)
+				if (m_techniqueType == ShadowMappingTechnique::PCF)
 				{
 					woss << std::setprecision(5)
 						<< L"Depth Bias Amount (+J/-K): " << (int)m_depthBias << '\n'
 						<< L"Slope-Scaled Depth Bias (+O/-P): " << m_slopeScaledDepthBias;
-
 				}
 
 			return woss.str();
@@ -391,12 +389,12 @@ void ShadowMappingDemo::UpdateTechnique()
 	{
 		if (m_keyboard->WasKeyPressed(Key::Space))
 		{
-			m_techniqueType = Technique::Next(m_techniqueType);
+			m_techniqueType = ShadowMappingTechnique::Next(m_techniqueType);
 			m_material->SetCurrentTechnique(
-				m_effect->GetTechnique(Technique::ToString(m_techniqueType))
+				m_effect->GetTechnique(ShadowMappingTechnique::ToString(m_techniqueType))
 			);
 
-			const auto depthMapTechnique = Technique::GetDepthMapTechniqueType(m_techniqueType);
+			const auto depthMapTechnique = ShadowMappingTechnique::GetDepthMapTechniqueType(m_techniqueType);
 			m_depthMapMaterial->SetCurrentTechnique(
 				m_depthMapEffect->GetTechnique(DepthMappingTechnique::ToString(depthMapTechnique))
 			);
@@ -538,6 +536,7 @@ void ShadowMappingDemo::UpdatePointLightAndProjector(const Time& time)
 		// rotate projector
 		{
 			math::Vector2 rotationAmount;
+
 			if (m_keyboard->IsKeyDown(Key::Left))
 				rotationAmount.x += k_lightRotationRate.x * elapsedTime;
 
@@ -552,12 +551,14 @@ void ShadowMappingDemo::UpdatePointLightAndProjector(const Time& time)
 
 			if (rotationAmount)
 			{
-				const auto pitchMatrix = math::Matrix4::RotationAxis(GetRight(), rotationAmount.y);
+				const auto pitchMatrix = math::Matrix4::RotationAxis(
+					m_projector->GetRight(), rotationAmount.y
+				);
 				const auto yawMatrix = math::Matrix4::RotationY(rotationAmount.x);
+				m_projector->ApplyRotation(pitchMatrix * yawMatrix);
 
 				m_proxyModel->Rotate(math::Vector3(rotationAmount.y, rotationAmount.x, 0.f));
 				m_renderableProjectorFrustum->Rotate(math::Vector3(rotationAmount.y, rotationAmount.x, 0.f));
-				m_projector->ApplyRotation(pitchMatrix * yawMatrix);
 			}
 		}
 	}
@@ -599,72 +600,4 @@ void ShadowMappingDemo::InitializeProjectedTextureScalingMatrix()
 	m_projectedTextureScalingMatrix._41 = 0.5f;
 	m_projectedTextureScalingMatrix._42 = 0.5f;
 	m_projectedTextureScalingMatrix._44 = 1.f;
-}
-
-//-------------------------------------------------------------------------
-
-constexpr DepthMappingTechnique::Type DepthMappingTechnique::Next(const Type t)
-{
-	return static_cast<Type>((t + 1) % Count);
-}
-
-constexpr char* DepthMappingTechnique::ToDisplayString(const Type t)
-{
-	switch (t)
-	{
-		case Create:				return "Create";
-		case Bias:				return "Bias";
-		//case RenderTarget:		return "Render Target";
-		default:					return "";
-	};
-}
-
-constexpr char* DepthMappingTechnique::ToString(const Type t)
-{
-	switch (t)
-	{
-		case Create:				return "create_depth_map";
-		//case RenderTarget:		return "depth_map_render_target";
-		case Bias:				return "depth_map_bias";
-		default:					return "";
-	};
-}
-
-//-------------------------------------------------------------------------
-
-constexpr DepthMappingTechnique::Type ShadowMappingDemo::Technique::GetDepthMapTechniqueType(const Type t)
-{
-	switch (t)
-	{
-		case PCF:	return DepthMappingTechnique::Bias;
-		default:		return DepthMappingTechnique::Create;
-	}
-}
-
-
-constexpr ShadowMappingDemo::Technique::Type ShadowMappingDemo::Technique::Next(const Type t)
-{
-	return static_cast<Type>((t + 1) % Count);
-}
-
-constexpr char* ShadowMappingDemo::Technique::ToDisplayString(const Type t)
-{
-	switch (t)
-	{
-		case Simple:			return "Simple";
-		case ManualPCF:		return "Manual PCF";
-		case PCF:			return "PCF";
-		default:				return "";
-	};
-}
-
-constexpr char* ShadowMappingDemo::Technique::ToString(const Type t)
-{
-	switch (t)
-	{
-		case Simple:			return "shadow_mapping";
-		case ManualPCF:		return "shadow_mapping_manual_pcf";
-		case PCF:			return "shadow_mapping_pcf";
-		default:				return "";
-	};
 }

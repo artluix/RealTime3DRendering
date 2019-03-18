@@ -34,7 +34,7 @@ namespace library
 
 		Material::InitializeInternal();
 
-		CreateInputLayout("depth_map_render_target");
+		// CreateInputLayout("depth_map_render_target");
 		CreateInputLayout("depth_map_bias");
 	}
 	

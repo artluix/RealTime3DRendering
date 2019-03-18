@@ -27,10 +27,11 @@ namespace
 	constexpr float k_lightAngleDelta = 5.f;
 	constexpr float k_lightMovementRate = 10.f;
 	constexpr auto k_lightRotationRate = math::Vector2(math::Pi_2);
-	constexpr auto k_rotationOffset = math::Vector3(math::Pi_Div_2, 0.f, 0.f);
 
 	constexpr auto k_proxyModelRotationOffset = math::Vector3(math::Pi_Div_2, 0.f, 0.f);
 }
+
+//-------------------------------------------------------------------------
 
 SpotlightDemo::SpotlightDemo()
 	: m_specularPower(25.f)
@@ -42,6 +43,8 @@ SpotlightDemo::SpotlightDemo()
 }
 
 SpotlightDemo::~SpotlightDemo() = default;
+
+//-------------------------------------------------------------------------
 
 void SpotlightDemo::Initialize(const Application& app)
 {

@@ -112,7 +112,7 @@ void ProjectiveTextureMappingDemo::Initialize(const Application& app)
 	m_projector->SetPosition(m_pointLight->GetPosition());
 	m_projector->Initialize(app);
 
-	m_projectorFrustum.SetMatrix(m_projector->GetProjectionMatrix());
+	m_projectorFrustum.SetProjectionMatrix(m_projector->GetProjectionMatrix());
 
 	m_renderableProjectorFrustum = std::make_unique<RenderableFrustumComponent>();
 	m_renderableProjectorFrustum->SetCamera(*camera);

@@ -57,7 +57,7 @@ namespace library
 
 		//-------------------------------------------------------------------------
 
-		explicit Frustum(const math::Matrix4& matrix = math::Matrix4::Identity);
+		explicit Frustum(const math::Matrix4& projectionMatrix = math::Matrix4::Identity);
 
 		const math::Vector4& GetPlane(const Plane::Type planeType);
 		const math::Vector3& GetCorner(const Corner::Type cornerType);
@@ -65,11 +65,11 @@ namespace library
 		const PlaneArray& GetPlanes() const { return m_planes; }
 		const CornerArray& GetCorners() const { return m_corners; }
 
-		const math::Matrix4& GetMatrix() const { return m_matrix; }
-		void SetMatrix(const math::Matrix4& matrix);
+		const math::Matrix4& GetProjectionMatrix() const { return m_projectionMatrix; }
+		void SetProjectionMatrix(const math::Matrix4& projectionMatrix);
 
 	private:
-		math::Matrix4 m_matrix;
+		math::Matrix4 m_projectionMatrix;
 		PlaneArray m_planes;
 		CornerArray m_corners;
 	};

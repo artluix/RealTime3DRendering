@@ -20,6 +20,7 @@ namespace library
 	SceneComponent::SceneComponent()
 		: m_scaling(math::Vector3::One)
 		, m_worldMatrix(math::Matrix4::Identity)
+		, m_initialTransformMatrix(math::Matrix4::Identity)
 		, m_direction(math::Vector3::Forward)
 		, m_up(math::Vector3::Up)
 		, m_right(math::Vector3::Right)
@@ -88,6 +89,14 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
+	void SceneComponent::SetInitialTransform(const math::Matrix4& initialTransform)
+	{
+		m_initialTransformMatrix = initialTransform;
+		m_isWorldMatrixDirty = true;
+	}
+
+	//-------------------------------------------------------------------------
+
 	void SceneComponent::UpdateWorldMatrix()
 	{
 		if (!m_isWorldMatrixDirty)
@@ -101,7 +110,7 @@ namespace library
 		m_up = rotationMatrix.GetUp();
 		m_right = rotationMatrix.GetRight();
 
-		m_worldMatrix = scalingMatrix * rotationMatrix * translationMatrix;
+		m_worldMatrix = m_initialTransformMatrix * (scalingMatrix * rotationMatrix * translationMatrix);
 
 		m_direction = rotationMatrix.GetForward();
 		m_up = rotationMatrix.GetUp();

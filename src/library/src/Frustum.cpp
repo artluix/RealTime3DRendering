@@ -41,10 +41,12 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	Frustum::Frustum(const math::Matrix4& matrix /*= math::Matrix4::Identity*/)
+	Frustum::Frustum(const math::Matrix4& projectionMatrix /*= math::Matrix4::Identity*/)
 	{
-		SetMatrix(matrix);
+		SetProjectionMatrix(projectionMatrix);
 	}
+
+	//-------------------------------------------------------------------------
 
 	const math::Vector4& Frustum::GetPlane(const Plane::Type planeType)
 	{
@@ -58,16 +60,16 @@ namespace library
 		return m_corners[cornerType];
 	}
 
-	void Frustum::SetMatrix(const math::Matrix4& matrix)
+	void Frustum::SetProjectionMatrix(const math::Matrix4& projectionMatrix)
 	{
-		m_matrix = matrix;
+		m_projectionMatrix = projectionMatrix;
 
-		m_planes[Plane::Near] = -matrix.GetCol(2);
-		m_planes[Plane::Far] = -matrix.GetCol(3) + matrix.GetCol(2);
-		m_planes[Plane::Left] = -matrix.GetCol(3) - matrix.GetCol(0);
-		m_planes[Plane::Right] = -matrix.GetCol(3) + matrix.GetCol(0);
-		m_planes[Plane::Top] = -matrix.GetCol(3) + matrix.GetCol(1);
-		m_planes[Plane::Bottom] = -matrix.GetCol(3) - matrix.GetCol(1);
+		m_planes[Plane::Near] = -projectionMatrix.GetCol(2);
+		m_planes[Plane::Far] = -projectionMatrix.GetCol(3) + projectionMatrix.GetCol(2);
+		m_planes[Plane::Left] = -projectionMatrix.GetCol(3) - projectionMatrix.GetCol(0);
+		m_planes[Plane::Right] = -projectionMatrix.GetCol(3) + projectionMatrix.GetCol(0);
+		m_planes[Plane::Top] = -projectionMatrix.GetCol(3) + projectionMatrix.GetCol(1);
+		m_planes[Plane::Bottom] = -projectionMatrix.GetCol(3) - projectionMatrix.GetCol(1);
 
 		auto normalizePred = [](math::Vector4& plane)
 		{

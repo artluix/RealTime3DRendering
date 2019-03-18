@@ -20,28 +20,8 @@ namespace library
 	class UIComponent;
 	class TextComponent;
 
-	class DepthMapMaterial;
 	class DepthMapRenderTarget;
 } // namespace library
-
-//-------------------------------------------------------------------------
-
-struct DepthMappingTechnique
-{
-	enum Type : unsigned
-	{
-		Create = 0,
-		//RenderTarget,
-		Bias,
-
-		//# Count
-		Count
-	};
-
-	static constexpr Type Next(const Type t);
-	static constexpr char* ToDisplayString(const Type t);
-	static constexpr char* ToString(const Type t);
-};
 
 //-------------------------------------------------------------------------
 
@@ -52,26 +32,6 @@ class ShadowMappingDemo
 	RTTI_CLASS(ShadowMappingDemo, library::SceneComponent, library::InputReceivableComponent)
 
 public:
-	struct Technique
-	{
-		enum Type : unsigned
-		{
-			Simple = 0,
-			ManualPCF,
-			PCF,
-
-			//# Count
-			Count
-		};
-
-		static constexpr DepthMappingTechnique::Type GetDepthMapTechniqueType(const Type t);
-		static constexpr Type Next(const Type t);
-		static constexpr char* ToDisplayString(const Type t);
-		static constexpr char* ToString(const Type t);
-	};
-
-	//-------------------------------------------------------------------------
-
 	explicit ShadowMappingDemo();
 	~ShadowMappingDemo();
 
@@ -94,7 +54,7 @@ private:
 
 	void InitializeProjectedTextureScalingMatrix();
 
-	Technique::Type m_techniqueType;
+	library::ShadowMappingTechnique::Type m_techniqueType;
 
 	std::unique_ptr<library::TextComponent> m_text;
 	std::unique_ptr<library::UIComponent> m_uiDepthMap;

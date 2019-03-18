@@ -31,8 +31,6 @@ namespace
 
 	constexpr auto k_proxyModelRotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
 	constexpr float k_proxyModelDistanceOffset = 10.f;
-
-	constexpr auto k_rotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
 }
 
 //-------------------------------------------------------------------------

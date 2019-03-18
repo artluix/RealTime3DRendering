@@ -23,4 +23,8 @@ namespace library
 		CreateInputLayout("shadow_mapping_manual_pcf");
 		CreateInputLayout("shadow_mapping_pcf");
 	}
+
+	//-------------------------------------------------------------------------
+
+
 } // namespace library
