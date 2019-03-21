@@ -250,12 +250,23 @@ namespace library::math
 		return Store(DirectX::XMMatrixRotationZ(angle));
 	}
 
+	Matrix<4> Matrix<4>::AffineTransformation(
+		const Vector3& scale,
+		const Vector4& rotationOrigin, const Vector4& rotationQuat,
+		const Vector3 & translation
+	)
+	{
+		return Store(DirectX::XMMatrixAffineTransformation(
+			scale.Load(), rotationOrigin.Load(), rotationQuat.Load(), translation.Load())
+		);
+	}
+
+	//-------------------------------------------------------------------------
+
 	//Matrix<4> Matrix<4>::Scaling(const float scale)
 	//{
 	//	return Scaling(scale, scale, scale);
 	//}
-
-	//-------------------------------------------------------------------------
 
 	Matrix<4> Matrix<4>::Scaling(const float x, const float y, const float z)
 	{

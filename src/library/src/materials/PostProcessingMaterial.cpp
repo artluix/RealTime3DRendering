@@ -5,7 +5,7 @@
 #include "library/Effect/EffectTechnique.h"
 #include "library/Effect/EffectPass.h"
 
-#include "library/Mesh.h"
+#include "library/Model/Mesh.h"
 
 namespace library
 {

@@ -31,4 +31,10 @@ namespace library::math
 	{
 		return Min(Max(x, min), max);
 	}
+
+	template <typename T>
+	constexpr T Lerp(const T& lhs, const T& rhs, const float factor)
+	{
+		return lhs + factor * (rhs - lhs);
+	}
 } // namespace library::math

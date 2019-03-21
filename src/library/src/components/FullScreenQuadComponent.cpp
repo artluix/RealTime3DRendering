@@ -72,10 +72,10 @@ namespace library
 				Vertex(DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f)),
 				Vertex(DirectX::XMFLOAT4(1.0f, -1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f)),
 			};
-			m_input.vertices.count = vertices.size();
+			m_input.vertexBuffer.elementsCount = vertices.size();
 
 			D3D11_BUFFER_DESC vertexBufferDesc{};
-			vertexBufferDesc.ByteWidth = sizeof(Vertex) * m_input.vertices.count;
+			vertexBufferDesc.ByteWidth = sizeof(Vertex) * m_input.vertexBuffer.elementsCount;
 			vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 			vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
@@ -85,7 +85,7 @@ namespace library
 			auto hr = app.GetDevice()->CreateBuffer(
 				&vertexBufferDesc,
 				&vertexSubResourceData,
-				m_input.vertices.buffer.GetAddressOf()
+				m_input.vertexBuffer.buffer.GetAddressOf()
 			);
 			if (FAILED(hr))
 			{
@@ -95,17 +95,17 @@ namespace library
 
 		// index buffer
 		{
-			m_input.indices = std::make_optional(BufferData());
+			m_input.indexBuffer = std::make_optional(BufferData());
 
 			std::array<unsigned, 6> indices =
 			{
 				0, 1, 2,
 				0, 2, 3,
 			};
-			m_input.indices->count = indices.size();
+			m_input.indexBuffer->elementsCount = indices.size();
 
 			D3D11_BUFFER_DESC indexBufferDesc{};
-			indexBufferDesc.ByteWidth = sizeof(unsigned) * m_input.indices->count;
+			indexBufferDesc.ByteWidth = sizeof(unsigned) * m_input.indexBuffer->elementsCount;
 			indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 			indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
@@ -115,7 +115,7 @@ namespace library
 			auto hr = app.GetDevice()->CreateBuffer(
 				&indexBufferDesc,
 				&indexSubResourceData,
-				m_input.indices->buffer.GetAddressOf()
+				m_input.indexBuffer->buffer.GetAddressOf()
 			);
 			if (FAILED(hr))
 			{

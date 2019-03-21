@@ -11,8 +11,8 @@
 
 #include <library/RenderTargets/FullScreenRenderTarget.h>
 
-#include <library/Model.h>
-#include <library/Mesh.h>
+#include <library/Model/Model.h>
+#include <library/Model/Mesh.h>
 
 #include <library/Effect/Effect.h>
 #include <library/Effect/EffectTechnique.h>
@@ -69,8 +69,8 @@ void DistortionMappingDemo::Initialize(const Application& app)
 	// Load model
 	Model model(app, "Sphere", true);
 	const auto& mesh = model.GetMesh(0);
-	m_vertices.buffer = m_material->CreateVertexBuffer(app.GetDevice(), mesh);
-	m_vertices.count = mesh.GetVerticesCount();
+	m_vertexBuffer.buffer = m_material->CreateVertexBuffer(app.GetDevice(), mesh);
+	m_vertexBuffer.elementsCount = mesh.GetVerticesCount();
 
 	if (mesh.HasIndices())
 	{
@@ -161,7 +161,7 @@ void DistortionMappingDemo::DrawMeshForDistortionCutout()
 
 		const auto stride = m_material->GetVertexSize();
 		unsigned offset = 0;
-		deviceContext->IASetVertexBuffers(0, 1, m_vertices.buffer.GetAddressOf(), &stride, &offset);
+		deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.buffer.GetAddressOf(), &stride, &offset);
 
 		if (m_indices)
 		{
@@ -186,9 +186,9 @@ void DistortionMappingDemo::DrawMeshForDistortionCutout()
 
 	// Render
 	if (m_indices)
-		deviceContext->DrawIndexed(m_indices->count, 0, 0);
+		deviceContext->DrawIndexed(m_indices->elementsCount, 0, 0);
 	else
-		deviceContext->Draw(m_vertices.count, 0);
+		deviceContext->Draw(m_vertexBuffer.elementsCount, 0);
 }
 
 //-------------------------------------------------------------------------

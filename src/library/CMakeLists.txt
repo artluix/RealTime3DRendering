@@ -8,6 +8,7 @@ if(APPLICATION)
             # Components
                 include/library/Components/Component.h
 
+                include/library/Components/AnimationPlayerComponent.h
                 include/library/Components/BloomComponent.h
                 include/library/Components/CameraComponent.h
                 include/library/Components/ConcreteMaterialPostProcessingComponent.hpp
@@ -76,6 +77,18 @@ if(APPLICATION)
                 include/library/Math/Matrix.h
                 include/library/Math/Vector.h
 
+            # Model
+                include/library/Model/Model.h
+
+                include/library/Model/AnimationClip.h
+                include/library/Model/AnimationDef.h
+                include/library/Model/Bone.h
+                include/library/Model/BoneAnimation.h
+                include/library/Model/Keyframe.h
+                include/library/Model/Mesh.h
+                include/library/Model/ModelMaterial.h
+                include/library/Model/SceneNode.h
+
             # RenderTargets
                 include/library/RenderTargets/RenderTarget.h
 
@@ -91,9 +104,6 @@ if(APPLICATION)
             include/library/Frustum.h
             include/library/Key.h
             include/library/Logger.h
-            include/library/Mesh.h
-            include/library/Model.h
-            include/library/ModelMaterial.h
             include/library/NonCopyable.hpp
             include/library/NonConstructible.hpp
             include/library/Path.h
@@ -112,6 +122,7 @@ if(APPLICATION)
             # Components
                 src/Components/Component.cpp
 
+                src/Components/AnimationPlayerComponent.cpp
                 src/Components/BloomComponent.cpp
                 src/Components/CameraComponent.cpp
                 src/Components/DirectionalLightComponent.cpp
@@ -176,6 +187,17 @@ if(APPLICATION)
                 src/Math/Matrix.cpp
                 src/Math/Vector.cpp
 
+            # Model
+                src/Model/Model.cpp
+
+                src/Model/AnimationClip.cpp
+                src/Model/Bone.cpp
+                src/Model/BoneAnimation.cpp
+                src/Model/Keyframe.cpp
+                src/Model/Mesh.cpp
+                src/Model/ModelMaterial.cpp
+                src/Model/SceneNode.cpp
+
             # RenderTargets
                 src/RenderTargets/RenderTarget.cpp
 
@@ -188,9 +210,6 @@ if(APPLICATION)
             src/Exception.cpp
             src/Frustum.cpp
             src/Logger.cpp
-            src/Mesh.cpp
-            src/Model.cpp
-            src/ModelMaterial.cpp
             src/Path.cpp
             src/RasterizerStates.cpp
             src/Renderer.cpp

@@ -273,6 +273,26 @@ namespace library::math
 	};
 
 	//-------------------------------------------------------------------------
+	// lerp
+	//-------------------------------------------------------------------------
+
+	template<std::size_t Size>
+	Vector<Size> Lerp(
+		const Vector<Size>& lhs,
+		const Vector<Size>& rhs,
+		const float factor
+	)
+	{
+		return Vector<Size>::Store(DirectX::XMVectorLerp(lhs.Load(), rhs.Load(), factor));
+	}
+
+	template<std::size_t Size>
+	Vector<Size> Lerp(const Vector<Size>& lhs, const Vector<Size>& rhs, const Vector<Size>& factor)
+	{
+		return Store(DirectX::XMVectorLerpV(lhs.Load(), rhs.Load(), factor.Load()));
+	}
+
+	//-------------------------------------------------------------------------
 
 	bool operator == (const Vector4& lhs, const Vector4& rhs);
 	bool operator != (const Vector4& lhs, const Vector4& rhs);

@@ -143,7 +143,7 @@ void TriangleDemo::Initialize(const Application& app)
 			VertexPositionColor(XMFLOAT4(l, -0.5f, 0.0f, 1.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f)),
 		};
 
-		m_input.vertices.count = vertices.size();
+		m_input.vertexBuffer.elementsCount = vertices.size();
 
 		D3D11_BUFFER_DESC vertexBufferDesc{};
 		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -156,7 +156,7 @@ void TriangleDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
-			m_input.vertices.buffer.GetAddressOf()
+			m_input.vertexBuffer.buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{

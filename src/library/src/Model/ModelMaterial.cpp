@@ -1,7 +1,7 @@
 #include "StdAfx.h"
-#include "library/ModelMaterial.h"
+#include "library/Model/ModelMaterial.h"
 
-#include "library/Model.h"
+#include "library/Model/Model.h"
 #include "library/Exception.h"
 #include "library/Utils.h"
 
@@ -64,18 +64,18 @@ namespace library
 		return m_textures[textureType];
 	}
 
-	ModelMaterial::ModelMaterial(const Model& model, const aiMaterial& material)
+	ModelMaterial::ModelMaterial(const Model& model, const aiMaterial& aiMaterial)
 		: m_model(model)
 	{
 		aiString name;
-		material.Get(AI_MATKEY_NAME, name);
+		aiMaterial.Get(AI_MATKEY_NAME, name);
 		m_name = name.C_Str();
 
 		for (const auto tt : TextureType::GetValues())
 		{
 			const auto aiTextureType = TextureType::ToAiTextureType(tt);
 
-			const auto texturesCount = material.GetTextureCount(aiTextureType);
+			const auto texturesCount = aiMaterial.GetTextureCount(aiTextureType);
 			if (texturesCount > 0)
 			{
 				TextureNameVector textureNames;
@@ -84,7 +84,7 @@ namespace library
 				for (unsigned i = 0; i < texturesCount; i++)
 				{
 					aiString path;
-					if (material.GetTexture(aiTextureType, i, &path) == AI_SUCCESS)
+					if (aiMaterial.GetTexture(aiTextureType, i, &path) == AI_SUCCESS)
 					{
 						textureNames.emplace_back(utils::ToWideString(std::string(path.C_Str())));
 					}

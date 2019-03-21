@@ -69,13 +69,16 @@ private:
 	library::math::Matrix4 m_projectedTextureScalingMatrix;
 
 	// plane appendix to m_input data
-	library::BufferData m_positionVertices; // for depth map
+	library::BufferData m_positionVertexBuffer; // for depth map
 
 	// model data
-	library::BufferData m_modelVertices;
-	std::optional<library::BufferData> m_modelIndices;
-	library::BufferData m_modelPositionVertices; // for depth map
-	library::math::Matrix4 m_modelWorldMatrix;
+	struct
+	{
+		library::BufferData vertexBuffer;
+		std::optional<library::BufferData> indexBuffer;
+		library::BufferData positionVertexBuffer; // for depth map
+		library::math::Matrix4 worldMatrix;
+	} m_model;
 
 	bool m_drawDepthMap;
 	std::shared_ptr<library::Effect> m_depthMapEffect;

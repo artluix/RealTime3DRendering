@@ -240,6 +240,12 @@ namespace library::math
 		static Matrix RotationY(const float angle);
 		static Matrix RotationZ(const float angle);
 
+		static Matrix AffineTransformation(
+			const Vector3& scale,
+			const Vector4& rotationOrigin, const Vector4& rotationQuat,
+			const Vector3& translation
+		);
+
 		//-------------------------------------------------------------------------
 
 		//static Matrix Scaling(const float scale);

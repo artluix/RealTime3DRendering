@@ -157,8 +157,8 @@ void CubeDemo::Initialize(const Application& app)
 			1, 6, 2
 		};
 
-		m_input.indices = std::make_optional(BufferData());
-		m_input.indices->count = k_indices.size();
+		m_input.indexBuffer = std::make_optional(BufferData());
+		m_input.indexBuffer->elementsCount = k_indices.size();
 
 		D3D11_BUFFER_DESC indexBufferDesc{};
 		indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -171,7 +171,7 @@ void CubeDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateBuffer(
 			&indexBufferDesc,
 			&vertexSubResourceData,
-			m_input.indices->buffer.GetAddressOf()
+			m_input.indexBuffer->buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
@@ -198,7 +198,7 @@ void CubeDemo::Initialize(const Application& app)
 			VertexPositionColor(XMFLOAT4(1.0f, -1.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 0.5f, 1.0f, 1.0f)),
 		};
 
-		m_input.vertices.count = vertices.size();
+		m_input.vertexBuffer.elementsCount = vertices.size();
 
 		D3D11_BUFFER_DESC vertexBufferDesc{};
 		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -211,7 +211,7 @@ void CubeDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
-			m_input.vertices.buffer.GetAddressOf()
+			m_input.vertexBuffer.buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{

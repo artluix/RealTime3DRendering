@@ -21,8 +21,8 @@
 #include <library/Renderer.h>
 #include <library/VertexTypes.h>
 
-#include <library/Model.h>
-#include <library/Mesh.h>
+#include <library/Model/Model.h>
+#include <library/Model/Mesh.h>
 
 #include <SpriteBatch.h>
 
@@ -51,8 +51,6 @@ ShadowMappingDemo::ShadowMappingDemo()
 	: m_projectorFrustum(math::Matrix4::Identity)
 	, m_projectedTextureScalingMatrix(math::Matrix4::Identity)
 
-	, m_modelWorldMatrix(math::Matrix4::Identity)
-
 	, m_drawDepthMap(true)
 	, m_depthBias(0.0005f)
 	, m_slopeScaledDepthBias(2.f)
@@ -63,6 +61,8 @@ ShadowMappingDemo::ShadowMappingDemo()
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
 	, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 {
+	m_model.worldMatrix = math::Matrix4::Identity;
+
 	SetTextureName("Checkerboard");
 }
 
@@ -76,7 +76,7 @@ void ShadowMappingDemo::Initialize(const Application& app)
 
 	assert(camera);
 
-	// build plane vertices manually
+	// build plane vertexBuffer manually
 	{
 		using Vertex = Material::Vertex;
 
@@ -93,8 +93,8 @@ void ShadowMappingDemo::Initialize(const Application& app)
 			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward),
 		};
 
-		m_input.vertices.count = vertices.size();
-		m_input.vertices.buffer = library::Material::CreateVertexBuffer(
+		m_input.vertexBuffer.elementsCount = vertices.size();
+		m_input.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
 			app.GetDevice(),
 			vertices
 		);
@@ -111,7 +111,7 @@ void ShadowMappingDemo::Initialize(const Application& app)
 			VertexPosition(vertices[5].position)
 		};
 
-		m_positionVertices.count = vertices.size();
+		m_positionVertices.elementsCount = vertices.size();
 		m_positionVertices.buffer = library::Material::CreateVertexBuffer(
 			app.GetDevice(),
 			positionVertices
@@ -158,19 +158,21 @@ void ShadowMappingDemo::Initialize(const Application& app)
 		Model model(app, "Teapot", true);
 		const auto& mesh = model.GetMesh(0);
 
-		m_modelVertices.buffer = m_material->CreateVertexBuffer(app.GetDevice(), mesh);
-		m_modelPositionVertices.buffer = m_depthMapMaterial->CreateVertexBuffer(app.GetDevice(), mesh);
+		m_model.vertexBuffer.buffer = m_material->CreateVertexBuffer(app.GetDevice(), mesh);
+		m_model.positionVertexBuffer.buffer = m_depthMapMaterial->CreateVertexBuffer(app.GetDevice(), mesh);
 
-		m_modelVertices.count = m_modelPositionVertices.count = mesh.GetVerticesCount();
+		m_model.vertexBuffer.elementsCount =
+			m_model.positionVertexBuffer.elementsCount =
+				mesh.GetVerticesCount();
 
 		if (mesh.HasIndices())
 		{
-			m_modelIndices = std::make_optional(
+			m_model.indexBuffer = std::make_optional(
 				BufferData{ mesh.CreateIndexBuffer(), mesh.GetIndicesCount() }
 			);
 		}
 
-		m_modelWorldMatrix =
+		m_model.worldMatrix =
 			math::Matrix4::Scaling(math::Vector3(0.1f)) * 
 			math::Matrix4::Translation(math::Vector3(0.f, 0.f, 5.f));
 
@@ -243,20 +245,20 @@ void ShadowMappingDemo::Draw(const library::Time& time)
 		const auto stride = m_depthMapMaterial->GetVertexSize();
 		const unsigned offset = 0;
 		deviceContext->IASetVertexBuffers(
-			0, 1, m_modelPositionVertices.buffer.GetAddressOf(), &stride, &offset
+			0, 1, m_model.positionVertexBuffer.buffer.GetAddressOf(), &stride, &offset
 		);
-		if (m_modelIndices)
-			deviceContext->IASetIndexBuffer(m_modelIndices->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		if (m_model.indexBuffer)
+			deviceContext->IASetIndexBuffer(m_model.indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 		m_depthMapMaterial->GetWorldLightViewProjection() << 
-			m_modelWorldMatrix * m_projector->GetViewProjectionMatrix();
+			m_model.worldMatrix * m_projector->GetViewProjectionMatrix();
 
 		pass.Apply(0, deviceContext);
 
-		if (m_modelIndices)
-			deviceContext->DrawIndexed(m_modelIndices->count, 0, 0);
+		if (m_model.indexBuffer)
+			deviceContext->DrawIndexed(m_model.indexBuffer->elementsCount, 0, 0);
 		else
-			deviceContext->Draw(m_modelPositionVertices.count, 0);
+			deviceContext->Draw(m_model.positionVertexBuffer.elementsCount, 0);
 
 		m_depthMapRenderTarget->End();
 
@@ -274,21 +276,21 @@ void ShadowMappingDemo::Draw(const library::Time& time)
 		// Draw teapot model
 		const auto stride = m_material->GetVertexSize();
 		const unsigned offset{ 0 };
-		deviceContext->IASetVertexBuffers(0, 1, m_modelVertices.buffer.GetAddressOf(), &stride, &offset);
-		if (m_modelIndices)
-			deviceContext->IASetIndexBuffer(m_modelIndices->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		deviceContext->IASetVertexBuffers(0, 1, m_model.vertexBuffer.buffer.GetAddressOf(), &stride, &offset);
+		if (m_model.indexBuffer)
+			deviceContext->IASetIndexBuffer(m_model.indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
-		auto modelWvp = m_modelWorldMatrix;
+		auto modelWvp = m_model.worldMatrix;
 		if (!!m_camera)
 		{
 			modelWvp *= m_camera->GetViewProjectionMatrix();
 		}
 
 		const auto modelProjectiveTextureMatrix =
-			m_modelWorldMatrix * m_projector->GetViewProjectionMatrix() * m_projectedTextureScalingMatrix;
+			m_model.worldMatrix * m_projector->GetViewProjectionMatrix() * m_projectedTextureScalingMatrix;
 
 		m_material->GetWVP() << modelWvp;
-		m_material->GetWorld() << m_modelWorldMatrix;
+		m_material->GetWorld() << m_model.worldMatrix;
 
 		m_material->GetSpecularPower() << m_specularPower;
 		m_material->GetSpecularColor() << m_specularColor;
@@ -308,10 +310,10 @@ void ShadowMappingDemo::Draw(const library::Time& time)
 		auto& pass = m_material->GetCurrentTechnique().GetPass(0);
 		pass.Apply(0, deviceContext);
 
-		if (m_modelIndices)
-			deviceContext->DrawIndexed(m_modelIndices->count, 0, 0);
+		if (m_model.indexBuffer)
+			deviceContext->DrawIndexed(m_model.indexBuffer->elementsCount, 0, 0);
 		else
-			deviceContext->Draw(m_modelVertices.count, 0);
+			deviceContext->Draw(m_model.vertexBuffer.elementsCount, 0);
 
 		GetApp()->UnbindPixelShaderResources(0, 3);
 	}

@@ -73,7 +73,7 @@ namespace library
 		using Vertex = Material::Vertex;
 		using DirectX::XMFLOAT4;
 
-		m_input.vertices.buffer.Reset();
+		m_input.vertexBuffer.buffer.Reset();
 
 		std::vector<Vertex> vertices;
 		vertices.reserve(k_verticesCount);
@@ -97,7 +97,7 @@ namespace library
 		auto hr = GetApp()->GetDevice()->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
-			m_input.vertices.buffer.GetAddressOf()
+			m_input.vertexBuffer.buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
@@ -128,8 +128,8 @@ namespace library
 			7, 4
 		};
 
-		m_input.indices = std::make_optional<BufferData>();
-		m_input.indices->count = k_indicesCount;
+		m_input.indexBuffer = std::make_optional<BufferData>();
+		m_input.indexBuffer->elementsCount = k_indicesCount;
 
 		D3D11_BUFFER_DESC indexBufferDesc{};
 		indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -142,7 +142,7 @@ namespace library
 		auto hr = GetApp()->GetDevice()->CreateBuffer(
 			&indexBufferDesc,
 			&vertexSubResourceData,
-			m_input.indices->buffer.GetAddressOf()
+			m_input.indexBuffer->buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{

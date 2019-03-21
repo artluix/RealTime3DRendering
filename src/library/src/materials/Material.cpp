@@ -6,8 +6,8 @@
 #include "library/Effect/EffectVariable.h"
 #include "library/Effect/EffectPass.h"
 
-#include "library/Model.h"
-#include "library/Mesh.h"
+#include "library/Model/Model.h"
+#include "library/Model/Mesh.h"
 
 #include "library/Exception.h"
 

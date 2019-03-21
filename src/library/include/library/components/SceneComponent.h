@@ -1,6 +1,7 @@
 #pragma once
 #include "library/Components/DrawableComponent.h"
 #include "library/Math/Math.h"
+#include "library/BufferData.h"
 
 #include <d3dcommon.h>
 #include <string>
@@ -63,8 +64,8 @@ namespace library
 		struct
 		{
 			D3D_PRIMITIVE_TOPOLOGY topology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-			BufferData vertices; // mandatory
-			std::optional<BufferData> indices; // optional
+			BufferData vertexBuffer; // mandatory
+			std::optional<BufferData> indexBuffer; // optional
 			ComPtr<ID3D11InputLayout> layout;
 		} m_input;
 

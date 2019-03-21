@@ -1,19 +1,8 @@
 #pragma once
 #include "library/Components/Component.h"
 
-#include "library/CommonTypes.h"
-#include "library/DirectXForwardDeclarations.h"
-
 namespace library
 {
-	struct BufferData
-	{
-		ComPtr<ID3D11Buffer> buffer;
-		unsigned count = 0;
-	};
-
-	//-------------------------------------------------------------------------
-
 	class Material;
 	class Effect;
 	class CameraComponent;

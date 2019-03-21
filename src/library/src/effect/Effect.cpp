@@ -134,12 +134,10 @@ namespace library
 
 	void Effect::SetEffect(const ComPtr<ID3DX11Effect>& effect)
 	{
-		//m_techniquesMap.clear();
-		m_techniquesIndexMap.clear();
+		m_techniquesIndexMapping.clear();
 		m_techniques.clear();
 
-		//m_variablesMap.clear();
-		m_variablesIndexMap.clear();
+		m_variablesIndexMapping.clear();
 		m_variables.clear();
 
 		m_isInitialized = false;
@@ -153,9 +151,7 @@ namespace library
 
 	bool Effect::HasTechnique(const std::string& techniqueName) const
 	{
-		//return m_techniquesIndexMap.find(techniqueName) != m_techniquesIndexMap.end();
-
-		if (m_techniquesIndexMap.find(techniqueName) == m_techniquesIndexMap.end())
+		if (m_techniquesIndexMapping.find(techniqueName) == m_techniquesIndexMapping.end())
 		{
 			Logger::Error("Effect: %s\nTechnique not found: %s", m_name.c_str(), techniqueName.c_str());
 			return false;
@@ -164,18 +160,23 @@ namespace library
 		return true;
 	}
 
+
+	unsigned Effect::GetTechniqueIdx(const std::string& techniqueName) const
+	{
+		assert(HasTechnique(techniqueName));
+		return m_techniquesIndexMapping.at(techniqueName);
+	}
+
 	//-------------------------------------------------------------------------
 
 	const Effect::Technique& Effect::GetTechnique(const std::string& techniqueName) const
 	{
-		assert(HasTechnique(techniqueName));
-		return GetTechnique(m_techniquesIndexMap.at(techniqueName));
+		return GetTechnique(GetTechniqueIdx(techniqueName));
 	}
 
 	Effect::Technique& Effect::GetTechnique(const std::string& techniqueName)
 	{
-		assert(HasTechnique(techniqueName));
-		return GetTechnique(m_techniquesIndexMap.at(techniqueName));
+		return GetTechnique(GetTechniqueIdx(techniqueName));
 	}
 
 	//-------------------------------------------------------------------------
@@ -196,19 +197,23 @@ namespace library
 
 	bool Effect::HasVariable(const std::string& variableName) const
 	{
-		return m_variablesIndexMap.find(variableName) != m_variablesIndexMap.end();
+		return m_variablesIndexMapping.find(variableName) != m_variablesIndexMapping.end();
+	}
+
+	unsigned Effect::GetVariableIdx(const std::string& variableName) const
+	{
+		assert(HasVariable(variableName));
+		return m_variablesIndexMapping.at(variableName);
 	}
 
 	const Effect::Variable& Effect::GetVariable(const std::string& variableName) const
 	{
-		assert(HasVariable(variableName));
-		return GetVariable(m_variablesIndexMap.at(variableName));
+		return GetVariable(GetVariableIdx(variableName));
 	}
 
 	Effect::Variable& Effect::GetVariable(const std::string& variableName)
 	{
-		assert(HasVariable(variableName));
-		return GetVariable(m_variablesIndexMap.at(variableName));
+		return GetVariable(GetVariableIdx(variableName));
 	}
 
 	//-------------------------------------------------------------------------
@@ -246,7 +251,7 @@ namespace library
 				m_effect->GetTechniqueByIndex(i)
 			);
 
-			m_techniquesIndexMap.emplace(technique->GetName(), i);
+			m_techniquesIndexMapping.emplace(technique->GetName(), i);
 			m_techniques.push_back(std::move(technique));
 		}
 
@@ -254,7 +259,7 @@ namespace library
 		{
 			auto variable = std::make_unique<Variable>(*this, m_effect->GetVariableByIndex(i));
 
-			m_variablesIndexMap.emplace(variable->GetName(), i);
+			m_variablesIndexMapping.emplace(variable->GetName(), i);
 			m_variables.push_back(std::move(variable));
 		}
 

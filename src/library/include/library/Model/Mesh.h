@@ -1,6 +1,8 @@
 #pragma once
 #include "library/NonCopyable.hpp"
+#include "library/Model/Bone.h"
 #include "library/CommonTypes.h"
+#include "library/DirectXForwardDeclarations.h"
 
 #include <DirectXMath.h>
 #include <string>
@@ -80,13 +82,17 @@ namespace library
 		const std::vector<unsigned>& GetIndices() const { return m_indices; }
 
 		// faces
-		bool HasFaces() const { return m_facesCount > 0; }
+		bool HasFaces() const { return !!m_facesCount; }
 		unsigned GetFacesCount() const { return m_facesCount; }
+
+		// bone weights
+		bool HasBoneWeights() const { return !m_boneWeights.empty(); }
+		const std::vector<Bone::VertexWeights>& GetBoneWeights() const { return m_boneWeights; }
 
 		ComPtr<ID3D11Buffer> CreateIndexBuffer() const;
 
 	private:
-		explicit Mesh(Model& model, aiMesh& mesh);
+		explicit Mesh(Model& model, const aiMesh& aiMesh);
 
 		Model& m_model;
 		ModelMaterial& m_material;
@@ -100,7 +106,8 @@ namespace library
 		std::vector<DirectX::XMFLOAT4Vector> m_verticesColors;
 
 		unsigned m_facesCount;
-
 		std::vector<unsigned> m_indices;
+
+		std::vector<Bone::VertexWeights> m_boneWeights;
 	};
 } // namespace library

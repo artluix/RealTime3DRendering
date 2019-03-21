@@ -2,7 +2,7 @@
 #include "library/Materials/NormalMappingMaterial.h"
 
 #include "library/Effect/Effect.h"
-#include "library/Mesh.h"
+#include "library/Model/Mesh.h"
 
 namespace library
 {

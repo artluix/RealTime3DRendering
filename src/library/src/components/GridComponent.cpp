@@ -99,17 +99,17 @@ namespace library
 
 	void GridComponent::Build()
 	{
-		m_input.vertices.buffer.Reset();
+		m_input.vertexBuffer.buffer.Reset();
 
 		const float adjustedScale = m_scale * 0.1f;
 		const float maxPosition = m_size * adjustedScale / 2;
 
-		m_input.vertices.count = 4 * (m_size + 1);
+		m_input.vertexBuffer.elementsCount = 4 * (m_size + 1);
 
-		const unsigned size = sizeof(VertexPositionColor) * m_input.vertices.count;
+		const unsigned size = sizeof(VertexPositionColor) * m_input.vertexBuffer.elementsCount;
 
 		std::vector<VertexPositionColor> vertices;
-		vertices.reserve(m_input.vertices.count);
+		vertices.reserve(m_input.vertexBuffer.elementsCount);
 
 		const DirectX::XMFLOAT4 color(m_color);
 
@@ -137,7 +137,7 @@ namespace library
 		auto hr = GetApp()->GetDevice()->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
-			m_input.vertices.buffer.GetAddressOf()
+			m_input.vertexBuffer.buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{

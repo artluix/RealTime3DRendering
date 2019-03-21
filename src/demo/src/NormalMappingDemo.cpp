@@ -66,8 +66,8 @@ void NormalMappingDemo::Initialize(const Application& app)
 			Vertex(XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), XMFLOAT2(1.0f, 1.0f), backward, right),
 		};
 
-		m_input.vertices.count = vertices.size();
-		m_input.vertices.buffer = library::Material::CreateVertexBuffer(
+		m_input.vertexBuffer.elementsCount = vertices.size();
+		m_input.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
 			app.GetDevice(),
 			vertices
 		);

@@ -52,6 +52,7 @@ namespace library
 		bool HasTechnique(const std::string& techniqueName) const;
 		std::size_t GetTechniquesCount() const { return m_techniques.size(); }
 
+		unsigned GetTechniqueIdx(const std::string& techniqueName) const;
 		const Technique& GetTechnique(const std::string& techniqueName) const;
 		Technique& GetTechnique(const std::string& techniqueName);
 
@@ -63,6 +64,7 @@ namespace library
 		bool HasVariable(const std::string& variableName) const;
 		std::size_t GetVariablesCount() const { return m_variables.size(); }
 
+		unsigned GetVariableIdx(const std::string& variableName) const;
 		const Variable& GetVariable(const std::string& variableName) const;
 		Variable& GetVariable(const std::string& variableName);
 
@@ -96,9 +98,9 @@ namespace library
 		bool m_isInitialized = false;
 
 		std::vector<TechniquePtr> m_techniques;
-		std::map<std::string, unsigned> m_techniquesIndexMap;
+		std::map<std::string, unsigned> m_techniquesIndexMapping;
 
 		std::vector<VariablePtr> m_variables;
-		std::map<std::string, unsigned> m_variablesIndexMap;
+		std::map<std::string, unsigned> m_variablesIndexMapping;
 	};
 } // namespace library

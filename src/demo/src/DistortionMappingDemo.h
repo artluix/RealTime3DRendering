@@ -3,6 +3,7 @@
 
 #include <library/Components/ConcreteMaterialPostProcessingComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
+#include <library/BufferData.h>
 
 #include <optional>
 
@@ -49,7 +50,7 @@ private:
 	std::unique_ptr<library::FullScreenRenderTarget> m_cutoutRenderTarget;
 	library::EffectPass* m_cutoutPass;
 
-	library::BufferData m_vertices;
+	library::BufferData m_vertexBuffer;
 	std::optional<library::BufferData> m_indices;
 
 	float m_displacementScale;

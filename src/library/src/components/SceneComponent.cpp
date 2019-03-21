@@ -4,8 +4,8 @@
 #include "library/Application.h"
 #include "library/Renderer.h"
 
-#include "library/Model.h"
-#include "library/Mesh.h"
+#include "library/Model/Model.h"
+#include "library/Model/Mesh.h"
 
 #include "library/Materials/Material.h"
 
@@ -154,12 +154,12 @@ namespace library
 				Model model(*GetApp(), m_modelName, true);
 				const auto& mesh = model.GetMesh(0);
 
-				m_input.vertices.buffer = material->CreateVertexBuffer(GetApp()->GetDevice(), mesh);
-				m_input.vertices.count = mesh.GetVerticesCount();
+				m_input.vertexBuffer.buffer = material->CreateVertexBuffer(GetApp()->GetDevice(), mesh);
+				m_input.vertexBuffer.elementsCount = mesh.GetVerticesCount();
 
 				if (mesh.HasIndices())
 				{
-					m_input.indices = std::make_optional(BufferData {
+					m_input.indexBuffer = std::make_optional(BufferData {
 						mesh.CreateIndexBuffer(),
 						mesh.GetIndicesCount()
 					});
@@ -201,13 +201,13 @@ namespace library
 		{
 			unsigned stride = GetVertexSize();
 			unsigned offset = 0;
-			deviceContext->IASetVertexBuffers(0, 1, m_input.vertices.buffer.GetAddressOf(), &stride, &offset);
+			deviceContext->IASetVertexBuffers(0, 1, m_input.vertexBuffer.buffer.GetAddressOf(), &stride, &offset);
 		}
 
 		// set index buffer (if needed)
-		if (!!m_input.indices)
+		if (!!m_input.indexBuffer)
 		{
-			deviceContext->IASetIndexBuffer(m_input.indices->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+			deviceContext->IASetIndexBuffer(m_input.indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 		}
 	}
 
@@ -226,9 +226,9 @@ namespace library
 	{
 		auto deviceContext = GetApp()->GetDeviceContext();
 
-		if (!!m_input.indices)
-			deviceContext->DrawIndexed(m_input.indices->count, 0, 0);
+		if (!!m_input.indexBuffer)
+			deviceContext->DrawIndexed(m_input.indexBuffer->elementsCount, 0, 0);
 		else
-			deviceContext->Draw(m_input.vertices.count, 0);
+			deviceContext->Draw(m_input.vertexBuffer.elementsCount, 0);
 	}
 } // namespace library

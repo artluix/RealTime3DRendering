@@ -10,8 +10,8 @@
 #include <library/Exception.h>
 #include <library/Color.h>
 
-#include <library/Model.h>
-#include <library/Mesh.h>
+#include <library/Model/Model.h>
+#include <library/Model/Mesh.h>
 
 #include <d3dx11effect.h>
 
@@ -155,7 +155,7 @@ void TextureModelDemo::Initialize(const Application& app)
 
 	if (mesh.HasIndices())
 	{
-		m_input.indices = std::make_optional(BufferData{
+		m_input.indexBuffer = std::make_optional(BufferData{
 			mesh.CreateIndexBuffer(),
 			mesh.GetIndicesCount()
 		});
@@ -243,38 +243,38 @@ void TextureModelDemo::Draw_SetData()
 
 void TextureModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const Mesh& mesh)
 {
-	std::vector<VertexType> vertices;
+	std::vector<VertexType> vertexBuffer;
 
 	if (mesh.HasVertices())
 	{
 		const auto& meshVertices = mesh.GetVertices();
 		const auto& textureCoordinates = mesh.GetTextureCoordinates(0);
-		m_input.vertices.count = meshVertices.size();
+		m_input.vertexBuffer.elementsCount = meshVertices.size();
 
-		vertices.reserve(m_input.vertices.count);
+		vertexBuffer.reserve(m_input.vertexBuffer.elementsCount);
 
-		for (unsigned i = 0; i < m_input.vertices.count; i++)
+		for (unsigned i = 0; i < m_input.vertexBuffer.elementsCount; i++)
 		{
 			const auto& position = meshVertices[i];
 			const auto& uv = textureCoordinates[i];
-			vertices.emplace_back(
+			vertexBuffer.emplace_back(
 				DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f),
 				DirectX::XMFLOAT2(uv.x, uv.y)
 			);
 		}
 
 		D3D11_BUFFER_DESC vertexBufferDesc{};
-		vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_input.vertices.count;
+		vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_input.vertexBuffer.elementsCount;
 		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
-		vertexSubResourceData.pSysMem = vertices.data();
+		vertexSubResourceData.pSysMem = vertexBuffer.data();
 
 		auto hr = device->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
-			m_input.vertices.buffer.GetAddressOf()
+			m_input.vertexBuffer.buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{

@@ -2,7 +2,7 @@
 #include "library/Materials/SkyboxMaterial.h"
 
 #include "library/Effect/Effect.h"
-#include "library/Mesh.h"
+#include "library/Model/Mesh.h"
 #include "library/Color.h"
 
 namespace library

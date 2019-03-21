@@ -9,8 +9,8 @@
 #include <library/Exception.h>
 #include <library/Color.h>
 
-#include <library/Model.h>
-#include <library/Mesh.h>
+#include <library/Model/Model.h>
+#include <library/Model/Mesh.h>
 
 #include <d3dx11effect.h>
 #include <d3dcompiler.h>
@@ -149,7 +149,7 @@ void ModelDemo::Initialize(const Application& app)
 
 	if (mesh.HasIndices())
 	{
-		m_input.indices = std::make_optional(BufferData{
+		m_input.indexBuffer = std::make_optional(BufferData{
 			mesh.CreateIndexBuffer(),
 			mesh.GetIndicesCount()
 		});
@@ -258,7 +258,7 @@ void ModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const Mes
 		auto hr = device->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
-			m_input.vertices.buffer.GetAddressOf()
+			m_input.vertexBuffer.buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
