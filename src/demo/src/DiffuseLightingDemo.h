@@ -27,11 +27,12 @@ public:
 	void Initialize(const library::Application& app) override;
 	void Update(const library::Time& time) override;
 
+protected:
+	void Draw_SetData(const library::MeshData& meshData) override;
+
 private:
 	void UpdateAmbientLight(const library::Time& time);
 	void UpdateDirectionalLight(const library::Time& time);
-
-	void Draw_SetData() override;
 
 	library::Color m_ambientColor;
 

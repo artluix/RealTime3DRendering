@@ -11,7 +11,7 @@ namespace library
 	//-------------------------------------------------------------------------
 
 	FpsComponent::FpsComponent()
-		: m_frameCount(0)
+		: m_framesCount(0)
 		, m_frameRate(0)
 		, m_timeAccumulator(Duration::zero())
 	{
@@ -26,17 +26,17 @@ namespace library
 		const auto elapsed = time.elapsed.GetDuration();
 		if (m_timeAccumulator >= k_fpsMeasureInterval)
 		{
-			m_frameRate = m_frameCount;
+			m_frameRate = m_framesCount;
 
 			m_timeAccumulator = Duration::zero();
-			m_frameCount = 0;
+			m_framesCount = 0;
 		}
 		else
 		{
 			m_timeAccumulator += elapsed;
 		}
 
-		m_frameCount++;
+		m_framesCount++;
 
 		std::wostringstream woss;
 		woss << std::setprecision(4) <<

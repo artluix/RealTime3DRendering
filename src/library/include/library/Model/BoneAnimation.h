@@ -16,11 +16,10 @@ namespace library
 
 	class BoneAnimation : public NonCopyable<BoneAnimation>
 	{
-		friend class AnimationClip;
-
 	public:
 		using TimePoint = animation::TimePoint;
 
+		explicit BoneAnimation(const Model& model, const aiNodeAnim& aiNodeAnim);
 		~BoneAnimation();
 
 		const Model& GetModel() const { return m_model; }
@@ -36,8 +35,6 @@ namespace library
 
 	private:
 		using KeyframePtr = std::unique_ptr<Keyframe>;
-
-		explicit BoneAnimation(const Model& model, const aiNodeAnim& aiNodeAnim);
 
 		const Model& m_model;
 		const Bone& m_bone;

@@ -3,7 +3,8 @@
 
 #include "library/Model/Model.h"
 #include "library/Exception.h"
-#include "library/Utils.h"
+
+#include <cassert>
 
 namespace library
 {
@@ -11,16 +12,15 @@ namespace library
 	{
 		switch (aiTt)
 		{
-			case aiTextureType_DIFFUSE: return Diffuse;
-			case aiTextureType_SPECULAR: return SpecularMap;
-			case aiTextureType_AMBIENT: return Ambient;
-			case aiTextureType_EMISSIVE: return Emissive;
-			case aiTextureType_HEIGHT: return HeightMap;
-			case aiTextureType_NORMALS: return NormalMap;
-			case aiTextureType_SHININESS: return SpecularPowerMap;
-			case aiTextureType_LIGHTMAP: return LightMap;
-
-			default: return None;
+			case aiTextureType_DIFFUSE:		return Diffuse;
+			case aiTextureType_SPECULAR:	return SpecularMap;
+			case aiTextureType_AMBIENT:		return Ambient;
+			case aiTextureType_EMISSIVE:	return Emissive;
+			case aiTextureType_HEIGHT:		return HeightMap;
+			case aiTextureType_NORMALS:		return NormalMap;
+			case aiTextureType_SHININESS:	return SpecularPowerMap;
+			case aiTextureType_LIGHTMAP:	return LightMap;
+			default:						return None;
 		}
 	}
 
@@ -28,16 +28,15 @@ namespace library
 	{
 		switch (t)
 		{
-			case Diffuse: return aiTextureType_DIFFUSE;
-			case SpecularMap: return aiTextureType_SPECULAR;
-			case Ambient: return aiTextureType_AMBIENT;
-			case Emissive: return aiTextureType_EMISSIVE;
-			case HeightMap: return aiTextureType_HEIGHT;
-			case NormalMap: return aiTextureType_NORMALS;
-			case SpecularPowerMap: return aiTextureType_SHININESS;
-			case LightMap: return aiTextureType_LIGHTMAP;
-
-			default: return aiTextureType_NONE;
+			case Diffuse:			return aiTextureType_DIFFUSE;
+			case SpecularMap:		return aiTextureType_SPECULAR;
+			case Ambient:			return aiTextureType_AMBIENT;
+			case Emissive:			return aiTextureType_EMISSIVE;
+			case HeightMap:			return aiTextureType_HEIGHT;
+			case NormalMap:			return aiTextureType_NORMALS;
+			case SpecularPowerMap:	return aiTextureType_SHININESS;
+			case LightMap:			return aiTextureType_LIGHTMAP;
+			default:				return aiTextureType_NONE;
 		}
 	}
 
@@ -59,9 +58,15 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
+	bool ModelMaterial::HasTextureNames(const TextureType::Type textureType) const
+	{
+		return m_textureNamesMap.find(textureType) != m_textureNamesMap.end();
+	}
+
 	const TextureNameVector& ModelMaterial::GetTextureNames(const TextureType::Type textureType) const
 	{
-		return m_textures[textureType];
+		assert(HasTextureNames(textureType));
+		return m_textureNamesMap.at(textureType);
 	}
 
 	ModelMaterial::ModelMaterial(const Model& model, const aiMaterial& aiMaterial)
@@ -86,11 +91,11 @@ namespace library
 					aiString path;
 					if (aiMaterial.GetTexture(aiTextureType, i, &path) == AI_SUCCESS)
 					{
-						textureNames.emplace_back(utils::ToWideString(std::string(path.C_Str())));
+						textureNames.emplace_back(std::string(path.C_Str()));
 					}
 				}
 
-				m_textures[tt] = textureNames;
+				m_textureNamesMap[tt] = textureNames;
 			}
 		}
 	}

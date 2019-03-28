@@ -83,7 +83,7 @@ namespace library
 
 		// faces
 		bool HasFaces() const { return !!m_facesCount; }
-		unsigned GetFacesCount() const { return m_facesCount; }
+		std::size_t GetFacesCount() const { return m_facesCount; }
 
 		// bone weights
 		bool HasBoneWeights() const { return !m_boneWeights.empty(); }
@@ -105,7 +105,7 @@ namespace library
 		std::vector<DirectX::XMFLOAT3Vector> m_texturesCoordinates;
 		std::vector<DirectX::XMFLOAT4Vector> m_verticesColors;
 
-		unsigned m_facesCount;
+		std::size_t m_facesCount;
 		std::vector<unsigned> m_indices;
 
 		std::vector<Bone::VertexWeights> m_boneWeights;

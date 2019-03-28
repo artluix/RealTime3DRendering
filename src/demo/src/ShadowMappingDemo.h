@@ -40,7 +40,7 @@ public:
 	void Draw(const library::Time& time) override;
 
 protected:
-	void Draw_SetData() override;
+	void Draw_SetData(const library::MeshData& meshData) override;
 
 private:
 	void UpdateTechnique();

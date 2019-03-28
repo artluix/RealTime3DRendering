@@ -78,6 +78,8 @@ namespace library
 		Period = DIK_PERIOD,
 		Return = DIK_RETURN,
 
+		Pause = DIK_PAUSE,
+
 		//# Count
 		Count
 	};

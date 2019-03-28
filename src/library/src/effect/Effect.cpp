@@ -134,10 +134,10 @@ namespace library
 
 	void Effect::SetEffect(const ComPtr<ID3DX11Effect>& effect)
 	{
-		m_techniquesIndexMapping.clear();
+		m_techniquesMapping.clear();
 		m_techniques.clear();
 
-		m_variablesIndexMapping.clear();
+		m_variabesMapping.clear();
 		m_variables.clear();
 
 		m_isInitialized = false;
@@ -151,7 +151,7 @@ namespace library
 
 	bool Effect::HasTechnique(const std::string& techniqueName) const
 	{
-		if (m_techniquesIndexMapping.find(techniqueName) == m_techniquesIndexMapping.end())
+		if (m_techniquesMapping.find(techniqueName) == m_techniquesMapping.end())
 		{
 			Logger::Error("Effect: %s\nTechnique not found: %s", m_name.c_str(), techniqueName.c_str());
 			return false;
@@ -164,7 +164,7 @@ namespace library
 	unsigned Effect::GetTechniqueIdx(const std::string& techniqueName) const
 	{
 		assert(HasTechnique(techniqueName));
-		return m_techniquesIndexMapping.at(techniqueName);
+		return m_techniquesMapping.at(techniqueName);
 	}
 
 	//-------------------------------------------------------------------------
@@ -197,13 +197,13 @@ namespace library
 
 	bool Effect::HasVariable(const std::string& variableName) const
 	{
-		return m_variablesIndexMapping.find(variableName) != m_variablesIndexMapping.end();
+		return m_variabesMapping.find(variableName) != m_variabesMapping.end();
 	}
 
 	unsigned Effect::GetVariableIdx(const std::string& variableName) const
 	{
 		assert(HasVariable(variableName));
-		return m_variablesIndexMapping.at(variableName);
+		return m_variabesMapping.at(variableName);
 	}
 
 	const Effect::Variable& Effect::GetVariable(const std::string& variableName) const
@@ -251,7 +251,7 @@ namespace library
 				m_effect->GetTechniqueByIndex(i)
 			);
 
-			m_techniquesIndexMapping.emplace(technique->GetName(), i);
+			m_techniquesMapping.emplace(technique->GetName(), i);
 			m_techniques.push_back(std::move(technique));
 		}
 
@@ -259,7 +259,7 @@ namespace library
 		{
 			auto variable = std::make_unique<Variable>(*this, m_effect->GetVariableByIndex(i));
 
-			m_variablesIndexMapping.emplace(variable->GetName(), i);
+			m_variabesMapping.emplace(variable->GetName(), i);
 			m_variables.push_back(std::move(variable));
 		}
 

@@ -185,7 +185,7 @@ void PointLightDemo::UpdateSpecularLight(const Time& time)
 	}
 }
 
-void PointLightDemo::Draw_SetData()
+void PointLightDemo::Draw_SetData(const MeshData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
@@ -203,7 +203,7 @@ void PointLightDemo::Draw_SetData()
 	m_material->GetLightColor() << m_pointLight->GetColor();
 	m_material->GetLightPosition() << m_pointLight->GetPosition();
 	m_material->GetLightRadius() << m_pointLight->GetRadius();
-	m_material->GetColorTexture() << GetTexture();
+	m_material->GetColorTexture() << meshData.texture.Get();
 
-	SceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData(meshData);
 }

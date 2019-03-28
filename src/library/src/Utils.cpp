@@ -8,7 +8,7 @@ namespace library::utils
 {
 	namespace
 	{
-		constexpr std::size_t k_maxPath = 255;
+		constexpr std::size_t k_maxPathLength = 255;
 	}
 
 	std::wstring ToWideString(const std::string& str)
@@ -19,15 +19,15 @@ namespace library::utils
 
 	Path GetCurrentDirectory()
 	{
-		std::array<char, k_maxPath> buffer;
-		::GetCurrentDirectoryA(k_maxPath, buffer.data());
+		std::array<char, k_maxPathLength> buffer;
+		::GetCurrentDirectoryA(k_maxPathLength, buffer.data());
 		return Path(buffer.data());
 	}
 
 	Path GetExecutableDirectory()
 	{
-		std::array<char, k_maxPath> buffer;
-		::GetModuleFileNameA(nullptr, buffer.data(), k_maxPath);
+		std::array<char, k_maxPathLength> buffer;
+		::GetModuleFileNameA(nullptr, buffer.data(), k_maxPathLength);
 		return Path(buffer.data()).GetDirName();
 	}
 

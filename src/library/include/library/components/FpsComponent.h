@@ -18,12 +18,12 @@ namespace library
 		explicit FpsComponent();
 		~FpsComponent();
 
-		unsigned GetFrameRate() const { return m_frameRate; }
+		std::size_t GetFrameRate() const { return m_frameRate; }
 
 		void Update(const Time& time) override;
 
 	private:
-		unsigned m_frameCount;
+		std::size_t m_framesCount;
 		unsigned m_frameRate;
 
 		Duration m_timeAccumulator;

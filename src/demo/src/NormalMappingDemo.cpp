@@ -49,6 +49,7 @@ void NormalMappingDemo::Initialize(const Application& app)
 	// build vertices manually
 	{
 		using Vertex = NormalMappingMaterial::Vertex;
+
 		using DirectX::XMFLOAT4;
 		using DirectX::XMFLOAT2;
 
@@ -66,8 +67,11 @@ void NormalMappingDemo::Initialize(const Application& app)
 			Vertex(XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), XMFLOAT2(1.0f, 1.0f), backward, right),
 		};
 
-		m_input.vertexBuffer.elementsCount = vertices.size();
-		m_input.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
+		m_meshesData = { MeshData() };
+		auto& md = m_meshesData.front();
+
+		md.vertexBuffer.elementsCount = vertices.size();
+		md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
 			app.GetDevice(),
 			vertices
 		);
@@ -220,7 +224,7 @@ void NormalMappingDemo::UpdateSpecularLight(const Time& time)
 	}
 }
 
-void NormalMappingDemo::Draw_SetData()
+void NormalMappingDemo::Draw_SetData(const MeshData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
@@ -237,8 +241,8 @@ void NormalMappingDemo::Draw_SetData()
 	m_material->GetAmbientColor() << m_ambientColor;
 	m_material->GetLightColor() << m_directionalLight->GetColor();
 	m_material->GetLightDirection() << m_directionalLight->GetDirection();
-	m_material->GetColorTexture() << GetTexture();
+	m_material->GetColorTexture() << meshData.texture.Get();
 	m_material->GetNormalMap() << m_normalMapTexture.Get();
 
-	SceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData(meshData);
 }

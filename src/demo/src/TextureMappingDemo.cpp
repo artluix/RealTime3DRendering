@@ -76,14 +76,14 @@ void TextureMappingDemo::Update(const Time& time)
 	DrawableComponent::Update(time);
 }
 
-void TextureMappingDemo::Draw_SetData()
+void TextureMappingDemo::Draw_SetData(const MeshData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
 		wvp *= m_camera->GetViewProjectionMatrix();
 	m_material->GetWVP() << wvp;
 
-	m_material->GetColorTexture() << GetTexture();
+	m_material->GetColorTexture() << meshData.texture.Get();
 
-	SceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData(meshData);
 }

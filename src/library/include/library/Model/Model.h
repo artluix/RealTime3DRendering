@@ -46,10 +46,10 @@ namespace library
 
 		unsigned GetBoneIdx(const std::string& boneName) const;
 		const Bone& GetBone(const std::string& boneName) const;
-		Bone& GetBone(const std::string& boneName);
+		//Bone& GetBone(const std::string& boneName);
 
 		const Bone& GetBone(const unsigned boneIdx) const;
-		Bone& GetBone(const unsigned boneIdx);
+		//Bone& GetBone(const unsigned boneIdx);
 
 		// animations
 		bool HasAnimations() const { return !m_animations.empty(); }
@@ -58,10 +58,10 @@ namespace library
 
 		unsigned GetAnimationIdx(const std::string& animationName) const;
 		const AnimationClip& GetAnimation(const std::string& animationName) const;
-		AnimationClip& GetAnimation(const std::string& animationName);
+		//AnimationClip& GetAnimation(const std::string& animationName);
 
 		const AnimationClip& GetAnimation(const unsigned animationIdx) const;
-		AnimationClip& GetAnimation(const unsigned animationIdx);
+		//AnimationClip& GetAnimation(const unsigned animationIdx);
 
 		const SceneNode* GetRootNode() const { return m_rootNode.get(); }
 
@@ -81,10 +81,10 @@ namespace library
 		std::vector<MaterialPtr> m_materials;
 
 		std::vector<BonePtr> m_bones;
-		std::map<std::string, unsigned> m_bonesIndexMapping;
+		std::map<std::string, unsigned> m_bonesMapping;
 
 		std::vector<AnimationClipPtr> m_animations;
-		std::map<std::string, unsigned> m_animationsIndexMapping;
+		std::map<std::string, unsigned> m_animationsMapping;
 
 		SceneNodePtr m_rootNode;
 	};

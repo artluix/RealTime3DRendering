@@ -150,6 +150,9 @@ namespace library
 		if (textureName.empty())
 			return texture;
 
+		// texture name must be without extension
+		assert(!Path(textureName).GetExt()); 
+
 		const auto texturePath = GetTexturesPath() + Path(textureName + ".dds");
 
 		std::vector<std::byte> textureData;

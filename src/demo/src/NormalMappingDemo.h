@@ -30,7 +30,7 @@ public:
 	void Update(const library::Time& time) override;
 
 protected:
-	void Draw_SetData() override;
+	void Draw_SetData(const library::MeshData& meshData) override;
 
 private:
 	void UpdateAmbientLight(const library::Time& time);

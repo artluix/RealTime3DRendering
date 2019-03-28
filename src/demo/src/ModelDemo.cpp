@@ -132,7 +132,7 @@ void ModelDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateInputLayout(
 			inputElementDescriptions.data(), inputElementDescriptions.size(),
 			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
-			m_input.layout.GetAddressOf()
+			m_inputLayout.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
@@ -149,7 +149,7 @@ void ModelDemo::Initialize(const Application& app)
 
 	if (mesh.HasIndices())
 	{
-		m_input.indexBuffer = std::make_optional(BufferData{
+		m_meshesData.front().indexBuffer = std::make_optional(BufferData{
 			mesh.CreateIndexBuffer(),
 			mesh.GetIndicesCount()
 		});
@@ -200,7 +200,7 @@ void ModelDemo::Update(const Time& time)
 	SceneComponent::Update(time);
 }
 
-void ModelDemo::Draw_SetData()
+void ModelDemo::Draw_SetData(const MeshData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
@@ -255,10 +255,13 @@ void ModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const Mes
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = vertices.data();
 
+		m_meshesData = { MeshData() };
+		auto& md = m_meshesData.front();
+
 		auto hr = device->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
-			m_input.vertexBuffer.buffer.GetAddressOf()
+			md.vertexBuffer.buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{

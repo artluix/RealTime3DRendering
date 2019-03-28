@@ -27,9 +27,10 @@ public:
 	void Initialize(const library::Application& app) override;
 	void Update(const library::Time& time) override;
 
-private:
-	void Draw_SetData() override;
+protected:
+	void Draw_SetData(const library::MeshData& meshData) override;
 
+private:
 	library::Color m_ambientColor;
 	float m_reflectionAmount;
 

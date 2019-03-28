@@ -32,29 +32,29 @@ namespace library
 		SceneComponent::Initialize(app);
 	}
 
-	void ProxyModelComponent::Draw_SetData()
+	void ProxyModelComponent::Draw_SetData(const MeshData& meshData)
 	{
 		auto wvp = GetWorldMatrix();
 		if (!!m_camera)
 			wvp *= m_camera->GetViewProjectionMatrix();
 		m_material->GetWorldViewProjection() << wvp;
 
-		SceneComponent::Draw_SetData();
+		SceneComponent::Draw_SetData(meshData);
 	}
 
-	void ProxyModelComponent::Draw_Render()
+	void ProxyModelComponent::Draw_Render(const MeshData& meshData)
 	{
 		auto deviceContext = GetApp()->GetDeviceContext();
 
 		if (m_isWireframeVisible)
 		{
 			deviceContext->RSSetState(RasterizerStates::Wireframe);
-			SceneComponent::Draw_Render();
+			SceneComponent::Draw_Render(meshData);
 			deviceContext->RSSetState(nullptr);
 		}
 		else
 		{
-			SceneComponent::Draw_Render();
+			SceneComponent::Draw_Render(meshData);
 		}
 	}
 } // namespace library

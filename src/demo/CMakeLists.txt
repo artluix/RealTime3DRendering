@@ -25,6 +25,9 @@ if(APPLICATION)
             src/TextureModelDemo.cpp
 
         # with materials
+            src/AnimationDemo.h
+            src/AnimationDemo.cpp
+
             src/BasicMaterialDemo.h
             src/BasicMaterialDemo.cpp
 

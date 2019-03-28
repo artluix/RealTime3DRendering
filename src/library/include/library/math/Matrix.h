@@ -260,6 +260,9 @@ namespace library::math
 
 		//-------------------------------------------------------------------------
 
+		float GetDeterminant() const;
+		Matrix Inverse() const;
+
 		Matrix Transpose() const;
 
 		Vector3 GetForward() const;

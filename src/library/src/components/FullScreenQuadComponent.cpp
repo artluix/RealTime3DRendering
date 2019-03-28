@@ -49,7 +49,7 @@ namespace library
 		auto& pass = technique.GetPass(passName);
 
 		m_pass = &pass;
-		m_input.layout = m_material->GetInputLayoutShared(pass);
+		m_inputLayout = m_material->GetInputLayoutShared(pass);
 	}
 
 	void FullScreenQuadComponent::SetMaterialUpdateFunction(const MaterialUpdateFunction& func)
@@ -60,6 +60,9 @@ namespace library
 	void FullScreenQuadComponent::Initialize(const Application& app)
 	{
 		SceneComponent::Initialize(app);
+
+		m_meshesData = { MeshData() };
+		auto& md = m_meshesData.front();
 
 		// vertex buffer
 		{
@@ -72,10 +75,10 @@ namespace library
 				Vertex(DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f)),
 				Vertex(DirectX::XMFLOAT4(1.0f, -1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f)),
 			};
-			m_input.vertexBuffer.elementsCount = vertices.size();
+			md.vertexBuffer.elementsCount = vertices.size();
 
 			D3D11_BUFFER_DESC vertexBufferDesc{};
-			vertexBufferDesc.ByteWidth = sizeof(Vertex) * m_input.vertexBuffer.elementsCount;
+			vertexBufferDesc.ByteWidth = sizeof(Vertex) * md.vertexBuffer.elementsCount;
 			vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 			vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
@@ -85,7 +88,7 @@ namespace library
 			auto hr = app.GetDevice()->CreateBuffer(
 				&vertexBufferDesc,
 				&vertexSubResourceData,
-				m_input.vertexBuffer.buffer.GetAddressOf()
+				md.vertexBuffer.buffer.GetAddressOf()
 			);
 			if (FAILED(hr))
 			{
@@ -95,17 +98,17 @@ namespace library
 
 		// index buffer
 		{
-			m_input.indexBuffer = std::make_optional(BufferData());
+			md.indexBuffer = std::make_optional(BufferData());
 
 			std::array<unsigned, 6> indices =
 			{
 				0, 1, 2,
 				0, 2, 3,
 			};
-			m_input.indexBuffer->elementsCount = indices.size();
+			md.indexBuffer->elementsCount = indices.size();
 
 			D3D11_BUFFER_DESC indexBufferDesc{};
-			indexBufferDesc.ByteWidth = sizeof(unsigned) * m_input.indexBuffer->elementsCount;
+			indexBufferDesc.ByteWidth = sizeof(unsigned) * md.indexBuffer->elementsCount;
 			indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 			indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
@@ -115,7 +118,7 @@ namespace library
 			auto hr = app.GetDevice()->CreateBuffer(
 				&indexBufferDesc,
 				&indexSubResourceData,
-				m_input.indexBuffer->buffer.GetAddressOf()
+				md.indexBuffer->buffer.GetAddressOf()
 			);
 			if (FAILED(hr))
 			{
@@ -128,7 +131,7 @@ namespace library
 	{
 	}
 
-	void FullScreenQuadComponent::Draw_SetData()
+	void FullScreenQuadComponent::Draw_SetData(const MeshData& meshData)
 	{
 		if (!!m_materialUpdateFunction)
 			m_materialUpdateFunction();

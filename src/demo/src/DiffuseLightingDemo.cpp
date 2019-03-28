@@ -164,7 +164,7 @@ void DiffuseLightingDemo::UpdateDirectionalLight(const Time& time)
 	}
 }
 	
-void DiffuseLightingDemo::Draw_SetData()
+void DiffuseLightingDemo::Draw_SetData(const MeshData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
@@ -175,7 +175,7 @@ void DiffuseLightingDemo::Draw_SetData()
 	m_material->GetAmbientColor() << m_ambientColor;
 	m_material->GetLightColor() << m_directionalLight->GetColor();
 	m_material->GetLightDirection() << m_directionalLight->GetDirection();
-	m_material->GetColorTexture() << GetTexture();
+	m_material->GetColorTexture() << meshData.texture.Get();
 
-	SceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData(meshData);
 }

@@ -16,6 +16,6 @@ namespace library
 		void Update(const Time& time) override;
 
 	protected:
-		void Draw_SetData() override;
+		void Draw_SetData(const MeshData& meshData) override;
 	};
 } // namespace library

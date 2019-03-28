@@ -7,6 +7,6 @@ namespace library
 	struct BufferData
 	{
 		ComPtr<ID3D11Buffer> buffer;
-		unsigned elementsCount = 0;
+		std::size_t elementsCount = 0;
 	};
 } // namespace library

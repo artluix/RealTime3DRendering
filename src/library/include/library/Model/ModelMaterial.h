@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 #include <array>
+#include <map>
 
 #include <assimp/material.h>
 
@@ -35,8 +36,8 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	using TextureNameVector = std::vector<std::wstring>;
-	using TextureNameVectorArray = std::array<TextureNameVector, TextureType::Count>;
+	using TextureNameVector = std::vector<std::string>;
+	using TextureNamesMap = std::map<TextureType::Type, TextureNameVector>;
 
 	class ModelMaterial : public NonCopyable<ModelMaterial>
 	{
@@ -47,8 +48,8 @@ namespace library
 
 		const Model& GetModel() const { return m_model; }
 		const std::string& GetName() const { return m_name; }
-		const TextureNameVectorArray& GetAllTextureNames() const { return m_textures; }
 
+		bool HasTextureNames(const TextureType::Type textureType) const;
 		const TextureNameVector& GetTextureNames(const TextureType::Type textureType) const;
 
 	private:
@@ -56,6 +57,6 @@ namespace library
 
 		const Model& m_model;
 		std::string m_name;
-		TextureNameVectorArray m_textures;
+		TextureNamesMap m_textureNamesMap;
 	};
 } // namespace library

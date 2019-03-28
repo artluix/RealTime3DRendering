@@ -78,6 +78,9 @@ void DirectionalShadowMappingDemo::Initialize(const Application& app)
 
 	assert(camera);
 
+	m_meshesData = { MeshData() };
+	auto& md = m_meshesData.front();
+
 	// build plane vertices manually
 	{
 		using Vertex = Material::Vertex;
@@ -95,8 +98,8 @@ void DirectionalShadowMappingDemo::Initialize(const Application& app)
 			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward),
 		};
 
-		m_input.vertexBuffer.elementsCount = vertices.size();
-		m_input.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
+		md.vertexBuffer.elementsCount = vertices.size();
+		md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
 			app.GetDevice(),
 			vertices
 		);
@@ -230,7 +233,7 @@ void DirectionalShadowMappingDemo::Draw(const library::Time& time)
 		GetApp()->GetRenderer()->SaveRenderState(RenderState::Rasterizer);
 		m_depthMapRenderTarget->Begin();
 
-		deviceContext->IASetPrimitiveTopology(m_input.topology);
+		deviceContext->IASetPrimitiveTopology(m_primitiveTopology);
 		deviceContext->ClearDepthStencilView(
 			m_depthMapRenderTarget->GetDepthStencilView(),
 			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
@@ -302,7 +305,7 @@ void DirectionalShadowMappingDemo::Draw(const library::Time& time)
 
 		m_material->GetProjectiveTextureMatrix() << modelProjectiveTextureMatrix;
 
-		m_material->GetColorTexture() << GetTexture();
+		m_material->GetColorTexture() << m_meshesData.front().texture.Get(); // use same texture for model
 		m_material->GetShadowMapTexture() << m_depthMapRenderTarget->GetOutputTexture();
 
 		const math::Vector2 shadowMapSize(k_depthMapWidth, k_depthMapHeight);
@@ -320,7 +323,7 @@ void DirectionalShadowMappingDemo::Draw(const library::Time& time)
 	}
 }
 
-void DirectionalShadowMappingDemo::Draw_SetData()
+void DirectionalShadowMappingDemo::Draw_SetData(const MeshData& meshData)
 {
 	const auto world = GetWorldMatrix();
 
@@ -345,14 +348,14 @@ void DirectionalShadowMappingDemo::Draw_SetData()
 	m_material->GetLightDirection() << m_directionalLight->GetDirection();
 
 	//m_material->GetDepthBias() << m_depthBias;
-	m_material->GetColorTexture() << GetTexture();
+	m_material->GetColorTexture() << meshData.texture.Get();
 	m_material->GetShadowMapTexture() << m_depthMapRenderTarget->GetOutputTexture();
 	m_material->GetProjectiveTextureMatrix() << projectiveTextureMatrix;
 
 	const math::Vector2 shadowMapSize(k_depthMapWidth, k_depthMapHeight);
 	m_material->GetShadowMapSize() << shadowMapSize;
 
-	SceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData(meshData);
 }
 
 //-------------------------------------------------------------------------

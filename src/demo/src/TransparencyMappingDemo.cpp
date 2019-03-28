@@ -41,6 +41,8 @@ TransparencyMappingDemo::TransparencyMappingDemo()
 
 TransparencyMappingDemo::~TransparencyMappingDemo() = default;
 
+//-------------------------------------------------------------------------
+
 void TransparencyMappingDemo::Initialize(const Application& app)
 {
 	assert(!!GetCamera());
@@ -62,8 +64,11 @@ void TransparencyMappingDemo::Initialize(const Application& app)
 			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward),
 		};
 
-		m_input.vertexBuffer.elementsCount = vertices.size();
-		m_input.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
+		m_meshesData = { MeshData() };
+		auto& md = m_meshesData.front();
+
+		md.vertexBuffer.elementsCount = vertices.size();
+		md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
 			app.GetDevice(),
 			vertices
 		);
@@ -213,7 +218,7 @@ void TransparencyMappingDemo::UpdateSpecularLight(const Time& time)
 	}
 }
 
-void TransparencyMappingDemo::Draw_SetData()
+void TransparencyMappingDemo::Draw_SetData(const MeshData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
@@ -233,19 +238,19 @@ void TransparencyMappingDemo::Draw_SetData()
 	m_material->GetSpecularPower() << m_specularPower;
 	m_material->GetSpecularColor() << m_specularColor;
 
-	m_material->GetColorTexture() << GetTexture();
+	m_material->GetColorTexture() << meshData.texture.Get();
 	m_material->GetTransparencyMap() << m_transparencyMapTexture.Get();
 
-	SceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData(meshData);
 }
 
-void TransparencyMappingDemo::Draw_Render()
+void TransparencyMappingDemo::Draw_Render(const MeshData& meshData)
 {
 	auto deviceContext = GetApp()->GetDeviceContext();
 	auto renderer = GetApp()->GetRenderer();
 
 	renderer->SaveRenderState(RenderState::Blend);
 	deviceContext->OMSetBlendState(BlendStates::Alpha, 0, 0xFFFFFFFF);
-	SceneComponent::Draw_Render();
+	SceneComponent::Draw_Render(meshData);
 	renderer->RestoreRenderState(RenderState::Blend);
 }

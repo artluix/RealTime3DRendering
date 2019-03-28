@@ -27,7 +27,7 @@ public:
 	unsigned GetVertexSize() const override;
 
 protected:
-	void Draw_SetData() override;
+	void Draw_SetData(const library::MeshData& meshData) override;
 
 private:
 	void CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const library::Mesh& mesh);

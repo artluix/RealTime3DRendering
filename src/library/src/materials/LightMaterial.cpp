@@ -78,8 +78,8 @@ namespace library
 		const auto& meshVertices = mesh.GetVertices();
 		const auto& textureCoordinates = mesh.GetTextureCoordinates(0);
 		const auto& normals = mesh.GetNormals();
-		const auto verticesCount = meshVertices.size();
 
+		const auto verticesCount = meshVertices.size();
 		vertices.reserve(verticesCount);
 
 		for (unsigned i = 0; i < verticesCount; i++)

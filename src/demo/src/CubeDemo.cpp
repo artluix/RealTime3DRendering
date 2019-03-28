@@ -126,13 +126,16 @@ void CubeDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateInputLayout(
 			inputElementDescriptions.data(), inputElementDescriptions.size(),
 			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
-			m_input.layout.GetAddressOf()
+			m_inputLayout.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateInputLayout() failed.", hr);
 		}
 	}
+
+	m_meshesData = { MeshData() };
+	auto& md = m_meshesData.front();
 
 	// index buffer
 	{
@@ -157,8 +160,9 @@ void CubeDemo::Initialize(const Application& app)
 			1, 6, 2
 		};
 
-		m_input.indexBuffer = std::make_optional(BufferData());
-		m_input.indexBuffer->elementsCount = k_indices.size();
+
+		md.indexBuffer = std::make_optional(BufferData());
+		md.indexBuffer->elementsCount = k_indices.size();
 
 		D3D11_BUFFER_DESC indexBufferDesc{};
 		indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -171,7 +175,7 @@ void CubeDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateBuffer(
 			&indexBufferDesc,
 			&vertexSubResourceData,
-			m_input.indexBuffer->buffer.GetAddressOf()
+			md.indexBuffer->buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
@@ -198,7 +202,7 @@ void CubeDemo::Initialize(const Application& app)
 			VertexPositionColor(XMFLOAT4(1.0f, -1.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 0.5f, 1.0f, 1.0f)),
 		};
 
-		m_input.vertexBuffer.elementsCount = vertices.size();
+		md.vertexBuffer.elementsCount = vertices.size();
 
 		D3D11_BUFFER_DESC vertexBufferDesc{};
 		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -211,7 +215,7 @@ void CubeDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
-			m_input.vertexBuffer.buffer.GetAddressOf()
+			md.vertexBuffer.buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
@@ -264,14 +268,14 @@ void CubeDemo::Update(const Time& time)
 	SceneComponent::Update(time);
 }
 
-void CubeDemo::Draw_SetData()
+void CubeDemo::Draw_SetData(const MeshData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
 		wvp *= m_camera->GetViewProjectionMatrix();
 	m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
-	m_pass->Apply(0, GetApp()->GetDeviceContext());
+	SceneComponent::Draw_SetData(meshData);
 }
 
 unsigned CubeDemo::GetVertexSize() const

@@ -18,11 +18,11 @@ namespace library
 	{
 		const auto k_defaultColor = Color::Green;
 
-		constexpr unsigned k_verticesCount = 8;
+		constexpr std::size_t k_verticesCount = 8;
 
-		constexpr unsigned k_primitivesCount = 12;
-		constexpr unsigned k_indicesPerPrimitive = 2;
-		constexpr unsigned k_indicesCount = k_primitivesCount * k_indicesPerPrimitive;
+		constexpr std::size_t k_primitivesCount = 12;
+		constexpr std::size_t k_indicesPerPrimitive = 2;
+		constexpr std::size_t k_indicesCount = k_primitivesCount * k_indicesPerPrimitive;
 	}
 
 	//-------------------------------------------------------------------------
@@ -35,7 +35,7 @@ namespace library
 	RenderableFrustumComponent::RenderableFrustumComponent(const Color& color)
 		: m_color(color)
 	{
-		m_input.topology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+		m_primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
 	}
 
 	//-------------------------------------------------------------------------
@@ -48,7 +48,7 @@ namespace library
 		InitializeIndexBuffer();
 	}
 
-	void RenderableFrustumComponent::Draw_SetData()
+	void RenderableFrustumComponent::Draw_SetData(const MeshData& meshData)
 	{
 		auto wvp = GetWorldMatrix();
 		if (!!m_camera)
@@ -58,7 +58,7 @@ namespace library
 
 		GetMaterial()->GetWorldViewProjection() << wvp;
 
-		SceneComponent::Draw_SetData();
+		SceneComponent::Draw_SetData(meshData);
 	}
 
 	void RenderableFrustumComponent::InitializeGeometry(const Frustum& frustum)
@@ -73,7 +73,9 @@ namespace library
 		using Vertex = Material::Vertex;
 		using DirectX::XMFLOAT4;
 
-		m_input.vertexBuffer.buffer.Reset();
+		auto& md = m_meshesData.front();
+
+		md.vertexBuffer.buffer.Reset();
 
 		std::vector<Vertex> vertices;
 		vertices.reserve(k_verticesCount);
@@ -97,7 +99,7 @@ namespace library
 		auto hr = GetApp()->GetDevice()->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
-			m_input.vertexBuffer.buffer.GetAddressOf()
+			md.vertexBuffer.buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
@@ -107,6 +109,9 @@ namespace library
 
 	void RenderableFrustumComponent::InitializeIndexBuffer()
 	{
+		m_meshesData = { MeshData() };
+		auto& md = m_meshesData.front();
+
 		constexpr std::array<unsigned, k_indicesCount> k_indices =
 		{
 			// Near plane lines
@@ -128,8 +133,8 @@ namespace library
 			7, 4
 		};
 
-		m_input.indexBuffer = std::make_optional<BufferData>();
-		m_input.indexBuffer->elementsCount = k_indicesCount;
+		md.indexBuffer = std::make_optional<BufferData>();
+		md.indexBuffer->elementsCount = k_indicesCount;
 
 		D3D11_BUFFER_DESC indexBufferDesc{};
 		indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -142,7 +147,7 @@ namespace library
 		auto hr = GetApp()->GetDevice()->CreateBuffer(
 			&indexBufferDesc,
 			&vertexSubResourceData,
-			m_input.indexBuffer->buffer.GetAddressOf()
+			md.indexBuffer->buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{

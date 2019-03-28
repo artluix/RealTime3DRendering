@@ -27,7 +27,7 @@ namespace library
 		, m_scale(k_defaultScale)
 		, m_color(k_defaultColor)
 	{
-		m_input.topology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+		m_primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
 	}
 
 	GridComponent::GridComponent(
@@ -84,7 +84,7 @@ namespace library
 
 	//-------------------------------------------------------------------------
 
-	void GridComponent::Draw_SetData()
+	void GridComponent::Draw_SetData(const MeshData& meshData)
 	{
 		auto wvp = GetWorldMatrix();
 		if (!!m_camera)
@@ -92,24 +92,27 @@ namespace library
 
 		GetMaterial()->GetWorldViewProjection() << wvp;
 
-		SceneComponent::Draw_SetData();
+		SceneComponent::Draw_SetData(meshData);
 	}
 
 	//-------------------------------------------------------------------------
 
 	void GridComponent::Build()
 	{
-		m_input.vertexBuffer.buffer.Reset();
+		m_meshesData = { MeshData() };
+		auto& md = m_meshesData.front();
+
+		md.vertexBuffer.buffer.Reset();
 
 		const float adjustedScale = m_scale * 0.1f;
 		const float maxPosition = m_size * adjustedScale / 2;
 
-		m_input.vertexBuffer.elementsCount = 4 * (m_size + 1);
+		md.vertexBuffer.elementsCount = 4 * (m_size + 1);
 
-		const unsigned size = sizeof(VertexPositionColor) * m_input.vertexBuffer.elementsCount;
+		const auto size = sizeof(VertexPositionColor) * md.vertexBuffer.elementsCount;
 
 		std::vector<VertexPositionColor> vertices;
-		vertices.reserve(m_input.vertexBuffer.elementsCount);
+		vertices.reserve(md.vertexBuffer.elementsCount);
 
 		const DirectX::XMFLOAT4 color(m_color);
 
@@ -137,7 +140,7 @@ namespace library
 		auto hr = GetApp()->GetDevice()->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
-			m_input.vertexBuffer.buffer.GetAddressOf()
+			md.vertexBuffer.buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{

@@ -22,8 +22,8 @@ namespace library
 		void Initialize(const Application& app) override;
 
 	protected:
-		void Draw_SetData() override;
-		void Draw_Render() override;
+		void Draw_SetData(const MeshData& meshData) override;
+		void Draw_Render(const MeshData& meshData) override;
 
 		bool m_isWireframeVisible = true;
 	};

@@ -297,10 +297,24 @@ namespace library::math
 		return DirectX::XMLoadFloat4x4(&xmFloat4x4);
 	}
 
+	//-------------------------------------------------------------------------
+
+	float Matrix<4>::GetDeterminant() const
+	{
+		return DirectX::XMVectorGetX(DirectX::XMMatrixDeterminant(Load()));
+	}
+
+	Matrix<4> Matrix<4>::Inverse() const
+	{
+		return Store(DirectX::XMMatrixInverse(nullptr, Load()));
+	}
+
 	Matrix<4> Matrix<4>::Transpose() const
 	{
 		return Store(DirectX::XMMatrixTranspose(Load()));
 	}
+
+	//-------------------------------------------------------------------------
 
 	Vector3 Matrix<4>::GetForward() const
 	{

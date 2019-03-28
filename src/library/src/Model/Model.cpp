@@ -9,6 +9,7 @@
 #include "library/Application.h"
 #include "library/Exception.h"
 #include "library/Path.h"
+#include "library/Logger.h"
 
 #include <assimp/Importer.hpp>
 #include <assimp/scene.h>
@@ -30,7 +31,11 @@ namespace library
 		if (flipUVs)
 			flags |= aiProcess_FlipUVs;
 
-		const auto path = app.GetModelsPath() + Path(name + ".obj");
+		auto filename = name;
+		if (!Path(filename).GetExt())
+			filename += ".obj";
+
+		const auto path = app.GetModelsPath() + Path(filename);
 
 		if (const auto aiScene = importer.ReadFile(path.GetString(), flags))
 		{
@@ -40,7 +45,7 @@ namespace library
 
 				for (unsigned i = 0; i < aiScene->mNumMaterials; i++)
 				{
-					m_materials.emplace_back(new ModelMaterial(*this, *(aiScene->mMaterials[i])));
+					m_materials.emplace_back(new ModelMaterial(*this, *aiScene->mMaterials[i]));
 				}
 			}
 
@@ -50,7 +55,7 @@ namespace library
 
 				for (unsigned i = 0; i < aiScene->mNumMeshes; i++)
 				{
-					m_meshes.emplace_back(new Mesh(*this, *(aiScene->mMeshes[i])));
+					m_meshes.emplace_back(new Mesh(*this, *aiScene->mMeshes[i]));
 				}
 			}
 
@@ -64,9 +69,9 @@ namespace library
 				for (unsigned i = 0; i < aiScene->mNumAnimations; i++)
 				{
 					const auto& animation = m_animations.emplace_back(
-						new AnimationClip(*this, *(aiScene->mAnimations[i]))
+						new AnimationClip(*this, *aiScene->mAnimations[i])
 					);
-					m_animationsIndexMapping.emplace(animation->GetName(), i);
+					m_animationsMapping.emplace(animation->GetName(), i);
 				}
 			}
 		}
@@ -74,6 +79,10 @@ namespace library
 		{
 			throw Exception(importer.GetErrorString());
 		}
+
+#if defined DEBUG || defined _DEBUG
+		ValidateModel();
+#endif
 	}
 
 	Model::~Model() = default;
@@ -112,13 +121,13 @@ namespace library
 
 	bool Model::HasBone(const std::string& boneName) const
 	{
-		return m_bonesIndexMapping.find(boneName) != m_bonesIndexMapping.end();
+		return m_bonesMapping.find(boneName) != m_bonesMapping.end();
 	}
 
 	unsigned Model::GetBoneIdx(const std::string& boneName) const
 	{
 		assert(HasBone(boneName));
-		return m_bonesIndexMapping.at(boneName);
+		return m_bonesMapping.at(boneName);
 	}
 
 	const Bone& Model::GetBone(const std::string& boneName) const
@@ -126,10 +135,10 @@ namespace library
 		return GetBone(GetBoneIdx(boneName));
 	}
 
-	Bone& Model::GetBone(const std::string& boneName)
-	{
-		return GetBone(GetBoneIdx(boneName));
-	}
+	//Bone& Model::GetBone(const std::string& boneName)
+	//{
+	//	return GetBone(GetBoneIdx(boneName));
+	//}
 
 	//-------------------------------------------------------------------------
 
@@ -139,11 +148,11 @@ namespace library
 		return *m_bones.at(boneIdx);
 	}
 
-	Bone& Model::GetBone(const unsigned boneIdx)
-	{
-		assert(boneIdx < m_bones.size());
-		return *m_bones.at(boneIdx);
-	}
+	//Bone& Model::GetBone(const unsigned boneIdx)
+	//{
+	//	assert(boneIdx < m_bones.size());
+	//	return *m_bones.at(boneIdx);
+	//}
 
 	//-------------------------------------------------------------------------
 	// animations
@@ -151,13 +160,13 @@ namespace library
 
 	bool Model::HasAnimation(const std::string& animationName) const
 	{
-		return m_animationsIndexMapping.find(animationName) != m_animationsIndexMapping.end();
+		return m_animationsMapping.find(animationName) != m_animationsMapping.end();
 	}
 
 	unsigned Model::GetAnimationIdx(const std::string& animationName) const
 	{
 		assert(HasAnimation(animationName));
-		return m_animationsIndexMapping.at(animationName);
+		return m_animationsMapping.at(animationName);
 	}
 
 	const AnimationClip& Model::GetAnimation(const std::string& animationName) const
@@ -165,10 +174,10 @@ namespace library
 		return GetAnimation(GetAnimationIdx(animationName));
 	}
 
-	AnimationClip& Model::GetAnimation(const std::string& animationName)
-	{
-		return GetAnimation(GetAnimationIdx(animationName));
-	}
+	//AnimationClip& Model::GetAnimation(const std::string& animationName)
+	//{
+	//	return GetAnimation(GetAnimationIdx(animationName));
+	//}
 
 	//-------------------------------------------------------------------------
 
@@ -178,19 +187,24 @@ namespace library
 		return *m_animations.at(animationIdx);
 	}
 
-	AnimationClip& Model::GetAnimation(const unsigned animationIdx)
-	{
-		assert(animationIdx < m_animations.size());
-		return *m_animations.at(animationIdx);
-	}
+	//AnimationClip& Model::GetAnimation(const unsigned animationIdx)
+	//{
+	//	assert(animationIdx < m_animations.size());
+	//	return *m_animations.at(animationIdx);
+	//}
 
 	//-------------------------------------------------------------------------
 
 	SceneNodePtr Model::BuildSkeleton(const aiNode& aiNode, const SceneNode* parentNode /* = nullptr */)
 	{
+		//static unsigned indent = 0;
+
 		SceneNodePtr node;
 
 		const std::string nodeName = aiNode.mName.C_Str();
+
+		// uncomment to output hierarchy
+		// Logger::Log(Logger::Level::Debug, "%sNode: %s", std::string(indent * 4, ' ').c_str(), nodeName.c_str());
 
 		if (HasBone(nodeName))
 		{
@@ -198,17 +212,21 @@ namespace library
 		}
 		else
 		{
-			node = std::make_unique<SceneNode>(nodeName);
+			node = std::make_shared<SceneNode>(nodeName);
 		}
 
 		const auto transform = reinterpret_cast<const math::Matrix4&>(aiNode.mTransformation);
-		node->SetTransform(transform);
+		node->SetTransform(transform.Transpose()); // assimp use row-major matrices
 		node->SetParent(parentNode);
+
+		//indent++;
 
 		for (unsigned i = 0; i < aiNode.mNumChildren; i++)
 		{
 			node->AddChild(BuildSkeleton(*aiNode.mChildren[i], node.get()));
 		}
+
+		//indent--;
 
 		return node;
 	}
@@ -222,10 +240,11 @@ namespace library
 			{
 				float totalWeight{ 0.f };
 
-				for (const auto& vw : boneWeight)
+				for (unsigned i = 0; i < boneWeight.Size(); i++)
 				{
+					const auto& vw = boneWeight[i];
 					totalWeight += vw.weight;
-					assert(vw.boneIndex > 0 && vw.boneIndex < m_bones.size());
+					assert(vw.boneIndex >= 0 && vw.boneIndex < m_bones.size());
 				}
 
 				assert(totalWeight >= 0.95f && totalWeight <= 1.05f);

@@ -25,16 +25,19 @@ namespace library
 		virtual ~SceneNode();
 
 		const std::string& GetName() const { return m_name; }
+
 		const math::Matrix4& GetTransform() const { return m_transform; }
-		const SceneNode* GetParent() const { return m_parent; }
-
-		void SetParent(const SceneNode* parent);
 		void SetTransform(const math::Matrix4& transform);
+		
+		bool HasParent() const { return !!m_parent; }
+		const SceneNode& GetParentRef() const { return *m_parent; }
+		const SceneNode* GetParent() const { return m_parent; }
+		void SetParent(const SceneNode* parent);
 
-		unsigned GetChildrenCount() const { return m_children.size(); }
+		std::size_t GetChildrenCount() const { return m_children.size(); }
 		bool HasChild(const std::string& childName) const;
-		SceneNode& GetChild(const std::string& childName) const;
-		SceneNode& GetChild(const unsigned childIdx) const;
+		const SceneNode& GetChild(const std::string& childName) const;
+		const SceneNode& GetChild(const unsigned childIdx) const;
 		void AddChild(SceneNodePtr&& child);
 
 	protected:

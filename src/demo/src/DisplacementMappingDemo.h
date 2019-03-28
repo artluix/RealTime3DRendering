@@ -29,13 +29,14 @@ public:
 	void Initialize(const library::Application& app) override;
 	void Update(const library::Time& time) override;
 
+protected:
+	void Draw_SetData(const library::MeshData& meshData) override;
+
 private:
 	void UpdateAmbientLight(const library::Time& time);
 	void UpdatePointLight(const library::Time& time);
 
 	void UpdateDisplacement(const library::Time& time);
-
-	void Draw_SetData() override;
 
 	ComPtr<ID3D11ShaderResourceView> m_displacementMapTexture;
 

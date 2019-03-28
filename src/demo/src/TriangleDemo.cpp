@@ -119,7 +119,7 @@ void TriangleDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateInputLayout(
 			inputElementDescriptions.data(), inputElementDescriptions.size(),
 			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
-			m_input.layout.GetAddressOf()
+			m_inputLayout.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
@@ -143,7 +143,10 @@ void TriangleDemo::Initialize(const Application& app)
 			VertexPositionColor(XMFLOAT4(l, -0.5f, 0.0f, 1.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f)),
 		};
 
-		m_input.vertexBuffer.elementsCount = vertices.size();
+		m_meshesData = { MeshData() };
+		auto& md = m_meshesData.front();
+
+		md.vertexBuffer.elementsCount = vertices.size();
 
 		D3D11_BUFFER_DESC vertexBufferDesc{};
 		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -156,7 +159,7 @@ void TriangleDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
-			m_input.vertexBuffer.buffer.GetAddressOf()
+			md.vertexBuffer.buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
@@ -179,7 +182,7 @@ unsigned TriangleDemo::GetVertexSize() const
 	return sizeof(VertexPositionColor);
 }
 
-void TriangleDemo::Draw_SetData()
+void TriangleDemo::Draw_SetData(const MeshData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)

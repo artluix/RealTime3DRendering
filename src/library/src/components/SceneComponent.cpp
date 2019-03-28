@@ -4,8 +4,8 @@
 #include "library/Application.h"
 #include "library/Renderer.h"
 
-#include "library/Model/Model.h"
 #include "library/Model/Mesh.h"
+#include "library/Model/Model.h"
 
 #include "library/Materials/Material.h"
 
@@ -26,6 +26,8 @@ namespace library
 		, m_right(math::Vector3::Right)
 	{
 	}
+
+	SceneComponent::~SceneComponent() = default;
 
 	//-------------------------------------------------------------------------
 
@@ -146,31 +148,64 @@ namespace library
 			// set default layout from material
 			const auto& currentTechnique = material->GetCurrentTechnique();
 			const auto& pass = currentTechnique.GetPass(0);
-			m_input.layout = material->GetInputLayoutShared(pass);
+			m_inputLayout = material->GetInputLayoutShared(pass);
 
 			// load model from file
 			if (!m_modelName.empty())
 			{
-				Model model(*GetApp(), m_modelName, true);
-				const auto& mesh = model.GetMesh(0);
+				m_model = std::make_unique<Model>(*GetApp(), m_modelName, true);
 
-				m_input.vertexBuffer.buffer = material->CreateVertexBuffer(GetApp()->GetDevice(), mesh);
-				m_input.vertexBuffer.elementsCount = mesh.GetVerticesCount();
-
-				if (mesh.HasIndices())
+				if (m_model->HasMeshes())
 				{
-					m_input.indexBuffer = std::make_optional(BufferData {
-						mesh.CreateIndexBuffer(),
-						mesh.GetIndicesCount()
-					});
+					m_meshesData.clear();
+
+					const auto meshesCount = m_model->GetMeshesCount();
+					m_meshesData.reserve(meshesCount);
+
+					for (unsigned i = 0; i < meshesCount; i++)
+					{
+						MeshData md;
+
+						const auto& mesh = m_model->GetMesh(i);
+
+						md.vertexBuffer.buffer = material->CreateVertexBuffer(GetApp()->GetDevice(), mesh);
+						md.vertexBuffer.elementsCount = mesh.GetVerticesCount();
+
+						if (mesh.HasIndices())
+						{
+							md.indexBuffer = std::make_optional(BufferData{
+								mesh.CreateIndexBuffer(),
+								mesh.GetIndicesCount()
+							});
+						}
+
+						// load texture from model if not specified other texture
+						if (m_textureName.empty())
+						{
+							const auto& modelMaterial = mesh.GetMaterial();
+							if (modelMaterial.HasTextureNames(m_textureType))
+							{
+								const auto& textureNames = modelMaterial.GetTextureNames(m_textureType);
+								assert(!textureNames.empty());
+
+								Path texturePath(textureNames.front());
+								md.texture = GetApp()->LoadTexture(
+									texturePath.GetBaseName().SplitExt().first.GetString()
+								);
+							}
+						}
+
+						m_meshesData.push_back(std::move(md));
+					}
 				}
 			}
 		}
 
-		// load texture
+		// load texture not from model
 		if (!m_textureName.empty())
 		{
-			m_texture = GetApp()->LoadTexture(m_textureName);
+			assert(m_meshesData.size() == 1);
+			m_meshesData[0].texture = GetApp()->LoadTexture(m_textureName);
 		}
 	}
 
@@ -183,35 +218,45 @@ namespace library
 
 	void SceneComponent::Draw(const Time& time)
 	{
-		Draw_SetIA();
-		Draw_SetData();
-		Draw_Render();
+		if (m_meshesData.empty())
+			return;
+
+		for (const auto& meshData : m_meshesData)
+		{
+			Draw_SetIA(meshData);
+			Draw_SetData(meshData);
+			Draw_Render(meshData);
+		}
 	}
 
 	//-------------------------------------------------------------------------
 
-	void SceneComponent::Draw_SetIA()
+	void SceneComponent::Draw_SetIA(const MeshData& meshData)
 	{
 		auto deviceContext = GetApp()->GetDeviceContext();
 
-		deviceContext->IASetPrimitiveTopology(m_input.topology);
-		deviceContext->IASetInputLayout(m_input.layout.Get());
+		deviceContext->IASetPrimitiveTopology(m_primitiveTopology);
+		deviceContext->IASetInputLayout(m_inputLayout.Get());
 
 		// set vertex buffer
 		{
 			unsigned stride = GetVertexSize();
 			unsigned offset = 0;
-			deviceContext->IASetVertexBuffers(0, 1, m_input.vertexBuffer.buffer.GetAddressOf(), &stride, &offset);
+			deviceContext->IASetVertexBuffers(
+				0, 1, meshData.vertexBuffer.buffer.GetAddressOf(), &stride, &offset
+			);
 		}
 
 		// set index buffer (if needed)
-		if (!!m_input.indexBuffer)
+		if (!!meshData.indexBuffer)
 		{
-			deviceContext->IASetIndexBuffer(m_input.indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+			deviceContext->IASetIndexBuffer(
+				meshData.indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0
+			);
 		}
 	}
 
-	void SceneComponent::Draw_SetData()
+	void SceneComponent::Draw_SetData(const MeshData& meshData)
 	{
 		if (const auto material = GetMaterial())
 		{
@@ -222,13 +267,13 @@ namespace library
 		}
 	}
 
-	void SceneComponent::Draw_Render()
+	void SceneComponent::Draw_Render(const MeshData& meshData)
 	{
 		auto deviceContext = GetApp()->GetDeviceContext();
 
-		if (!!m_input.indexBuffer)
-			deviceContext->DrawIndexed(m_input.indexBuffer->elementsCount, 0, 0);
+		if (!!meshData.indexBuffer)
+			deviceContext->DrawIndexed(meshData.indexBuffer->elementsCount, 0, 0);
 		else
-			deviceContext->Draw(m_input.vertexBuffer.elementsCount, 0);
+			deviceContext->Draw(meshData.vertexBuffer.elementsCount, 0);
 	}
 } // namespace library

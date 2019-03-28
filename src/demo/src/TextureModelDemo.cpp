@@ -138,7 +138,7 @@ void TextureModelDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateInputLayout(
 			inputElementDescriptions.data(), inputElementDescriptions.size(),
 			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
-			m_input.layout.GetAddressOf()
+			m_inputLayout.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
@@ -155,7 +155,7 @@ void TextureModelDemo::Initialize(const Application& app)
 
 	if (mesh.HasIndices())
 	{
-		m_input.indexBuffer = std::make_optional(BufferData{
+		m_meshesData.front().indexBuffer = std::make_optional(BufferData{
 			mesh.CreateIndexBuffer(),
 			mesh.GetIndicesCount()
 		});
@@ -227,7 +227,7 @@ unsigned TextureModelDemo::GetVertexSize() const
 	return sizeof(VertexType);
 }
 
-void TextureModelDemo::Draw_SetData()
+void TextureModelDemo::Draw_SetData(const MeshData& meshData)
 {
 	auto deviceContext = GetApp()->GetDeviceContext();
 
@@ -236,7 +236,7 @@ void TextureModelDemo::Draw_SetData()
 		wvp *= m_camera->GetViewProjectionMatrix();
 	m_wvpVariable->SetMatrix(static_cast<const float*>(wvp));
 
-	m_colorTextureVariable->SetResource(GetTexture());
+	m_colorTextureVariable->SetResource(meshData.texture.Get());
 
 	m_pass->Apply(0, deviceContext);
 }
@@ -247,13 +247,16 @@ void TextureModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, co
 
 	if (mesh.HasVertices())
 	{
+		m_meshesData = { MeshData() };
+		auto& md = m_meshesData.front();
+
 		const auto& meshVertices = mesh.GetVertices();
 		const auto& textureCoordinates = mesh.GetTextureCoordinates(0);
-		m_input.vertexBuffer.elementsCount = meshVertices.size();
+		md.vertexBuffer.elementsCount = meshVertices.size();
 
-		vertexBuffer.reserve(m_input.vertexBuffer.elementsCount);
+		vertexBuffer.reserve(md.vertexBuffer.elementsCount);
 
-		for (unsigned i = 0; i < m_input.vertexBuffer.elementsCount; i++)
+		for (unsigned i = 0; i < md.vertexBuffer.elementsCount; i++)
 		{
 			const auto& position = meshVertices[i];
 			const auto& uv = textureCoordinates[i];
@@ -264,7 +267,7 @@ void TextureModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, co
 		}
 
 		D3D11_BUFFER_DESC vertexBufferDesc{};
-		vertexBufferDesc.ByteWidth = sizeof(VertexType) * m_input.vertexBuffer.elementsCount;
+		vertexBufferDesc.ByteWidth = sizeof(VertexType) * md.vertexBuffer.elementsCount;
 		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
@@ -274,7 +277,7 @@ void TextureModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, co
 		auto hr = device->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
-			m_input.vertexBuffer.buffer.GetAddressOf()
+			md.vertexBuffer.buffer.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{

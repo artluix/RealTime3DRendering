@@ -17,7 +17,7 @@ public:
 	unsigned GetVertexSize() const override;
 
 protected:
-	void Draw_SetData() override;
+	void Draw_SetData(const library::MeshData& meshData) override;
 
 private:
 	ComPtr<ID3DX11Effect> m_effect;

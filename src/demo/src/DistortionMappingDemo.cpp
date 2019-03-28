@@ -42,6 +42,8 @@ DistortionMappingDemo::DistortionMappingDemo()
 
 DistortionMappingDemo::~DistortionMappingDemo() = default;
 
+//-------------------------------------------------------------------------
+
 void DistortionMappingDemo::Initialize(const Application& app)
 {
 	PostProcessingComponent::Initialize(app);
@@ -237,8 +239,8 @@ std::string DistortionMappingDemo::ModeToString(const Mode mode)
 	{
 		case Mode::Fullscreen:	return "Fullscreen";
 		case Mode::Masking:		return "Masking";
-		case Mode::MaskOnly:		return "MaskOnly";
-		default:					return "";
+		case Mode::MaskOnly:	return "MaskOnly";
+		default:				return "";
 	}
 }
 
@@ -248,7 +250,7 @@ DistortionMappingDemo::Mode DistortionMappingDemo::NextMode(const Mode mode)
 	{
 		case Mode::Fullscreen:	return Mode::Masking;
 		case Mode::Masking:		return Mode::MaskOnly;
-		case Mode::MaskOnly:		return Mode::Fullscreen;
-		default:					return Mode::Fullscreen;
+		case Mode::MaskOnly:	return Mode::Fullscreen;
+		default:				return Mode::Fullscreen;
 	}
 }

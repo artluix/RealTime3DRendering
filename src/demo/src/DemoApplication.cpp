@@ -28,6 +28,8 @@
 #include "ShadowMappingDemo.h"
 #include "DirectionalShadowMappingDemo.h"
 
+#include "AnimationDemo.h"
+
 //-------------------------------------------------------------------------
 
 #include <library/Components/FpsComponent.h>
@@ -39,6 +41,8 @@
 #include <library/Components/FullScreenQuadComponent.h>
 
 #include <library/RenderTargets/FullScreenRenderTarget.h>
+
+//-------------------------------------------------------------------------
 
 #include <library/Effect/Effect.h>
 #include <library/Effect/EffectVariable.h>
@@ -58,7 +62,7 @@ using namespace library;
 
 namespace
 {
-	const auto k_backgroundColor = Color::Black;
+	const auto k_backgroundColor = Color::CornFlower;
 }
 
 DemoApplication::DemoApplication(
@@ -243,6 +247,7 @@ void DemoApplication::Initialize()
 	);
 	postProcessingText->SetPosition(math::Vector2(0.f, 70.f));
 
+	// projection
 	auto projectiveTextureMapping = std::make_shared<ProjectiveTextureMappingDemo>();
 	projectiveTextureMapping->SetCamera(*camera);
 	projectiveTextureMapping->SetKeyboard(*m_keyboard);
@@ -259,6 +264,11 @@ void DemoApplication::Initialize()
 	directionalShadowMapping->SetCamera(*camera);
 	directionalShadowMapping->SetKeyboard(*m_keyboard);
 
+	// animation
+	auto animation = std::make_shared<AnimationDemo>();
+	animation->SetCamera(*camera);
+	animation->SetKeyboard(*m_keyboard);
+
 	// push needed components
 	m_components.push_back(m_keyboard);
 	m_components.push_back(m_mouse);
@@ -268,7 +278,8 @@ void DemoApplication::Initialize()
 	//m_components.push_back(skybox);
 	m_components.push_back(postProcessingText);
 	//m_components.push_back(shadowMapping);
-	m_components.push_back(directionalShadowMapping);
+	//m_components.push_back(directionalShadowMapping);
+	m_components.push_back(animation);
 
 	Application::Initialize();
 

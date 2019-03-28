@@ -77,7 +77,7 @@ void EnvironmentMappingDemo::Update(const Time& time)
 	SceneComponent::Update(time);
 }
 
-void EnvironmentMappingDemo::Draw_SetData()
+void EnvironmentMappingDemo::Draw_SetData(const MeshData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
@@ -94,8 +94,8 @@ void EnvironmentMappingDemo::Draw_SetData()
 	m_material->GetWorld() << GetWorldMatrix();
 	m_material->GetReflectionAmount() << m_reflectionAmount;
 
-	m_material->GetColorTexture() << GetTexture();
+	m_material->GetColorTexture() << meshData.texture.Get();
 	m_material->GetEnvironmentMap() << m_environmentMapTexture.Get();
 
-	SceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData(meshData);
 }

@@ -31,7 +31,15 @@ namespace library
 			const auto time = static_cast<float>(positionKey.mTime);
 
 			const auto position = reinterpret_cast<const math::Vector3&>(positionKey.mValue);
-			const auto rotation = reinterpret_cast<const math::Vector4&>(rotationKey.mValue);
+
+			// assimp stores quaternions differently
+			const auto rotation = math::Vector4(
+				rotationKey.mValue.x,
+				rotationKey.mValue.y,
+				rotationKey.mValue.z,
+				rotationKey.mValue.w
+			);
+
 			const auto scale = reinterpret_cast<const math::Vector3&>(scaleKey.mValue);
 
 			m_keyframes.emplace_back(KeyframePtr(new Keyframe(time, position, rotation, scale)));
@@ -44,8 +52,7 @@ namespace library
 
 	const Keyframe& BoneAnimation::GetKeyframe(const unsigned keyframeIdx) const
 	{
-		assert(keyframeIdx < m_keyframes.size());
-		return *m_keyframes[keyframeIdx];
+		return *m_keyframes[math::Min(keyframeIdx, m_keyframes.size() - 1)];
 	}
 
 	unsigned BoneAnimation::GetKeyframeIdx(const TimePoint& timePoint) const
@@ -71,13 +78,13 @@ namespace library
 			keyframeToFind,
 			findPred
 		);
-		return std::distance(m_keyframes.cbegin(), it) - 1;
+		
+		return std::distance(m_keyframes.cbegin(), it)- 1; // std::distance return index, but we need -1
 	}
 
 	const math::Matrix4& BoneAnimation::GetTransform(const unsigned keyframeIdx) const
 	{
-		assert(keyframeIdx < m_keyframes.size());
-		return m_keyframes[keyframeIdx]->GetTransform();
+		return m_keyframes[math::Min(keyframeIdx, m_keyframes.size() - 1)]->GetTransform();
 	}
 
 	const math::Matrix4& BoneAnimation::GetTransform(const TimePoint& timePoint) const
@@ -89,7 +96,7 @@ namespace library
 	{
 		// time before start of animation
 		if (timePoint <= m_keyframes.front()->GetTimePoint())
-			m_keyframes.front()->GetTransform();
+			return m_keyframes.front()->GetTransform();
 
 		// time after end time of animation
 		if (timePoint >= m_keyframes.back()->GetTimePoint())
@@ -101,7 +108,7 @@ namespace library
 		const auto& rightKeyframe = *m_keyframes[keyframeIdx + 1];
 
 		const auto lerpFactor = (timePoint - leftKeyframe.GetTimePoint()) / 
-			(leftKeyframe.GetTimePoint() - rightKeyframe.GetTimePoint());
+			(rightKeyframe.GetTimePoint() - leftKeyframe.GetTimePoint());
 
 		const auto translation = math::Lerp(
 			leftKeyframe.GetTranslation(),

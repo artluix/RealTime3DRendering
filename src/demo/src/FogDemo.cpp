@@ -187,10 +187,10 @@ void FogDemo::SetActiveTechnique()
 	const auto& technique = m_material->GetEffect().GetTechnique(techniqueName);
 	const auto& pass = technique.GetPass("p0");
 
-	m_input.layout = m_material->GetInputLayout(pass);
+	m_inputLayout = m_material->GetInputLayout(pass);
 }
 
-void FogDemo::Draw_SetData()
+void FogDemo::Draw_SetData(const MeshData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
@@ -210,7 +210,7 @@ void FogDemo::Draw_SetData()
 	m_material->GetWVP() << wvp;
 	m_material->GetWorld() << GetWorldMatrix();
 
-	m_material->GetColorTexture() << GetTexture();
+	m_material->GetColorTexture() << meshData.texture.Get();
 
-	SceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData(meshData);
 }

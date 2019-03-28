@@ -72,7 +72,7 @@ void BasicMaterialDemo::Update(const Time& time)
 	SceneComponent::Update(time);
 }
 
-void BasicMaterialDemo::Draw_SetData()
+void BasicMaterialDemo::Draw_SetData(const MeshData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
@@ -80,5 +80,5 @@ void BasicMaterialDemo::Draw_SetData()
 
 	m_material->GetWorldViewProjection() << wvp;
 
-	SceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData(meshData);
 }

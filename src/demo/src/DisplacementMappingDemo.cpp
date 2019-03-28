@@ -186,7 +186,7 @@ void DisplacementMappingDemo::UpdateDisplacement(const Time& time)
 	}
 }
 
-void DisplacementMappingDemo::Draw_SetData()
+void DisplacementMappingDemo::Draw_SetData(const MeshData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
@@ -207,8 +207,8 @@ void DisplacementMappingDemo::Draw_SetData()
 	m_material->GetSpecularColor() << m_specularColor;
 	m_material->GetDisplacementScale() << m_displacementScale;
 
-	m_material->GetColorTexture() << GetTexture();
+	m_material->GetColorTexture() << meshData.texture.Get();
 	m_material->GetDisplacementMap() << m_displacementMapTexture.Get();
 
-	SceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData(meshData);
 }

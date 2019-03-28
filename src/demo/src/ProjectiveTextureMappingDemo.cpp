@@ -66,8 +66,11 @@ void ProjectiveTextureMappingDemo::Initialize(const Application& app)
 			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward),
 		};
 
-		m_input.vertexBuffer.elementsCount = vertices.size();
-		m_input.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
+		m_meshesData = { MeshData() };
+		auto& md = m_meshesData.front();
+
+		md.vertexBuffer.elementsCount = vertices.size();
+		md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
 			app.GetDevice(),
 			vertices
 		);
@@ -142,7 +145,7 @@ void ProjectiveTextureMappingDemo::Initialize(const Application& app)
 	}
 }
 
-void ProjectiveTextureMappingDemo::Draw_SetData()
+void ProjectiveTextureMappingDemo::Draw_SetData(const MeshData& meshData)
 {
 	const auto world = GetWorldMatrix();
 
@@ -167,12 +170,12 @@ void ProjectiveTextureMappingDemo::Draw_SetData()
 	m_material->GetLightPosition() << m_pointLight->GetPosition();
 	m_material->GetLightRadius() << m_pointLight->GetRadius();
 	
-	m_material->GetColorTexture() << GetTexture();
+	m_material->GetColorTexture() << meshData.texture.Get();
 	m_material->GetProjectedTexture() << m_projectedTexture.Get();
 
 	m_material->GetProjectiveTextureMatrix() << projectiveTextureMatrix;
 
-	SceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData(meshData);
 }
 
 //-------------------------------------------------------------------------

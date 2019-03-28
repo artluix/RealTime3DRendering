@@ -26,17 +26,14 @@ namespace library
 		class VertexWeights
 		{
 		public:
-			using const_iterator = std::vector<VertexWeight>::const_iterator;
-
 			explicit VertexWeights();
 
 			void Push(const VertexWeight& vw);
 			void Push(VertexWeight&& vw) { Push(vw); }
 
-			const_iterator begin() const noexcept { return m_weights.cbegin(); }
-			const_iterator end() const noexcept { return m_weights.cend(); }
-
 			std::size_t Size() const { return m_weights.size(); }
+
+			const VertexWeight& operator[] (const unsigned idx) const;
 
 			static inline constexpr std::size_t MaxPerVertex = 4;
 

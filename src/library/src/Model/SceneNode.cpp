@@ -56,14 +56,14 @@ namespace library
 		return it != m_children.end();
 	}
 
-	SceneNode& SceneNode::GetChild(const std::string& childName) const
+	const SceneNode& SceneNode::GetChild(const std::string& childName) const
 	{
 		auto it = std::find_if(m_children.begin(), m_children.end(), NodeFinder(childName));
 		assert(it != m_children.end());
 		return **it;
 	}
 
-	SceneNode& SceneNode::GetChild(const unsigned childIdx) const
+	const SceneNode& SceneNode::GetChild(const unsigned childIdx) const
 	{
 		assert(childIdx < m_children.size());
 		return *m_children[childIdx];

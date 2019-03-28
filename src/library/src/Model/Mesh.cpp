@@ -113,16 +113,15 @@ namespace library
 		// Bones
 		if (aiMesh.HasBones())
 		{
-			const unsigned bonesCount = aiMesh.mNumBones;
-			m_boneWeights.reserve(bonesCount);
+			m_boneWeights.resize(aiMesh.mNumVertices);
 
-			for (unsigned i = 0; i < bonesCount; i++)
+			for (unsigned i = 0; i < aiMesh.mNumBones; i++)
 			{
 				const auto aiBone = aiMesh.mBones[i];
 
 				// look up bone in model's hierarchy or add it if not found
 				unsigned boneIdx = m_model.GetBonesCount();
-				auto boneName = aiBone->mName.C_Str();
+				const std::string boneName(aiBone->mName.C_Str());
 
 				if (m_model.HasBone(boneName))
 				{
@@ -131,10 +130,10 @@ namespace library
 				else
 				{
 					auto offsetMatrix = reinterpret_cast<math::Matrix4&>(aiBone->mOffsetMatrix);
-					offsetMatrix = offsetMatrix.Transpose();
+					offsetMatrix = offsetMatrix.Transpose(); // assimp use row-major matrices
 
 					m_model.m_bones.emplace_back(std::make_unique<Bone>(boneName, boneIdx, offsetMatrix));
-					m_model.m_bonesIndexMapping.emplace(boneName, boneIdx);
+					m_model.m_bonesMapping.emplace(boneName, boneIdx);
 				}
 
 				for (unsigned i = 0; i < aiBone->mNumWeights; i++)
@@ -148,6 +147,8 @@ namespace library
 	}
 
 	Mesh::~Mesh() = default;
+
+	//-------------------------------------------------------------------------
 
 	const DirectX::XMFLOAT3Vector& Mesh::GetTextureCoordinates(const unsigned textureIdx) const
 	{

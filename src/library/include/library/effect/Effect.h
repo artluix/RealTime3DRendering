@@ -98,9 +98,9 @@ namespace library
 		bool m_isInitialized = false;
 
 		std::vector<TechniquePtr> m_techniques;
-		std::map<std::string, unsigned> m_techniquesIndexMapping;
+		std::map<std::string, unsigned> m_techniquesMapping;
 
 		std::vector<VariablePtr> m_variables;
-		std::map<std::string, unsigned> m_variablesIndexMapping;
+		std::map<std::string, unsigned> m_variabesMapping;
 	};
 } // namespace library

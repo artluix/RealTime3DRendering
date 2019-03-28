@@ -11,6 +11,16 @@ namespace library::math
 	using XMVector = DirectX::XMVECTOR;
 
 	//-------------------------------------------------------------------------
+	// VectorDef
+	//-------------------------------------------------------------------------
+
+	template <std::size_t Size>
+	struct VectorDef
+	{
+		static constexpr std::size_t Size = Size;
+	};
+
+	//-------------------------------------------------------------------------
 	// forward declarations
 	//-------------------------------------------------------------------------
 
@@ -34,7 +44,7 @@ namespace library::math
 	//-------------------------------------------------------------------------
 
 	template<>
-	struct Vector<2>
+	struct Vector<2> : public VectorDef<2>
 	{
 		union
 		{
@@ -103,7 +113,7 @@ namespace library::math
 	//-------------------------------------------------------------------------
 
 	template<>
-	struct Vector<3>
+	struct Vector<3> 
 	{
 		union
 		{
@@ -172,14 +182,14 @@ namespace library::math
 
 	//-------------------------------------------------------------------------
 
-	template <std::size_t Size>
-	inline Vector3 Vector<3>::Transform(const Matrix<Size>& matrix) const
+	template <std::size_t MatrixSize>
+	inline Vector3 Vector<3>::Transform(const Matrix<MatrixSize>& matrix) const
 	{
 		return Store(DirectX::XMVector3Transform(Load(), matrix.Load()));
 	}
 
-	template <std::size_t Size>
-	inline Vector3 Vector<3>::TransformNormal(const Matrix<Size>& matrix) const
+	template <std::size_t MatrixSize>
+	inline Vector3 Vector<3>::TransformNormal(const Matrix<MatrixSize>& matrix) const
 	{
 		return Store(DirectX::XMVector3TransformNormal(Load(), matrix.Load()));
 	}
@@ -196,7 +206,7 @@ namespace library::math
 	//-------------------------------------------------------------------------
 
 	template<>
-	struct Vector<4>
+	struct Vector<4> : public VectorDef<4>
 	{
 		union
 		{

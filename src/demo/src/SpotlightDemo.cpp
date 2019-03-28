@@ -277,7 +277,7 @@ void SpotlightDemo::UpdateSpecularLight(const Time& time)
 	}
 }
 
-void SpotlightDemo::Draw_SetData()
+void SpotlightDemo::Draw_SetData(const MeshData& meshData)
 {
 	auto world = GetWorldMatrix();
 	if (!!m_camera)
@@ -298,7 +298,7 @@ void SpotlightDemo::Draw_SetData()
 	m_material->GetLightLookAt() << m_spotlight->GetDirection();
 	m_material->GetSpotlightInnerAngle() << m_spotlight->GetInnerAngle();
 	m_material->GetSpotlightOuterAngle() << m_spotlight->GetOuterAngle();
-	m_material->GetColorTexture() << GetTexture();
+	m_material->GetColorTexture() << meshData.texture.Get();
 
-	SceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData(meshData);
 }

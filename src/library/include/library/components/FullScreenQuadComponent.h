@@ -33,7 +33,7 @@ namespace library
 		const Material* GetMaterial() const override { return m_material; }
 
 	protected:
-		void Draw_SetData() override;
+		void Draw_SetData(const MeshData& meshData) override;
 
 		Material* GetMaterial() override { return m_material; }
 		unsigned GetVertexSize() const override;

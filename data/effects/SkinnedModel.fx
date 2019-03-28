@@ -6,25 +6,25 @@
 
 cbuffer CBufferPerFrame
 {
-    float4 AmbientColor = { 1.f, 1.f, 1.f, 0.f };
-    float4 LightColor = { 1.f, 1.f, 1.f, 1.f };
-    float3 LightPosition = { 0.f, 0.f, 0.f };
-    float LightRadius = 10.f;
-    float3 CameraPosition;
+    float4 ambientColor = { 1.f, 1.f, 1.f, 0.f };
+    float4 lightColor = { 1.f, 1.f, 1.f, 1.f };
+    float3 lightPosition = { 0.f, 0.f, 0.f };
+    float lightRadius = 10.f;
+    float3 cameraPosition;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 WVP : WORLDVIEWPROJECTION;
-    float4x4 World : WORLD;
+    float4x4 wvp : WORLDVIEWPROJECTION;
+    float4x4 world : WORLD;
 
-    float4 SpecularColor : SPECULAR = { 1.f, 1.f, 1.f, 1.f };
-    float SpecularPower : SPECULARPOWER = 25.f;
+    float4 specularColor : SPECULAR = { 1.f, 1.f, 1.f, 1.f };
+    float specularPower : SPECULARPOWER = 25.f;
 }
 
 cbuffer CBufferPerSkinning
 {
-    float4x4 BoneTransforms[MaxBones];
+    float4x4 boneTransforms[MaxBones];
 }
 
 Texture2D ColorTexture;
@@ -63,22 +63,22 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
     VS_OUTPUT OUT = (VS_OUTPUT)0;
 
     float4x4 skinTransform = (float4x4)0;
-    skinTransform += BoneTransforms[IN.boneIndices.x] * IN.boneWeights.x;
-    skinTransform += BoneTransforms[IN.boneIndices.y] * IN.boneWeights.y;
-    skinTransform += BoneTransforms[IN.boneIndices.z] * IN.boneWeights.z;
-    skinTransform += BoneTransforms[IN.boneIndices.w] * IN.boneWeights.w;
+    skinTransform += boneTransforms[IN.boneIndices.x] * IN.boneWeights.x;
+    skinTransform += boneTransforms[IN.boneIndices.y] * IN.boneWeights.y;
+    skinTransform += boneTransforms[IN.boneIndices.z] * IN.boneWeights.z;
+    skinTransform += boneTransforms[IN.boneIndices.w] * IN.boneWeights.w;
 
     float4 position = mul(IN.objectPosition, skinTransform);
-    OUT.position = mul(position, WVP);
-    OUT.worldPosition = mul(position, World).xyz;
+    OUT.position = mul(position, wvp);
+    OUT.worldPosition = mul(position, world).xyz;
 
     float4 normal = mul(float4(IN.normal, 0.f), skinTransform);
-    OUT.normal = normalize(mul(normal, World).xyz);
+    OUT.normal = normalize(mul(normal, world).xyz);
 
     OUT.textureCoordinate = IN.textureCoordinate;
 
-    float3 lightDirection = LightPosition - OUT.worldPosition;
-    OUT.attenuation = saturate(1.f - (length(lightDirection) / LightRadius));
+    float3 lightDirection = lightPosition - OUT.worldPosition;
+    OUT.attenuation = saturate(1.f - (length(lightDirection) / lightRadius));
 
     return OUT;
 }
@@ -90,8 +90,8 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 OUT = (float4)0;
 
-    float3 lightDirection = normalize(LightPosition - IN.worldPosition);
-    float3 viewDirection = normalize(CameraPosition - IN.worldPosition);
+    float3 lightDirection = normalize(lightPosition - IN.worldPosition);
+    float3 viewDirection = normalize(cameraPosition - IN.worldPosition);
 
     float3 normal = normalize(IN.normal);
     float n_dot_l = dot(normal, lightDirection);
@@ -99,11 +99,11 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     float n_dot_h = dot(normal, halfVector);
 
     float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
-    float4 lightCoefficients = lit(n_dot_l, n_dot_h, SpecularPower);
+    float4 lightCoefficients = lit(n_dot_l, n_dot_h, specularPower);
 
-    float3 ambient = get_color_contribution(AmbientColor, color.rgb);
-    float3 diffuse = get_color_contribution(LightColor, lightCoefficients.y * color.rgb) * IN.attenuation;
-    float3 specular = get_color_contribution(SpecularColor, min(lightCoefficients.z, color.w)) * IN.attenuation;
+    float3 ambient = get_color_contribution(ambientColor, color.rgb);
+    float3 diffuse = get_color_contribution(lightColor, lightCoefficients.y * color.rgb) * IN.attenuation;
+    float3 specular = get_color_contribution(specularColor, min(lightCoefficients.z, color.w)) * IN.attenuation;
 
     OUT.rgb = ambient + diffuse + specular;
     OUT.a = 1.f;

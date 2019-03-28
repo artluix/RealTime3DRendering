@@ -21,7 +21,7 @@ namespace library
 		void Initialize(const Application& app) override;
 
 	protected:
-		void Draw_SetData() override;
+		void Draw_SetData(const MeshData& meshData) override;
 
 	private:
 		void InitializeVertexBuffer(const Frustum& frustum);

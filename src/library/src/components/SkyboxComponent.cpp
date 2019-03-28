@@ -33,15 +33,15 @@ namespace library
 		SceneComponent::Update(time);
 	}
 
-	void SkyboxComponent::Draw_SetData()
+	void SkyboxComponent::Draw_SetData(const MeshData& meshData)
 	{
 		auto wvp = GetWorldMatrix();
 		if (!!m_camera)
 			wvp *= m_camera->GetViewProjectionMatrix();
 
 		m_material->GetWorldViewProjection() << wvp;
-		m_material->GetSkyboxTexture() << GetTexture();
+		m_material->GetSkyboxTexture() << meshData.texture.Get();
 
-		SceneComponent::Draw_SetData();
+		SceneComponent::Draw_SetData(meshData);
 	}
 } // namespace library

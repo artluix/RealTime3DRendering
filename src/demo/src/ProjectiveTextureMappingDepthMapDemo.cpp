@@ -78,6 +78,9 @@ void ProjectiveTextureMappingDepthMapDemo::Initialize(const Application& app)
 	{
 		using Vertex = Material::Vertex;
 
+		m_meshesData = { MeshData() };
+		auto& md = m_meshesData.front();
+
 		const auto backward = DirectX::XMFLOAT3(math::Vector3::Backward);
 
 		const std::array<Vertex, 6> vertices =
@@ -91,8 +94,8 @@ void ProjectiveTextureMappingDepthMapDemo::Initialize(const Application& app)
 			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward),
 		};
 
-		m_input.vertexBuffer.elementsCount = vertices.size();
-		m_input.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
+		md.vertexBuffer.elementsCount = vertices.size();
+		md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
 			app.GetDevice(),
 			vertices
 		);
@@ -219,7 +222,7 @@ void ProjectiveTextureMappingDepthMapDemo::Draw(const library::Time& time)
 		GetApp()->GetRenderer()->SaveRenderState(RenderState::Rasterizer);
 		m_depthMapRenderTarget->Begin();
 
-		deviceContext->IASetPrimitiveTopology(m_input.topology);
+		deviceContext->IASetPrimitiveTopology(m_primitiveTopology);
 		deviceContext->ClearDepthStencilView(
 			m_depthMapRenderTarget->GetDepthStencilView(),
 			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
@@ -287,7 +290,7 @@ void ProjectiveTextureMappingDepthMapDemo::Draw(const library::Time& time)
 		m_material->GetLightPosition() << m_pointLight->GetPosition();
 		m_material->GetLightRadius() << m_pointLight->GetRadius();
 
-		m_material->GetColorTexture() << GetTexture();
+		m_material->GetColorTexture() << m_meshesData.front().texture.Get();
 		m_material->GetProjectedTexture() << m_projectedTexture.Get();
 
 		m_material->GetProjectiveTextureMatrix() << modelProjectiveTextureMatrix;
@@ -307,7 +310,7 @@ void ProjectiveTextureMappingDepthMapDemo::Draw(const library::Time& time)
 	}
 }
 
-void ProjectiveTextureMappingDepthMapDemo::Draw_SetData()
+void ProjectiveTextureMappingDepthMapDemo::Draw_SetData(const MeshData& meshData)
 {
 	const auto world = GetWorldMatrix();
 
@@ -332,7 +335,7 @@ void ProjectiveTextureMappingDepthMapDemo::Draw_SetData()
 	m_material->GetLightPosition() << m_pointLight->GetPosition();
 	m_material->GetLightRadius() << m_pointLight->GetRadius();
 
-	m_material->GetColorTexture() << GetTexture();
+	m_material->GetColorTexture() << meshData.texture.Get();
 	m_material->GetProjectedTexture() << m_projectedTexture.Get();
 
 	m_material->GetProjectiveTextureMatrix() << projectiveTextureMatrix;
@@ -340,7 +343,7 @@ void ProjectiveTextureMappingDepthMapDemo::Draw_SetData()
 	m_material->GetDepthMapTexture() << m_depthMapRenderTarget->GetOutputTexture();
 	m_material->GetDepthBias() << m_depthBias;
 
-	SceneComponent::Draw_SetData();
+	SceneComponent::Draw_SetData(meshData);
 }
 
 //-------------------------------------------------------------------------

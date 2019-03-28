@@ -20,6 +20,12 @@ namespace library
 		m_weights.push_back(vw);
 	}
 
+	const Bone::VertexWeight& Bone::VertexWeights::operator[](const unsigned idx) const
+	{
+		assert(idx < m_weights.size());
+		return m_weights[idx];
+	}
+
 	//-------------------------------------------------------------------------
 
 	Bone::Bone(const std::string& name, const unsigned index, const math::Matrix4& offsetTransform)
