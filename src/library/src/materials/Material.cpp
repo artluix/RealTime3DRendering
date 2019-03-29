@@ -13,7 +13,7 @@
 
 namespace library
 {
-	Material::Material(Effect& effect, const std::string& defaultTechniqueName /* = ""*/)
+	Material::Material(Effect& effect, const std::string& defaultTechniqueName /* = "" */)
 		: m_effect(effect)
 		, m_defaultTechniqueName(defaultTechniqueName)
 		, m_currentTechnique(

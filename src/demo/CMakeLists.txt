@@ -58,6 +58,9 @@ if(APPLICATION)
             src/GaussianBlurDemo.h
             src/GaussianBlurDemo.cpp
 
+            src/GeometryShaderDemo.h
+            src/GeometryShaderDemo.cpp
+
             src/NormalMappingDemo.h
             src/NormalMappingDemo.cpp
 

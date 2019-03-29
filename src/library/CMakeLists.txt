@@ -63,6 +63,7 @@ if(APPLICATION)
                 include/library/Materials/LightMaterial.h
                 include/library/Materials/NormalMappingMaterial.h
                 include/library/Materials/PointLightMaterial.h
+                include/library/Materials/PointSpriteMaterial.h
                 include/library/Materials/PostProcessingMaterial.h
                 include/library/Materials/ProjectiveTextureMappingMaterial.h
                 include/library/Materials/ShadowMappingMaterial.h
@@ -176,6 +177,7 @@ if(APPLICATION)
                 src/Materials/LightMaterial.cpp
                 src/Materials/NormalMappingMaterial.cpp
                 src/Materials/PointLightMaterial.cpp
+                src/Materials/PointSpriteMaterial.cpp
                 src/Materials/PostProcessingMaterial.cpp
                 src/Materials/ProjectiveTextureMappingMaterial.cpp
                 src/Materials/ShadowMappingMaterial.cpp

@@ -62,7 +62,7 @@ namespace library
 			},
 		};
 
-		CreateInputLayout();
+		Material::InitializeInternal();
 	}
 
 	ComPtr<ID3D11Buffer> LightMaterial::CreateVertexBuffer(

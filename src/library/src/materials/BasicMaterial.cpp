@@ -41,7 +41,7 @@ namespace library
 			},
 		};
 
-		CreateInputLayout();
+		Material::InitializeInternal();
 	}
 
 	ComPtr<ID3D11Buffer> BasicMaterial::CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const

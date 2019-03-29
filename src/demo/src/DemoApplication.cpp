@@ -30,6 +30,8 @@
 
 #include "AnimationDemo.h"
 
+#include "GeometryShaderDemo.h"
+
 //-------------------------------------------------------------------------
 
 #include <library/Components/FpsComponent.h>
@@ -269,17 +271,23 @@ void DemoApplication::Initialize()
 	animation->SetCamera(*camera);
 	animation->SetKeyboard(*m_keyboard);
 
+	// geometry shader
+	auto geometryShader = std::make_shared<GeometryShaderDemo>();
+	geometryShader->SetCamera(*camera);
+	geometryShader->SetKeyboard(*m_keyboard);
+
 	// push needed components
 	m_components.push_back(m_keyboard);
 	m_components.push_back(m_mouse);
 	m_components.push_back(camera);
-	m_components.push_back(m_grid);
+	//m_components.push_back(m_grid);
 	m_components.push_back(fps);
 	//m_components.push_back(skybox);
 	m_components.push_back(postProcessingText);
 	//m_components.push_back(shadowMapping);
 	//m_components.push_back(directionalShadowMapping);
-	m_components.push_back(animation);
+	//m_components.push_back(animation);
+	m_components.push_back(geometryShader);
 
 	Application::Initialize();
 
