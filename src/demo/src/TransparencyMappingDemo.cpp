@@ -43,7 +43,7 @@ TransparencyMappingDemo::~TransparencyMappingDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void TransparencyMappingDemo::Initialize(const Application& app)
+void TransparencyMappingDemo::Initialize()
 {
 	assert(!!GetCamera());
 
@@ -64,7 +64,7 @@ void TransparencyMappingDemo::Initialize(const Application& app)
 			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward),
 		};
 
-		m_meshesData = { MeshData() };
+		m_meshesData = { PrimitiveData() };
 		auto& md = m_meshesData.front();
 
 		md.vertexBuffer.elementsCount = vertices.size();
@@ -74,8 +74,7 @@ void TransparencyMappingDemo::Initialize(const Application& app)
 		);
 	}
 
-	InitializeMaterial(app, "TransparencyMapping");
-	SceneComponent::Initialize(app);
+	InitializeMaterial("TransparencyMapping");
 
 	m_transparencyMapTexture = app.LoadTexture("AlphaMask_32bpp");
 
@@ -218,7 +217,7 @@ void TransparencyMappingDemo::UpdateSpecularLight(const Time& time)
 	}
 }
 
-void TransparencyMappingDemo::Draw_SetData(const MeshData& meshData)
+void TransparencyMappingDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
@@ -244,7 +243,7 @@ void TransparencyMappingDemo::Draw_SetData(const MeshData& meshData)
 	SceneComponent::Draw_SetData(meshData);
 }
 
-void TransparencyMappingDemo::Draw_Render(const MeshData& meshData)
+void TransparencyMappingDemo::Draw_Render(const PrimitiveData& meshData)
 {
 	auto deviceContext = GetApp()->GetDeviceContext();
 	auto renderer = GetApp()->GetRenderer();

@@ -66,9 +66,9 @@ ColorFilterDemo::~ColorFilterDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void ColorFilterDemo::Initialize(const Application& app)
+void ColorFilterDemo::Initialize()
 {
-	InitializeMaterial(app, "ColorFilter");
+	InitializeMaterial("ColorFilter");
 	InitializeQuad(app, "grayscale_filter");
 
 	m_fullScreenQuad->SetMaterialUpdateFunction(

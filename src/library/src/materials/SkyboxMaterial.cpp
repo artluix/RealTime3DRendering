@@ -7,54 +7,52 @@
 
 namespace library
 {
-	SkyboxMaterial::SkyboxMaterial(Effect& effect)
-		: Material(effect, "main11")
-		, m_worldViewProjection(effect.GetVariable("WorldViewProjection"))
-		, m_skyboxTexture(effect.GetVariable("SkyboxTexture"))
-	{
-	}
+SkyboxMaterial::SkyboxMaterial(std::shared_ptr<Effect> effect)
+	: Material(effect, "main11")
+	, m_worldViewProjection(effect->GetVariable("WorldViewProjection"))
+	, m_skyboxTexture(effect->GetVariable("SkyboxTexture"))
+{}
 
-	SkyboxMaterial::~SkyboxMaterial() = default;
+SkyboxMaterial::~SkyboxMaterial() = default;
 
-	void SkyboxMaterial::InitializeInternal()
+void SkyboxMaterial::InitializeInternal()
+{
+	// clang-format off
+	m_inputElementDescriptions =
 	{
-		m_inputElementDescriptions =
 		{
-			{
-				"POSITION",
-				0,
-				DXGI_FORMAT_R32G32B32A32_FLOAT,
-				0,
-				0,
-				D3D11_INPUT_PER_VERTEX_DATA,
-				0
-			},
-		};
+			"POSITION",
+			0,
+			DXGI_FORMAT_R32G32B32A32_FLOAT,
+			0,
+			0,
+			D3D11_INPUT_PER_VERTEX_DATA,
+			0
+		},
+	};
+	// clang-format on
 
-		Material::InitializeInternal();
-	}
+	Material::InitializeInternal();
+}
 
-	ComPtr<ID3D11Buffer> SkyboxMaterial::CreateVertexBuffer(
-		ID3D11Device* const device,
-		const Mesh& mesh
-	) const
+VertexBufferData SkyboxMaterial::CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh) const
+{
+	if (!mesh.HasVertices())
+		return VertexBufferData();
+
+	std::vector<Vertex> vertices;
+
+	const auto& meshVertices = mesh.GetVertices();
+	const auto verticesCount = meshVertices.size();
+
+	vertices.reserve(verticesCount);
+
+	for (unsigned i = 0; i < verticesCount; i++)
 	{
-		if (!mesh.HasVertices())
-			return ComPtr<ID3D11Buffer>();
-
-		std::vector<Vertex> vertices;
-
-		const auto& meshVertices = mesh.GetVertices();
-		const auto verticesCount = meshVertices.size();
-
-		vertices.reserve(verticesCount);
-
-		for (unsigned i = 0; i < verticesCount; i++)
-		{
-			const auto& position = meshVertices[i];
-			vertices.emplace_back(DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f));
-		}
-
-		return Material::CreateVertexBuffer(device, vertices);
+		const auto& position = meshVertices[i];
+		vertices.emplace_back(DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f));
 	}
+
+	return VertexBufferData(device, vertices);
+}
 } // namespace library

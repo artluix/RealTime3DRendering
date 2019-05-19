@@ -3,19 +3,16 @@
 
 namespace library
 {
-	Exception::Exception(const char* const& message, const HRESULT hr /*= S_OK*/)
-		: exception(message)
-		, m_hr(hr)
-	{
-	}
+Exception::Exception(const char* const& message, const HRESULT hr /*= S_OK*/) : exception(message), m_hr(hr)
+{}
 
-	std::string Exception::GetWhatString() const
-	{
-		std::string msg = what();
+std::string Exception::GetWhatString() const
+{
+	std::string msg = what();
 
-		if (m_hr != S_OK)
-			msg += " Error: " + std::to_string(m_hr);
+	if (m_hr != S_OK)
+		msg += " Error: " + std::to_string(m_hr);
 
-		return msg;
-	}
+	return msg;
+}
 } // namespace library

@@ -30,8 +30,6 @@ namespace
 {
 	const auto k_backgroundColor = Color::Black;
 	constexpr auto k_emptyColor = Color();
-
-
 }
 
 DistortionMappingDemo::DistortionMappingDemo()
@@ -44,11 +42,11 @@ DistortionMappingDemo::~DistortionMappingDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void DistortionMappingDemo::Initialize(const Application& app)
+void DistortionMappingDemo::Initialize()
 {
 	PostProcessingComponent::Initialize(app);
 
-	InitializeMaterial(app, "DistortionMapping");
+	InitializeMaterial("DistortionMapping");
 	InitializeQuad(app, "distortion");
 
 	m_distortionMapTexture = app.LoadTexture("DistortionGlass");
@@ -163,7 +161,7 @@ void DistortionMappingDemo::DrawMeshForDistortionCutout()
 
 		const auto stride = m_material->GetVertexSize();
 		unsigned offset = 0;
-		deviceContext->IASetVertexBuffers(0, 1, m_vertexBuffer.buffer.GetAddressOf(), &stride, &offset);
+		deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer.buffer, &stride, &offset);
 
 		if (m_indices)
 		{

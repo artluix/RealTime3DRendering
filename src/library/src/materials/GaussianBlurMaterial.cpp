@@ -5,12 +5,11 @@
 
 namespace library
 {
-	GaussianBlurMaterial::GaussianBlurMaterial(Effect& effect)
-		: PostProcessingMaterial(effect)
-		, m_sampleOffsets(effect.GetVariable("sampleOffsets"))
-		, m_sampleWeights(effect.GetVariable("sampleWeights"))
-	{
-	}
+GaussianBlurMaterial::GaussianBlurMaterial(std::shared_ptr<Effect> effect)
+	: PostProcessingMaterial(effect)
+	, m_sampleOffsets(effect->GetVariable("sampleOffsets"))
+	, m_sampleWeights(effect->GetVariable("sampleWeights"))
+{}
 
-	GaussianBlurMaterial::~GaussianBlurMaterial() = default;
+GaussianBlurMaterial::~GaussianBlurMaterial() = default;
 } // namespace library

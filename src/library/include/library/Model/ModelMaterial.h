@@ -1,62 +1,34 @@
 #pragma once
 #include "library/NonCopyable.hpp"
+#include "library/Model/TextureType.h"
 
 #include <string>
 #include <vector>
-#include <array>
 #include <map>
-
-#include <assimp/material.h>
 
 namespace library
 {
-	struct TextureType
-	{
-		enum Type : unsigned
-		{
-			Diffuse = 0,
-			SpecularMap,
-			Ambient,
-			Emissive,
-			HeightMap,
-			NormalMap,
-			SpecularPowerMap,
-			DisplacementMap,
-			LightMap,
+using TextureNameVector = std::vector<std::string>;
+using TextureNamesMap = std::map<TextureType::Type, TextureNameVector>;
 
-			//# Count
-			Count,
-			None = Count
-		};
+class ModelMaterial : public NonCopyable<ModelMaterial>
+{
+	friend class Model;
 
-		static constexpr Type FromAiTextureType(const aiTextureType aiTt);
-		static constexpr aiTextureType ToAiTextureType(const Type t);
-		static constexpr std::array<Type, Count> GetValues();
-	};
+public:
+	~ModelMaterial();
 
-	//-------------------------------------------------------------------------
+	const Model& GetModel() const { return m_model; }
+	const std::string& GetName() const { return m_name; }
 
-	using TextureNameVector = std::vector<std::string>;
-	using TextureNamesMap = std::map<TextureType::Type, TextureNameVector>;
+	bool HasTextureNames(const TextureType::Type textureType) const;
+	const TextureNameVector& GetTextureNames(const TextureType::Type textureType) const;
 
-	class ModelMaterial : public NonCopyable<ModelMaterial>
-	{
-		friend class Model;
+private:
+	ModelMaterial(const Model& model, const aiMaterial& material);
 
-	public:
-		~ModelMaterial();
-
-		const Model& GetModel() const { return m_model; }
-		const std::string& GetName() const { return m_name; }
-
-		bool HasTextureNames(const TextureType::Type textureType) const;
-		const TextureNameVector& GetTextureNames(const TextureType::Type textureType) const;
-
-	private:
-		explicit ModelMaterial(const Model& model, const aiMaterial& material);
-
-		const Model& m_model;
-		std::string m_name;
-		TextureNamesMap m_textureNamesMap;
-	};
+	const Model& m_model;
+	std::string m_name;
+	TextureNamesMap m_textureNamesMap;
+};
 } // namespace library

@@ -43,18 +43,18 @@ AnimationDemo::AnimationDemo()
 
 	, m_manualAdvanceMode(false)
 {
-	SetModelName("RunningSoldier.dae");
 }
 
 //-------------------------------------------------------------------------
 
-void AnimationDemo::Initialize(const Application& app)
+void AnimationDemo::Initialize()
 {
 	const auto camera = GetCamera();
 	assert(!!camera);
 
-	InitializeMaterial(app, "SkinnedModel");
-	SceneComponent::Initialize(app);
+	InitializeMaterial("SkinnedModel");
+
+	m_model = std::make_unique<Model>(GetApp(), "RunningSoldier.dae", true);
 
 	SetScaling(math::Vector3(0.05f));
 
@@ -65,7 +65,7 @@ void AnimationDemo::Initialize(const Application& app)
 	m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.5f);
 	m_proxyModel->SetCamera(*camera);
 	m_proxyModel->SetPosition(m_pointLight->GetPosition());
-	m_proxyModel->Initialize(app);
+	m_proxyModel->Initialize();
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -91,10 +91,10 @@ void AnimationDemo::Initialize(const Application& app)
 			return woss.str();
 		}
 	);
-	m_text->Initialize(app);
+	m_text->Initialize();
 
 	m_animationPlayer = std::make_unique<AnimationPlayerComponent>(*m_model, false);
-	m_animationPlayer->Initialize(app);
+	m_animationPlayer->Initialize();
 	m_animationPlayer->Play(m_model->GetAnimation(0));
 }
 
@@ -117,16 +117,16 @@ void AnimationDemo::Update(const Time& time)
 
 //-------------------------------------------------------------------------
 
-void AnimationDemo::Draw_SetData(const MeshData& meshData)
+void AnimationDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	auto world = GetWorldMatrix();
 
 	auto wvp = world;
-	if (!!m_camera)
+	if (auto camera = GetCamera())
 	{
-		wvp *= m_camera->GetViewProjectionMatrix();
+		wvp *= camera->GetViewProjectionMatrix();
 
-		m_material->GetCameraPosition() << m_camera->GetPosition();
+		m_material->GetCameraPosition() << camera->GetPosition();
 	}
 
 	m_material->GetWVP() << wvp;

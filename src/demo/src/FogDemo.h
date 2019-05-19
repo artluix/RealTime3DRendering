@@ -1,11 +1,11 @@
 #pragma once
 #include <library/Materials/FogMaterial.h>
 
-#include <library/Components/ConcreteMaterialSceneComponent.hpp>
+#include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
 
 #include <library/DirectXForwardDeclarations.h>
-#include <library/Color.h>
+#include <library/math/Color.h>
 
 #include <memory>
 
@@ -17,7 +17,7 @@ namespace library
 } // namespace library
 
 class FogDemo
-	: public library::ConcreteMaterialSceneComponent<library::FogMaterial>
+	: public library::ConcreteMaterialPrimitiveComponent<library::FogMaterial>
 	, public library::InputReceivableComponent
 {
 	RTTI_CLASS(FogDemo, library::SceneComponent, library::InputReceivableComponent)
@@ -26,11 +26,11 @@ public:
 	explicit FogDemo();
 	~FogDemo();
 
-	void Initialize(const library::Application& app) override;
+	void Initialize() override;
 	void Update(const library::Time& time) override;
 
 protected:
-	void Draw_SetData(const library::MeshData& meshData) override;
+	void Draw_SetData(const library::PrimitiveData& primitiveData) override;
 
 private:
 	void UpdateAmbientLight(const library::Time& time);

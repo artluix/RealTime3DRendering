@@ -1,15 +1,14 @@
 #pragma once
 #include <library/Materials/SkinnedModelMaterial.h>
-#include <library/Components/ConcreteMaterialSceneComponent.hpp>
+#include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
 
 #include <library/Components/InputReceivableComponent.h>
 
-#include <library/Color.h>
+#include <library/math/Color.h>
 #include <library/CommonTypes.h>
 #include <library/DirectXForwardDeclarations.h>
 
 #include <memory>
-#include <optional>
 #include <vector>
 
 namespace library
@@ -23,7 +22,7 @@ namespace library
 } // namespace library
 
 class AnimationDemo
-	: public library::ConcreteMaterialSceneComponent<library::SkinnedModelMaterial>
+	: public library::ConcreteMaterialPrimitiveComponent<library::SkinnedModelMaterial>
 	, public library::InputReceivableComponent
 {
 	RTTI_CLASS(AnimationDemo, library::SceneComponent, library::InputReceivableComponent)
@@ -31,11 +30,11 @@ class AnimationDemo
 public:
 	explicit AnimationDemo();
 
-	void Initialize(const library::Application& app) override;
+	void Initialize() override;
 	void Update(const library::Time& time) override;
 
 protected:
-	void Draw_SetData(const library::MeshData& meshData) override;
+	void Draw_SetData(const library::PrimitiveData& primitiveData) override;
 
 private:
 	void UpdateOptions();
@@ -48,6 +47,8 @@ private:
 	std::unique_ptr<library::PointLightComponent> m_pointLight;
 	std::unique_ptr<library::ProxyModelComponent> m_proxyModel;
 	std::unique_ptr<library::AnimationPlayerComponent> m_animationPlayer;
+
+	std::unique_ptr<Model> m_model;
 
 	bool m_manualAdvanceMode;
 

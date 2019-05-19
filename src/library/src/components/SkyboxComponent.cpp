@@ -5,43 +5,51 @@
 
 #include "library/Application.h"
 
+#include "library/Model/Model.h"
 #include "library/Effect/EffectVariable.h"
 
 namespace library
 {
-	SkyboxComponent::SkyboxComponent(const std::string& cubeMapName, const float scale)
+SkyboxComponent::SkyboxComponent(const std::string& cubeMapName, const float scale)
+	: m_cubeMapName(cubeMapName)
+{
+	SetScaling(math::Vector3(scale));
+}
+
+//-------------------------------------------------------------------------
+
+void SkyboxComponent::Initialize()
+{
+	InitializeMaterial("Skybox");
+	PrimitiveComponent::Initialize();
+
+	Model model(GetApp(), "Sphere", true);
+	m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);
+
+	m_textures.resize(Texture::Count);
+	m_textures[Texture::Skybox] = GetApp().LoadTexture(m_cubeMapName);
+}
+
+void SkyboxComponent::Update(const Time& time)
+{
+	if (auto camera = GetCamera())
 	{
-		SetModelName("Sphere");
-		SetTextureName(cubeMapName);
-		SetScaling(math::Vector3(scale));
+		const auto& position = camera->GetPosition();
+		SetPosition(position);
 	}
 
-	void SkyboxComponent::Initialize(const Application& app)
-	{
-		InitializeMaterial(app, "Skybox");
-		SceneComponent::Initialize(app);
-	}
+	SceneComponent::Update(time);
+}
 
-	void SkyboxComponent::Update(const Time& time)
-	{
-		if (!!m_camera)
-		{
-			const auto& position = m_camera->GetPosition();
-			SetPosition(position);
-		}
+void SkyboxComponent::Draw_SetData(const PrimitiveData& primitiveData)
+{
+	auto wvp = GetWorldMatrix();
+	if (auto camera = GetCamera())
+		wvp *= camera->GetViewProjectionMatrix();
 
-		SceneComponent::Update(time);
-	}
+	m_material->GetWorldViewProjection() << math::XMMatrix(wvp);
+	m_material->GetSkyboxTexture() << GetTexture(Texture::Skybox);
 
-	void SkyboxComponent::Draw_SetData(const MeshData& meshData)
-	{
-		auto wvp = GetWorldMatrix();
-		if (!!m_camera)
-			wvp *= m_camera->GetViewProjectionMatrix();
-
-		m_material->GetWorldViewProjection() << wvp;
-		m_material->GetSkyboxTexture() << meshData.texture.Get();
-
-		SceneComponent::Draw_SetData(meshData);
-	}
+	PrimitiveComponent::Draw_SetData(primitiveData);
+}
 } // namespace library

@@ -3,63 +3,74 @@
 
 namespace library
 {
-	using Clock = std::chrono::steady_clock;
-	using TimePoint = Clock::time_point;
-	using Duration = Clock::duration;
+using Clock = std::chrono::steady_clock;
+using TimePoint = Clock::time_point;
+using Duration = Clock::duration;
 
-	//-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 
-	struct TimeValue
+struct TimeValue
+{
+public:
+	TimeValue() = default;
+	explicit TimeValue(const Duration& duration) : m_duration(duration) {}
+
+	Duration GetDuration() const { return m_duration; }
+
+	template <typename T>
+	T GetNanoseconds() const
 	{
-	public:
-		explicit TimeValue() = default;
-		explicit TimeValue(const Duration& duration)
-			: m_duration(duration)
-		{
-		}
+		return GetAs<T, std::chrono::nanoseconds::period>();
+	}
 
-		Duration GetDuration() const { return m_duration; }
-
-		template <typename T>
-		T GetNanoseconds() const { return GetAs<T, std::chrono::nanoseconds::period>(); }
-
-		template <typename T = float>
-		T GetMicroseconds() const { return GetAs<T, std::chrono::microseconds::period>(); }
-
-		template <typename T = float>
-		T GetMilliseconds() const { return GetAs<T, std::chrono::milliseconds::period>(); }
-
-		template <typename T = float>
-		T GetSeconds() const { return GetAs<T, std::chrono::seconds::period>(); }
-
-		template <typename T = float>
-		T GetMinutes() const { return GetAs<T, std::chrono::minutes::period>(); }
-
-		template <typename T = float>
-		T GetHours() const { return GetAs<T, std::chrono::hours::period>(); }
-
-	private:
-		template <typename T, typename Period>
-		T GetAs() const
-		{
-			return std::chrono::duration_cast<std::chrono::duration<T, Period>>(m_duration).count();
-		}
-
-		Duration m_duration;
-	};
-
-	//-------------------------------------------------------------------------
-
-	struct Time
+	template <typename T = float>
+	T GetMicroseconds() const
 	{
-		explicit Time() = default;
-		explicit Time(const TimeValue& _elapsed, const TimeValue& _total)
-			: total(_total)
-			, elapsed(_elapsed)
-		{
-		}
+		return GetAs<T, std::chrono::microseconds::period>();
+	}
 
-		TimeValue total;
-		TimeValue elapsed;
-	};
+	template <typename T = float>
+	T GetMilliseconds() const
+	{
+		return GetAs<T, std::chrono::milliseconds::period>();
+	}
+
+	template <typename T = float>
+	T GetSeconds() const
+	{
+		return GetAs<T, std::chrono::seconds::period>();
+	}
+
+	template <typename T = float>
+	T GetMinutes() const
+	{
+		return GetAs<T, std::chrono::minutes::period>();
+	}
+
+	template <typename T = float>
+	T GetHours() const
+	{
+		return GetAs<T, std::chrono::hours::period>();
+	}
+
+private:
+	template <typename T, typename Period>
+	T GetAs() const
+	{
+		return std::chrono::duration_cast<std::chrono::duration<T, Period>>(m_duration).count();
+	}
+
+	Duration m_duration;
+};
+
+//-------------------------------------------------------------------------
+
+struct Time
+{
+	Time() = default;
+	Time(const TimeValue& _elapsed, const TimeValue& _total) : total(_total), elapsed(_elapsed) {}
+
+	TimeValue total;
+	TimeValue elapsed;
+};
 } // namespace library

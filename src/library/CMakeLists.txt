@@ -12,7 +12,7 @@ if(APPLICATION)
                 include/library/Components/BloomComponent.h
                 include/library/Components/CameraComponent.h
                 include/library/Components/ConcreteMaterialPostProcessingComponent.hpp
-                include/library/Components/ConcreteMaterialSceneComponent.hpp
+                include/library/Components/ConcreteMaterialPrimitiveComponent.hpp
                 include/library/Components/DirectionalLightComponent.h
                 include/library/Components/DrawableComponent.h
                 include/library/Components/FirstPersonCameraComponent.h
@@ -25,10 +25,9 @@ if(APPLICATION)
                 include/library/Components/KeyboardComponent.h
                 include/library/Components/LightComponent.h
                 include/library/Components/MouseComponent.h
-                include/library/Components/OrthographicProjectorComponent.h
                 include/library/Components/PointLightComponent.h
                 include/library/Components/PostProcessingComponent.h
-                include/library/Components/PerspectiveProjectorComponent.h
+                include/library/Components/PrimitiveComponent.h
                 include/library/Components/ProjectorComponent.h
                 include/library/Components/ProxyModelComponent.h
                 include/library/Components/RenderableFrustumComponent.h
@@ -70,14 +69,21 @@ if(APPLICATION)
                 include/library/Materials/SkinnedModelMaterial.h
                 include/library/Materials/SkyboxMaterial.h
                 include/library/Materials/SpotlightMaterial.h
+                include/library/Materials/TessellationMaterial.h
                 include/library/Materials/TextureMappingMaterial.h
                 include/library/Materials/TransparencyMappingMaterial.h
 
             # Math
                 include/library/Math/Math.h
 
+                include/library/Math/Color.h
                 include/library/Math/Matrix.h
+                include/library/Math/Plane.h
+                include/library/Math/Quaternion.h
+                include/library/Math/Ray.h
+                include/library/Math/Transform.h
                 include/library/Math/Vector.h
+                include/library/Math/XmTypes.h
 
             # Model
                 include/library/Model/Model.h
@@ -90,6 +96,7 @@ if(APPLICATION)
                 include/library/Model/Mesh.h
                 include/library/Model/ModelMaterial.h
                 include/library/Model/SceneNode.h
+                include/library/Model/TextureType.h
 
             # RenderTargets
                 include/library/RenderTargets/RenderTarget.h
@@ -98,9 +105,10 @@ if(APPLICATION)
                 include/library/RenderTargets/FullScreenRenderTarget.h
 
             include/library/Application.h
-            include/library/BlendStates.h
             include/library/Color.h
+            include/library/BlendStates.h
             include/library/CommonTypes.h
+            include/library/ComPtr.hpp
             include/library/DirectXForwardDeclarations.h
             include/library/Exception.h
             include/library/Frustum.h
@@ -109,7 +117,7 @@ if(APPLICATION)
             include/library/NonCopyable.hpp
             include/library/NonConstructible.hpp
             include/library/Path.h
-            include/library/Ray.h
+            include/library/PrimitiveData.h
             include/library/Renderer.h
             include/library/RasterizerStates.h
             include/library/RTTI.hpp
@@ -122,13 +130,10 @@ if(APPLICATION)
 
         # src
             # Components
-                src/Components/Component.cpp
-
                 src/Components/AnimationPlayerComponent.cpp
                 src/Components/BloomComponent.cpp
                 src/Components/CameraComponent.cpp
                 src/Components/DirectionalLightComponent.cpp
-                src/Components/DrawableComponent.cpp
                 src/Components/FirstPersonCameraComponent.cpp
                 src/Components/FpsComponent.cpp
                 src/Components/FullScreenQuadComponent.cpp
@@ -139,10 +144,9 @@ if(APPLICATION)
                 src/Components/KeyboardComponent.cpp
                 src/Components/LightComponent.cpp
                 src/Components/MouseComponent.cpp
-                src/Components/OrthographicProjectorComponent.cpp
                 src/Components/PointLightComponent.cpp
                 src/Components/PostProcessingComponent.cpp
-                src/Components/PerspectiveProjectorComponent.cpp
+                src/Components/PrimitiveComponent.cpp
                 src/Components/ProjectorComponent.cpp
                 src/Components/ProxyModelComponent.cpp
                 src/Components/RenderableFrustumComponent.cpp
@@ -185,10 +189,14 @@ if(APPLICATION)
                 src/Materials/SkyboxMaterial.cpp
                 src/Materials/SpotlightMaterial.cpp
                 src/Materials/TextureMappingMaterial.cpp
+                src/Materials/TessellationMaterial.cpp
                 src/Materials/TransparencyMappingMaterial.cpp
 
             # Math
+                src/Math/Color.cpp
                 src/Math/Matrix.cpp
+                src/Math/Plane.cpp
+                src/Math/Quaternion.cpp
                 src/Math/Vector.cpp
 
             # Model
@@ -210,7 +218,6 @@ if(APPLICATION)
 
             src/Application.cpp
             src/BlendStates.cpp
-            src/Color.cpp
             src/Exception.cpp
             src/Frustum.cpp
             src/Logger.cpp

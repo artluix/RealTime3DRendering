@@ -30,7 +30,7 @@ public:
 	explicit DistortionMappingDemo();
 	~DistortionMappingDemo();
 
-	void Initialize(const library::Application& app) override;
+	void Initialize() override;
 	void Update(const library::Time& time) override;
 	void Draw(const library::Time& time) override;
 
@@ -46,8 +46,10 @@ private:
 
 	std::unique_ptr<library::TextComponent> m_text;
 
-	ComPtr<ID3D11ShaderResourceView> m_distortionMapTexture;
 	std::unique_ptr<library::FullScreenRenderTarget> m_cutoutRenderTarget;
+	PrimitiveData
+
+	library::ComPtr<ID3D11ShaderResourceView> m_distortionMapTexture;
 	library::EffectPass* m_cutoutPass;
 
 	library::BufferData m_vertexBuffer;

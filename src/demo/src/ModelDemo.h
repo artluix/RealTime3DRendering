@@ -20,19 +20,19 @@ class ModelDemo
 public:
 	explicit ModelDemo() = default;
 
-	void Initialize(const library::Application& app) override;
+	void Initialize() override;
 	void Update(const library::Time& time) override;
 
 protected:
-	void Draw_SetData(const library::MeshData& meshData) override;
+	void Draw_SetData(const library::PrimitiveData& primitiveData) override;
 
 	unsigned GetVertexSize() const override;
 
 private:
-	void CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const library::Mesh& mesh);
+	void CreateVertexBuffer(const library::ComPtr<ID3D11Device>& device, const library::Mesh& mesh);
 
-	ComPtr<ID3DX11Effect> m_effect;
-	ComPtr<ID3DX11EffectTechnique> m_technique;
-	ComPtr<ID3DX11EffectPass> m_pass;
-	ComPtr<ID3DX11EffectMatrixVariable> m_wvpVariable;
+	library::ComPtr<ID3DX11Effect> m_effect;
+	library::ComPtr<ID3DX11EffectTechnique> m_technique;
+	library::ComPtr<ID3DX11EffectPass> m_pass;
+	library::ComPtr<ID3DX11EffectMatrixVariable> m_wvpVariable;
 };

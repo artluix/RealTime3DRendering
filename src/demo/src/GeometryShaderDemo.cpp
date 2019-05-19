@@ -20,19 +20,17 @@ using namespace library;
 GeometryShaderDemo::GeometryShaderDemo()
 	: m_showRandomPoints(true)
 {
-	m_primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
-
 	SetTextureName("BookCover");
 }
 
 //-------------------------------------------------------------------------
 
-void GeometryShaderDemo::Initialize(const Application& app)
+void GeometryShaderDemo::Initialize()
 {
-	m_meshesData = { MeshData() };
+	m_meshesData = { PrimitiveData() };
+	m_meshesData.front().primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
 
-	InitializeMaterial(app, "PointSprite");
-	SceneComponent::Initialize(app);
+	InitializeMaterial("PointSprite");
 
 	InitializeRandomPoints();
 
@@ -72,7 +70,8 @@ void GeometryShaderDemo::Update(const Time& time)
 
 			const auto& technique = m_effect->GetTechnique(techniqueName);
 			m_material->SetCurrentTechnique(technique);
-			m_inputLayout = m_material->GetInputLayoutShared(technique.GetPass(0));
+			m_currentPass = &technique.GetPass(0);
+			m_currentInputLayout = m_material->GetInputLayout(*m_currentPass);
 		}
 	}
 
@@ -83,7 +82,7 @@ void GeometryShaderDemo::Update(const Time& time)
 
 //-------------------------------------------------------------------------
 
-void GeometryShaderDemo::Draw_SetData(const MeshData& meshData)
+void GeometryShaderDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	if (!!m_camera)
 	{
@@ -97,7 +96,7 @@ void GeometryShaderDemo::Draw_SetData(const MeshData& meshData)
 	SceneComponent::Draw_SetData(meshData);
 }
 
-void GeometryShaderDemo::Draw_Render(const library::MeshData& meshData)
+void GeometryShaderDemo::Draw_Render(const library::PrimitiveData& primitiveData)
 {
 	SceneComponent::Draw_Render(meshData);
 

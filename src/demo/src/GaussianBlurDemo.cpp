@@ -8,7 +8,7 @@
 #include <library/Application.h>
 #include <library/Utils.h>
 #include <library/Path.h>
-#include <library/Color.h>
+#include <library/math/Color.h>
 #include <library/Application.h>
 
 #include <cmath>
@@ -30,7 +30,7 @@ GaussianBlurDemo::~GaussianBlurDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void GaussianBlurDemo::Initialize(const Application& app)
+void GaussianBlurDemo::Initialize()
 {
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 45.f));

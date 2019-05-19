@@ -4,25 +4,25 @@
 
 namespace library
 {
-	class PostProcessingMaterial : public Material
-	{
-		RTTI_CLASS(PostProcessingMaterial, Material)
+class PostProcessingMaterial : public Material
+{
+	RTTI_CLASS(PostProcessingMaterial, Material)
 
-	public:
-		using Vertex = VertexPositionTexture;
+public:
+	using Vertex = VertexPositionTexture;
 
-		explicit PostProcessingMaterial(Effect& effect);
-		~PostProcessingMaterial();
+	explicit PostProcessingMaterial(std::shared_ptr<Effect> effect);
+	~PostProcessingMaterial();
 
-		EffectVariable& GetSceneTexture() { return m_sceneTexture; }
+	EffectVariable& GetSceneTexture() { return m_sceneTexture; }
 
-		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
-		unsigned GetVertexSize() const override { return sizeof(Vertex); }
+	VertexBufferData CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh) const override;
+	unsigned GetVertexSize() const override { return sizeof(Vertex); }
 
-	protected:
-		void InitializeInternal() override;
+protected:
+	void InitializeInternal() override;
 
-	private:
-		EffectVariable& m_sceneTexture;
-	};
+private:
+	EffectVariable& m_sceneTexture;
+};
 } // namespace library

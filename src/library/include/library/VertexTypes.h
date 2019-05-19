@@ -6,115 +6,103 @@
 
 namespace library
 {
-	struct VertexPosition
-	{
-		DirectX::XMFLOAT4 position;
+struct Vertex
+{};
 
-		explicit VertexPosition(const DirectX::XMFLOAT4& position)
-			: position(position)
-		{
-		}
-	};
+struct VertexPosition : public Vertex
+{
+	DirectX::XMFLOAT4 position;
 
-	//-------------------------------------------------------------------------
+	explicit VertexPosition(const DirectX::XMFLOAT4& position) : position(position) {}
+};
 
-	struct VertexPositionColor : public VertexPosition
-	{
-		DirectX::XMFLOAT4 color;
+//-------------------------------------------------------------------------
 
-		explicit VertexPositionColor(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& color)
-			: VertexPosition(position)
-			, color(color)
-		{
-		}
-	};
+struct VertexPositionColor : public VertexPosition
+{
+	DirectX::XMFLOAT4 color;
 
-	//-------------------------------------------------------------------------
+	VertexPositionColor(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT4& color)
+		: VertexPosition(position)
+		, color(color)
+	{}
+};
 
-	struct VertexPositionTexture : public VertexPosition
-	{
-		DirectX::XMFLOAT2 textureCoordinates;
+//-------------------------------------------------------------------------
 
-		explicit VertexPositionTexture(
-			const DirectX::XMFLOAT4& position,
-			const DirectX::XMFLOAT2& textureCoordinates
-		)
-			: VertexPosition(position)
-			, textureCoordinates(textureCoordinates)
-		{
-		}
-	};
+struct VertexPositionTexture : public VertexPosition
+{
+	DirectX::XMFLOAT2 textureCoordinates;
 
-	//-------------------------------------------------------------------------
+	VertexPositionTexture(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT2& textureCoordinates)
+		: VertexPosition(position)
+		, textureCoordinates(textureCoordinates)
+	{}
+};
 
-	using VertexPositionSize = VertexPositionTexture;
+//-------------------------------------------------------------------------
 
-	//-------------------------------------------------------------------------
+using VertexPositionSize = VertexPositionTexture;
 
-	struct VertexPositionNormal : public VertexPosition
-	{
-		DirectX::XMFLOAT3 normal;
+//-------------------------------------------------------------------------
 
-		explicit VertexPositionNormal(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT3& normal)
-			: VertexPosition(position)
-			, normal(normal)
-		{
-		}
-	};
+struct VertexPositionNormal : public VertexPosition
+{
+	DirectX::XMFLOAT3 normal;
 
-	//-------------------------------------------------------------------------
+	VertexPositionNormal(const DirectX::XMFLOAT4& position, const DirectX::XMFLOAT3& normal)
+		: VertexPosition(position)
+		, normal(normal)
+	{}
+};
 
-	struct VertexPositionTextureNormal : public VertexPositionTexture
-	{
-		DirectX::XMFLOAT3 normal;
+//-------------------------------------------------------------------------
 
-		explicit VertexPositionTextureNormal(
-			const DirectX::XMFLOAT4& position,
-			const DirectX::XMFLOAT2& textureCoordinates,
-			const DirectX::XMFLOAT3& normal
-		)
-			: VertexPositionTexture(position, textureCoordinates)
-			, normal(normal)
-		{
-		}
-	};
+struct VertexPositionTextureNormal : public VertexPositionTexture
+{
+	DirectX::XMFLOAT3 normal;
 
-	//-------------------------------------------------------------------------
+	VertexPositionTextureNormal(
+		const DirectX::XMFLOAT4& position,
+		const DirectX::XMFLOAT2& textureCoordinates,
+		const DirectX::XMFLOAT3& normal)
+		: VertexPositionTexture(position, textureCoordinates)
+		, normal(normal)
+	{}
+};
 
-	struct VertexPositionTextureNormalTangent : public VertexPositionTextureNormal
-	{
-		DirectX::XMFLOAT3 tangent;
+//-------------------------------------------------------------------------
 
-		explicit VertexPositionTextureNormalTangent(
-			const DirectX::XMFLOAT4& position,
-			const DirectX::XMFLOAT2& textureCoordinates,
-			const DirectX::XMFLOAT3& normal,
-			const DirectX::XMFLOAT3& tangent
-		)
-			: VertexPositionTextureNormal(position, textureCoordinates, normal)
-			, tangent(tangent)
-		{
-		}
-	};
+struct VertexPositionTextureNormalTangent : public VertexPositionTextureNormal
+{
+	DirectX::XMFLOAT3 tangent;
 
-	//-------------------------------------------------------------------------
+	VertexPositionTextureNormalTangent(
+		const DirectX::XMFLOAT4& position,
+		const DirectX::XMFLOAT2& textureCoordinates,
+		const DirectX::XMFLOAT3& normal,
+		const DirectX::XMFLOAT3& tangent)
+		: VertexPositionTextureNormal(position, textureCoordinates, normal)
+		, tangent(tangent)
+	{}
+};
 
-	struct VertexPositionTextureNormalSkinned : public VertexPositionTextureNormal
-	{
-		DirectX::XMUINT4 boneIndices;
-		DirectX::XMFLOAT4 boneWeights;
+//-------------------------------------------------------------------------
 
-		explicit VertexPositionTextureNormalSkinned(
-			const DirectX::XMFLOAT4& position,
-			const DirectX::XMFLOAT2& textureCoordinates,
-			const DirectX::XMFLOAT3& normal,
-			const DirectX::XMUINT4& boneIndices,
-			const DirectX::XMFLOAT4& boneWeights
-		)
-			: VertexPositionTextureNormal(position, textureCoordinates, normal)
-			, boneIndices(boneIndices)
-			, boneWeights(boneWeights)
-		{
-		}
-	};
+struct VertexPositionTextureNormalSkinned : public VertexPositionTextureNormal
+{
+	DirectX::XMUINT4 boneIndices;
+	DirectX::XMFLOAT4 boneWeights;
+
+	VertexPositionTextureNormalSkinned(
+		const DirectX::XMFLOAT4& position,
+		const DirectX::XMFLOAT2& textureCoordinates,
+		const DirectX::XMFLOAT3& normal,
+		const DirectX::XMUINT4& boneIndices,
+		const DirectX::XMFLOAT4& boneWeights)
+		: VertexPositionTextureNormal(position, textureCoordinates, normal)
+		, boneIndices(boneIndices)
+		, boneWeights(boneWeights)
+	{}
+};
 } // namespace library

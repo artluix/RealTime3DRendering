@@ -5,13 +5,12 @@
 
 namespace library
 {
-	DisplacementMappingMaterial::DisplacementMappingMaterial(Effect& effect)
-		: PointLightMaterial(effect, "main10")
+DisplacementMappingMaterial::DisplacementMappingMaterial(std::shared_ptr<Effect> effect)
+	: PointLightMaterial(effect, "main10")
 
-		, m_displacementScale(effect.GetVariable("displacementScale"))
-		, m_displacementMap(effect.GetVariable("DisplacementMap"))
-	{
-	}
+	, m_displacementScale(effect->GetVariable("displacementScale"))
+	, m_displacementMap(effect->GetVariable("DisplacementMap"))
+{}
 
-	DisplacementMappingMaterial::~DisplacementMappingMaterial() = default;
+DisplacementMappingMaterial::~DisplacementMappingMaterial() = default;
 } // namespace library

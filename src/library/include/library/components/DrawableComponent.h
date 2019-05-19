@@ -3,33 +3,26 @@
 
 namespace library
 {
-	class Material;
-	class Effect;
-	class CameraComponent;
+class Material;
 
-	class DrawableComponent : public virtual Component
-	{
-		RTTI_CLASS(DrawableComponent, Component)
+// abstract drawable
+class DrawableComponent : public virtual Component
+{
+	RTTI_CLASS(DrawableComponent, Component)
 
-	public:
-		bool IsVisible() const { return m_visible; }
-		void SetVisible(const bool visible);
+public:
+	bool IsVisible() const { return m_visible; }
+	void SetVisible(const bool visible) { m_visible = visible; }
 
-		const CameraComponent* GetCamera() const { return m_camera; }
-		void SetCamera(const CameraComponent& camera);
+	virtual void Draw(const Time& time) = 0;
+	virtual const Material* GetMaterial() const { return nullptr; }
 
-		virtual void Draw(const Time& time) {}
+protected:
+	DrawableComponent() = default;
 
-		virtual const Material* GetMaterial() const { return nullptr; }
-		virtual const Effect* GetEffect() const { return nullptr; }
+	virtual Material* GetMaterial() { return nullptr; }
 
-	protected:
-		explicit DrawableComponent() = default;
-
-		virtual Material* GetMaterial() { return nullptr; }
-		virtual Effect* GetEffect() { return nullptr; }
-
-		const CameraComponent* m_camera = nullptr;
-		bool m_visible = true;
-	};
+private:
+	bool m_visible = true;
+};
 } // namespace library

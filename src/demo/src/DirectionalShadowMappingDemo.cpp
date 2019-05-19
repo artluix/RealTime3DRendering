@@ -72,13 +72,13 @@ DirectionalShadowMappingDemo::~DirectionalShadowMappingDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void DirectionalShadowMappingDemo::Initialize(const Application& app)
+void DirectionalShadowMappingDemo::Initialize()
 {
 	const auto camera = GetCamera();
 
 	assert(camera);
 
-	m_meshesData = { MeshData() };
+	m_meshesData = { PrimitiveData() };
 	auto& md = m_meshesData.front();
 
 	// build plane vertices manually
@@ -123,14 +123,14 @@ void DirectionalShadowMappingDemo::Initialize(const Application& app)
 		);
 	}
 
-	InitializeMaterial(app, "DirectionalShadowMapping");
+	InitializeMaterial("DirectionalShadowMapping");
 
 	// manually create depth map effect & material
 	m_depthMapEffect = Effect::Create(app, "DepthMap");
 	m_depthMapMaterial = std::make_unique<DepthMapMaterial>(*m_depthMapEffect);
 	m_depthMapMaterial->Initialize();
 
-	SceneComponent::Initialize(app);
+	
 
 	m_directionalLight = std::make_unique<DirectionalLightComponent>();
 	//m_directionalLight->Rotate(math::Vector3(0.f, math::Pi, 0.f));
@@ -226,6 +226,8 @@ void DirectionalShadowMappingDemo::Draw(const library::Time& time)
 {
 	auto deviceContext = GetApp()->GetDeviceContext();
 
+	const auto& md = m_meshesData.front();
+
 	//-------------------------------------------------------------------------
 	// depth map pass (render the teapot model only)
 	//-------------------------------------------------------------------------
@@ -233,7 +235,8 @@ void DirectionalShadowMappingDemo::Draw(const library::Time& time)
 		GetApp()->GetRenderer()->SaveRenderState(RenderState::Rasterizer);
 		m_depthMapRenderTarget->Begin();
 
-		deviceContext->IASetPrimitiveTopology(m_primitiveTopology);
+
+		deviceContext->IASetPrimitiveTopology(md.primitiveTopology);
 		deviceContext->ClearDepthStencilView(
 			m_depthMapRenderTarget->GetDepthStencilView(),
 			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
@@ -305,14 +308,13 @@ void DirectionalShadowMappingDemo::Draw(const library::Time& time)
 
 		m_material->GetProjectiveTextureMatrix() << modelProjectiveTextureMatrix;
 
-		m_material->GetColorTexture() << m_meshesData.front().texture.Get(); // use same texture for model
+		m_material->GetColorTexture() << md.texture.Get(); // use same texture for model
 		m_material->GetShadowMapTexture() << m_depthMapRenderTarget->GetOutputTexture();
 
 		const math::Vector2 shadowMapSize(k_depthMapWidth, k_depthMapHeight);
 		m_material->GetShadowMapSize() << shadowMapSize;
 
-		auto& pass = m_material->GetCurrentTechnique().GetPass(0);
-		pass.Apply(0, deviceContext);
+		m_currentPass->Apply(0, deviceContext);
 
 		if (m_model.indexBuffer)
 			deviceContext->DrawIndexed(m_model.indexBuffer->elementsCount, 0, 0);
@@ -323,7 +325,7 @@ void DirectionalShadowMappingDemo::Draw(const library::Time& time)
 	}
 }
 
-void DirectionalShadowMappingDemo::Draw_SetData(const MeshData& meshData)
+void DirectionalShadowMappingDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	const auto world = GetWorldMatrix();
 

@@ -17,7 +17,7 @@ public:
 	explicit GaussianBlurDemo();
 	~GaussianBlurDemo();
 
-	void Initialize(const library::Application& app) override;
+	void Initialize() override;
 	void Update(const library::Time& time) override;
 
 private:

@@ -12,9 +12,9 @@
 
 using namespace library;
 
-void TriangleDemo::Initialize(const Application& app)
+void TriangleDemo::Initialize()
 {
-	SceneComponent::Initialize(app);
+	
 
 	// shader
 	{
@@ -119,7 +119,7 @@ void TriangleDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateInputLayout(
 			inputElementDescriptions.data(), inputElementDescriptions.size(),
 			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
-			m_inputLayout.GetAddressOf()
+			m_currentInputLayout.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
@@ -143,7 +143,7 @@ void TriangleDemo::Initialize(const Application& app)
 			VertexPositionColor(XMFLOAT4(l, -0.5f, 0.0f, 1.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f)),
 		};
 
-		m_meshesData = { MeshData() };
+		m_meshesData = { PrimitiveData() };
 		auto& md = m_meshesData.front();
 
 		md.vertexBuffer.elementsCount = vertices.size();
@@ -182,7 +182,7 @@ unsigned TriangleDemo::GetVertexSize() const
 	return sizeof(VertexPositionColor);
 }
 
-void TriangleDemo::Draw_SetData(const MeshData& meshData)
+void TriangleDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)

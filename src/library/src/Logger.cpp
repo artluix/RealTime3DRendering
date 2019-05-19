@@ -3,85 +3,75 @@
 
 namespace library
 {
-	void Logger::Log(const Level level, const char* fmt, ...)
+void Logger::Log(const Level level, const char* fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	Log(level, fmt, args);
+	va_end(args);
+}
+
+void Logger::Log(const Level level, const char* fmt, const va_list ap)
+{
+	constexpr unsigned k_bufferSize = 256;
+
+	char buffer[k_bufferSize];
+	vsprintf_s(buffer, k_bufferSize, fmt, ap);
+
+	std::string prefixMsg;
+
+	// clang-format off
+	switch (level)
 	{
-		va_list args;
-		va_start(args, fmt);
-		Log(level, fmt, args);
-		va_end(args);
+		case Level::Info:		prefixMsg = "Info"; break;
+		case Level::Debug:		prefixMsg = "Debug"; break;
+		case Level::Warning:	prefixMsg = "Warn"; break;
+		case Level::Error:		prefixMsg = "Error"; break;
+		default: break;
 	}
+	// clang-format on
 
-	void Logger::Log(const Level level, const char* fmt, const va_list ap)
-	{
-		constexpr unsigned k_bufferSize = 256;
+	std::string message = prefixMsg + ": " + std::string(buffer);
+	Message(message);
+}
 
-		char buffer[k_bufferSize];
-		vsprintf_s(buffer, k_bufferSize, fmt, ap);
+void Logger::Info(const char* fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	Log(Level::Info, fmt, args);
+	va_end(args);
+}
 
-		std::string prefixMsg;
-		switch (level)
-		{
-		case Level::Info:
-			prefixMsg = "Info";
-			break;
+void Logger::Debug(const char* fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	Log(Level::Debug, fmt, args);
+	va_end(args);
+}
 
-		case Level::Debug:
-			prefixMsg = "Debug";
-			break;
+void Logger::Warn(const char* fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	Log(Level::Warning, fmt, args);
+	va_end(args);
+}
 
-		case Level::Warning:
-			prefixMsg = "Warn";
-			break;
+void Logger::Error(const char* fmt, ...)
+{
+	va_list args;
+	va_start(args, fmt);
+	Log(Level::Error, fmt, args);
+	va_end(args);
+}
 
-		case Level::Error:
-			prefixMsg = "Error";
-			break;
+void Logger::Message(std::string msg, const bool newline /*= true*/)
+{
+	if (newline)
+		msg += '\n';
 
-		default:
-			break;
-		}
-
-		std::string message = prefixMsg + ": " + std::string(buffer);
-		Message(message);
-	}
-
-	void Logger::Info(const char* fmt, ...)
-	{
-		va_list args;
-		va_start(args, fmt);
-		Log(Level::Info, fmt, args);
-		va_end(args);
-	}
-
-	void Logger::Debug(const char* fmt, ...)
-	{
-		va_list args;
-		va_start(args, fmt);
-		Log(Level::Debug, fmt, args);
-		va_end(args);
-	}
-
-	void Logger::Warn(const char* fmt, ...)
-	{
-		va_list args;
-		va_start(args, fmt);
-		Log(Level::Warning, fmt, args);
-		va_end(args);
-	}
-
-	void Logger::Error(const char* fmt, ...)
-	{
-		va_list args;
-		va_start(args, fmt);
-		Log(Level::Error, fmt, args);
-		va_end(args);
-	}
-
-	void Logger::Message(std::string msg, const bool newline /*= true*/)
-	{
-		if (newline)
-			msg += '\n';
-
-		OutputDebugStringA(msg.c_str());
-	}
+	OutputDebugStringA(msg.c_str());
+}
 } // namespace library

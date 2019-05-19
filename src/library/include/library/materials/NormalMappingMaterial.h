@@ -4,25 +4,25 @@
 
 namespace library
 {
-	class NormalMappingMaterial : public DirectionalLightMaterial
-	{
-		RTTI_CLASS(NormalMappingMaterial, DirectionalLightMaterial)
+class NormalMappingMaterial : public DirectionalLightMaterial
+{
+	RTTI_CLASS(NormalMappingMaterial, DirectionalLightMaterial)
 
-	public:
-		using Vertex = VertexPositionTextureNormalTangent;
+public:
+	using Vertex = VertexPositionTextureNormalTangent;
 
-		explicit NormalMappingMaterial(Effect& effect);
-		~NormalMappingMaterial();
+	explicit NormalMappingMaterial(std::shared_ptr<Effect> effect);
+	~NormalMappingMaterial();
 
-		EffectVariable& GetNormalMap() { return m_normalMap; }
+	EffectVariable& GetNormalMap() { return m_normalMap; }
 
-		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
-		unsigned GetVertexSize() const override { return sizeof(Vertex); }
+	VertexBufferData CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh) const override;
+	unsigned GetVertexSize() const override { return sizeof(Vertex); }
 
-	protected:
-		void InitializeInternal() override;
+protected:
+	void InitializeInternal() override;
 
-	private:
-		EffectVariable& m_normalMap;
-	};
+private:
+	EffectVariable& m_normalMap;
+};
 } // namespace library

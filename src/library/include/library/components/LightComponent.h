@@ -4,17 +4,17 @@
 
 namespace library
 {
-	class LightComponent : public virtual Component
-	{
-		RTTI_CLASS(LightComponent, Component)
+class LightComponent : public virtual Component
+{
+	RTTI_CLASS(LightComponent, Component)
 
-	public:
-		const Color& GetColor() const { return m_color; }
-		void SetColor(const Color& color);
+public:
+	const Color& GetColor() const { return m_color; }
+	void SetColor(const Color& color);
 
-	protected:
-		explicit LightComponent(const Color& color = Color::White);
+protected:
+	explicit LightComponent(const Color& color = Color::White);
 
-		Color m_color;
-	};
+	Color m_color;
+};
 } // namespace library

@@ -5,13 +5,12 @@
 
 namespace library
 {
-	SpotlightMaterial::SpotlightMaterial(Effect& effect)
-		: PointLightMaterial(effect, "main10")
-		, m_lightLookAt(effect.GetVariable("lightLookAt"))
-		, m_spotlightInnerAngle(effect.GetVariable("spotLightInnerAngle"))
-		, m_spotlightOuterAngle(effect.GetVariable("spotLightOuterAngle"))
-	{
-	}
+SpotlightMaterial::SpotlightMaterial(std::shared_ptr<Effect> effect)
+	: PointLightMaterial(effect, "main10")
+	, m_lightLookAt(effect->GetVariable("lightLookAt"))
+	, m_spotlightInnerAngle(effect->GetVariable("spotLightInnerAngle"))
+	, m_spotlightOuterAngle(effect->GetVariable("spotLightOuterAngle"))
+{}
 
-	SpotlightMaterial::~SpotlightMaterial() = default;
+SpotlightMaterial::~SpotlightMaterial() = default;
 } // namespace library

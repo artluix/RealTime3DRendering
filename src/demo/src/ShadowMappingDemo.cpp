@@ -70,7 +70,7 @@ ShadowMappingDemo::~ShadowMappingDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void ShadowMappingDemo::Initialize(const Application& app)
+void ShadowMappingDemo::Initialize()
 {
 	const auto camera = GetCamera();
 	assert(!!camera);
@@ -92,7 +92,7 @@ void ShadowMappingDemo::Initialize(const Application& app)
 			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward),
 		};
 
-		m_meshesData = { MeshData() };
+		m_meshesData = { PrimitiveData() };
 		auto& md = m_meshesData.front();
 
 		md.vertexBuffer.elementsCount = vertices.size();
@@ -120,14 +120,12 @@ void ShadowMappingDemo::Initialize(const Application& app)
 		);
 	}
 
-	InitializeMaterial(app, "ShadowMapping");
+	InitializeMaterial("ShadowMapping");
 
 	// manually create depth map effect & material
 	m_depthMapEffect = Effect::Create(app, "DepthMap");
 	m_depthMapMaterial = std::make_unique<DepthMapMaterial>(*m_depthMapEffect);
 	m_depthMapMaterial->Initialize();
-
-	SceneComponent::Initialize(app);
 
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetRadius(500.f);
@@ -223,6 +221,8 @@ void ShadowMappingDemo::Draw(const library::Time& time)
 {
 	auto deviceContext = GetApp()->GetDeviceContext();
 
+	const auto& md = m_meshesData.front();
+
 	//-------------------------------------------------------------------------
 	// depth map pass (render the teapot model only)
 	//-------------------------------------------------------------------------
@@ -230,7 +230,7 @@ void ShadowMappingDemo::Draw(const library::Time& time)
 		GetApp()->GetRenderer()->SaveRenderState(RenderState::Rasterizer);
 		m_depthMapRenderTarget->Begin();
 
-		deviceContext->IASetPrimitiveTopology(m_primitiveTopology);
+		deviceContext->IASetPrimitiveTopology(md.primitiveTopology);
 		deviceContext->ClearDepthStencilView(
 			m_depthMapRenderTarget->GetDepthStencilView(),
 			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
@@ -303,14 +303,13 @@ void ShadowMappingDemo::Draw(const library::Time& time)
 
 		m_material->GetProjectiveTextureMatrix() << modelProjectiveTextureMatrix;
 
-		m_material->GetColorTexture() << m_meshesData.front().texture.Get();
+		m_material->GetColorTexture() << md.texture.Get();
 		m_material->GetShadowMapTexture() << m_depthMapRenderTarget->GetOutputTexture();
 
 		const math::Vector2 shadowMapSize(k_depthMapWidth, k_depthMapHeight);
 		m_material->GetShadowMapSize() << shadowMapSize;
 
-		auto& pass = m_material->GetCurrentTechnique().GetPass(0);
-		pass.Apply(0, deviceContext);
+		m_currentPass->Apply(0, deviceContext);
 
 		if (m_model.indexBuffer)
 			deviceContext->DrawIndexed(m_model.indexBuffer->elementsCount, 0, 0);
@@ -321,7 +320,7 @@ void ShadowMappingDemo::Draw(const library::Time& time)
 	}
 }
 
-void ShadowMappingDemo::Draw_SetData(const MeshData& meshData)
+void ShadowMappingDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	const auto world = GetWorldMatrix();
 

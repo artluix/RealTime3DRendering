@@ -33,10 +33,9 @@ EnvironmentMappingDemo::EnvironmentMappingDemo()
 
 EnvironmentMappingDemo::~EnvironmentMappingDemo() = default;
 
-void EnvironmentMappingDemo::Initialize(const Application& app)
+void EnvironmentMappingDemo::Initialize()
 {
-	InitializeMaterial(app, "EnvironmentMapping");
-	SceneComponent::Initialize(app);
+	InitializeMaterial("EnvironmentMapping");
 
 	m_environmentMapTexture = app.LoadTexture("Maskonaive2_1024");
 
@@ -77,7 +76,7 @@ void EnvironmentMappingDemo::Update(const Time& time)
 	SceneComponent::Update(time);
 }
 
-void EnvironmentMappingDemo::Draw_SetData(const MeshData& meshData)
+void EnvironmentMappingDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)

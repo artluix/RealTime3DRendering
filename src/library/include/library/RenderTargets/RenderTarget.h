@@ -7,42 +7,35 @@
 
 namespace library
 {
-	class RenderTarget : public NonCopyable<RenderTarget>
+class RenderTarget : public NonCopyable<RenderTarget>
+{
+	RTTI_CLASS_BASE(RenderTarget)
+
+public:
+	RenderTarget() = default;
+	~RenderTarget() = default;
+
+	virtual void Begin() = 0;
+	virtual void End() = 0;
+
+protected:
+	struct Data
 	{
-		RTTI_CLASS_BASE(RenderTarget)
+		Data(ID3D11RenderTargetView* rtv, ID3D11DepthStencilView* dsv, const D3D11_VIEWPORT& vp)
+			: renderTargetView(rtv), depthStencilView(dsv), viewport(vp)
+		{}
 
-	public:
-		explicit RenderTarget() = default;
-		~RenderTarget() = default;
-
-		virtual void Begin() = 0;
-		virtual void End() = 0;
-
-	protected:
-		struct Data
-		{
-			explicit Data(
-				ID3D11RenderTargetView* rtv,
-				ID3D11DepthStencilView* dsv,
-				const D3D11_VIEWPORT& vp
-			)
-				: renderTargetView(rtv)
-				, depthStencilView(dsv)
-				, viewport(vp)
-			{
-			}
-
-			ID3D11RenderTargetView* renderTargetView;
-			ID3D11DepthStencilView* depthStencilView;
-			D3D11_VIEWPORT viewport;
-		};
-
-		void Begin(ID3D11DeviceContext* const deviceContext, const Data& data);
-		void End(ID3D11DeviceContext* const deviceContext);
-
-	private:
-		void SetRenderTargetData(ID3D11DeviceContext* const deviceContext, const Data& data);
-
-		static std::stack<Data> s_renderTargetsData;
+		ID3D11RenderTargetView* renderTargetView;
+		ID3D11DepthStencilView* depthStencilView;
+		D3D11_VIEWPORT viewport;
 	};
+
+	void Begin(ID3D11DeviceContext* const deviceContext, const Data& data);
+	void End(ID3D11DeviceContext* const deviceContext);
+
+private:
+	void SetRenderTargetData(ID3D11DeviceContext* const deviceContext, const Data& data);
+
+	static std::stack<Data> s_renderTargetsData;
+};
 } // namespace library

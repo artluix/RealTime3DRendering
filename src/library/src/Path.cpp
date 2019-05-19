@@ -5,164 +5,163 @@
 
 namespace library
 {
-	namespace
+
+namespace
+{
+constexpr char k_sep = '/';
+constexpr char k_badSep = '\\';
+} // namespace
+
+//-------------------------------------------------------------------------
+
+Path::Path(const std::string& s) : m_string(s)
+{
+	FixSeparator();
+}
+
+Path::Path(std::string&& s) : m_string(s)
+{
+	FixSeparator();
+}
+
+Path Path::GetBaseName() const
+{
+	return Split().second;
+}
+
+Path Path::GetDirName() const
+{
+	return Split().first;
+}
+
+Pair<Path> Path::Split() const
+{
+	if (m_string.empty())
+		return Pair<Path>();
+
+	const auto lastSlashIdx = m_string.find_last_of('/');
+	if (lastSlashIdx != std::string::npos)
 	{
-		constexpr char k_sep = '/';
-		constexpr char k_badSep = '\\';
+		Pair<Path> result;
+		result.first = Path(m_string.substr(0, lastSlashIdx));
+
+		if (lastSlashIdx < m_string.length() - 1)
+			result.second = Path(m_string.substr(lastSlashIdx + 1));
+
+		return result;
 	}
-
-	//-------------------------------------------------------------------------
-
-	Path::Path(const std::string& s)
-		: m_string(s)
+	else
 	{
-		FixSeparator();
+		return Pair<Path>(*this, Path());
 	}
+}
 
-	Path::Path(std::string&& s)
-		: m_string(s)
-	{
-		FixSeparator();
-	}
+//-------------------------------------------------------------------------
 
-	Path Path::GetBaseName() const
-	{
-		return Split().second;
-	}
-
-	Path Path::GetDirName() const
-	{
-		return Split().first;
-	}
-
-	Pair<Path> Path::Split() const
-	{
-		if (m_string.empty())
-			return Pair<Path>();
-
-		const auto lastSlashIdx = m_string.find_last_of('/');
-		if (lastSlashIdx != std::string::npos)
-		{
-			Pair<Path> result;
-			result.first = Path(m_string.substr(0, lastSlashIdx));
-
-			if (lastSlashIdx < m_string.length() - 1)
-				result.second = Path(m_string.substr(lastSlashIdx + 1));
-
-			return result;
-		}
-		else
-		{
-			return Pair<Path>(*this, Path());
-		}
-	}
-
-	//-------------------------------------------------------------------------
-
-	Path& Path::Join(const Path& other)
-	{
-		if (!other)
-			return *this;
-
-		const auto& otherString = other.GetString();
-
-		const bool hasEndSlash = (m_string.back() == '/');
-		const bool hasStartSlash = (otherString.front() == '/');
-
-		if (hasStartSlash && hasEndSlash)
-		{
-			m_string.pop_back();
-		}
-		else if (!hasStartSlash && !hasEndSlash)
-		{
-			m_string += '/';
-		}
-
-		m_string += otherString;
-
-		UpdateCached();
-
+Path& Path::Join(const Path& other)
+{
+	if (!other)
 		return *this;
+
+	const auto& otherString = other.GetString();
+
+	const bool hasEndSlash = (m_string.back() == '/');
+	const bool hasStartSlash = (otherString.front() == '/');
+
+	if (hasStartSlash && hasEndSlash)
+	{
+		m_string.pop_back();
+	}
+	else if (!hasStartSlash && !hasEndSlash)
+	{
+		m_string += '/';
 	}
 
-	Path& Path::Join(const std::vector<Path>& paths)
+	m_string += otherString;
+
+	UpdateCached();
+
+	return *this;
+}
+
+Path& Path::Join(const std::vector<Path>& paths)
+{
+	if (!paths.empty())
 	{
-		if (!paths.empty())
+		for (const auto& path : paths)
 		{
-			for (const auto& path : paths)
-			{
-				Join(path);
-			}
-		}
-
-		return *this;
-	}
-
-	Path Path::Join(const Path& other) const
-	{
-		auto path = *this;
-		path.Join(other);
-		return path;
-	}
-
-	Path Path::Join(const std::vector<Path>& paths) const
-	{
-		auto path = *this;
-		path.Join(paths);
-		return path;
-	}
-
-	//-------------------------------------------------------------------------
-
-	Pair<Path> Path::SplitExt() const
-	{
-		if (m_string.empty())
-			return Pair<Path>();
-
-		const auto lastDotIdx = m_string.find_last_of('.');
-		if (lastDotIdx != std::string::npos)
-		{
-			Pair<Path> result;
-			result.first = Path(m_string.substr(0, lastDotIdx));
-
-			if (lastDotIdx < m_string.length() - 1)
-				result.second = Path(m_string.substr(lastDotIdx + 1));
-
-			return result;
-		}
-		else
-		{
-			return Pair<Path>(*this, Path());
+			Join(path);
 		}
 	}
 
-	Path Path::GetExt() const
+	return *this;
+}
+
+Path Path::Join(const Path& other) const
+{
+	auto path = *this;
+	path.Join(other);
+	return path;
+}
+
+Path Path::Join(const std::vector<Path>& paths) const
+{
+	auto path = *this;
+	path.Join(paths);
+	return path;
+}
+
+//-------------------------------------------------------------------------
+
+Pair<Path> Path::SplitExt() const
+{
+	if (m_string.empty())
+		return Pair<Path>();
+
+	const auto lastDotIdx = m_string.find_last_of('.');
+	if (lastDotIdx != std::string::npos)
 	{
-		return SplitExt().second;
+		Pair<Path> result;
+		result.first = Path(m_string.substr(0, lastDotIdx));
+
+		if (lastDotIdx < m_string.length() - 1)
+			result.second = Path(m_string.substr(lastDotIdx + 1));
+
+		return result;
 	}
-
-	//-------------------------------------------------------------------------
-
-	Path& Path::operator += (const Path& p)
+	else
 	{
-		return Join(p);
+		return Pair<Path>(*this, Path());
 	}
+}
 
-	Path Path::operator + (const Path& p) const
-	{
-		return Join(p);
-	}
+Path Path::GetExt() const
+{
+	return SplitExt().second;
+}
 
-	//-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 
-	void Path::FixSeparator()
-	{
-		std::replace(std::begin(m_string), std::end(m_string), k_badSep, k_sep);
-		UpdateCached();
-	}
+Path& Path::operator+=(const Path& p)
+{
+	return Join(p);
+}
 
-	void Path::UpdateCached()
-	{
-		m_wstring = utils::ToWideString(m_string);
-	}
+Path Path::operator+(const Path& p) const
+{
+	return Join(p);
+}
+
+//-------------------------------------------------------------------------
+
+void Path::FixSeparator()
+{
+	std::replace(std::begin(m_string), std::end(m_string), k_badSep, k_sep);
+	UpdateCached();
+}
+
+void Path::UpdateCached()
+{
+	m_wstring = utils::ToWideString(m_string);
+}
 } // namespace library

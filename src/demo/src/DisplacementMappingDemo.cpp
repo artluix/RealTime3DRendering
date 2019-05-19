@@ -41,12 +41,11 @@ DisplacementMappingDemo::DisplacementMappingDemo()
 
 DisplacementMappingDemo::~DisplacementMappingDemo() = default;
 
-void DisplacementMappingDemo::Initialize(const Application& app)
+void DisplacementMappingDemo::Initialize()
 {
 	assert(!!GetCamera());
 
-	InitializeMaterial(app, "DisplacementMapping");
-	SceneComponent::Initialize(app);
+	InitializeMaterial("DisplacementMapping");
 
 	m_displacementMapTexture = app.LoadTexture("Blocks_DISP");
 
@@ -186,7 +185,7 @@ void DisplacementMappingDemo::UpdateDisplacement(const Time& time)
 	}
 }
 
-void DisplacementMappingDemo::Draw_SetData(const MeshData& meshData)
+void DisplacementMappingDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)

@@ -12,199 +12,180 @@
 
 namespace library
 {
-	namespace
+
+namespace
+{
+const BloomSettings k_defaultBloomSettings = {
+	0.45f, // bloomThreshold
+	2.0f,  // blurAmount
+	1.25f, // bloomSaturation
+	1.0f,  // bloomIntensity
+	1.0f,  // sceneIntensity
+	1.0f,  // sceneSaturation
+};
+
+const auto k_backgroundColor = Color::Black;
+} // anonymous namespace
+
+std::string BloomDrawModeToString(const BloomDrawMode bloomDrawMode)
+{
+	switch (bloomDrawMode)
 	{
-		const BloomSettings k_defaultBloomSettings =
-		{
-			0.45f,	// bloomThreshold
-			2.0f,	// blurAmount
-			1.25f,	// bloomSaturation
-			1.0f,	// bloomIntensity
-			1.0f,	// sceneIntensity
-			1.0f,	// sceneSaturation
-		};
-
-		const auto k_backgroundColor = library::Color::Black;
+		case BloomDrawMode::Normal: return "Normal";
+		case BloomDrawMode::ExtractedTexture: return "Extracted Texture";
+		case BloomDrawMode::BlurredTexture: return "Blurred Texture";
+		default: return "";
 	}
+}
 
-	std::string BloomDrawModeToString(const BloomDrawMode bloomDrawMode)
+BloomDrawMode BloomDrawModeNext(const BloomDrawMode bloomDrawMode)
+{
+	switch (bloomDrawMode)
 	{
-		switch (bloomDrawMode)
-		{
-			case BloomDrawMode::Normal:				return "Normal";
-			case BloomDrawMode::ExtractedTexture:	return "Extracted Texture";
-			case BloomDrawMode::BlurredTexture:		return "Blurred Texture";
-			default:									return "";
-		}
+		case BloomDrawMode::Normal: return BloomDrawMode::ExtractedTexture;
+		case BloomDrawMode::ExtractedTexture: return BloomDrawMode::BlurredTexture;
+		case BloomDrawMode::BlurredTexture: return BloomDrawMode::Normal;
+		default: return BloomDrawMode::Normal; // to skip warning
 	}
+}
 
-	BloomDrawMode BloomDrawModeNext(const BloomDrawMode bloomDrawMode)
+//-------------------------------------------------------------------------
+
+BloomComponent::BloomComponent() : m_settings(k_defaultBloomSettings), m_drawMode(BloomDrawMode::Normal)
+{}
+
+BloomComponent::~BloomComponent() = default;
+
+//-------------------------------------------------------------------------
+
+void BloomComponent::SetSettings(const BloomSettings& settings)
+{
+	m_settings = settings;
+	m_gaussianBlur->SetBlurAmount(m_settings.blurAmount);
+}
+
+void BloomComponent::SetDrawMode(const BloomDrawMode drawMode)
+{
+	m_drawMode = drawMode;
+}
+
+//-------------------------------------------------------------------------
+
+void BloomComponent::Initialize()
+{
+	PostProcessingComponent::Initialize();
+
+	InitializeMaterial("Bloom");
+	InitializeQuad();
+
+	m_renderTarget = std::make_unique<FullScreenRenderTarget>(GetApp());
+
+	m_gaussianBlur = std::make_unique<GaussianBlurComponent>();
+	m_gaussianBlur->SetSceneTexture(*m_renderTarget->GetOutputTexture());
+	m_gaussianBlur->Initialize();
+	m_gaussianBlur->SetBlurAmount(m_settings.blurAmount);
+}
+
+void BloomComponent::Draw(const Time& time)
+{
+	switch (m_drawMode)
 	{
-		switch (bloomDrawMode)
-		{
-			case BloomDrawMode::Normal:				return BloomDrawMode::ExtractedTexture;
-			case BloomDrawMode::ExtractedTexture:	return BloomDrawMode::BlurredTexture;
-			case BloomDrawMode::BlurredTexture:		return BloomDrawMode::Normal;
-			default:									return BloomDrawMode::Normal; // to skip warning
-		}
-	}
+		case BloomDrawMode::Normal: DrawNormal(time); break;
+		case BloomDrawMode::ExtractedTexture: DrawExtractedTexture(time); break;
+		case BloomDrawMode::BlurredTexture: DrawBlurredTexture(time); break;
+		default: break;
+	};
+}
 
-	//-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 
-	BloomComponent::BloomComponent()
-		: m_settings(k_defaultBloomSettings)
-		, m_drawMode(BloomDrawMode::Normal)
-	{
-	}
+void BloomComponent::UpdateExtractMaterial(Material& material) const
+{
+	material.GetSceneTexture() << GetSceneTexture();
+	material.GetBloomThreshold() << m_settings.bloomThreshold;
+}
 
-	BloomComponent::~BloomComponent() = default;
+void BloomComponent::UpdateCompositeMaterial(Material& material) const
+{
+	material.GetSceneTexture() << GetSceneTexture();
+	material.GetBloomTexture() << m_gaussianBlur->GetOutputTexture();
+	material.GetBloomIntensity() << m_settings.bloomIntensity;
+	material.GetBloomSaturation() << m_settings.bloomSaturation;
+	material.GetSceneIntensity() << m_settings.sceneIntensity;
+	material.GetSceneSaturation() << m_settings.sceneSaturation;
+}
 
-	//-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 
-	void BloomComponent::SetSettings(const BloomSettings& settings)
-	{
-		m_settings = settings;
-		m_gaussianBlur->SetBlurAmount(m_settings.blurAmount);
-	}
+void BloomComponent::DrawNormal(const Time& time)
+{
+	auto deviceContext = GetApp().GetDeviceContext();
 
-	void BloomComponent::SetDrawMode(const BloomDrawMode drawMode)
-	{
-		m_drawMode = drawMode;
-	}
+	// Extract bright spots in the scene
+	m_renderTarget->Begin();
 
-	//-------------------------------------------------------------------------
+	deviceContext->ClearRenderTargetView(
+		m_renderTarget->GetRenderTargetView(),
+		static_cast<const float*>(k_backgroundColor));
+	deviceContext->ClearDepthStencilView(
+		m_renderTarget->GetDepthStencilView(),
+		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
+		1.0f,
+		0);
 
-	void BloomComponent::Initialize(const Application& app)
-	{
-		PostProcessingComponent::Initialize(app);
-		
-		InitializeMaterial(app, "Bloom");
-		InitializeQuad(app);
+	m_fullScreenQuad->SetActiveTechnique("bloom_extract", "p0");
+	m_fullScreenQuad->SetMaterialUpdateFunction(
+		std::bind(&BloomComponent::UpdateExtractMaterial, this, std::ref(*m_material)));
+	m_fullScreenQuad->Draw(time);
 
-		m_renderTarget = std::make_unique<FullScreenRenderTarget>(app);
+	m_renderTarget->End();
+	GetApp().UnbindPixelShaderResources(0, 1);
 
-		m_gaussianBlur = std::make_unique<GaussianBlurComponent>();
-		m_gaussianBlur->SetSceneTexture(*m_renderTarget->GetOutputTexture());
-		m_gaussianBlur->Initialize(app);
-		m_gaussianBlur->SetBlurAmount(m_settings.blurAmount);
-	}
+	// Blur the bright spots in the scene
+	m_gaussianBlur->DrawToTexture(time);
+	GetApp().UnbindPixelShaderResources(0, 1);
 
-	void BloomComponent::Draw(const Time& time)
-	{
-		switch (m_drawMode)
-		{
-			case BloomDrawMode::Normal:
-				DrawNormal(time);
-				break;
+	// Combine the original scene with the blurred bright spot image
+	m_fullScreenQuad->SetActiveTechnique("bloom_composite", "p0");
+	m_fullScreenQuad->SetMaterialUpdateFunction(
+		std::bind(&BloomComponent::UpdateCompositeMaterial, this, std::ref(*m_material)));
+	m_fullScreenQuad->Draw(time);
+	GetApp().UnbindPixelShaderResources(0, 1);
+}
 
-			case BloomDrawMode::ExtractedTexture:
-				DrawExtractedTexture(time);
-				break;
+void BloomComponent::DrawExtractedTexture(const Time& time)
+{
+	m_fullScreenQuad->SetActiveTechnique("bloom_extract", "p0");
+	m_fullScreenQuad->SetMaterialUpdateFunction(
+		std::bind(&BloomComponent::UpdateExtractMaterial, this, std::ref(*m_material)));
+	m_fullScreenQuad->Draw(time);
+}
 
-			case BloomDrawMode::BlurredTexture:
-				DrawBlurredTexture(time);
-				break;
+void BloomComponent::DrawBlurredTexture(const Time& time)
+{
+	auto deviceContext = GetApp().GetDeviceContext();
 
-			default:
-				break;
-		};
-	}
+	// Extract bright spots in the scene
+	m_renderTarget->Begin();
 
-	//-------------------------------------------------------------------------
+	deviceContext->ClearRenderTargetView(
+		m_renderTarget->GetRenderTargetView(),
+		static_cast<const float*>(k_backgroundColor));
+	deviceContext->ClearDepthStencilView(
+		m_renderTarget->GetDepthStencilView(),
+		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
+		1.0f,
+		0);
 
-	void BloomComponent::UpdateExtractMaterial(Material& material) const
-	{
-		material.GetSceneTexture() << GetSceneTexture();
-		material.GetBloomThreshold() << m_settings.bloomThreshold;
-	}
+	m_fullScreenQuad->SetActiveTechnique("bloom_extract", "p0");
+	m_fullScreenQuad->SetMaterialUpdateFunction(
+		std::bind(&BloomComponent::UpdateExtractMaterial, this, std::ref(*m_material)));
+	m_fullScreenQuad->Draw(time);
 
-	void BloomComponent::UpdateCompositeMaterial(Material& material) const
-	{
-		material.GetSceneTexture() << GetSceneTexture();
-		material.GetBloomTexture() << m_gaussianBlur->GetOutputTexture();
-		material.GetBloomIntensity() << m_settings.bloomIntensity;
-		material.GetBloomSaturation() << m_settings.bloomSaturation;
-		material.GetSceneIntensity() << m_settings.sceneIntensity;
-		material.GetSceneSaturation() << m_settings.sceneSaturation;
-	}
+	m_renderTarget->End();
 
-	//-------------------------------------------------------------------------
-	
-	void BloomComponent::DrawNormal(const Time& time)
-	{
-		auto deviceContext = GetApp()->GetDeviceContext();
+	GetApp().UnbindPixelShaderResources(0, 1);
 
-		// Extract bright spots in the scene
-		m_renderTarget->Begin();
-
-		deviceContext->ClearRenderTargetView(
-			m_renderTarget->GetRenderTargetView(),
-			static_cast<const float*>(k_backgroundColor)
-		);
-		deviceContext->ClearDepthStencilView(
-			m_renderTarget->GetDepthStencilView(),
-			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-			1.0f, 0
-		);
-
-		m_fullScreenQuad->SetActiveTechnique("bloom_extract", "p0");
-		m_fullScreenQuad->SetMaterialUpdateFunction(
-			std::bind(&BloomComponent::UpdateExtractMaterial, this, std::ref(*m_material))
-		);
-		m_fullScreenQuad->Draw(time);
-
-		m_renderTarget->End();
-		GetApp()->UnbindPixelShaderResources(0, 1);
-
-		// Blur the bright spots in the scene
-		m_gaussianBlur->DrawToTexture(time);
-		GetApp()->UnbindPixelShaderResources(0, 1);
-
-		// Combine the original scene with the blurred bright spot image
-		m_fullScreenQuad->SetActiveTechnique("bloom_composite", "p0");
-		m_fullScreenQuad->SetMaterialUpdateFunction(
-			std::bind(&BloomComponent::UpdateCompositeMaterial, this, std::ref(*m_material))
-		);
-		m_fullScreenQuad->Draw(time);
-		GetApp()->UnbindPixelShaderResources(0, 1);
-	}
-
-	void BloomComponent::DrawExtractedTexture(const Time& time)
-	{
-		m_fullScreenQuad->SetActiveTechnique("bloom_extract", "p0");
-		m_fullScreenQuad->SetMaterialUpdateFunction(
-			std::bind(&BloomComponent::UpdateExtractMaterial, this, std::ref(*m_material))
-		);
-		m_fullScreenQuad->Draw(time);
-	}
-
-	void BloomComponent::DrawBlurredTexture(const Time& time)
-	{
-		auto deviceContext = GetApp()->GetDeviceContext();
-
-		// Extract bright spots in the scene
-		m_renderTarget->Begin();
-		
-		deviceContext->ClearRenderTargetView(
-			m_renderTarget->GetRenderTargetView(),
-			static_cast<const float*>(k_backgroundColor)
-		);
-		deviceContext->ClearDepthStencilView(
-			m_renderTarget->GetDepthStencilView(),
-			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-			1.0f, 0
-		);
-		
-		m_fullScreenQuad->SetActiveTechnique("bloom_extract", "p0");
-		m_fullScreenQuad->SetMaterialUpdateFunction(
-			std::bind(&BloomComponent::UpdateExtractMaterial, this, std::ref(*m_material))
-		);
-		m_fullScreenQuad->Draw(time);
-
-		m_renderTarget->End();
-
-		GetApp()->UnbindPixelShaderResources(0, 1);
-
-		m_gaussianBlur->Draw(time);
-	}
+	m_gaussianBlur->Draw(time);
+}
 } // namespace library

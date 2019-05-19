@@ -22,10 +22,10 @@ BasicMaterialDemo::BasicMaterialDemo()
 	SetModelName("Sphere");
 }
 
-void BasicMaterialDemo::Initialize(const Application& app)
+void BasicMaterialDemo::Initialize()
 {
-	InitializeMaterial(app, "Basic");
-	SceneComponent::Initialize(app);
+	InitializeMaterial("Basic");
+	
 }
 
 void BasicMaterialDemo::Update(const Time& time)
@@ -72,7 +72,7 @@ void BasicMaterialDemo::Update(const Time& time)
 	SceneComponent::Update(time);
 }
 
-void BasicMaterialDemo::Draw_SetData(const MeshData& meshData)
+void BasicMaterialDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)

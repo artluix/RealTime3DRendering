@@ -1,7 +1,7 @@
 #pragma once
 #include <library/Application.h>
 #include <library/CommonTypes.h>
-#include <library/Color.h>
+#include <library/math/Color.h>
 
 #include <dinput.h>
 
@@ -49,5 +49,5 @@ private:
 	std::unique_ptr<library::PostProcessingComponent> m_postProcessing;
 	bool m_postProcessingEnabled;
 
-	ComPtr<IDirectInput8> m_directInput;
+	library::ComPtr<IDirectInput8> m_directInput;
 };

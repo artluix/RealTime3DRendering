@@ -4,27 +4,27 @@
 
 namespace library
 {
-	class TextureMappingMaterial : public Material
-	{
-		RTTI_CLASS(TextureMappingMaterial, Material)
+class TextureMappingMaterial : public Material
+{
+	RTTI_CLASS(TextureMappingMaterial, Material)
 
-	public:
-		using Vertex = VertexPositionTexture;
+public:
+	using Vertex = VertexPositionTexture;
 
-		explicit TextureMappingMaterial(Effect& effect);
-		~TextureMappingMaterial();
+	explicit TextureMappingMaterial(std::shared_ptr<Effect> effect);
+	~TextureMappingMaterial();
 
-		EffectVariable& GetWVP() { return m_wvp; }
-		EffectVariable& GetColorTexture() { return m_colorTexture; }
+	EffectVariable& GetWVP() { return m_wvp; }
+	EffectVariable& GetColorTexture() { return m_colorTexture; }
 
-		ComPtr<ID3D11Buffer> CreateVertexBuffer(ID3D11Device* const device, const Mesh& mesh) const override;
-		unsigned GetVertexSize() const override { return sizeof(Vertex); }
+	VertexBufferData CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh) const override;
+	unsigned GetVertexSize() const override { return sizeof(Vertex); }
 
-	protected:
-		void InitializeInternal() override;
+protected:
+	void InitializeInternal() override;
 
-	private:
-		EffectVariable& m_wvp;
-		EffectVariable& m_colorTexture;
-	};
+private:
+	EffectVariable& m_wvp;
+	EffectVariable& m_colorTexture;
+};
 } // namespace library

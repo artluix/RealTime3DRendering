@@ -3,16 +3,16 @@
 
 namespace library
 {
-	class Stopwatch
-	{
-	public:
-		explicit Stopwatch();
+class Stopwatch
+{
+public:
+	Stopwatch();
 
-		void Reset();
-		void UpdateTime(Time& time);
+	void Reset();
+	void UpdateTime(Time& time);
 
-	private:
-		TimePoint m_startTimePoint;
-		TimePoint m_currentTimePoint;
-	};
+private:
+	TimePoint m_startTimePoint;
+	TimePoint m_currentTimePoint;
+};
 } // namespace library

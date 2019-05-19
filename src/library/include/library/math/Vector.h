@@ -1,467 +1,443 @@
 #pragma once
-#include "library/NonConstructible.hpp"
+#include "library/Math/XmTypes.h"
 
-#include <DirectXMath.h>
-#include <cstdio>
-#include <string>
 #include <array>
+#include <vector>
+#include <string>
 
 namespace library::math
 {
-	using XMVector = DirectX::XMVECTOR;
+template <unsigned Size>
+struct Vector;
 
-	//-------------------------------------------------------------------------
-	// VectorDef
-	//-------------------------------------------------------------------------
+using Vector2 = Vector<2>;
+using Vector3 = Vector<3>;
+using Vector4 = Vector<4>;
 
-	template <std::size_t Size>
-	struct VectorDef
+template <class T>
+constexpr bool IsVector2 = std::is_base_of_v<Vector2, T>;
+
+template <class T>
+constexpr bool IsVector3 = std::is_base_of_v<Vector3, T>;
+
+template <class T>
+constexpr bool IsVector4 = std::is_base_of_v<Vector4, T>;
+
+template <class T>
+constexpr bool IsVector = IsVector2<T> || IsVector3<T> || IsVector4<T>;
+
+//-------------------------------------------------------------------------
+
+template <unsigned Size>
+struct Matrix;
+
+// using Matrix2 = Matrix<2>;
+using Matrix3 = Matrix<3>;
+using Matrix4 = Matrix<4>;
+
+template <class T>
+constexpr bool IsMatrix3 = std::is_base_of_v<Matrix3, T>;
+
+template <class T>
+constexpr bool IsMatrix4 = std::is_base_of_v<Matrix3, T>;
+
+template <class T>
+constexpr bool IsMatrix = IsMatrix3<T> || IsMatrix4<T>;
+
+//-------------------------------------------------------------------------
+// VectorDef<T>
+//-------------------------------------------------------------------------
+
+template <unsigned Size>
+struct VectorDef
+{
+	static constexpr unsigned Size = Size;
+};
+
+//-------------------------------------------------------------------------
+// Vector2
+//-------------------------------------------------------------------------
+
+template <>
+struct Vector<2> : public VectorDef<2>
+{
+	union
 	{
-		static constexpr std::size_t Size = Size;
-	};
-
-	//-------------------------------------------------------------------------
-	// forward declarations
-	//-------------------------------------------------------------------------
-
-	template<std::size_t Size>
-	struct Vector;
-
-	using Vector2 = Vector<2>;
-	using Vector3 = Vector<3>;
-	using Vector4 = Vector<4>;
-
-	//-------------------------------------------------------------------------
-
-	template<std::size_t Size>
-	struct Matrix;
-
-	using Matrix3 = Matrix<3>;
-	using Matrix4 = Matrix<4>;
-
-	//-------------------------------------------------------------------------
-	// Vector2
-	//-------------------------------------------------------------------------
-
-	template<>
-	struct Vector<2> : public VectorDef<2>
-	{
-		union
+		struct
 		{
-			struct
-			{
-				float x, y;
-			};
-
-			std::array<float, 2> _data;
+			float x, y;
 		};
 
-		//-------------------------------------------------------------------------
-
-		constexpr Vector(const float value = 0.f) : x(value), y(value) {}
-		constexpr Vector(const float x, const float y) : x(x), y(y) {}
-		constexpr Vector(const DirectX::XMFLOAT2& xmFloat2) : x(xmFloat2.x), y(xmFloat2.y) {}
-
-		//-------------------------------------------------------------------------
-
-		static XMVector Load(const Vector& vector);
-		static Vector Store(const XMVector& xmVector);
-
-		//-------------------------------------------------------------------------
-
-		static const Vector Zero;
-		static const Vector One;
-
-		//-------------------------------------------------------------------------
-
-		std::string ToString() const;
-
-		XMVector Load() const;
-
-		bool IsZero() const;
-
-		//-------------------------------------------------------------------------
-
-		float Dot(const Vector& vector) const;
-		Vector Cross(const Vector& vector) const;
-
-		Vector Normalize() const;
-		float Length() const;
-		float LengthSq() const;
-
-		//-------------------------------------------------------------------------
-
-		explicit operator bool() const { return !IsZero(); }
-		explicit operator DirectX::XMFLOAT2() const { return DirectX::XMFLOAT2(x, y); }
-		explicit operator const float* () const { return _data.data(); }
-
-		const float& operator[] (const std::size_t idx) const { return _data[idx]; }
-		float& operator[] (const std::size_t idx) { return _data[idx]; }
+		std::array<float, 2> _data;
 	};
 
 	//-------------------------------------------------------------------------
 
-	bool operator == (const Vector2& lhs, const Vector2& rhs);
-	bool operator != (const Vector2& lhs, const Vector2& rhs);
-	bool operator > (const Vector2& lhs, const Vector2& rhs);
-	bool operator >= (const Vector2& lhs, const Vector2& rhs);
-	bool operator < (const Vector2& lhs, const Vector2& rhs);
-	bool operator <= (const Vector2& lhs, const Vector2& rhs);
+	constexpr Vector(const float x, const float y) : x(x), y(y) {}
+	explicit constexpr Vector(const float v = 0.f) : Vector(v, v) {}
+	explicit constexpr Vector(const XMVector2& xmFloat2) : Vector(xmFloat2.x, xmFloat2.y) {}
+	explicit constexpr Vector(const XMVector& xmVector) : Vector(xmVector.m128_f32[0], xmVector.m128_f32[1])
+	{}
+
+	Vector& operator=(const XMVector& xmVector);
 
 	//-------------------------------------------------------------------------
-	// Vector3
+
+	const float& operator[](const unsigned idx) const { return _data[idx]; }
+	float& operator[](const unsigned idx) { return _data[idx]; }
+	operator const float*() const { return _data.data(); }
+
 	//-------------------------------------------------------------------------
 
-	template<>
-	struct Vector<3> 
+	explicit operator XMVector() const;
+	explicit operator const XMVector2&() const;
+	explicit operator bool() const;
+
+	//-------------------------------------------------------------------------
+
+	static const Vector Zero;
+	static const Vector One;
+
+	//-------------------------------------------------------------------------
+
+	std::string ToString() const;
+
+	//-------------------------------------------------------------------------
+
+	float Length() const;
+	float LengthSq() const;
+	float Dot(const Vector& other) const;
+
+	Vector Normalize() const;
+	Vector Transform(const Matrix3& matrix) const;
+
+	//-------------------------------------------------------------------------
+	// logical operators
+	//-------------------------------------------------------------------------
+
+	bool operator==(const Vector& other) const;
+	bool operator!=(const Vector& other) const;
+	bool operator<(const Vector& other) const;
+	bool operator<=(const Vector& other) const;
+	bool operator>(const Vector& other) const;
+	bool operator>=(const Vector& other) const;
+};
+
+//-------------------------------------------------------------------------
+// Vector3
+//-------------------------------------------------------------------------
+
+template <>
+struct Vector<3> : public VectorDef<3>
+{
+	union
 	{
-		union
+		struct
 		{
-			struct
-			{
-				float x, y, z;
-			};
-
-			std::array<float, 3> _data;
+			float x, y, z;
 		};
 
-		constexpr Vector(const float value = 0.f) : x(value), y(value), z(value) {}
-		constexpr Vector(const float x, const float y, const float z) : x(x), y(y), z(z) {}
-		constexpr Vector(const DirectX::XMFLOAT3& xmFloat3) : x(xmFloat3.x), y(xmFloat3.y), z(xmFloat3.z) {}
-		constexpr Vector(const Vector<2>& vec2) : x(vec2.x), y(vec2.y), z(0.f) {}
-
-		//-------------------------------------------------------------------------
-
-		static XMVector Load(const Vector& vector);
-		static Vector Store(const XMVector& vector);
-
-		//-------------------------------------------------------------------------
-
-		static const Vector Zero;
-		static const Vector One;
-
-		static const Vector Forward;
-		static const Vector Backward;
-		static const Vector Up;
-		static const Vector Down;
-		static const Vector Right;
-		static const Vector Left;
-
-		//-------------------------------------------------------------------------
-
-		std::string ToString() const;
-
-		XMVector Load() const;
-
-		bool IsZero() const;
-
-		//-------------------------------------------------------------------------
-
-		float Dot(const Vector& vector) const;
-		Vector Cross(const Vector& vector) const;
-
-		Vector Normalize() const;
-		float Length() const;
-		float LengthSq() const;
-
-		template <std::size_t Size>
-		Vector Transform(const Matrix<Size>& matrix) const;
-
-		template <std::size_t Size>
-		Vector TransformNormal(const Matrix<Size>& matrix) const;
-
-		//-------------------------------------------------------------------------
-
-		explicit operator bool() const { return !IsZero(); }
-		explicit operator DirectX::XMFLOAT3() const { return DirectX::XMFLOAT3(x, y, z); }
-		explicit operator const float* () const { return _data.data(); }
-
-		const float& operator[] (const std::size_t idx) const { return _data[idx]; }
-		float& operator[] (const std::size_t idx) { return _data[idx]; }
+		std::array<float, 3> _data;
 	};
 
 	//-------------------------------------------------------------------------
 
-	template <std::size_t MatrixSize>
-	inline Vector3 Vector<3>::Transform(const Matrix<MatrixSize>& matrix) const
-	{
-		return Store(DirectX::XMVector3Transform(Load(), matrix.Load()));
-	}
+	constexpr Vector(const float x, const float y, const float z) : x(x), y(y), z(z) {}
+	explicit constexpr Vector(const float v = 0.f) : Vector(v, v, v) {}
+	explicit constexpr Vector(const XMVector3& xmFloat3) : Vector(xmFloat3.x, xmFloat3.y, xmFloat3.z) {}
+	explicit constexpr Vector(const XMVector& xmVector)
+		: Vector(xmVector.m128_f32[0], xmVector.m128_f32[1], xmVector.m128_f32[2])
+	{}
 
-	template <std::size_t MatrixSize>
-	inline Vector3 Vector<3>::TransformNormal(const Matrix<MatrixSize>& matrix) const
-	{
-		return Store(DirectX::XMVector3TransformNormal(Load(), matrix.Load()));
-	}
-
-	bool operator == (const Vector3& lhs, const Vector3& rhs);
-	bool operator != (const Vector3& lhs, const Vector3& rhs);
-	bool operator > (const Vector3& lhs, const Vector3& rhs);
-	bool operator >= (const Vector3& lhs, const Vector3& rhs);
-	bool operator < (const Vector3& lhs, const Vector3& rhs);
-	bool operator <= (const Vector3& lhs, const Vector3& rhs);
+	Vector& operator=(const XMVector& xmVector);
 
 	//-------------------------------------------------------------------------
-	// Vector4
+
+	const float& operator[](const unsigned idx) const { return _data[idx]; }
+	float& operator[](const unsigned idx) { return _data[idx]; }
+	operator const float*() const { return _data.data(); }
+
 	//-------------------------------------------------------------------------
 
-	template<>
-	struct Vector<4> : public VectorDef<4>
+	explicit operator XMVector() const;
+	explicit operator const XMVector3&() const;
+	explicit operator bool() const;
+
+	//-------------------------------------------------------------------------
+
+	static const Vector Zero;
+	static const Vector One;
+
+	static const Vector Forward;
+	static const Vector Backward;
+	static const Vector Up;
+	static const Vector Down;
+	static const Vector Right;
+	static const Vector Left;
+
+	//-------------------------------------------------------------------------
+
+	std::string ToString() const;
+
+	//-------------------------------------------------------------------------
+
+	float Length() const;
+	float LengthSq() const;
+
+	float Dot(const Vector& other) const;
+	Vector Cross(const Vector& other) const;
+
+	Vector Normalize() const;
+	Vector Transform(const Matrix4& matrix) const;
+	Vector TransformNormal(const Matrix3& matrix) const;
+
+	//-------------------------------------------------------------------------
+	// logical operators
+	//-------------------------------------------------------------------------
+
+	bool operator==(const Vector& other) const;
+	bool operator!=(const Vector& other) const;
+	bool operator<(const Vector& other) const;
+	bool operator<=(const Vector& other) const;
+	bool operator>(const Vector& other) const;
+	bool operator>=(const Vector& other) const;
+};
+
+//-------------------------------------------------------------------------
+// Vector4
+//-------------------------------------------------------------------------
+
+template <>
+struct Vector<4> : public VectorDef<4>
+{
+	union
 	{
-		union
+		// Vector components
+		struct
 		{
-			struct
-			{
-				float x, y, z, w;
-			};
-
-			struct
-			{
-				float r, g, b, a;
-			};
-
-			std::array<float, 4> _data;
+			float x, y, z, w;
 		};
 
-		//-------------------------------------------------------------------------
+		// Vector3 & w
+		struct
+		{
+			Vector3 xyz;
+			float _w;
+		};
 
-		constexpr Vector(const float value = 0.f) : x(value), y(value), z(value), w(value) {}
-		constexpr Vector(const float x, const float y, const float z, const float w)
-			: x(x)
-			, y(y)
-			, z(z)
-			, w(w)
-		{}
-		constexpr Vector(const DirectX::XMFLOAT4& xmFloat4)
-			: x(xmFloat4.x)
-			, y(xmFloat4.y)
-			, z(xmFloat4.z)
-			, w(xmFloat4.w)
-		{}
-		constexpr Vector(const Vector<3>& vec3) : x(vec3.x), y(vec3.y), z(vec3.z), w(0.f) {}
-
-		//-------------------------------------------------------------------------
-
-		static XMVector Load(const Vector& vector);
-		static Vector Store(const XMVector& xmVector);
-
-		//-------------------------------------------------------------------------
-
-		static const Vector Zero;
-		static const Vector One;
-
-		//-------------------------------------------------------------------------
-
-		std::string ToString() const;
-
-		XMVector Load() const;
-
-		bool IsZero() const;
-
-		//-------------------------------------------------------------------------
-
-		float Dot(const Vector& vector) const;
-		Vector Cross(const Vector& vector1, const Vector& vector2) const;
-
-		Vector Normalize() const;
-		Vector PlaneNormalize() const;
-
-		float Length() const;
-		float LengthSq() const;
-
-		Vector Transform(const Matrix4& matrix) const;
-
-		//-------------------------------------------------------------------------
-
-		explicit operator bool() const { return !IsZero(); }
-		explicit operator DirectX::XMFLOAT4() const { return DirectX::XMFLOAT4(x, y, z, w); }
-		explicit operator Vector<3>() const { return Vector<3>(x, y, z); }
-		explicit operator const float* () const { return _data.data(); }
-
-		const float& operator[] (const std::size_t idx) const { return _data[idx]; }
-		float& operator[] (const std::size_t idx) { return _data[idx]; }
+		std::array<float, 4> _data;
 	};
 
 	//-------------------------------------------------------------------------
-	// lerp
-	//-------------------------------------------------------------------------
 
-	template<std::size_t Size>
-	Vector<Size> Lerp(
-		const Vector<Size>& lhs,
-		const Vector<Size>& rhs,
-		const float factor
-	)
-	{
-		return Vector<Size>::Store(DirectX::XMVectorLerp(lhs.Load(), rhs.Load(), factor));
-	}
+	constexpr Vector(const float x, const float y, const float z, const float w) : x(x), y(y), z(z), w(w) {}
+	explicit constexpr Vector(const float v = 0.f) : Vector(v, v, v, v) {}
+	explicit constexpr Vector(const XMVector4& xmFloat4)
+		: Vector(xmFloat4.x, xmFloat4.y, xmFloat4.z, xmFloat4.w)
+	{}
+	explicit constexpr Vector(const XMVector& xmVector)
+		: Vector(xmVector.m128_f32[0], xmVector.m128_f32[1], xmVector.m128_f32[2], xmVector.m128_f32[3])
+	{}
 
-	template<std::size_t Size>
-	Vector<Size> Lerp(const Vector<Size>& lhs, const Vector<Size>& rhs, const Vector<Size>& factor)
-	{
-		return Store(DirectX::XMVectorLerpV(lhs.Load(), rhs.Load(), factor.Load()));
-	}
+	Vector& operator=(const XMVector& xmVector);
 
 	//-------------------------------------------------------------------------
 
-	bool operator == (const Vector4& lhs, const Vector4& rhs);
-	bool operator != (const Vector4& lhs, const Vector4& rhs);
-	bool operator > (const Vector4& lhs, const Vector4& rhs);
-	bool operator >= (const Vector4& lhs, const Vector4& rhs);
-	bool operator < (const Vector4& lhs, const Vector4& rhs);
-	bool operator <= (const Vector4& lhs, const Vector4& rhs);
+	const float& operator[](const unsigned idx) const { return _data[idx]; }
+	float& operator[](const unsigned idx) { return _data[idx]; }
+	operator const float*() const { return _data.data(); }
 
 	//-------------------------------------------------------------------------
-	// explicit instantiation
-	//-------------------------------------------------------------------------
 
-	extern template struct Vector<2>;
-	extern template struct Vector<3>;
-	extern template struct Vector<4>;
+	explicit operator XMVector() const;
+	explicit operator const XMVector4&() const;
+	explicit operator bool() const;
 
 	//-------------------------------------------------------------------------
-	// common operators
-	//-------------------------------------------------------------------------
+
+	static const Vector Zero;
+	static const Vector One;
 
 	//-------------------------------------------------------------------------
-	// add
-	//-------------------------------------------------------------------------
 
-	template<std::size_t Size>
-	inline Vector<Size> operator + (const Vector<Size>& lhs, const Vector<Size>& rhs)
-	{
-		return Vector<Size>::Store(DirectX::XMVectorAdd(lhs.Load(), rhs.Load()));
-	}
+	std::string ToString() const;
 
-	template<std::size_t Size>
-	inline Vector<Size>& operator += (Vector<Size>& lhs, const Vector<Size>& rhs)
-	{
-		lhs = Vector<Size>::Store(DirectX::XMVectorAdd(lhs.Load(), rhs.Load()));
-		return lhs;
-	}
+	//------------------------------------------------------------------------
 
-	template<std::size_t Size>
-	inline Vector<Size> operator + (const Vector<Size>& lhs, const float value)
-	{
-		return lhs + Vector<Size>(value);
-	}
+	float Length() const;
+	float LengthSq() const;
+	float Dot(const Vector& other) const;
 
-	template<std::size_t Size>
-	inline Vector<Size>& operator += (Vector<Size>& lhs, const float value)
-	{
-		lhs += Vector<Size>(value);
-		return lhs;
-	}
-
-	template<std::size_t Size>
-	inline Vector<Size> operator + (const float value, const Vector<Size>& lhs)
-	{
-		return Vector(value) + lhs;
-	}
+	Vector Normalize() const;
+	Vector Transform(const Matrix4& matrix) const;
 
 	//-------------------------------------------------------------------------
-	// negate
+	// logical operators
 	//-------------------------------------------------------------------------
 
-	template<std::size_t Size>
-	inline Vector<Size> operator - (const Vector<Size>& vector)
-	{
-		return Vector<Size>::Store(DirectX::XMVectorNegate(Vector<Size>::Load(vector)));
-	}
+	bool operator==(const Vector& other) const;
+	bool operator!=(const Vector& other) const;
+	bool operator<(const Vector& other) const;
+	bool operator<=(const Vector& other) const;
+	bool operator>(const Vector& other) const;
+	bool operator>=(const Vector& other) const;
+};
 
-	//-------------------------------------------------------------------------
-	// subtract
-	//-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
+// explicit template instantiation
+//-------------------------------------------------------------------------
 
-	template<std::size_t Size>
-	inline Vector<Size> operator - (const Vector<Size>& lhs, const Vector<Size>& rhs)
-	{
-		return Vector<Size>::Store(DirectX::XMVectorSubtract(lhs.Load(), rhs.Load()));
-	}
+template struct Vector<2>;
+template struct Vector<3>;
+template struct Vector<4>;
 
-	template<std::size_t Size>
-	inline Vector<Size>& operator -= (Vector<Size>& lhs, const Vector<Size>& rhs)
-	{
-		lhs = Vector<Size>::Store(DirectX::XMVectorSubtract(lhs.Load(), rhs.Load()));
-		return lhs;
-	}
+//-------------------------------------------------------------------------
+// arithmetic operators
+//-------------------------------------------------------------------------
 
-	template<std::size_t Size>
-	inline Vector<Size> operator - (const Vector<Size>& lhs, const float value)
-	{
-		return lhs - Vector<Size>(value);
-	}
+//-------------------------------------------------------------------------
+// add
+//-------------------------------------------------------------------------
 
-	template<std::size_t Size>
-	inline Vector<Size>& operator -= (Vector<Size>& lhs, const float value)
-	{
-		lhs -= Vector<Size>(value);
-		return lhs;
-	}
+template <unsigned Size>
+inline Vector<Size> operator+(const Vector<Size>& lhs, const Vector<Size>& rhs)
+{
+	return Vector<Size>(DirectX::XMVectorAdd(XMVector(lhs), XMVector(rhs)));
+}
 
-	//-------------------------------------------------------------------------
-	// multiply
-	//-------------------------------------------------------------------------
+template <unsigned Size>
+inline Vector<Size>& operator+=(Vector<Size>& lhs, const Vector<Size>& rhs)
+{
+	return lhs = Vector<Size>(DirectX::XMVectorAdd(XMVector(lhs), XMVector(rhs)));
+}
 
-	template<std::size_t Size>
-	inline Vector<Size> operator * (const Vector<Size>& lhs, const Vector<Size>& rhs)
-	{
-		return Vector<Size>::Store(DirectX::XMVectorMultiply(lhs.Load(), rhs.Load()));
-	}
+//-------------------------------------------------------------------------
 
-	template<std::size_t Size>
-	inline Vector<Size>& operator *= (Vector<Size>& lhs, const Vector<Size>& rhs)
-	{
-		lhs = Vector<Size>::Store(DirectX::XMVectorMultiply(lhs.Load(), rhs.Load()));
-		return lhs;
-	}
+template <unsigned Size>
+inline Vector<Size> operator+(const Vector<Size>& lhs, const float value)
+{
+	return lhs + Vector<Size>(value);
+}
 
-	template<std::size_t Size>
-	inline Vector<Size> operator * (const Vector<Size>& lhs, const float value)
-	{
-		return lhs * Vector<Size>(value);
-	}
+template <unsigned Size>
+inline Vector<Size>& operator+=(Vector<Size>& lhs, const float value)
+{
+	return lhs += Vector<Size>(value);
+}
 
-	template<std::size_t Size>
-	inline Vector<Size>& operator *= (Vector<Size>& lhs, const float value)
-	{
-		lhs *= Vector<Size>(value);
-		return lhs;
-	}
+//-------------------------------------------------------------------------
+// negate
+//-------------------------------------------------------------------------
 
-	template<std::size_t Size>
-	inline Vector<Size> operator * (const float value, const Vector<Size>& lhs)
-	{
-		return Vector<Size>(value) * lhs;
-	}
+template <unsigned Size>
+inline Vector<Size> operator-(const Vector<Size>& vector)
+{
+	return Vector<Size>(DirectX::XMVectorNegate(XMVector(vector)));
+}
 
-	//-------------------------------------------------------------------------
-	// divide
-	//-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
+// subtract
+//-------------------------------------------------------------------------
 
-	template<std::size_t Size>
-	inline Vector<Size> operator / (const Vector<Size>& lhs, const Vector<Size>& rhs)
-	{
-		return Vector<Size>::Store(DirectX::XMVectorDivide(lhs.Load(), rhs.Load()));
-	}
+template <unsigned Size>
+inline Vector<Size> operator-(const Vector<Size>& lhs, const Vector<Size>& rhs)
+{
+	return Vector<Size>(DirectX::XMVectorSubtract(XMVector(lhs), XMVector(rhs)));
+}
 
-	template<std::size_t Size>
-	inline Vector<Size> operator /= (Vector<Size>& lhs, const Vector<Size>& rhs)
-	{
-		lhs = Vector<Size>::Store(DirectX::XMVectorDivide(lhs.Load(), rhs.Load()));
-		return lhs;
-	}
+template <unsigned Size>
+inline Vector<Size>& operator-=(Vector<Size>& lhs, const Vector<Size>& rhs)
+{
+	return lhs = Vector<Size>(DirectX::XMVectorSubtract(XMVector(lhs), XMVector(rhs)));
+}
 
-	template<std::size_t Size>
-	inline Vector<Size> operator / (const Vector<Size>& lhs, const float value)
-	{
-		return lhs / Vector<Size>(value);
-	}
+//-------------------------------------------------------------------------
 
-	template<std::size_t Size>
-	inline Vector<Size>& operator /= (Vector<Size>& lhs, const float value)
-	{
-		lhs /= Vector<Size>(value);
-		return lhs;
-	}
+template <unsigned Size>
+inline Vector<Size> operator-(const Vector<Size>& lhs, const float value)
+{
+	return lhs - Vector<Size>(value);
+}
+
+template <unsigned Size>
+inline Vector<Size>& operator-=(Vector<Size>& lhs, const float value)
+{
+	return lhs -= Vector<Size>(value);
+}
+
+//-------------------------------------------------------------------------
+// multiply
+//-------------------------------------------------------------------------
+
+template <unsigned Size>
+inline Vector<Size> operator*(const Vector<Size>& lhs, const Vector<Size>& rhs)
+{
+	return Vector<Size>(DirectX::XMVectorMultiply(XMVector(lhs), XMVector(rhs)));
+}
+
+template <unsigned Size>
+inline Vector<Size>& operator*=(Vector<Size>& lhs, const Vector<Size>& rhs)
+{
+	return lhs = Vector<Size>(DirectX::XMVectorMultiply(XMVector(lhs), XMVector(rhs)));
+}
+
+//-------------------------------------------------------------------------
+
+template <unsigned Size>
+inline Vector<Size> operator*(const Vector<Size>& lhs, const float value)
+{
+	return lhs * Vector<Size>(value);
+}
+
+template <unsigned Size>
+inline Vector<Size>& operator*=(Vector<Size>& lhs, const float value)
+{
+	return lhs *= Vector<Size>(value);
+}
+
+//-------------------------------------------------------------------------
+// divide
+//-------------------------------------------------------------------------
+
+template <unsigned Size>
+inline Vector<Size> operator/(const Vector<Size>& lhs, const Vector<Size>& rhs)
+{
+	return Vector<Size>(DirectX::XMVectorDivide(XMVector(lhs), XMVector(rhs)));
+}
+
+template <unsigned Size>
+inline Vector<Size> operator/=(Vector<Size>& lhs, const Vector<Size>& rhs)
+{
+	return lhs = Vector<Size>(DirectX::XMVectorDivide(XMVector(lhs), XMVector(rhs)));
+}
+
+//-------------------------------------------------------------------------
+
+template <unsigned Size>
+inline Vector<Size> operator/(const Vector<Size>& lhs, const float value)
+{
+	return lhs / Vector<Size>(value);
+}
+
+template <unsigned Size>
+inline Vector<Size>& operator/=(Vector<Size>& lhs, const float value)
+{
+	return lhs /= Vector<Size>(value);
+}
+
+//-------------------------------------------------------------------------
+// Lerp
+//-------------------------------------------------------------------------
+
+template <unsigned Size>
+Vector<Size> Lerp(const Vector<Size>& lhs, const Vector<Size>& rhs, const float factor)
+{
+	return Vector<Size>(DirectX::XMVectorLerp(XMVector(lhs), XMVector(rhs), factor));
+}
+
+template <unsigned Size>
+Vector<Size> Lerp(const Vector<Size>& lhs, const Vector<Size>& rhs, const Vector<Size> factor)
+{
+	return Vector<Size>(DirectX::XMVectorLerpV(XMVector(lhs), XMVector(rhs), XMVector(factor)));
+}
 } // namespace library::math

@@ -13,94 +13,87 @@ interface ID3D11Device;
 
 namespace library
 {
-	class Application;
+class Application;
+class EffectTechnique;
+class EffectVariable;
+class EffectPass;
 
-	class EffectTechnique;
-	class EffectVariable;
-	class EffectPass;
+class Effect : public NonCopyable<Effect>
+{
+public:
+	using Technique = EffectTechnique;
+	using Variable = EffectVariable;
+	using Pass = EffectPass;
 
-	class Effect : public NonCopyable<Effect>
-	{
-	public:
-		using Technique = EffectTechnique;
-		using Variable = EffectVariable;
-		using Pass = EffectPass;
+	~Effect();
 
-		using SharedPtr = std::shared_ptr<Effect>;
-		using WeakPtr = std::weak_ptr<Effect>;
+	static std::shared_ptr<Effect> Create(
+		const Application& app, const std::string& effectName, const bool compile = false);
+	static void ClearAll();
 
-		~Effect();
+	const Application& GetApp() const { return m_app; }
+	const std::string& GetName() const { return m_name; }
+	const Path& GetPath() const { return m_path; }
 
-		static SharedPtr Create(
-			const Application& app,
-			const std::string& effectName,
-			const bool compile = false
-		);
-		static void ClearAll();
+	ID3DX11Effect* GetEffect() const { return m_effect.Get(); }
+	void SetEffect(ComPtr<ID3DX11Effect>&& effect);
 
-		const Application& GetApp() const { return m_app; }
-		const std::string& GetName() const { return m_name; }
-		const Path& GetPath() const { return m_path; }
+	const D3DX11_EFFECT_DESC& GetEffectDesc() const { return m_effectDesc; }
 
-		ID3DX11Effect* GetEffect() const { return m_effect.Get(); }
-		void SetEffect(const ComPtr<ID3DX11Effect>& effect);
+	//-------------------------------------------------------------------------
 
-		const D3DX11_EFFECT_DESC& GetEffectDesc() const { return m_effectDesc; }
+	bool HasTechnique(const std::string& techniqueName) const;
+	unsigned GetTechniquesCount() const { return static_cast<unsigned>(m_techniques.size()); }
 
-		//-------------------------------------------------------------------------
+	unsigned GetTechniqueIdx(const std::string& techniqueName) const;
+	const Technique& GetTechnique(const std::string& techniqueName) const;
+	Technique& GetTechnique(const std::string& techniqueName);
 
-		bool HasTechnique(const std::string& techniqueName) const;
-		std::size_t GetTechniquesCount() const { return m_techniques.size(); }
+	const Technique& GetTechnique(const unsigned techniqueIdx) const;
+	Technique& GetTechnique(const unsigned techniqueIdx);
 
-		unsigned GetTechniqueIdx(const std::string& techniqueName) const;
-		const Technique& GetTechnique(const std::string& techniqueName) const;
-		Technique& GetTechnique(const std::string& techniqueName);
+	//-------------------------------------------------------------------------
 
-		const Technique& GetTechnique(const unsigned techniqueIdx) const;
-		Technique& GetTechnique(const unsigned techniqueIdx);
+	bool HasVariable(const std::string& variableName) const;
+	std::size_t GetVariablesCount() const { return m_variables.size(); }
 
-		//-------------------------------------------------------------------------
+	unsigned GetVariableIdx(const std::string& variableName) const;
+	const Variable& GetVariable(const std::string& variableName) const;
+	Variable& GetVariable(const std::string& variableName);
 
-		bool HasVariable(const std::string& variableName) const;
-		std::size_t GetVariablesCount() const { return m_variables.size(); }
+	const Variable& GetVariable(const unsigned variableIdx) const;
+	Variable& GetVariable(const unsigned variableIdx);
 
-		unsigned GetVariableIdx(const std::string& variableName) const;
-		const Variable& GetVariable(const std::string& variableName) const;
-		Variable& GetVariable(const std::string& variableName);
+	//-------------------------------------------------------------------------
 
-		const Variable& GetVariable(const unsigned variableIdx) const;
-		Variable& GetVariable(const unsigned variableIdx);
+	bool IsInitialized() const { return m_isInitialized; }
 
-		//-------------------------------------------------------------------------
+private:
+	using TechniquePtr = std::unique_ptr<Technique>;
+	using VariablePtr = std::unique_ptr<Variable>;
 
-		bool IsInitialized() const { return m_isInitialized; }
+	Effect(const Application& app, const std::string& name);
 
-	private:
-		using TechniquePtr = std::unique_ptr<Technique>;
-		using VariablePtr = std::unique_ptr<Variable>;
+	void Compile();
+	void LoadCompiled();
 
-		explicit Effect(const Application& app, const std::string& name);
+	void Initialize();
 
-		void Compile();
-		void LoadCompiled();
+	static std::map<std::string, std::weak_ptr<Effect>> s_effectsCache;
 
-		void Initialize();
+	const Application& m_app;
+	Path m_path;
+	std::string m_name;
 
-		static std::map<std::string, WeakPtr> s_effectsCache;
+	ComPtr<ID3DX11Effect> m_effect;
+	D3DX11_EFFECT_DESC m_effectDesc;
 
-		const Application& m_app;
-		Path m_path;
-		std::string m_name;
+	bool m_isInitialized = false;
 
-		ComPtr<ID3DX11Effect> m_effect;
-		D3DX11_EFFECT_DESC m_effectDesc;
+	std::vector<TechniquePtr> m_techniques;
+	std::map<std::string, unsigned> m_techniquesMapping;
 
-		bool m_isInitialized = false;
-
-		std::vector<TechniquePtr> m_techniques;
-		std::map<std::string, unsigned> m_techniquesMapping;
-
-		std::vector<VariablePtr> m_variables;
-		std::map<std::string, unsigned> m_variabesMapping;
-	};
+	std::vector<VariablePtr> m_variables;
+	std::map<std::string, unsigned> m_variablesMapping;
+};
 } // namespace library

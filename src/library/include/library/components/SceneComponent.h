@@ -1,93 +1,60 @@
 #pragma once
-#include "library/Components/DrawableComponent.h"
-#include "library/Math/Math.h"
-
-#include "library/MeshData.h"
-#include "library/Model/ModelMaterial.h"
-
-#include <d3dcommon.h>
-#include <string>
-#include <vector>
-#include <memory>
+#include "library/Components/Component.h"
+#include "library/Math/Transform.h"
+#include "library/Math/Matrix.h"
 
 namespace library
 {
-	class Model;
+class SceneComponent : public virtual Component
+{
+	RTTI_CLASS(SceneComponent, Component)
 
-	class SceneComponent : public DrawableComponent
-	{
-		RTTI_CLASS(SceneComponent, DrawableComponent)
+public:
+	SceneComponent();
+	~SceneComponent();
 
-	public:
-		~SceneComponent();
+	const math::Transform& GetTransform() const { return m_transform; }
 
-		const math::Vector3& GetPosition() const { return m_position; }
-		const math::Vector3& GetRotation() const { return m_rotation; }
-		const math::Vector3& GetScaling() const { return m_scaling; }
-		const math::Matrix4& GetInitialTransformMatrix() const { return m_initialTransformMatrix; }
-		const math::Matrix4& GetWorldMatrix() const { assert(!m_isWorldMatrixDirty); return m_worldMatrix; }
+	const math::Vector3& GetPosition() const { return m_transform.position; }
+	const math::Quaternion& GetRotation() const { return m_transform.rotation; }
+	const math::Vector3& GetScaling() const { return m_transform.scaling; }
 
-		void SetPosition(const math::Vector3& position);
-		void Translate(const math::Vector3& translation);
+	const math::Matrix4& GetInitialTransformMatrix() const { return m_initialTransformMatrix; }
+	const math::Matrix4& GetWorldMatrix() const;
 
-		void SetRotation(const math::Vector3& rotation);
-		void Rotate(const math::Vector3& rotation);
+	void SetPosition(const math::Vector3& position);
+	void Translate(const math::Vector3& translation);
 
-		void SetScaling(const math::Vector3& scaling);
-		void Scale(const math::Vector3& scaling);
+	void SetRotation(const math::Quaternion& rotation);
+	void Rotate(const math::Quaternion& rotation);
 
-		void SetInitialTransform(const math::Matrix4& initialTransform);
+	void SetRotation(const math::Vector3& pitchYawRoll);
+	void Rotate(const math::Vector3& pitchYawRoll);
 
-		const math::Vector3& GetDirection() const { return m_direction; }
-		const math::Vector3& GetUp() const { return m_up; }
-		const math::Vector3& GetRight() const { return m_right; }
+	void SetScaling(const math::Vector3& scaling);
+	void Scale(const math::Vector3& scaling);
 
-		//-------------------------------------------------------------------------
+	void SetInitialTransform(const math::Matrix4& initialTransform);
 
-		const std::string& GetModelName() const { return m_modelName; }
-		void SetModelName(const std::string& modelName);
+	const math::Vector3& GetDirection() const { return m_direction; }
+	const math::Vector3& GetUp() const { return m_up; }
+	const math::Vector3& GetRight() const { return m_right; }
 
-		const std::string& GetTextureName() const { return m_textureName; }
-		void SetTextureName(const std::string& textureName);
+	//-------------------------------------------------------------------------
 
-		void Initialize(const Application& app) override;
-		void Update(const Time& time) override;
-		void Draw(const Time& time) override;
+	void Update(const Time& time) override;
 
-	protected:
-		explicit SceneComponent();
+protected:
+	void UpdateWorldMatrix();
 
-		void UpdateWorldMatrix();
+	math::Transform m_transform;
 
-		// draw stages
-		virtual void Draw_SetIA(const MeshData& meshData);
-		virtual void Draw_SetData(const MeshData& meshData);
-		virtual void Draw_Render(const MeshData& meshData);
+	math::Vector3 m_direction;
+	math::Vector3 m_right;
+	math::Vector3 m_up;
 
-		virtual unsigned GetVertexSize() const = 0;
-
-		std::unique_ptr<Model> m_model;
-		std::vector<MeshData> m_meshesData;
-
-		D3D_PRIMITIVE_TOPOLOGY m_primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
-		TextureType::Type m_textureType = TextureType::Diffuse;
-
-		ComPtr<ID3D11InputLayout> m_inputLayout;
-
-		std::string m_modelName;
-		std::string m_textureName;
-
-	private:
-		math::Vector3 m_position;
-		math::Vector3 m_rotation;
-		math::Vector3 m_scaling;
-
-		math::Vector3 m_direction;
-		math::Vector3 m_right;
-		math::Vector3 m_up;
-
-		math::Matrix4 m_initialTransformMatrix;
-		math::Matrix4 m_worldMatrix;
-		bool m_isWorldMatrixDirty = true;
-	};
+	math::Matrix4 m_initialTransformMatrix = math::Matrix4::Identity;
+	math::Matrix4 m_worldMatrix = math::Matrix4::Identity;
+	bool m_isWorldMatrixDirty = true;
+};
 } // namespace library

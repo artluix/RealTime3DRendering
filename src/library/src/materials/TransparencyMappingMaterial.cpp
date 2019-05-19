@@ -5,25 +5,24 @@
 
 namespace library
 {
-	TransparencyMappingMaterial::TransparencyMappingMaterial(Effect& effect)
-		: PointLightMaterial(effect, "alphaBlendingWithoutFog")
+TransparencyMappingMaterial::TransparencyMappingMaterial(std::shared_ptr<Effect> effect)
+	: PointLightMaterial(effect, "alphaBlendingWithoutFog")
 
-		, m_fogColor(effect.GetVariable("fogColor"))
-		, m_fogStart(effect.GetVariable("fogStart"))
-		, m_fogRange(effect.GetVariable("fogRange"))
+	, m_fogColor(effect->GetVariable("fogColor"))
+	, m_fogStart(effect->GetVariable("fogStart"))
+	, m_fogRange(effect->GetVariable("fogRange"))
 
-		, m_transparencyMap(effect.GetVariable("TransparencyMap"))
-	{
-	}
+	, m_transparencyMap(effect->GetVariable("TransparencyMap"))
+{}
 
-	TransparencyMappingMaterial::~TransparencyMappingMaterial() = default;
+TransparencyMappingMaterial::~TransparencyMappingMaterial() = default;
 
-	//-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 
-	void TransparencyMappingMaterial::InitializeInternal()
-	{
-		PointLightMaterial::InitializeInternal();
+void TransparencyMappingMaterial::InitializeInternal()
+{
+	PointLightMaterial::InitializeInternal();
 
-		CreateInputLayout("alphaBlendingWithFog");
-	}
+	CreateInputLayout("alphaBlendingWithFog");
+}
 } // namespace library

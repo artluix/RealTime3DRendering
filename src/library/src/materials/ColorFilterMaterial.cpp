@@ -5,11 +5,10 @@
 
 namespace library
 {
-	ColorFilterMaterial::ColorFilterMaterial(Effect& effect)
-		: PostProcessingMaterial(effect)
-		, m_colorFilter(effect.GetVariable("colorFilter"))
-	{
-	}
+ColorFilterMaterial::ColorFilterMaterial(std::shared_ptr<Effect> effect)
+	: PostProcessingMaterial(effect)
+	, m_colorFilter(effect->GetVariable("colorFilter"))
+{}
 
-	ColorFilterMaterial::~ColorFilterMaterial() = default;
+ColorFilterMaterial::~ColorFilterMaterial() = default;
 } // namespace library

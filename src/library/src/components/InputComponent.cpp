@@ -4,72 +4,65 @@
 #include "library/Application.h"
 #include "library/Exception.h"
 
-#include <cassert>
-
 namespace library
 {
-	InputComponent::InputComponent(
-		const ComPtr<IDirectInput8>& directInput,
-		const DIDATAFORMAT& dataFormat,
-		const GUID& guid,
-		const DWORD cooperativeLevel
-	)
-		: m_directInput(directInput)
-		, m_dataFormat(dataFormat)
-		, m_guid(guid)
-		, m_cooperativeLevel(cooperativeLevel)
+InputComponent::InputComponent(
+	IDirectInput8& directInput,
+	const DIDATAFORMAT& dataFormat,
+	const GUID& guid,
+	const DWORD cooperativeLevel)
+	: m_directInput(directInput)
+	, m_dataFormat(dataFormat)
+	, m_guid(guid)
+	, m_cooperativeLevel(cooperativeLevel)
+{}
+
+InputComponent::~InputComponent()
+{
+	if (!!m_directInputDevice)
 	{
-		assert(!!m_directInput);
+		m_directInputDevice->Unacquire();
+		m_directInputDevice.Reset();
+	}
+}
+
+void InputComponent::Initialize()
+{
+	auto hr = m_directInput.CreateDevice(m_guid, &m_directInputDevice, nullptr);
+	if (FAILED(hr))
+	{
+		throw Exception("IDirectInput8::CreateDevice() failed.", hr);
 	}
 
-	InputComponent::~InputComponent()
+	hr = m_directInputDevice->SetDataFormat(&m_dataFormat);
+	if (FAILED(hr))
 	{
-		if (!!m_directInputDevice)
-		{
-			m_directInputDevice->Unacquire();
-			m_directInputDevice.Reset();
-		}
+		throw Exception("IDirectInputDevice::SetDataFormat() failed.", hr);
 	}
 
-	void InputComponent::Initialize(const Application& app)
+	hr = m_directInputDevice->SetCooperativeLevel(GetApp().GetWindowHandle(), m_cooperativeLevel);
+	if (FAILED(hr))
 	{
-		Component::Initialize(app);
+		throw Exception("IDirectInputDevice::SetCooperativeLevel() failed.", hr);
+	}
 
-		auto hr = m_directInput->CreateDevice(m_guid, m_directInputDevice.GetAddressOf(), nullptr);
-		if (FAILED(hr))
-		{
-			throw Exception("IDirectInput8::CreateDevice() failed.", hr);
-		}
+	// try to acquire the device
+	hr = m_directInputDevice->Acquire();
+}
 
-		hr = m_directInputDevice->SetDataFormat(&m_dataFormat);
-		if (FAILED(hr))
-		{
-			throw Exception("IDirectInputDevice::SetDataFormat() failed.", hr);
-		}
+void InputComponent::GetState(const std::size_t bufferSize, void* buffer)
+{
+	assert(!!buffer);
 
-		hr = m_directInputDevice->SetCooperativeLevel(app.GetWindowHandle(), m_cooperativeLevel);
-		if (FAILED(hr))
-		{
-			throw Exception("IDirectInputDevice::SetCooperativeLevel() failed.", hr);
-		}
-
-		// try to acquire the device
+	auto hr = m_directInputDevice->GetDeviceState(DWORD(bufferSize), buffer);
+	if (FAILED(hr))
+	{
+		// try to reacquire the device
 		hr = m_directInputDevice->Acquire();
-	}
-
-	void InputComponent::GetState(const std::size_t bufferSize, void* buffer)
-	{
-		assert(!!buffer);
-
-		auto hr = m_directInputDevice->GetDeviceState(bufferSize, buffer);
-		if (FAILED(hr))
+		if (SUCCEEDED(hr))
 		{
-			// try to reacquire the device
-			hr = m_directInputDevice->Acquire();
-			if (SUCCEEDED(hr))
-			{
-				m_directInputDevice->GetDeviceState(bufferSize, buffer);
-			}
+			m_directInputDevice->GetDeviceState(DWORD(bufferSize), buffer);
 		}
 	}
+}
 } // namespace library

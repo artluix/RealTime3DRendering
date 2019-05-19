@@ -1,33 +1,36 @@
 #pragma once
+#include "library/Application.h"
 #include "library/NonCopyable.hpp"
 #include "library/RTTI.hpp"
 
 namespace library
 {
-	class Application;
-	struct Time;
+struct Time;
 
-	class Component : public NonCopyable<Component>
-	{
-		RTTI_CLASS_BASE(Component)
+// abstract component
+class Component : public NonCopyable<Component>
+{
+	RTTI_CLASS_BASE(Component)
 
-	public:
-		virtual ~Component() = default;
+	// will set m_app
+	friend void Application::Initialize();
 
-		bool IsEnabled() const { return m_enabled; }
-		void SetEnabled(const bool enabled);
+public:
+	virtual ~Component() = default;
 
-		virtual void Initialize(const Application& app);
-		virtual void Update(const Time& time) {}
+	bool IsEnabled() const { return m_enabled; }
+	void SetEnabled(const bool enabled) { m_enabled = enabled; }
 
-		const Application* GetApp() const { return m_app; }
+	const Application& GetApp() const { return *m_app; }
 
-	protected:
-		explicit Component() = default;
+	virtual void Initialize() = 0;
+	virtual void Update(const Time& time) = 0;
 
-		bool m_enabled = true;
+protected:
+	Component() = default;
 
-	private:
-		const Application* m_app = nullptr;
-	};
+private:
+	bool m_enabled = true;
+	const Application* m_app = nullptr;
+};
 } // namespace library

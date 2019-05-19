@@ -6,16 +6,15 @@
 
 namespace library
 {
-	BloomMaterial::BloomMaterial(Effect& effect)
-		: PostProcessingMaterial(effect)
-		, m_bloomTexture(effect.GetVariable("BloomTexture"))
-		, m_bloomThreshold(effect.GetVariable("bloomThreshold"))
-		, m_bloomIntensity(effect.GetVariable("bloomIntensity"))
-		, m_bloomSaturation(effect.GetVariable("bloomSaturation"))
-		, m_sceneIntensity(effect.GetVariable("sceneIntensity"))
-		, m_sceneSaturation(effect.GetVariable("sceneSaturation"))
-	{
-	}
+BloomMaterial::BloomMaterial(std::shared_ptr<Effect> effect)
+	: PostProcessingMaterial(effect)
+	, m_bloomTexture(effect->GetVariable("BloomTexture"))
+	, m_bloomThreshold(effect->GetVariable("bloomThreshold"))
+	, m_bloomIntensity(effect->GetVariable("bloomIntensity"))
+	, m_bloomSaturation(effect->GetVariable("bloomSaturation"))
+	, m_sceneIntensity(effect->GetVariable("sceneIntensity"))
+	, m_sceneSaturation(effect->GetVariable("sceneSaturation"))
+{}
 
-	BloomMaterial::~BloomMaterial() = default;
+BloomMaterial::~BloomMaterial() = default;
 } // namespace library

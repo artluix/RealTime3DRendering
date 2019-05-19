@@ -43,7 +43,7 @@ ProjectiveTextureMappingDemo::~ProjectiveTextureMappingDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void ProjectiveTextureMappingDemo::Initialize(const Application& app)
+void ProjectiveTextureMappingDemo::Initialize()
 {
 	const auto camera = GetCamera();
 
@@ -66,7 +66,7 @@ void ProjectiveTextureMappingDemo::Initialize(const Application& app)
 			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward),
 		};
 
-		m_meshesData = { MeshData() };
+		m_meshesData = { PrimitiveData() };
 		auto& md = m_meshesData.front();
 
 		md.vertexBuffer.elementsCount = vertices.size();
@@ -76,9 +76,8 @@ void ProjectiveTextureMappingDemo::Initialize(const Application& app)
 		);
 	}
 
-	InitializeMaterial(app, "ProjectiveTextureMapping");
-	SceneComponent::Initialize(app);
-
+	InitializeMaterial("ProjectiveTextureMapping");
+	
 	m_projectedTexture = app.LoadTexture("ProjectedTexture");
 
 	m_pointLight = std::make_unique<PointLightComponent>();
@@ -145,7 +144,7 @@ void ProjectiveTextureMappingDemo::Initialize(const Application& app)
 	}
 }
 
-void ProjectiveTextureMappingDemo::Draw_SetData(const MeshData& meshData)
+void ProjectiveTextureMappingDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	const auto world = GetWorldMatrix();
 

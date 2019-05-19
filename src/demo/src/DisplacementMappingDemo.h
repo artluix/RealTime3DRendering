@@ -1,11 +1,11 @@
 #pragma once
 #include <library/Materials/DisplacementMappingMaterial.h>
 
-#include <library/Components/ConcreteMaterialSceneComponent.hpp>
+#include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
 
 #include <library/DirectXForwardDeclarations.h>
-#include <library/Color.h>
+#include <library/math/Color.h>
 
 #include <memory>
 
@@ -17,7 +17,7 @@ namespace library
 } // namespace library
 
 class DisplacementMappingDemo
-	: public library::ConcreteMaterialSceneComponent<library::DisplacementMappingMaterial>
+	: public library::ConcreteMaterialPrimitiveComponent<library::DisplacementMappingMaterial>
 	, public library::InputReceivableComponent
 {
 	RTTI_CLASS(DisplacementMappingDemo, library::SceneComponent, library::InputReceivableComponent)
@@ -26,11 +26,11 @@ public:
 	explicit DisplacementMappingDemo();
 	~DisplacementMappingDemo();
 
-	void Initialize(const library::Application& app) override;
+	void Initialize() override;
 	void Update(const library::Time& time) override;
 
 protected:
-	void Draw_SetData(const library::MeshData& meshData) override;
+	void Draw_SetData(const library::PrimitiveData& primitiveData) override;
 
 private:
 	void UpdateAmbientLight(const library::Time& time);
@@ -38,7 +38,7 @@ private:
 
 	void UpdateDisplacement(const library::Time& time);
 
-	ComPtr<ID3D11ShaderResourceView> m_displacementMapTexture;
+	library::ComPtr<ID3D11ShaderResourceView> m_displacementMapTexture;
 
 	library::Color m_ambientColor;
 	library::Color m_specularColor;

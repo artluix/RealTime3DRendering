@@ -1,10 +1,10 @@
 #pragma once
 #include <library/Materials/NormalMappingMaterial.h>
 
-#include <library/Components/ConcreteMaterialSceneComponent.hpp>
+#include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
 
-#include <library/Color.h>
+#include <library/math/Color.h>
 #include <library/DirectXForwardDeclarations.h>
 
 #include <memory>
@@ -17,7 +17,7 @@ namespace library
 } // namespace library
 
 class NormalMappingDemo
-	: public library::ConcreteMaterialSceneComponent<library::NormalMappingMaterial>
+	: public library::ConcreteMaterialPrimitiveComponent<library::NormalMappingMaterial>
 	, public library::InputReceivableComponent
 {
 	RTTI_CLASS(NormalMappingDemo, library::SceneComponent , library::InputReceivableComponent)
@@ -26,11 +26,11 @@ public:
 	explicit NormalMappingDemo();
 	~NormalMappingDemo();
 
-	void Initialize(const library::Application& app) override;
+	void Initialize() override;
 	void Update(const library::Time& time) override;
 
 protected:
-	void Draw_SetData(const library::MeshData& meshData) override;
+	void Draw_SetData(const library::PrimitiveData& primitiveData) override;
 
 private:
 	void UpdateAmbientLight(const library::Time& time);
@@ -41,7 +41,7 @@ private:
 	library::Color m_specularColor;
 	library::Color m_ambientColor;
 
-	ComPtr<ID3D11ShaderResourceView> m_normalMapTexture;
+	library::ComPtr<ID3D11ShaderResourceView> m_normalMapTexture;
 
 	std::unique_ptr<library::DirectionalLightComponent> m_directionalLight;
 	std::unique_ptr<library::ProxyModelComponent> m_proxyModel;

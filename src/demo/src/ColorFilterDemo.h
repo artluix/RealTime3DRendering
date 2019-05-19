@@ -40,7 +40,7 @@ public:
 	explicit ColorFilterDemo();
 	~ColorFilterDemo();
 
-	void Initialize(const library::Application& app) override;
+	void Initialize() override;
 	void Update(const library::Time& time) override;
 	void Draw(const library::Time& time) override;
 

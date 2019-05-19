@@ -2,13 +2,13 @@
 
 namespace library
 {
-	template<class T>
-	class NonConstructible
-	{
-		explicit NonConstructible() = delete;
-		//~NonConstructible() = delete;
+template <class T>
+class NonConstructible
+{
+	NonConstructible() = delete;
+	//~NonConstructible() = delete;
 
-		explicit NonConstructible(NonConstructible&&) = delete;
-		explicit NonConstructible(const NonConstructible&) = delete;
-	};
+	NonConstructible(NonConstructible&&) = delete;
+	NonConstructible(const NonConstructible&) = delete;
+};
 } // namespace library

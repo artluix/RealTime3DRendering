@@ -1,47 +1,43 @@
 #pragma once
-#include "library/Components/SceneComponent.h"
+#include "library/Components/PrimitiveComponent.h"
 
 #include <functional>
 
 namespace library
 {
-	class EffectPass;
+class EffectPass;
 
-	class FullScreenQuadComponent : public SceneComponent
-	{
-		RTTI_CLASS(FullScreenQuadComponent, SceneComponent)
+class FullScreenQuadComponent : public PrimitiveComponent
+{
+	RTTI_CLASS(FullScreenQuadComponent, PrimitiveComponent)
 
-	public:
-		using MaterialUpdateFunction = std::function<void()>;
+public:
+	using MaterialUpdateFunction = std::function<void()>;
 
-		explicit FullScreenQuadComponent();
-		~FullScreenQuadComponent();
+	FullScreenQuadComponent();
+	~FullScreenQuadComponent();
 
-		void SetMaterial(Material& material);
-		void SetMaterial(
-			Material& material,
-			const std::string& techniqueName,
-			const std::string& passName = "p0"
-		);
-		
-		void SetActiveTechnique(const std::string& techniqueName, const std::string& passName = "p0");
-		void SetMaterialUpdateFunction(const MaterialUpdateFunction& func);
+	void SetMaterial(Material& material);
+	void SetMaterial(Material& material, const std::string& techniqueName, const std::string& passName = "p0");
 
-		void Initialize(const Application& app) override;
-		void Update(const Time& time) override;
+	void SetActiveTechnique(const std::string& techniqueName, const std::string& passName = "p0");
+	void SetMaterialUpdateFunction(const MaterialUpdateFunction& func);
 
-		const Material* GetMaterial() const override { return m_material; }
+	void Initialize() override;
+	void Update(const Time& time) override;
 
-	protected:
-		void Draw_SetData(const MeshData& meshData) override;
+	const Material* GetMaterial() const override { return m_material; }
 
-		Material* GetMaterial() override { return m_material; }
-		unsigned GetVertexSize() const override;
+protected:
+	void Draw_SetData(const PrimitiveData& primitiveData) override;
 
-		MaterialUpdateFunction m_materialUpdateFunction;
-		Material* m_material = nullptr;
+	Material* GetMaterial() override { return m_material; }
 
-	private:
-		EffectPass* m_pass = nullptr;
-	};
+	MaterialUpdateFunction m_materialUpdateFunction;
+	Material* m_material = nullptr;
+
+private:
+	using PrimitiveComponent::m_dxEffectPass;
+	using PrimitiveComponent::m_dxInputLayout;
+};
 } // namespace library

@@ -46,12 +46,11 @@ SpotlightDemo::~SpotlightDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void SpotlightDemo::Initialize(const Application& app)
+void SpotlightDemo::Initialize()
 {
 	assert(!!GetCamera());
 
-	InitializeMaterial(app, "Spotlight");
-	SceneComponent::Initialize(app);
+	InitializeMaterial("Spotlight");
 
 	m_spotlight = std::make_unique<SpotlightComponent>();
 	m_spotlight->SetRadius(10.f);
@@ -277,7 +276,7 @@ void SpotlightDemo::UpdateSpecularLight(const Time& time)
 	}
 }
 
-void SpotlightDemo::Draw_SetData(const MeshData& meshData)
+void SpotlightDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	auto world = GetWorldMatrix();
 	if (!!m_camera)

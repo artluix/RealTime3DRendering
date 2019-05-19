@@ -1,188 +1,235 @@
 #include "StdAfx.h"
 #include "library/Components/ProjectorComponent.h"
 
+#include "library/Math/Math.h"
+
 namespace library
 {
-	namespace
+
+namespace
+{
+constexpr auto k_defaultNearPlaneDistance = 0.5f;
+constexpr auto k_defaultFarPlaneDistance = 100.f;
+
+constexpr auto k_defaultFieldOfView = math::Pi_Div_4;
+constexpr auto k_defaultAspectRatio = 4.f / 3.f;
+
+constexpr unsigned k_defaultWidth = 5;
+constexpr unsigned k_defaultHeight = 5;
+} // namespace
+
+//-------------------------------------------------------------------------
+
+ProjectorComponent::ProjectorComponent(const ProjectionType projectionType /*= ProjectionType::Perspective*/)
+	: m_projectionType(projectionType)
+	, m_nearPlaneDistance(k_defaultNearPlaneDistance)
+	, m_farPlaneDistance(k_defaultFarPlaneDistance)
+{}
+
+ProjectorComponent::ProjectorComponent(
+	const float nearPlaneDistance,
+	const float farPlaneDistance,
+	const float fieldOfView,
+	const float aspectRatio)
+	: m_projectionType(ProjectionType::Perspective)
+	, m_nearPlaneDistance(nearPlaneDistance)
+	, m_farPlaneDistance(farPlaneDistance)
+	, m_fieldOfView(fieldOfView)
+	, m_aspectRatio(aspectRatio)
+{}
+
+ProjectorComponent::ProjectorComponent(
+	const float nearPlaneDistance,
+	const float farPlaneDistance,
+	const unsigned int width,
+	const unsigned int height)
+	: m_projectionType(ProjectionType::Orthographic)
+	, m_nearPlaneDistance(nearPlaneDistance)
+	, m_farPlaneDistance(farPlaneDistance)
+	, m_width(width)
+	, m_height(height)
+{}
+
+ProjectorComponent::~ProjectorComponent() = default;
+
+//-------------------------------------------------------------------------
+
+void ProjectorComponent::SetProjectionType(const ProjectionType projectionType)
+{
+	m_projectionType = projectionType;
+}
+
+//-------------------------------------------------------------------------
+
+void ProjectorComponent::SetNearPlaneDistance(const float nearPlaneDistance)
+{
+	if (m_nearPlaneDistance != nearPlaneDistance)
 	{
-		constexpr auto k_defaultNearPlaneDistance = 0.5f;
-		constexpr auto k_defaultFarPlaneDistance = 100.f;
+		m_nearPlaneDistance = nearPlaneDistance;
+		m_isProjectionMatrixDirty = true;
 	}
+}
 
-	//-------------------------------------------------------------------------
-
-	ProjectorComponent::ProjectorComponent()
-		: ProjectorComponent(
-			k_defaultNearPlaneDistance,
-			k_defaultFarPlaneDistance
-		)
+void ProjectorComponent::SetFarPlaneDistance(const float farPlaneDistance)
+{
+	if (m_farPlaneDistance != farPlaneDistance)
 	{
+		m_farPlaneDistance = farPlaneDistance;
+		m_isProjectionMatrixDirty = true;
 	}
+}
 
-	ProjectorComponent::ProjectorComponent(
-		const float nearPlaneDistance,
-		const float farPlaneDistance
-	)
-		: m_position(math::Vector3::Zero)
+//-------------------------------------------------------------------------
 
-		, m_nearPlaneDistance(nearPlaneDistance)
-		, m_farPlaneDistance(farPlaneDistance)
+float ProjectorComponent::GetFieldOfView() const
+{
+	assert(m_projectionType == ProjectionType::Perspective);
+	return m_fieldOfView;
+}
 
-		, m_direction(math::Vector3::Forward)
-		, m_up(math::Vector3::Up)
-		, m_right(math::Vector3::Right)
-
-		, m_viewMatrix(math::Matrix4::Identity)
-		, m_projectionMatrix(math::Matrix4::Identity)
-		, m_viewProjectionMatrix(math::Matrix4::Identity)
+void ProjectorComponent::SetFieldOfView(const float fieldOfView)
+{
+	assert(m_projectionType == ProjectionType::Perspective);
+	if (m_fieldOfView != fieldOfView)
 	{
+		m_fieldOfView = fieldOfView;
+		m_isProjectionMatrixDirty = true;
 	}
+}
 
-	ProjectorComponent::~ProjectorComponent() = default;
+float ProjectorComponent::GetAspectRatio() const
+{
+	assert(m_projectionType == ProjectionType::Perspective);
+	return m_aspectRatio;
+}
 
-	//-------------------------------------------------------------------------
-
-	void ProjectorComponent::SetNearPlaneDistance(const float nearPlaneDistance)
+void ProjectorComponent::SetAspectRatio(const float aspectRatio)
+{
+	assert(m_projectionType == ProjectionType::Perspective);
+	if (m_aspectRatio != aspectRatio)
 	{
-		if (m_nearPlaneDistance != nearPlaneDistance)
-		{
-			m_nearPlaneDistance = nearPlaneDistance;
-			m_isProjectionMatrixDirty = true;
-		}
+		m_aspectRatio = aspectRatio;
+		m_isProjectionMatrixDirty = true;
 	}
+}
 
-	void ProjectorComponent::SetFarPlaneDistance(const float farPlaneDistance)
+//-------------------------------------------------------------------------
+
+unsigned int ProjectorComponent::GetWidth() const
+{
+	assert(m_projectionType == ProjectionType::Orthographic);
+	return m_width;
+}
+
+void ProjectorComponent::SetWidth(const unsigned int width)
+{
+	assert(m_projectionType == ProjectionType::Orthographic);
+	if (m_width != width)
 	{
-		if (m_farPlaneDistance != farPlaneDistance)
-		{
-			m_farPlaneDistance = farPlaneDistance;
-			m_isProjectionMatrixDirty = true;
-		}
+		m_width = width;
+		m_isProjectionMatrixDirty = true;
 	}
+}
 
-	void ProjectorComponent::SetPosition(const math::Vector3& position)
+unsigned int ProjectorComponent::GetHeight() const
+{
+	assert(m_projectionType == ProjectionType::Orthographic);
+	return m_height;
+}
+
+void ProjectorComponent::SetHeight(const unsigned int height)
+{
+	assert(m_projectionType == ProjectionType::Orthographic);
+	if (m_height != height)
 	{
-		if (m_position != position)
-		{
-			m_position = position;
-			m_isViewMatrixDirty = true;
-		}
+		m_height = height;
+		m_isProjectionMatrixDirty = true;
 	}
+}
 
-	//-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 
-	const math::Matrix4& ProjectorComponent::GetViewMatrix() const
-	{
-		assert(!m_isViewMatrixDirty);
-		return m_viewMatrix;
-	}
+const math::Matrix4& ProjectorComponent::GetViewMatrix() const
+{
+	assert(!m_isViewMatrixDirty);
+	return m_viewMatrix;
+}
 
-	const math::Matrix4& ProjectorComponent::GetProjectionMatrix() const
-	{
-		assert(!m_isProjectionMatrixDirty);
-		return m_projectionMatrix;
-	}
+const math::Matrix4& ProjectorComponent::GetProjectionMatrix() const
+{
+	assert(!m_isProjectionMatrixDirty);
+	return m_projectionMatrix;
+}
 
-	const math::Matrix4& ProjectorComponent::GetViewProjectionMatrix() const
-	{
-		assert(!m_isViewMatrixDirty && !m_isProjectionMatrixDirty);
-		return m_viewProjectionMatrix;
-	}
-	//-------------------------------------------------------------------------
+const math::Matrix4& ProjectorComponent::GetViewProjectionMatrix() const
+{
+	assert(!m_isViewMatrixDirty && !m_isProjectionMatrixDirty);
+	return m_viewProjectionMatrix;
+}
 
-	void ProjectorComponent::Reset()
-	{
-		// projection
-		{
-			m_nearPlaneDistance = k_defaultNearPlaneDistance;
-			m_farPlaneDistance = k_defaultFarPlaneDistance;
+//-------------------------------------------------------------------------
 
-			m_projectionMatrix = math::Matrix4::Identity;
-			m_isProjectionMatrixDirty = true;
-		}
+void ProjectorComponent::Initialize()
+{
+	// First time init matrices
+	UpdateViewMatrix();
+	UpdateProjectionMatrix();
+	UpdateViewProjectionMatrix();
+}
 
-		// view
-		{
-			m_position = math::Vector3::Zero;
+//-------------------------------------------------------------------------
 
-			m_direction = math::Vector3::Forward;
-			m_up = math::Vector3::Up;
-			m_right = math::Vector3::Right;
+void ProjectorComponent::Update(const Time& time)
+{
+	const bool isViewUpdated = UpdateViewMatrix();
+	const bool isProjectionUpdated = UpdateProjectionMatrix();
 
-			m_viewMatrix = math::Matrix4::Identity;
-			m_isViewMatrixDirty = true;
-		}
-
-		m_viewProjectionMatrix = math::Matrix4::Identity;
-	}
-
-	//-------------------------------------------------------------------------
-
-	void ProjectorComponent::Initialize(const Application& app)
-	{
-		Component::Initialize(app);
-
-		// First time init matrices
-		UpdateViewMatrix();
-		UpdateProjectionMatrix();
+	if (isViewUpdated || isProjectionUpdated)
 		UpdateViewProjectionMatrix();
-	}
+}
 
-	//-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 
-	void ProjectorComponent::Update(const Time& time)
+bool ProjectorComponent::UpdateViewMatrix()
+{
+	if (!m_isViewMatrixDirty)
+		return false;
+
+	m_viewMatrix = math::Matrix4::LookToRH(m_transform.position, m_direction, m_up);
+	m_isViewMatrixDirty = false;
+
+	return true;
+}
+
+bool ProjectorComponent::UpdateProjectionMatrix()
+{
+	if (!m_isProjectionMatrixDirty)
+		return false;
+
+	switch (m_projectionType)
 	{
-		const bool isViewUpdated = UpdateViewMatrix();
-		const bool isProjectionUpdated = UpdateProjectionMatrix();
+		case ProjectionType::Orthographic:
+			m_projectionMatrix = math::Matrix4::OrthographicRH(
+				static_cast<float>(m_width),
+				static_cast<float>(m_height),
+				m_nearPlaneDistance,
+				m_farPlaneDistance);
+			break;
 
-		if (isViewUpdated || isProjectionUpdated)
-			UpdateViewProjectionMatrix();
+		case ProjectionType::Perspective:
+			m_projectionMatrix = math::Matrix4::
+				PerspectiveFovRH(m_fieldOfView, m_aspectRatio, m_nearPlaneDistance, m_farPlaneDistance);
+			break;
+
+		default: break;
 	}
 
-	//-------------------------------------------------------------------------
+	m_isProjectionMatrixDirty = false;
+	return true;
+}
 
-	bool ProjectorComponent::UpdateViewMatrix()
-	{
-		if (!m_isViewMatrixDirty)
-			return false;
-
-		m_viewMatrix = math::Matrix4::LookToRH(m_position, m_direction, m_up);
-		m_isViewMatrixDirty = false;
-
-		return true;
-	}
-
-	void ProjectorComponent::UpdateViewProjectionMatrix()
-	{
-		m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
-	}
-
-	//-------------------------------------------------------------------------
-
-	void ProjectorComponent::ApplyRotation(const math::Matrix4& transform)
-	{
-		const auto direction = m_direction.TransformNormal(transform);
-		auto up = m_up.TransformNormal(transform);
-
-		const auto right = direction.Cross(up);
-		up = right.Cross(direction);
-
-		if (m_direction != direction)
-		{
-			m_direction = direction;
-			m_isViewMatrixDirty = true;
-		}
-
-		if (m_up != up)
-		{
-			m_up = up;
-			m_isViewMatrixDirty = true;
-		}
-
-		if (m_right != right)
-		{
-			m_right = right;
-			m_isViewMatrixDirty = true;
-		}
-	}
+void ProjectorComponent::UpdateViewProjectionMatrix()
+{
+	m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
+}
 } // namespace library

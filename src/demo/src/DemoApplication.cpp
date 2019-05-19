@@ -98,7 +98,7 @@ void DemoApplication::Initialize()
 		m_instanceHandle,
 		DIRECTINPUT_VERSION,
 		IID_IDirectInput8,
-		reinterpret_cast<LPVOID*>(m_directInput.GetAddressOf()),
+		reinterpret_cast<LPVOID*>(&m_directInput),
 		nullptr
 	);
 	if (FAILED(hr))
@@ -110,8 +110,8 @@ void DemoApplication::Initialize()
 	// don't initialize them before Application::Initialize
 
 	// keyboard & mouse
-	m_keyboard = std::make_shared<KeyboardComponent>(m_directInput);
-	m_mouse = std::make_shared<MouseComponent>(m_directInput);
+	m_keyboard = std::make_shared<KeyboardComponent>(*m_directInput);
+	m_mouse = std::make_shared<MouseComponent>(*m_directInput);
 
 	// mouse text component
 	auto mouseText = std::make_shared<TextComponent>();

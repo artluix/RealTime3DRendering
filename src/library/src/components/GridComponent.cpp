@@ -15,136 +15,110 @@
 
 namespace library
 {
-	namespace
+
+namespace
+{
+constexpr unsigned k_defaultSize = 16;
+constexpr unsigned k_defaultScale = 16;
+const auto k_defaultColor = Color::White;
+} // namespace
+
+GridComponent::GridComponent() : m_size(k_defaultSize), m_scale(k_defaultScale), m_color(k_defaultColor)
+{}
+
+GridComponent::GridComponent(const unsigned size, const unsigned scale, const Color& color)
+	: m_size(size)
+	, m_scale(scale)
+	, m_color(color)
+{}
+
+GridComponent::~GridComponent() = default;
+
+//-------------------------------------------------------------------------
+
+void GridComponent::SetSize(const unsigned size)
+{
+	if (m_size != size)
 	{
-		constexpr unsigned k_defaultSize = 16;
-		constexpr unsigned k_defaultScale = 16;
-		const auto k_defaultColor = Color::White;
-	}
-
-	GridComponent::GridComponent()
-		: m_size(k_defaultSize)
-		, m_scale(k_defaultScale)
-		, m_color(k_defaultColor)
-	{
-		m_primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
-	}
-
-	GridComponent::GridComponent(
-		const unsigned size,
-		const unsigned scale,
-		const Color& color
-	)
-		: m_size(size)
-		, m_scale(scale)
-		, m_color(color)
-	{
-	}
-
-	GridComponent::~GridComponent() = default;
-
-	//-------------------------------------------------------------------------
-
-	void GridComponent::SetSize(const unsigned size)
-	{
-		if (m_size != size)
-		{
-			m_size = size;
-			Build();
-		}
-	}
-
-	void GridComponent::SetScale(const unsigned scale)
-	{
-		if (m_scale != scale)
-		{
-			m_scale = scale;
-			Build();
-		}
-	}
-
-	void GridComponent::SetColor(const Color& color)
-	{
-		if (m_color != color)
-		{
-			m_color = color;
-			Build();
-		}
-	}
-
-	//-------------------------------------------------------------------------
-
-	void GridComponent::Initialize(const Application& app)
-	{
-		InitializeMaterial(app, "Basic");
-		SceneComponent::Initialize(app);
-
+		m_size = size;
 		Build();
 	}
+}
 
-	//-------------------------------------------------------------------------
-
-	void GridComponent::Draw_SetData(const MeshData& meshData)
+void GridComponent::SetScale(const unsigned scale)
+{
+	if (m_scale != scale)
 	{
-		auto wvp = GetWorldMatrix();
-		if (!!m_camera)
-			wvp *= m_camera->GetViewProjectionMatrix();
+		m_scale = scale;
+		Build();
+	}
+}
 
-		GetMaterial()->GetWorldViewProjection() << wvp;
+void GridComponent::SetColor(const Color& color)
+{
+	if (m_color != color)
+	{
+		m_color = color;
+		Build();
+	}
+}
 
-		SceneComponent::Draw_SetData(meshData);
+//-------------------------------------------------------------------------
+
+void GridComponent::Initialize()
+{
+	InitializeMaterial("Basic");
+	Build();
+}
+
+//-------------------------------------------------------------------------
+
+void GridComponent::Draw_SetData(const PrimitiveData& primitiveData)
+{
+	auto wvp = GetWorldMatrix();
+	if (auto camera = GetCamera())
+		wvp *= camera->GetViewProjectionMatrix();
+
+	GetMaterial()->GetWorldViewProjection() << math::XMMatrix(wvp);
+
+	PrimitiveComponent::Draw_SetData(primitiveData);
+}
+
+//-------------------------------------------------------------------------
+
+void GridComponent::Build()
+{
+	m_primitivesData.clear();
+	auto& pd = m_primitivesData.emplace_back(PrimitiveData());
+
+	pd.primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+	pd.stride = m_material->GetVertexSize();
+
+	const float adjustedScale = m_scale * 0.1f;
+	const float maxPosition = m_size * adjustedScale / 2;
+
+	const unsigned verticesCount = 4 * (m_size + 1);
+
+	const auto size = sizeof(VertexPositionColor) * verticesCount;
+
+	std::vector<VertexPositionColor> vertices;
+	vertices.reserve(verticesCount);
+
+	const DirectX::XMFLOAT4 color(m_color);
+
+	for (unsigned i = 0; i < m_size + 1; i++)
+	{
+		const float position = maxPosition - (i * adjustedScale);
+
+		// vertical line
+		vertices.emplace_back(DirectX::XMFLOAT4(position, maxPosition, 0.0f, 1.0f), color);
+		vertices.emplace_back(DirectX::XMFLOAT4(position, -maxPosition, 0.0f, 1.0f), color);
+
+		// horizontal line
+		vertices.emplace_back(DirectX::XMFLOAT4(maxPosition, position, 0.0f, 1.0f), color);
+		vertices.emplace_back(DirectX::XMFLOAT4(-maxPosition, position, 0.0f, 1.0f), color);
 	}
 
-	//-------------------------------------------------------------------------
-
-	void GridComponent::Build()
-	{
-		m_meshesData = { MeshData() };
-		auto& md = m_meshesData.front();
-
-		md.vertexBuffer.buffer.Reset();
-
-		const float adjustedScale = m_scale * 0.1f;
-		const float maxPosition = m_size * adjustedScale / 2;
-
-		md.vertexBuffer.elementsCount = 4 * (m_size + 1);
-
-		const auto size = sizeof(VertexPositionColor) * md.vertexBuffer.elementsCount;
-
-		std::vector<VertexPositionColor> vertices;
-		vertices.reserve(md.vertexBuffer.elementsCount);
-
-		const DirectX::XMFLOAT4 color(m_color);
-
-		for (unsigned i = 0; i < m_size + 1; i++)
-		{
-			const float position = maxPosition - (i * adjustedScale);
-
-			// vertical line
-			vertices.emplace_back(DirectX::XMFLOAT4(position, maxPosition, 0.0f, 1.0f), color);
-			vertices.emplace_back(DirectX::XMFLOAT4(position, -maxPosition, 0.0f, 1.0f), color);
-
-			// horizontal line
-			vertices.emplace_back(DirectX::XMFLOAT4(maxPosition, position, 0.0f, 1.0f), color);
-			vertices.emplace_back(DirectX::XMFLOAT4(-maxPosition, position, 0.0f, 1.0f), color);
-		}
-
-		D3D11_BUFFER_DESC vertexBufferDesc{};
-		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-		vertexBufferDesc.ByteWidth = size;
-		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
-		vertexSubResourceData.pSysMem = vertices.data();
-
-		auto hr = GetApp()->GetDevice()->CreateBuffer(
-			&vertexBufferDesc,
-			&vertexSubResourceData,
-			md.vertexBuffer.buffer.GetAddressOf()
-		);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11Device::CreateBuffer() failed.", hr);
-		}
-	}
+	pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
+}
 } // namespace library

@@ -42,7 +42,7 @@ NormalMappingDemo::NormalMappingDemo()
 
 NormalMappingDemo::~NormalMappingDemo() = default;
 
-void NormalMappingDemo::Initialize(const Application& app)
+void NormalMappingDemo::Initialize()
 {
 	assert(!!GetCamera());
 
@@ -67,7 +67,7 @@ void NormalMappingDemo::Initialize(const Application& app)
 			Vertex(XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), XMFLOAT2(1.0f, 1.0f), backward, right),
 		};
 
-		m_meshesData = { MeshData() };
+		m_meshesData = { PrimitiveData() };
 		auto& md = m_meshesData.front();
 
 		md.vertexBuffer.elementsCount = vertices.size();
@@ -77,8 +77,7 @@ void NormalMappingDemo::Initialize(const Application& app)
 		);
 	}
 
-	InitializeMaterial(app, "NormalMapping");
-	SceneComponent::Initialize(app);
+	InitializeMaterial("NormalMapping");
 
 	m_normalMapTexture = app.LoadTexture("Blocks_NORM");
 
@@ -224,7 +223,7 @@ void NormalMappingDemo::UpdateSpecularLight(const Time& time)
 	}
 }
 
-void NormalMappingDemo::Draw_SetData(const MeshData& meshData)
+void NormalMappingDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)

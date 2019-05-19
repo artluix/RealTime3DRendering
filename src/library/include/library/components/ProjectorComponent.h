@@ -1,64 +1,104 @@
 #pragma once
-#include "library/Components/Component.h"
-#include "library/Math/Math.h"
+#include "library/Components/SceneComponent.h"
+#include "library/Math/Matrix.h"
 
 namespace library
 {
-	class ProjectorComponent : public virtual Component
+enum class ProjectionType
+{
+	Perspective,
+	Orthographic
+};
+
+//-------------------------------------------------------------------------
+
+class ProjectorComponent : public SceneComponent
+{
+	RTTI_CLASS(ProjectorComponent, SceneComponent)
+
+public:
+	explicit ProjectorComponent(const ProjectionType projectionType = ProjectionType::Perspective);
+	ProjectorComponent(
+		const float nearPlaneDistance,
+		const float farPlaneDistance,
+		const float fieldOfView,
+		const float aspectRatio);
+
+	ProjectorComponent(
+		const float nearPlaneDistance,
+		const float farPlaneDistance,
+		const unsigned int width,
+		const unsigned int height);
+
+	~ProjectorComponent();
+
+	//-------------------------------------------------------------------------
+
+	ProjectionType GetProjectionType() const { return m_projectionType; }
+	void SetProjectionType(const ProjectionType projectionType);
+
+	float GetNearPlaneDistance() const { return m_nearPlaneDistance; }
+	void SetNearPlaneDistance(const float nearPlaneDistance);
+
+	float GetFarPlaneDistance() const { return m_farPlaneDistance; }
+	void SetFarPlaneDistance(const float farPlaneDistance);
+
+	//-------------------------------------------------------------------------
+
+	float GetFieldOfView() const;
+	void SetFieldOfView(const float fieldOfView);
+
+	float GetAspectRatio() const;
+	void SetAspectRatio(const float aspectRatio);
+
+	//-------------------------------------------------------------------------
+
+	unsigned int GetWidth() const;
+	void SetWidth(const unsigned int width);
+
+	unsigned int GetHeight() const;
+	void SetHeight(const unsigned int height);
+
+	//-------------------------------------------------------------------------
+
+	const math::Matrix4& GetViewMatrix() const;
+	const math::Matrix4& GetProjectionMatrix() const;
+	const math::Matrix4& GetViewProjectionMatrix() const;
+
+	void Initialize() override;
+	void Update(const Time& time) override;
+
+	// void Reset();
+	bool UpdateViewMatrix();
+	bool UpdateProjectionMatrix();
+
+protected:
+	virtual void UpdateViewProjectionMatrix();
+
+	float m_nearPlaneDistance;
+	float m_farPlaneDistance;
+
+	union
 	{
-		RTTI_CLASS(ProjectorComponent, Component)
+		struct
+		{
+			float m_fieldOfView, m_aspectRatio;
+		};
 
-	public:
-		~ProjectorComponent();
-
-		const math::Vector3& GetDirection() const { return m_direction; }
-		const math::Vector3& GetUp() const { return m_up; }
-		const math::Vector3& GetRight() const { return m_right; }
-
-		float GetNearPlaneDistance() const { return m_nearPlaneDistance; }
-		void SetNearPlaneDistance(const float nearPlaneDistance);
-
-		float GetFarPlaneDistance() const { return m_farPlaneDistance; }
-		void SetFarPlaneDistance(const float farPlaneDistance);
-
-		const math::Vector3& GetPosition() const { return m_position; }
-		void SetPosition(const math::Vector3& position);
-
-		const math::Matrix4& GetViewMatrix() const;
-		const math::Matrix4& GetProjectionMatrix() const;
-		const math::Matrix4& GetViewProjectionMatrix() const;
-
-		void Initialize(const Application& app) override;
-		void Update(const Time& time) override;
-
-		virtual void Reset();
-		virtual bool UpdateViewMatrix();
-		virtual bool UpdateProjectionMatrix() = 0;
-
-		void ApplyRotation(const math::Matrix4& transform);
-
-	protected:
-		explicit ProjectorComponent();
-		explicit ProjectorComponent(const float nearPlaneDistance, const float farPlaneDistance);
-
-		virtual void UpdateViewProjectionMatrix();
-
-		float m_nearPlaneDistance;
-		float m_farPlaneDistance;
-
-		math::Vector3 m_position;
-
-		math::Vector3 m_direction;
-		math::Vector3 m_up;
-		math::Vector3 m_right;
-
-		math::Matrix4 m_viewMatrix;
-		bool m_isViewMatrixDirty = true;
-
-		math::Matrix4 m_projectionMatrix;
-		bool m_isProjectionMatrixDirty = true;
-
-		math::Matrix4 m_viewProjectionMatrix;
+		struct
+		{
+			unsigned int m_width, m_height;
+		};
 	};
-} // namespace library
 
+	ProjectionType m_projectionType;
+
+	math::Matrix4 m_viewMatrix = math::Matrix4::Identity;
+	bool m_isViewMatrixDirty = true;
+
+	math::Matrix4 m_projectionMatrix = math::Matrix4::Identity;
+	bool m_isProjectionMatrixDirty = true;
+
+	math::Matrix4 m_viewProjectionMatrix = math::Matrix4::Identity;
+};
+} // namespace library

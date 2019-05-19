@@ -49,12 +49,11 @@ FogDemo::~FogDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void FogDemo::Initialize(const Application& app)
+void FogDemo::Initialize()
 {
 	assert(!!GetCamera());
 
-	InitializeMaterial(app, "Fog");
-	SceneComponent::Initialize(app);
+	InitializeMaterial("Fog");
 
 	m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
@@ -187,10 +186,10 @@ void FogDemo::SetActiveTechnique()
 	const auto& technique = m_material->GetEffect().GetTechnique(techniqueName);
 	const auto& pass = technique.GetPass("p0");
 
-	m_inputLayout = m_material->GetInputLayout(pass);
+	m_currentInputLayout = m_material->GetInputLayout(pass);
 }
 
-void FogDemo::Draw_SetData(const MeshData& meshData)
+void FogDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)

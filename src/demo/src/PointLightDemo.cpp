@@ -38,12 +38,11 @@ PointLightDemo::PointLightDemo()
 
 PointLightDemo::~PointLightDemo() = default;
 
-void PointLightDemo::Initialize(const Application& app)
+void PointLightDemo::Initialize()
 {
 	assert(!!GetCamera());
 
-	InitializeMaterial(app, "PointLight");
-	SceneComponent::Initialize(app);
+	InitializeMaterial("PointLight");
 
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetRadius(500.f);
@@ -185,7 +184,7 @@ void PointLightDemo::UpdateSpecularLight(const Time& time)
 	}
 }
 
-void PointLightDemo::Draw_SetData(const MeshData& meshData)
+void PointLightDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)

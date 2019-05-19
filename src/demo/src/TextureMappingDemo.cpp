@@ -26,10 +26,9 @@ TextureMappingDemo::TextureMappingDemo()
 	SetTextureName("EarthComposite");
 }
 
-void TextureMappingDemo::Initialize(const Application& app)
+void TextureMappingDemo::Initialize()
 {
-	InitializeMaterial(app, "TextureMapping");
-	SceneComponent::Initialize(app);
+	InitializeMaterial("TextureMapping");
 }
 
 void TextureMappingDemo::Update(const Time& time)
@@ -76,7 +75,7 @@ void TextureMappingDemo::Update(const Time& time)
 	DrawableComponent::Update(time);
 }
 
-void TextureMappingDemo::Draw_SetData(const MeshData& meshData)
+void TextureMappingDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)

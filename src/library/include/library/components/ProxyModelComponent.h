@@ -1,30 +1,31 @@
 #pragma once
 #include "library/Materials/BasicMaterial.h"
-#include "library/Components/ConcreteMaterialSceneComponent.hpp"
-
+#include "library/Components/ConcreteMaterialPrimitiveComponent.hpp"
 #include "library/DirectXForwardDeclarations.h"
 
 #include <string>
 
 namespace library
 {
-	class ProxyModelComponent : public ConcreteMaterialSceneComponent<BasicMaterial>
-	{
-		RTTI_CLASS(ProxyModelComponent, SceneComponent)
+class ProxyModelComponent : public ConcreteMaterialPrimitiveComponent<BasicMaterial>
+{
+	RTTI_CLASS(ProxyModelComponent, PrimitiveComponent)
 
-	public:
-		explicit ProxyModelComponent(const std::string& modelName, const float scale);
-		~ProxyModelComponent();
+public:
+	ProxyModelComponent(const std::string& modelName, const float scale);
+	~ProxyModelComponent();
 
-		bool IsWireframeVisible() const { return m_isWireframeVisible; }
-		void SetWireframeVisible(const bool visible);
+	bool IsWireframeVisible() const { return m_isWireframeVisible; }
+	void SetWireframeVisible(const bool visible);
 
-		void Initialize(const Application& app) override;
+	void Initialize() override;
 
-	protected:
-		void Draw_SetData(const MeshData& meshData) override;
-		void Draw_Render(const MeshData& meshData) override;
+protected:
+	void Draw_SetData(const PrimitiveData& primitiveData) override;
+	void Draw_Render(const PrimitiveData& primitiveData) override;
 
-		bool m_isWireframeVisible = true;
-	};
+	bool m_isWireframeVisible = true;
+
+	std::string m_modelName;
+};
 } // namespace library

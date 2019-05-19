@@ -3,17 +3,17 @@
 
 namespace library
 {
-	class ColorFilterMaterial : public PostProcessingMaterial
-	{
-		RTTI_CLASS(ColorFilterMaterial, PostProcessingMaterial)
+class ColorFilterMaterial : public PostProcessingMaterial
+{
+	RTTI_CLASS(ColorFilterMaterial, PostProcessingMaterial)
 
-	public:
-		explicit ColorFilterMaterial(Effect& effect);
-		~ColorFilterMaterial();
+public:
+	explicit ColorFilterMaterial(std::shared_ptr<Effect> effect);
+	~ColorFilterMaterial();
 
-		EffectVariable& GetColorFilter() { return m_colorFilter; }
+	EffectVariable& GetColorFilter() { return m_colorFilter; }
 
-	private:
-		EffectVariable& m_colorFilter;
-	};
+private:
+	EffectVariable& m_colorFilter;
+};
 } // namespace library

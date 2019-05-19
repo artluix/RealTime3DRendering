@@ -1,11 +1,11 @@
 #pragma once
 #include <library/Materials/DirectionalShadowMappingMaterial.h>
 
-#include <library/Components/ConcreteMaterialSceneComponent.hpp>
+#include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
 
 #include <library/Frustum.h>
-#include <library/Color.h>
+#include <library/math/Color.h>
 #include <library/Math/Math.h>
 
 #include <memory>
@@ -27,7 +27,7 @@ namespace library
 //-------------------------------------------------------------------------
 
 class DirectionalShadowMappingDemo
-	: public library::ConcreteMaterialSceneComponent<library::DirectionalShadowMappingMaterial>
+	: public library::ConcreteMaterialPrimitiveComponent<library::DirectionalShadowMappingMaterial>
 	, public library::InputReceivableComponent
 {
 	RTTI_CLASS(DirectionalShadowMappingDemo, library::SceneComponent, library::InputReceivableComponent)
@@ -36,12 +36,12 @@ public:
 	explicit DirectionalShadowMappingDemo();
 	~DirectionalShadowMappingDemo();
 
-	void Initialize(const library::Application& app) override;
+	void Initialize() override;
 	void Update(const library::Time& time) override;
 	void Draw(const library::Time& time) override;
 
 protected:
-	void Draw_SetData(const library::MeshData& meshData) override;
+	void Draw_SetData(const library::PrimitiveData& primitiveData) override;
 
 private:
 	void UpdateTechnique();
@@ -84,7 +84,7 @@ private:
 	std::shared_ptr<library::Effect> m_depthMapEffect;
 	std::unique_ptr<library::DepthMapMaterial> m_depthMapMaterial;
 	std::unique_ptr<library::DepthMapRenderTarget> m_depthMapRenderTarget;
-	ComPtr<ID3D11RasterizerState> m_depthBiasState;
+	library::ComPtr<ID3D11RasterizerState> m_depthBiasState;
 	float m_depthBias;
 	float m_slopeScaledDepthBias;
 

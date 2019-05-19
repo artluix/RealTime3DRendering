@@ -8,7 +8,7 @@
 #include <library/Application.h>
 #include <library/Utils.h>
 #include <library/Exception.h>
-#include <library/Color.h>
+#include <library/math/Color.h>
 
 #include <library/Model/Model.h>
 #include <library/Model/Mesh.h>
@@ -36,9 +36,9 @@ TextureModelDemo::TextureModelDemo()
 	SetTextureName("EarthComposite");
 }
 
-void TextureModelDemo::Initialize(const Application& app)
+void TextureModelDemo::Initialize()
 {
-	SceneComponent::Initialize(app);
+	
 
 	// shader
 	{
@@ -138,7 +138,7 @@ void TextureModelDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateInputLayout(
 			inputElementDescriptions.data(), inputElementDescriptions.size(),
 			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
-			m_inputLayout.GetAddressOf()
+			m_currentInputLayout.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
@@ -227,7 +227,7 @@ unsigned TextureModelDemo::GetVertexSize() const
 	return sizeof(VertexType);
 }
 
-void TextureModelDemo::Draw_SetData(const MeshData& meshData)
+void TextureModelDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	auto deviceContext = GetApp()->GetDeviceContext();
 
@@ -247,7 +247,7 @@ void TextureModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, co
 
 	if (mesh.HasVertices())
 	{
-		m_meshesData = { MeshData() };
+		m_meshesData = { PrimitiveData() };
 		auto& md = m_meshesData.front();
 
 		const auto& meshVertices = mesh.GetVertices();

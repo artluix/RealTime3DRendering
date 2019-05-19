@@ -3,17 +3,18 @@
 
 namespace library
 {
-	class DirectionalLightMaterial : public LightMaterial
-	{
-		RTTI_CLASS(DirectionalLightMaterial, Material)
+class DirectionalLightMaterial : public LightMaterial
+{
+	RTTI_CLASS(DirectionalLightMaterial, Material)
 
-	public:
-		explicit DirectionalLightMaterial(Effect& effect, const std::string& defaultTechniqueName = "main11");
-		~DirectionalLightMaterial();
+public:
+	explicit DirectionalLightMaterial(
+		std::shared_ptr<Effect> effect, const std::string& defaultTechniqueName = "main11");
+	~DirectionalLightMaterial();
 
-		EffectVariable& GetLightDirection() { return m_lightDirection; }
+	EffectVariable& GetLightDirection() { return m_lightDirection; }
 
-	private:
-		EffectVariable& m_lightDirection;
-	};
+private:
+	EffectVariable& m_lightDirection;
+};
 } // namespace library

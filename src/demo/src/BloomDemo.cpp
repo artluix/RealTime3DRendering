@@ -24,7 +24,7 @@ BloomDemo::~BloomDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void BloomDemo::Initialize(const Application& app)
+void BloomDemo::Initialize()
 {
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetTextUpdateFunction(

@@ -4,54 +4,52 @@
 
 namespace library
 {
-	class Bone : public SceneNode
+class Bone : public SceneNode
+{
+	RTTI_CLASS(Bone, SceneNode)
+
+public:
+	struct VertexWeight
 	{
-		RTTI_CLASS(Bone, SceneNode)
+		float weight;
+		unsigned boneIndex;
 
+		constexpr VertexWeight(const float weight, const unsigned boneIndex)
+			: weight(weight), boneIndex(boneIndex)
+		{}
+	};
+
+	//-------------------------------------------------------------------------
+
+	class VertexWeights
+	{
 	public:
-		struct VertexWeight
-		{
-			float weight;
-			unsigned boneIndex;
+		VertexWeights();
 
-			constexpr explicit VertexWeight(const float weight, const unsigned boneIndex)
-				: weight(weight)
-				, boneIndex(boneIndex)
-			{
-			}
-		};
+		void Push(const VertexWeight& vw);
+		void Push(VertexWeight&& vw) { Push(vw); }
 
-		//-------------------------------------------------------------------------
+		unsigned GetCount() const { return static_cast<unsigned>(m_weights.size()); }
 
-		class VertexWeights
-		{
-		public:
-			explicit VertexWeights();
+		const VertexWeight& operator[](const unsigned idx) const;
 
-			void Push(const VertexWeight& vw);
-			void Push(VertexWeight&& vw) { Push(vw); }
-
-			std::size_t Size() const { return m_weights.size(); }
-
-			const VertexWeight& operator[] (const unsigned idx) const;
-
-			static inline constexpr std::size_t MaxPerVertex = 4;
-
-		private:
-			std::vector<VertexWeight> m_weights;
-		};
-
-		//-------------------------------------------------------------------------
-
-		explicit Bone(const std::string& name, const unsigned index, const math::Matrix4& offsetTransform);
-
-		unsigned GetIndex() const { return m_index; }
-		void SetIndex(const unsigned index);
-
-		const math::Matrix4& GetOffsetTransform() const { return m_offsetTransform; }
+		static inline constexpr std::size_t MaxPerVertex = 4;
 
 	private:
-		unsigned m_index; // index int model's bone
-		math::Matrix4 m_offsetTransform;
+		std::vector<VertexWeight> m_weights;
 	};
+
+	//-------------------------------------------------------------------------
+
+	Bone(const std::string& name, const unsigned index, const math::Matrix4& offsetTransform);
+
+	unsigned GetIndex() const { return m_index; }
+	void SetIndex(const unsigned index);
+
+	const math::Matrix4& GetOffsetTransform() const { return m_offsetTransform; }
+
+private:
+	unsigned m_index; // index int model's bone
+	math::Matrix4 m_offsetTransform;
+};
 } // namespace library

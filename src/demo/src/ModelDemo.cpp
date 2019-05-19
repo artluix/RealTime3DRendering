@@ -7,7 +7,7 @@
 #include <library/Application.h>
 #include <library/Utils.h>
 #include <library/Exception.h>
-#include <library/Color.h>
+#include <library/math/Color.h>
 
 #include <library/Model/Model.h>
 #include <library/Model/Mesh.h>
@@ -25,7 +25,7 @@ namespace
 
 //-------------------------------------------------------------------------
 
-void ModelDemo::Initialize(const Application& app)
+void ModelDemo::Initialize()
 {
 	DrawableComponent::Initialize(app);
 
@@ -132,7 +132,7 @@ void ModelDemo::Initialize(const Application& app)
 		auto hr = app.GetDevice()->CreateInputLayout(
 			inputElementDescriptions.data(), inputElementDescriptions.size(),
 			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
-			m_inputLayout.GetAddressOf()
+			m_currentInputLayout.GetAddressOf()
 		);
 		if (FAILED(hr))
 		{
@@ -200,7 +200,7 @@ void ModelDemo::Update(const Time& time)
 	SceneComponent::Update(time);
 }
 
-void ModelDemo::Draw_SetData(const MeshData& meshData)
+void ModelDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
@@ -255,7 +255,7 @@ void ModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const Mes
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = vertices.data();
 
-		m_meshesData = { MeshData() };
+		m_meshesData = { PrimitiveData() };
 		auto& md = m_meshesData.front();
 
 		auto hr = device->CreateBuffer(

@@ -6,12 +6,12 @@
 
 namespace library::utils
 {
-	std::wstring ToWideString(const std::string& str);
+std::wstring ToWideString(const std::string& str);
 
-	Path GetCurrentDirectory();
-	Path GetExecutableDirectory();
+Path GetCurrentDirectory();
+Path GetExecutableDirectory();
 
-	void LoadBinaryFile(const Path& path, std::vector<std::byte>& data);
+void LoadBinaryFile(const Path& path, std::vector<std::byte>& data);
 } // namespace library::utils
 
 //-------------------------------------------------------------------------

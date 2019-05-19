@@ -1,11 +1,12 @@
 #pragma once
 #include <library/Materials/EnvironmentMappingMaterial.h>
 
-#include <library/Components/ConcreteMaterialSceneComponent.hpp>
+#include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
 
+#include <library/CommonTypes.h>
 #include <library/DirectXForwardDeclarations.h>
-#include <library/Color.h>
+#include <library/math/Color.h>
 
 #include <memory>
 
@@ -15,7 +16,7 @@ namespace library
 } // namespace library
 
 class EnvironmentMappingDemo
-	: public library::ConcreteMaterialSceneComponent<library::EnvironmentMappingMaterial>
+	: public library::ConcreteMaterialPrimitiveComponent<library::EnvironmentMappingMaterial>
 	, public library::InputReceivableComponent
 {
 	RTTI_CLASS(EnvironmentMappingDemo, library::SceneComponent, library::InputReceivableComponent)
@@ -24,17 +25,17 @@ public:
 	explicit EnvironmentMappingDemo();
 	~EnvironmentMappingDemo();
 
-	void Initialize(const library::Application& app) override;
+	void Initialize() override;
 	void Update(const library::Time& time) override;
 
 protected:
-	void Draw_SetData(const library::MeshData& meshData) override;
+	void Draw_SetData(const library::PrimitiveData& primitiveData) override;
 
 private:
 	library::Color m_ambientColor;
 	float m_reflectionAmount;
 
-	ComPtr<ID3D11ShaderResourceView> m_environmentMapTexture;
+	library::ComPtr<ID3D11ShaderResourceView> m_environmentMapTexture;
 
 	std::unique_ptr<library::TextComponent> m_text;
 };

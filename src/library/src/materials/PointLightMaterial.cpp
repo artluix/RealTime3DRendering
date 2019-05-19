@@ -5,16 +5,15 @@
 
 namespace library
 {
-	PointLightMaterial::PointLightMaterial(
-		Effect& effect,
-		const std::string& defaultTechniqueName /*= "main11"*/
+PointLightMaterial::PointLightMaterial(
+	std::shared_ptr<Effect> effect,
+	const std::string& defaultTechniqueName /*= "main11"*/
 	)
-		: LightMaterial(effect, defaultTechniqueName)
+	: LightMaterial(effect, defaultTechniqueName)
 
-		, m_lightPosition(effect.GetVariable("lightPosition"))
-		, m_lightRadius(effect.GetVariable("lightRadius"))
-	{
-	}
+	, m_lightPosition(effect->GetVariable("lightPosition"))
+	, m_lightRadius(effect->GetVariable("lightRadius"))
+{}
 
-	PointLightMaterial::~PointLightMaterial() = default;
+PointLightMaterial::~PointLightMaterial() = default;
 } // namespace library

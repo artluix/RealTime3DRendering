@@ -44,12 +44,11 @@ DiffuseLightingDemo::~DiffuseLightingDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void DiffuseLightingDemo::Initialize(const Application& app)
+void DiffuseLightingDemo::Initialize()
 {
 	assert(!!GetCamera());
 
-	InitializeMaterial(app, "DiffuseLighting");
-	SceneComponent::Initialize(app);
+	InitializeMaterial("DiffuseLighting");
 
 	m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
@@ -164,7 +163,7 @@ void DiffuseLightingDemo::UpdateDirectionalLight(const Time& time)
 	}
 }
 	
-void DiffuseLightingDemo::Draw_SetData(const MeshData& meshData)
+void DiffuseLightingDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)

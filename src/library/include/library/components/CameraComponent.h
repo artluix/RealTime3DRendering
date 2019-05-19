@@ -1,18 +1,16 @@
 #pragma once
-#include "library/Components/PerspectiveProjectorComponent.h"
+#include "library/Components/ProjectorComponent.h"
 
 namespace library
 {
-	class CameraComponent : public PerspectiveProjectorComponent
-	{
-		RTTI_CLASS(CameraComponent, Component)
+class CameraComponent : public ProjectorComponent
+{
+	RTTI_CLASS(CameraComponent, ProjectorComponent)
 
-	public:
-		explicit CameraComponent();
-		using PerspectiveProjectorComponent::PerspectiveProjectorComponent;
+public:
+	using ProjectorComponent::ProjectorComponent;
+	CameraComponent();
 
-		void Initialize(const Application& app) override;
-
-		void Reset() override;
-	};
+	void Initialize() override;
+};
 } // namespace library

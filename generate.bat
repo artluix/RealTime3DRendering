@@ -4,7 +4,7 @@ set "SOURCE_FOLDER=%~dp0\src"
 set "BUILD_FOLDER=%~dp0\build"
 
 setlocal enabledelayedexpansion
-set "GENERATOR=Visual Studio 15 2017"
+set "GENERATOR=Visual Studio 16 2019"
 set TARGET=APPLICATION
 
 if /i "%1" == "tools" (
@@ -28,7 +28,7 @@ if not exist %BUILD_FOLDER% (
 )
 
 pushd %BUILD_FOLDER%
-cmake -G "%GENERATOR%" %SOURCE_FOLDER% -D%TARGET%=TRUE -T v141
+cmake -G "%GENERATOR%" %SOURCE_FOLDER% -D%TARGET%=TRUE -T v142
 popd
 
 echo.
