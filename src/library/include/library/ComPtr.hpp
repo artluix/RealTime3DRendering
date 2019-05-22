@@ -14,7 +14,7 @@ class ComPtr : public NonCopyable<ComPtr<T>>
 public:
 	using Type = T;
 
-	constexpr ComPtr(T* ptr = nullptr) noexcept : m_ptr(ptr) {}
+	constexpr explicit ComPtr(T* ptr = nullptr) noexcept : m_ptr(ptr) {}
 
 	ComPtr(ComPtr&& other) noexcept : m_ptr(other.m_ptr) { other.m_ptr = nullptr; }
 

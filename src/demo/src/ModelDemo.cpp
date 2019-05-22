@@ -7,7 +7,7 @@
 #include <library/Application.h>
 #include <library/Utils.h>
 #include <library/Exception.h>
-#include <library/math/Color.h>
+#include <library/math/Math.h>
 
 #include <library/Model/Model.h>
 #include <library/Model/Mesh.h>
@@ -16,62 +16,18 @@
 #include <d3dcompiler.h>
 
 using namespace library;
-	
+
 namespace
 {
-	constexpr float k_rotationAngle = math::Pi_Div_2;
-	constexpr float k_movementRate = 0.01f;
-}
+constexpr float k_rotationAngle = math::Pi_Div_2;
+constexpr float k_movementRate = 0.01f;
+} // namespace
 
 //-------------------------------------------------------------------------
 
 void ModelDemo::Initialize()
 {
-	DrawableComponent::Initialize();
-
-	// shader
-	{
-		const auto path = app.GetEffectsPath() + Path("Basic.fx");
-
-		ComPtr<ID3DBlob> errorBlob;
-		ComPtr<ID3DBlob> shaderBlob;
-
-		auto hr = D3DCompileFromFile(
-			path.GetWideCString(),
-			nullptr,
-			nullptr,
-			nullptr,
-			"fx_5_0",
-#if defined(DEBUG) || defined(DEBUG)
-			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-#else
-			0,
-#endif
-			0,
-			&shaderBlob,
-			&errorBlob
-		);
-		if (FAILED(hr))
-		{
-			std::string error =
-				std::string("D3DX11CompileEffectFromFile() failed: ") +
-				std::string(
-					static_cast<const char*>(errorBlob->GetBufferPointer()), errorBlob->GetBufferSize()
-				);
-			throw Exception(error.c_str(), hr);
-		}
-
-		hr = D3DX11CreateEffectFromMemory(
-			shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
-			0,
-			app.GetDevice(),
-			&m_effect
-		);
-		if (FAILED(hr))
-		{
-			throw Exception("D3DX11CreateEffectFromMemory() failed.", hr);
-		}
-	}
+	InitializeEffect("Basic", true);
 
 	// Look up the technique, pass, and WVP variable from the effect
 	m_technique = m_effect->GetTechniqueByName("main11");
@@ -107,6 +63,7 @@ void ModelDemo::Initialize()
 		D3DX11_PASS_DESC passDesc;
 		m_pass->GetDesc(&passDesc);
 
+		// clang-format off
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{
 			{
@@ -128,12 +85,14 @@ void ModelDemo::Initialize()
 				0
 			},
 		};
+		// clang-format on
 
-		auto hr = app.GetDevice()->CreateInputLayout(
-			inputElementDescriptions.data(), inputElementDescriptions.size(),
-			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
-			&m_currentInputLayout
-		);
+		auto hr = GetApp().GetDevice()->CreateInputLayout(
+			inputElementDescriptions.data(),
+			inputElementDescriptions.size(),
+			passDesc.pIAInputSignature,
+			passDesc.IAInputSignatureSize,
+			&m_inputLayout);
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateInputLayout() failed.", hr);
@@ -141,19 +100,11 @@ void ModelDemo::Initialize()
 	}
 
 	// Load the model
-	Model model(app, "Sphere", true);
+	Model model(GetApp(), "Sphere", true);
 
 	// Create vertex and index buffers
 	const auto& mesh = model.GetMesh(0);
-	CreateVertexBuffer(app.GetDevice(), mesh);
-
-	if (mesh.HasIndices())
-	{
-		m_primitivesData.front().indexBuffer = std::make_optional(BufferData{
-			mesh.CreateIndexBuffer,
-			mesh.GetIndicesCount
-		});
-	}
+	CreatePrimitivesData(GetApp().GetDevice(), mesh);
 }
 
 void ModelDemo::Update(const Time& time)
@@ -164,7 +115,7 @@ void ModelDemo::Update(const Time& time)
 		if (m_keyboard->IsKeyDown(Key::R))
 		{
 			const auto rotationDelta = k_rotationAngle * time.elapsed.GetSeconds();
-			Rotate(rotationDelta);
+			Rotate(math::Quaternion::RotationPitchYawRoll(math::Vector3(rotationDelta)));
 		}
 
 		// movement
@@ -197,29 +148,27 @@ void ModelDemo::Update(const Time& time)
 		}
 	}
 
-	SceneComponent::Update(time);
+	SimplePrimitiveComponent::Update(time);
 }
 
 void ModelDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	auto wvp = GetWorldMatrix();
-	if (!!m_camera)
-		wvp *= m_camera->GetViewProjectionMatrix();
-	m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
+	if (auto camera = GetCamera())
+		wvp *= camera->GetViewProjectionMatrix();
 
-	m_pass->Apply(0, GetApp().GetDeviceContext());
+	m_wvpVariable->SetMatrix(static_cast<const float*>(wvp));
+
+	SimplePrimitiveComponent::Draw_SetData(primitiveData);
 }
 
-unsigned ModelDemo::GetVertexSize() const
+void ModelDemo::CreatePrimitivesData(ID3D11Device* const device, const Mesh& mesh)
 {
-	return sizeof(VertexPositionColor);
-}
+	using VertexType = VertexPositionColor;
 
-void ModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const Mesh& mesh)
-{
 	if (mesh.HasVertices())
 	{
-		std::vector<VertexPositionColor> vertices;
+		std::vector<VertexType> vertices;
 
 		const auto& meshVertices = mesh.GetVertices();
 		const auto verticesCount = meshVertices.size();
@@ -242,30 +191,31 @@ void ModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const Mes
 			for (unsigned i = 0; i < verticesCount; i++)
 			{
 				const auto& position = meshVertices[i];
-				const auto& color = DirectX::XMFLOAT4(Color::Random());
+				const auto& color = DirectX::XMFLOAT4(math::Color::Random());
 				vertices.emplace_back(DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f), color);
 			}
 		}
 
 		D3D11_BUFFER_DESC vertexBufferDesc{};
-		vertexBufferDesc.ByteWidth = sizeof(VertexPositionColor) * verticesCount;
+		vertexBufferDesc.ByteWidth = sizeof(VertexType) * verticesCount;
 		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = vertices.data();
 
-		m_primitivesData = { PrimitiveData() };
-		auto& md = m_primitivesData.front();
+		m_primitivesData.clear();
+		auto& pd = m_primitivesData.emplace_back(PrimitiveData());
 
-		auto hr = device->CreateBuffer(
-			&vertexBufferDesc,
-			&vertexSubResourceData,
-			&md.vertexBuffer.buffer
-		);
+		pd.stride = sizeof(VertexType);
+
+		if (mesh.HasIndices())
+			pd.indexBuffer = mesh.CreateIndexBufferData();
+
+		pd.vertexBuffer.elementsCount = verticesCount;
+
+		auto hr = device->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, &pd.vertexBuffer.buffer);
 		if (FAILED(hr))
-		{
 			throw Exception("ID3D11Device::CreateBuffer() failed.");
-		}
 	}
 }

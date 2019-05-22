@@ -25,7 +25,8 @@ namespace library
 struct TangentBinormal
 {
 	TangentBinormal(const DirectX::XMFLOAT3& tangent, const DirectX::XMFLOAT3& binormal)
-		: tangent(tangent), binormal(binormal)
+		: tangent(tangent)
+		, binormal(binormal)
 	{}
 
 	DirectX::XMFLOAT3 tangent;
