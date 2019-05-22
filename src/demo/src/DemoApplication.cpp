@@ -285,7 +285,7 @@ void DemoApplication::Initialize()
 	m_components.push_back(camera);
 	//m_components.push_back(m_grid);
 	m_components.push_back(fps);
-	m_components.push_back(triangle);
+	//m_components.push_back(triangle);
 	//m_components.push_back(cube);
 	//m_components.push_back(skybox);
 	m_components.push_back(postProcessingText);

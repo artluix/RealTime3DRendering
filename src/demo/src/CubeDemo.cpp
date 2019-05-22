@@ -98,7 +98,7 @@ void CubeDemo::Initialize()
 	// index buffer
 	{
 		// clang-format off
-		constexpr std::array<short, 2 * 3 * 6> k_indices =
+		constexpr std::array<unsigned, 2 * 3 * 6> k_indices =
 		{
 			0, 1, 2,
 			0, 2, 3,
@@ -125,7 +125,7 @@ void CubeDemo::Initialize()
 
 		D3D11_BUFFER_DESC indexBufferDesc{};
 		indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-		indexBufferDesc.ByteWidth = sizeof(short) * k_indices.size();
+		indexBufferDesc.ByteWidth = sizeof(unsigned) * k_indices.size();
 		indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
 
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
@@ -188,7 +188,7 @@ void CubeDemo::Update(const Time& time)
 		if (m_keyboard->IsKeyDown(Key::R))
 		{
 			const auto rotationDelta = k_rotationAngle * time.elapsed.GetSeconds();
-			Rotate(math::Quaternion(rotationDelta));
+			Rotate(math::Quaternion::RotationPitchYawRoll(math::Vector3(rotationDelta)));
 		}
 
 		// movement
@@ -211,7 +211,7 @@ void CubeDemo::Update(const Time& time)
 		}
 	}
 
-	SceneComponent::Update(time);
+	PrimitiveComponent::Update(time);
 }
 
 void CubeDemo::Draw_SetData(const PrimitiveData& primitiveData)
@@ -219,7 +219,8 @@ void CubeDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	auto wvp = GetWorldMatrix();
 	if (auto camera = GetCamera())
 		wvp *= camera->GetViewProjectionMatrix();
-	m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
+
+	m_wvpVariable->SetMatrix(static_cast<const float*>(wvp));
 
 	SimplePrimitiveComponent::Draw_SetData(primitiveData);
 }
