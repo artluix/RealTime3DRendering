@@ -27,7 +27,7 @@ namespace
 
 void ModelDemo::Initialize()
 {
-	DrawableComponent::Initialize(app);
+	DrawableComponent::Initialize();
 
 	// shader
 	{
@@ -48,8 +48,8 @@ void ModelDemo::Initialize()
 			0,
 #endif
 			0,
-			shaderBlob.GetAddressOf(),
-			errorBlob.GetAddressOf()
+			&shaderBlob,
+			&errorBlob
 		);
 		if (FAILED(hr))
 		{
@@ -65,7 +65,7 @@ void ModelDemo::Initialize()
 			shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
 			0,
 			app.GetDevice(),
-			m_effect.GetAddressOf()
+			&m_effect
 		);
 		if (FAILED(hr))
 		{
@@ -132,7 +132,7 @@ void ModelDemo::Initialize()
 		auto hr = app.GetDevice()->CreateInputLayout(
 			inputElementDescriptions.data(), inputElementDescriptions.size(),
 			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
-			m_currentInputLayout.GetAddressOf()
+			&m_currentInputLayout
 		);
 		if (FAILED(hr))
 		{
@@ -149,9 +149,9 @@ void ModelDemo::Initialize()
 
 	if (mesh.HasIndices())
 	{
-		m_meshesData.front().indexBuffer = std::make_optional(BufferData{
-			mesh.CreateIndexBuffer(),
-			mesh.GetIndicesCount()
+		m_primitivesData.front().indexBuffer = std::make_optional(BufferData{
+			mesh.CreateIndexBuffer,
+			mesh.GetIndicesCount
 		});
 	}
 }
@@ -200,14 +200,14 @@ void ModelDemo::Update(const Time& time)
 	SceneComponent::Update(time);
 }
 
-void ModelDemo::Draw_SetData(const PrimitiveData& meshData)
+void ModelDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
 		wvp *= m_camera->GetViewProjectionMatrix();
 	m_wvpVariable->SetMatrix(reinterpret_cast<const float*>(&wvp));
 
-	m_pass->Apply(0, GetApp()->GetDeviceContext());
+	m_pass->Apply(0, GetApp().GetDeviceContext());
 }
 
 unsigned ModelDemo::GetVertexSize() const
@@ -255,13 +255,13 @@ void ModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const Mes
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = vertices.data();
 
-		m_meshesData = { PrimitiveData() };
-		auto& md = m_meshesData.front();
+		m_primitivesData = { PrimitiveData() };
+		auto& md = m_primitivesData.front();
 
 		auto hr = device->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
-			md.vertexBuffer.buffer.GetAddressOf()
+			&md.vertexBuffer.buffer
 		);
 		if (FAILED(hr))
 		{

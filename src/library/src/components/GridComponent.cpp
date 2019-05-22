@@ -81,7 +81,7 @@ void GridComponent::Draw_SetData(const PrimitiveData& primitiveData)
 
 	GetMaterial()->GetWorldViewProjection() << math::XMMatrix(wvp);
 
-	PrimitiveComponent::Draw_SetData(primitiveData);
+	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }
 
 //-------------------------------------------------------------------------

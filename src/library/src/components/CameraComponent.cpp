@@ -23,6 +23,14 @@ CameraComponent::CameraComponent() : ProjectorComponent(ProjectionType::Perspect
 	m_farPlaneDistance = k_defaultFarPlaneDistance;
 }
 
+CameraComponent::CameraComponent(
+	const float nearPlaneDistance,
+	const float farPlaneDistance,
+	const float fieldOfView,
+	const float aspectRatio)
+	: ProjectorComponent(nearPlaneDistance, farPlaneDistance, fieldOfView, aspectRatio)
+{}
+
 void CameraComponent::Initialize()
 {
 	m_aspectRatio = GetApp().GetAspectRatio();

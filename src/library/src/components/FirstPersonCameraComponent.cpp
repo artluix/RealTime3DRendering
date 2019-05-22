@@ -52,28 +52,26 @@ void FirstPersonCameraComponent::Update(const Time& time)
 	{
 		if (m_mouse->WasButtonReleased(MouseButton::Left))
 		{
-			m_rotationStartPoint.x = 0.f;
-			m_rotationStartPoint.y = 0.f;
+			m_rotationStartPoint = math::Vector2();
 		}
 
 		if (m_mouse->WasButtonPressed(MouseButton::Left))
 		{
-			m_rotationStartPoint.x = m_mouse->GetX() * m_mouseSensitivity;
-			m_rotationStartPoint.y = m_mouse->GetY() * m_mouseSensitivity;
+			m_rotationStartPoint =
+				math::Vector2(float(m_mouse->GetX()), float(m_mouse->GetY())) * m_mouseSensitivity;
 		}
 
 		if (m_mouse->IsButtonHeldDown(MouseButton::Left))
 		{
 			auto prevPoint = m_rotationStartPoint;
-
-			m_rotationStartPoint.x = m_mouse->GetX() * m_mouseSensitivity;
-			m_rotationStartPoint.y = m_mouse->GetY() * m_mouseSensitivity;
+			m_rotationStartPoint =
+				math::Vector2(float(m_mouse->GetX()), float(m_mouse->GetY())) * m_mouseSensitivity;
 
 			const auto rotationDelta = m_rotationStartPoint - prevPoint;
 			const auto rotation = rotationDelta * m_rotationRate * elapsedTime;
 
 			const auto pitchQuat = math::Quaternion::RotationAxis(GetRight(), rotation.y);
-			const auto yawQuat = math::Quaternion::RotationAxis(math::Vector3::Up, rotation.x); // y
+			const auto yawQuat = math::Quaternion::RotationAxis(math::Vector3::Up, rotation.x);
 
 			Rotate(pitchQuat * yawQuat);
 		}
@@ -85,37 +83,24 @@ void FirstPersonCameraComponent::Update(const Time& time)
 		math::Vector2 movementAmount;
 
 		if (m_keyboard->IsKeyDown(Key::W))
-		{
 			movementAmount.y += 1.0f;
-		}
 
 		if (m_keyboard->IsKeyDown(Key::S))
-		{
 			movementAmount.y -= 1.0f;
-		}
 
 		if (m_keyboard->IsKeyDown(Key::A))
-		{
 			movementAmount.x -= 1.0f;
-		}
 
 		if (m_keyboard->IsKeyDown(Key::D))
-		{
 			movementAmount.x += 1.0f;
-		}
 
 		if (movementAmount)
 		{
 			const auto movement = movementAmount * m_movementRate * elapsedTime;
-			auto position = GetPosition();
-
 			const auto strafe = GetRight() * movement.x;
-			position += strafe;
-
 			const auto forward = GetDirection() * movement.y;
-			position += forward;
 
-			SetPosition(position);
+			Translate(strafe + forward);
 		}
 	}
 

@@ -27,9 +27,13 @@ public:
 	const D3DX11_TECHNIQUE_DESC& GetTechniqueDesc() const { return m_techniqueDesc; }
 
 	bool HasPass(const std::string& passName) const;
-	EffectPass& GetPass(const std::string& passName) const;
-	EffectPass& GetPass(const unsigned passIdx) const;
 	unsigned GetPassesCount() const { return static_cast<unsigned>(m_passes.size()); }
+
+	const EffectPass& GetPass(const std::string& passName) const;
+	EffectPass& GetPass(const std::string& passName);
+
+	const EffectPass& GetPass(const unsigned passIdx) const;
+	EffectPass& GetPass(const unsigned passIdx);
 
 private:
 	using EffectPassPtr = std::unique_ptr<EffectPass>;

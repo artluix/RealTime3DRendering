@@ -47,6 +47,10 @@ public:
 protected:
 	void UpdateWorldMatrix();
 
+	virtual void OnTranslation(const math::Vector3& translationDelta) {}
+	virtual void OnRotation(const math::Quaternion& rotationDelta) {}
+	virtual void OnScaling(const math::Vector3& scalingDelta) {}
+
 	math::Transform m_transform;
 
 	math::Vector3 m_direction;
@@ -54,6 +58,7 @@ protected:
 	math::Vector3 m_up;
 
 	math::Matrix4 m_initialTransformMatrix = math::Matrix4::Identity;
+
 	math::Matrix4 m_worldMatrix = math::Matrix4::Identity;
 	bool m_isWorldMatrixDirty = true;
 };

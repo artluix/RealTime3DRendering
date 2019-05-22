@@ -67,8 +67,8 @@ void NormalMappingDemo::Initialize()
 			Vertex(XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), XMFLOAT2(1.0f, 1.0f), backward, right),
 		};
 
-		m_meshesData = { PrimitiveData() };
-		auto& md = m_meshesData.front();
+		m_primitivesData = { PrimitiveData() };
+		auto& md = m_primitivesData.front();
 
 		md.vertexBuffer.elementsCount = vertices.size();
 		md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
@@ -89,7 +89,7 @@ void NormalMappingDemo::Initialize()
 	);
 	m_proxyModel->SetRotation(GetRotation() + k_proxyModelRotationOffset);
 	m_proxyModel->SetCamera(*GetCamera());
-	m_proxyModel->Initialize(app);
+	m_proxyModel->Initialize();
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -105,7 +105,7 @@ void NormalMappingDemo::Initialize()
 			return woss.str();
 		}
 	);
-	m_text->Initialize(app);
+	m_text->Initialize();
 }
 
 void NormalMappingDemo::Update(const Time& time)
@@ -223,7 +223,7 @@ void NormalMappingDemo::UpdateSpecularLight(const Time& time)
 	}
 }
 
-void NormalMappingDemo::Draw_SetData(const PrimitiveData& meshData)
+void NormalMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
@@ -240,8 +240,8 @@ void NormalMappingDemo::Draw_SetData(const PrimitiveData& meshData)
 	m_material->GetAmbientColor() << m_ambientColor;
 	m_material->GetLightColor() << m_directionalLight->GetColor();
 	m_material->GetLightDirection() << m_directionalLight->GetDirection();
-	m_material->GetColorTexture() << meshData.texture.Get();
+	m_material->GetColorTexture() << primitiveData.texture.Get();
 	m_material->GetNormalMap() << m_normalMapTexture.Get();
 
-	SceneComponent::Draw_SetData(meshData);
+	SceneComponent::Draw_SetData(primitiveData);
 }

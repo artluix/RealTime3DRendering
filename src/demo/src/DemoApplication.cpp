@@ -2,47 +2,47 @@
 
 #include "TriangleDemo.h"
 #include "CubeDemo.h"
-#include "ModelDemo.h"
-#include "TextureModelDemo.h"
+// #include "ModelDemo.h"
+// #include "TextureModelDemo.h"
 
-#include "DiffuseLightingDemo.h"
-#include "PointLightDemo.h"
-#include "SpotlightDemo.h"
-
-#include "BasicMaterialDemo.h"
-#include "TextureMappingDemo.h"
-
-#include "EnvironmentMappingDemo.h"
-#include "DisplacementMappingDemo.h"
-#include "NormalMappingDemo.h"
-#include "TransparencyMappingDemo.h"
-#include "FogDemo.h"
-
-#include "ColorFilterDemo.h"
-#include "GaussianBlurDemo.h"
-#include "BloomDemo.h"
-#include "DistortionMappingDemo.h"
-
-#include "ProjectiveTextureMappingDemo.h"
-#include "ProjectiveTextureMappingDepthMapDemo.h"
-#include "ShadowMappingDemo.h"
-#include "DirectionalShadowMappingDemo.h"
-
-#include "AnimationDemo.h"
-
-#include "GeometryShaderDemo.h"
-
-//-------------------------------------------------------------------------
-
+// #include "DiffuseLightingDemo.h"
+// #include "PointLightDemo.h"
+// #include "SpotlightDemo.h"
+// 
+// #include "BasicMaterialDemo.h"
+// #include "TextureMappingDemo.h"
+// 
+// #include "EnvironmentMappingDemo.h"
+// #include "DisplacementMappingDemo.h"
+// #include "NormalMappingDemo.h"
+// #include "TransparencyMappingDemo.h"
+// #include "FogDemo.h"
+// 
+// #include "ColorFilterDemo.h"
+// #include "GaussianBlurDemo.h"
+// #include "BloomDemo.h"
+// #include "DistortionMappingDemo.h"
+// 
+// #include "ProjectiveTextureMappingDemo.h"
+// #include "ProjectiveTextureMappingDepthMapDemo.h"
+// #include "ShadowMappingDemo.h"
+// #include "DirectionalShadowMappingDemo.h"
+// 
+// #include "AnimationDemo.h"
+// 
+// #include "GeometryShaderDemo.h"
+// 
+// //-------------------------------------------------------------------------
+// 
 #include <library/Components/FpsComponent.h>
 #include <library/Components/KeyboardComponent.h>
 #include <library/Components/MouseComponent.h>
 #include <library/Components/GridComponent.h>
 #include <library/Components/FirstPersonCameraComponent.h>
-#include <library/Components/SkyboxComponent.h>
-#include <library/Components/FullScreenQuadComponent.h>
-
-#include <library/RenderTargets/FullScreenRenderTarget.h>
+// #include <library/Components/SkyboxComponent.h>
+// #include <library/Components/FullScreenQuadComponent.h>
+// 
+// #include <library/RenderTargets/FullScreenRenderTarget.h>
 
 //-------------------------------------------------------------------------
 
@@ -50,6 +50,8 @@
 #include <library/Effect/EffectVariable.h>
 #include <library/Effect/EffectPass.h>
 #include <library/Effect/EffectTechnique.h>
+
+#include <library/Color.h>
 
 #include <library/Path.h>
 #include <library/Utils.h>
@@ -64,7 +66,8 @@ using namespace library;
 
 namespace
 {
-	const auto k_backgroundColor = Color::CornFlower;
+	//const auto k_backgroundColor = Color::CornFlower;
+	const auto k_backgroundColor = Color::Black;
 }
 
 DemoApplication::DemoApplication(
@@ -144,8 +147,8 @@ void DemoApplication::Initialize()
 	auto fps = std::make_shared<FpsComponent>();
 
 	// skybox
-	auto skybox = std::make_shared<SkyboxComponent>("Maskonaive2_1024", 100.f);
-	skybox->SetCamera(*camera);
+// 	auto skybox = std::make_shared<SkyboxComponent>("Maskonaive2_1024", 100.f);
+// 	skybox->SetCamera(*camera);
 
 	// grid
 	m_grid = std::make_shared<GridComponent>();
@@ -161,80 +164,80 @@ void DemoApplication::Initialize()
 	cube->SetKeyboard(*m_keyboard);
 
 	// model
-	auto model = std::make_shared<ModelDemo>();
-	model->SetCamera(*camera);
-	model->SetKeyboard(*m_keyboard);
+// 	auto model = std::make_shared<ModelDemo>();
+// 	model->SetCamera(*camera);
+// 	model->SetKeyboard(*m_keyboard);
 
 	// texture with model
-	auto textureModel = std::make_shared<TextureModelDemo>();
-	textureModel->SetCamera(*camera);
-	textureModel->SetKeyboard(*m_keyboard);
-	textureModel->SetMouse(*m_mouse);
+// 	auto textureModel = std::make_shared<TextureModelDemo>();
+// 	textureModel->SetCamera(*camera);
+// 	textureModel->SetKeyboard(*m_keyboard);
+// 	textureModel->SetMouse(*m_mouse);
 
 	// basic
-	auto basic = std::make_shared<BasicMaterialDemo>();
-	basic->SetCamera(*camera);
-	basic->SetKeyboard(*m_keyboard);
+// 	auto basic = std::make_shared<BasicMaterialDemo>();
+// 	basic->SetCamera(*camera);
+// 	basic->SetKeyboard(*m_keyboard);
 
 	// texture mapping
-	auto textureMapping = std::make_shared<TextureMappingDemo>();
-	textureMapping->SetCamera(*camera);
-	textureMapping->SetKeyboard(*m_keyboard);
+// 	auto textureMapping = std::make_shared<TextureMappingDemo>();
+// 	textureMapping->SetCamera(*camera);
+// 	textureMapping->SetKeyboard(*m_keyboard);
 
 	// diffuse lighting
-	auto diffuseLighting = std::make_shared<DiffuseLightingDemo>();
-	diffuseLighting->SetCamera(*camera);
-	diffuseLighting->SetKeyboard(*m_keyboard);
+// 	auto diffuseLighting = std::make_shared<DiffuseLightingDemo>();
+// 	diffuseLighting->SetCamera(*camera);
+// 	diffuseLighting->SetKeyboard(*m_keyboard);
 
 	// point light
-	auto pointLight = std::make_shared<PointLightDemo>();
-	pointLight->SetCamera(*camera);
-	pointLight->SetKeyboard(*m_keyboard);
+// 	auto pointLight = std::make_shared<PointLightDemo>();
+// 	pointLight->SetCamera(*camera);
+// 	pointLight->SetKeyboard(*m_keyboard);
 
 	// spotlight
-	auto spotlight = std::make_shared<SpotlightDemo>();
-	spotlight->SetCamera(*camera);
-	spotlight->SetKeyboard(*m_keyboard);
+// 	auto spotlight = std::make_shared<SpotlightDemo>();
+// 	spotlight->SetCamera(*camera);
+// 	spotlight->SetKeyboard(*m_keyboard);
 
 	// normal mapping
-	auto normalMapping = std::make_shared<NormalMappingDemo>();
-	normalMapping->SetCamera(*camera);
-	normalMapping->SetKeyboard(*m_keyboard);
+// 	auto normalMapping = std::make_shared<NormalMappingDemo>();
+// 	normalMapping->SetCamera(*camera);
+// 	normalMapping->SetKeyboard(*m_keyboard);
 
 	// environment mapping
-	auto environmentMapping = std::make_shared<EnvironmentMappingDemo>();
-	environmentMapping->SetCamera(*camera);
-	environmentMapping->SetKeyboard(*m_keyboard);
+// 	auto environmentMapping = std::make_shared<EnvironmentMappingDemo>();
+// 	environmentMapping->SetCamera(*camera);
+// 	environmentMapping->SetKeyboard(*m_keyboard);
 
 	// transparency mapping
-	auto transparencyMapping = std::make_shared<TransparencyMappingDemo>();
-	transparencyMapping->SetCamera(*camera);
-	transparencyMapping->SetKeyboard(*m_keyboard);
+// 	auto transparencyMapping = std::make_shared<TransparencyMappingDemo>();
+// 	transparencyMapping->SetCamera(*camera);
+// 	transparencyMapping->SetKeyboard(*m_keyboard);
 
 	// displacement mapping
-	auto displacementMapping = std::make_shared<DisplacementMappingDemo>();
-	displacementMapping->SetCamera(*camera);
-	displacementMapping->SetKeyboard(*m_keyboard);
+// 	auto displacementMapping = std::make_shared<DisplacementMappingDemo>();
+// 	displacementMapping->SetCamera(*camera);
+// 	displacementMapping->SetKeyboard(*m_keyboard);
 
 	// fog
-	auto fog = std::make_shared<FogDemo>();
-	fog->SetCamera(*camera);
-	fog->SetKeyboard(*m_keyboard);
+// 	auto fog = std::make_shared<FogDemo>();
+// 	fog->SetCamera(*camera);
+// 	fog->SetKeyboard(*m_keyboard);
 
 	// render target
-	m_sceneRenderTarget = std::make_unique<FullScreenRenderTarget>(*this);
+// 	m_sceneRenderTarget = std::make_unique<FullScreenRenderTarget>(*this);
 
 	// post-processing
 	{
-		//auto postProcessing = new ColorFilter();
-		//auto postProcessing = new GaussianBlurDemo();
-		//auto postProcessing = new BloomDemo();
-		auto postProcessing = new DistortionMappingDemo();
-		postProcessing->SetKeyboard(*m_keyboard);
-		postProcessing->SetCamera(*camera);
-		postProcessing->SetSceneTexture(*(m_sceneRenderTarget->GetOutputTexture()));
+		// auto postProcessing = new ColorFilter();
+		// auto postProcessing = new GaussianBlurDemo();
+		// auto postProcessing = new BloomDemo();
+		// auto postProcessing = new DistortionMappingDemo();
+// 		postProcessing->SetKeyboard(*m_keyboard);
+// 		postProcessing->SetCamera(*camera);
+// 		postProcessing->SetSceneTexture(*(m_sceneRenderTarget->GetOutputTexture()));
 
-		m_postProcessing = std::unique_ptr<PostProcessingComponent>(postProcessing);
+// 		m_postProcessing = std::unique_ptr<PostProcessingComponent>(postProcessing);
 	}
 
 	// post-processing text component
@@ -250,31 +253,31 @@ void DemoApplication::Initialize()
 	postProcessingText->SetPosition(math::Vector2(0.f, 70.f));
 
 	// projection
-	auto projectiveTextureMapping = std::make_shared<ProjectiveTextureMappingDemo>();
-	projectiveTextureMapping->SetCamera(*camera);
-	projectiveTextureMapping->SetKeyboard(*m_keyboard);
+// 	auto projectiveTextureMapping = std::make_shared<ProjectiveTextureMappingDemo>();
+// 	projectiveTextureMapping->SetCamera(*camera);
+// 	projectiveTextureMapping->SetKeyboard(*m_keyboard);
 
-	auto projectiveTextureDepthMapMapping = std::make_shared<ProjectiveTextureMappingDepthMapDemo>();
-	projectiveTextureDepthMapMapping->SetCamera(*camera);
-	projectiveTextureDepthMapMapping->SetKeyboard(*m_keyboard);
+// 	auto projectiveTextureDepthMapMapping = std::make_shared<ProjectiveTextureMappingDepthMapDemo>();
+// 	projectiveTextureDepthMapMapping->SetCamera(*camera);
+// 	projectiveTextureDepthMapMapping->SetKeyboard(*m_keyboard);
 
-	auto shadowMapping = std::make_shared<ShadowMappingDemo>();
-	shadowMapping->SetCamera(*camera);
-	shadowMapping->SetKeyboard(*m_keyboard);
+// 	auto shadowMapping = std::make_shared<ShadowMappingDemo>();
+// 	shadowMapping->SetCamera(*camera);
+// 	shadowMapping->SetKeyboard(*m_keyboard);
 
-	auto directionalShadowMapping = std::make_shared<DirectionalShadowMappingDemo>();
-	directionalShadowMapping->SetCamera(*camera);
-	directionalShadowMapping->SetKeyboard(*m_keyboard);
+// 	auto directionalShadowMapping = std::make_shared<DirectionalShadowMappingDemo>();
+// 	directionalShadowMapping->SetCamera(*camera);
+// 	directionalShadowMapping->SetKeyboard(*m_keyboard);
 
 	// animation
-	auto animation = std::make_shared<AnimationDemo>();
-	animation->SetCamera(*camera);
-	animation->SetKeyboard(*m_keyboard);
+// 	auto animation = std::make_shared<AnimationDemo>();
+// 	animation->SetCamera(*camera);
+// 	animation->SetKeyboard(*m_keyboard);
 
 	// geometry shader
-	auto geometryShader = std::make_shared<GeometryShaderDemo>();
-	geometryShader->SetCamera(*camera);
-	geometryShader->SetKeyboard(*m_keyboard);
+// 	auto geometryShader = std::make_shared<GeometryShaderDemo>();
+// 	geometryShader->SetCamera(*camera);
+// 	geometryShader->SetKeyboard(*m_keyboard);
 
 	// push needed components
 	m_components.push_back(m_keyboard);
@@ -282,16 +285,18 @@ void DemoApplication::Initialize()
 	m_components.push_back(camera);
 	//m_components.push_back(m_grid);
 	m_components.push_back(fps);
+	m_components.push_back(triangle);
+	//m_components.push_back(cube);
 	//m_components.push_back(skybox);
 	m_components.push_back(postProcessingText);
 	//m_components.push_back(shadowMapping);
 	//m_components.push_back(directionalShadowMapping);
 	//m_components.push_back(animation);
-	m_components.push_back(geometryShader);
+// 	m_components.push_back(geometryShader);
 
 	Application::Initialize();
 
-	m_postProcessing->Initialize(*this);
+// 	m_postProcessing->Initialize(*this);
 }
 
 void DemoApplication::Update(const Time& time)
@@ -308,15 +313,15 @@ void DemoApplication::Update(const Time& time)
 			m_postProcessingEnabled = !m_postProcessingEnabled;
 	}
 
-	if (m_postProcessingEnabled)
-		m_postProcessing->Update(time);
+	if (m_postProcessingEnabled) {}
+// 		m_postProcessing->Update(time);
 
 	Application::Update(time);
 }
 
 void DemoApplication::Draw(const Time& time)
 {
-	if (m_postProcessingEnabled)
+	/*if (m_postProcessingEnabled)
 	{
 		// Render the scene to an off-screen texture
 		m_sceneRenderTarget->Begin();
@@ -350,7 +355,7 @@ void DemoApplication::Draw(const Time& time)
 
 		m_renderer->RenderUI(time);
 	}
-	else
+	else*/
 	{
 		m_deviceContext->ClearRenderTargetView(
 			m_renderTargetView.Get(),

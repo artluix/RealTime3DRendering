@@ -45,10 +45,10 @@ void FullScreenQuadComponent::SetActiveTechnique(
 {
 	assert(!!m_material);
 
-	const auto& technique = m_material->GetEffect().GetTechnique(techniqueName);
+	auto& technique = m_material->GetEffect().GetTechnique(techniqueName);
 
-	m_effectPass = &technique.GetPass(passName);
-	m_inputLayout = m_material->GetInputLayout(*m_effectPass);
+	m_pass = &technique.GetPass(passName);
+	m_inputLayout = m_material->GetInputLayout(*m_pass);
 }
 
 void FullScreenQuadComponent::SetMaterialUpdateFunction(const MaterialUpdateFunction& func)
@@ -84,9 +84,10 @@ void FullScreenQuadComponent::Initialize()
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = vertices.data();
 
-		auto hr = GetApp()
-					  .GetDevice()
-					  ->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, &pd.vertexBuffer.buffer);
+		auto hr = GetApp().GetDevice()->CreateBuffer(
+			&vertexBufferDesc,
+			&vertexSubResourceData,
+			&pd.vertexBuffer.buffer);
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateBuffer", hr);
@@ -108,9 +109,10 @@ void FullScreenQuadComponent::Initialize()
 		D3D11_SUBRESOURCE_DATA indexSubResourceData{};
 		indexSubResourceData.pSysMem = indices.data();
 
-		auto hr = GetApp()
-					  .GetDevice()
-					  ->CreateBuffer(&indexBufferDesc, &indexSubResourceData, &pd.indexBuffer->buffer);
+		auto hr = GetApp().GetDevice()->CreateBuffer(
+			&indexBufferDesc,
+			&indexSubResourceData,
+			&pd.indexBuffer->buffer);
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateBuffer", hr);
@@ -126,6 +128,6 @@ void FullScreenQuadComponent::Draw_SetData(const PrimitiveData& primitiveData)
 	if (!!m_materialUpdateFunction)
 		m_materialUpdateFunction();
 
-	PrimitiveComponent::Draw_SetData(primitiveData);
+	m_pass->Apply(0, GetApp().GetDeviceContext());
 }
 } // namespace library

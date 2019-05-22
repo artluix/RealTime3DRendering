@@ -66,8 +66,8 @@ void ProjectiveTextureMappingDemo::Initialize()
 			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward),
 		};
 
-		m_meshesData = { PrimitiveData() };
-		auto& md = m_meshesData.front();
+		m_primitivesData = { PrimitiveData() };
+		auto& md = m_primitivesData.front();
 
 		md.vertexBuffer.elementsCount = vertices.size();
 		md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
@@ -87,7 +87,7 @@ void ProjectiveTextureMappingDemo::Initialize()
 	m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.5f);
 	m_proxyModel->SetCamera(*camera);
 	m_proxyModel->SetPosition(m_pointLight->GetPosition());
-	m_proxyModel->Initialize(app);
+	m_proxyModel->Initialize();
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -105,32 +105,32 @@ void ProjectiveTextureMappingDemo::Initialize()
 			return woss.str();
 		}
 	);
-	m_text->Initialize(app);
+	m_text->Initialize();
 
 	// specific
 	SetScaling(math::Vector3(10.f));
 
 	m_projector = std::make_unique<PerspectiveProjectorComponent>();
 	m_projector->SetPosition(m_pointLight->GetPosition());
-	m_projector->Initialize(app);
+	m_projector->Initialize();
 
 	m_projectorFrustum.SetProjectionMatrix(m_projector->GetProjectionMatrix());
 
 	m_renderableProjectorFrustum = std::make_unique<RenderableFrustumComponent>();
 	m_renderableProjectorFrustum->SetCamera(*camera);
 	m_renderableProjectorFrustum->SetPosition(m_pointLight->GetPosition());
-	m_renderableProjectorFrustum->Initialize(app);
+	m_renderableProjectorFrustum->Initialize();
 	m_renderableProjectorFrustum->InitializeGeometry(m_projectorFrustum);
 
 	// texture scaling matrix
 	{
 		ComPtr<ID3D11Resource> projectedTextureResource;
-		m_projectedTexture->GetResource(projectedTextureResource.GetAddressOf());
+		m_projectedTexture->GetResource(&projectedTextureResource);
 
 		ComPtr<ID3D11Texture2D> projectedTexture;
 		auto hr = projectedTextureResource->QueryInterface(
 			IID_ID3D11Texture2D,
-			reinterpret_cast<void**>(projectedTexture.GetAddressOf())
+			reinterpret_cast<void**>(&projectedTexture)
 		);
 		if (FAILED(hr))
 		{
@@ -144,7 +144,7 @@ void ProjectiveTextureMappingDemo::Initialize()
 	}
 }
 
-void ProjectiveTextureMappingDemo::Draw_SetData(const PrimitiveData& meshData)
+void ProjectiveTextureMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	const auto world = GetWorldMatrix();
 
@@ -169,12 +169,12 @@ void ProjectiveTextureMappingDemo::Draw_SetData(const PrimitiveData& meshData)
 	m_material->GetLightPosition() << m_pointLight->GetPosition();
 	m_material->GetLightRadius() << m_pointLight->GetRadius();
 	
-	m_material->GetColorTexture() << meshData.texture.Get();
+	m_material->GetColorTexture() << primitiveData.texture.Get();
 	m_material->GetProjectedTexture() << m_projectedTexture.Get();
 
 	m_material->GetProjectiveTextureMatrix() << projectiveTextureMatrix;
 
-	SceneComponent::Draw_SetData(meshData);
+	SceneComponent::Draw_SetData(primitiveData);
 }
 
 //-------------------------------------------------------------------------

@@ -78,8 +78,8 @@ void ProjectiveTextureMappingDepthMapDemo::Initialize()
 	{
 		using Vertex = Material::Vertex;
 
-		m_meshesData = { PrimitiveData() };
-		auto& md = m_meshesData.front();
+		m_primitivesData = { PrimitiveData() };
+		auto& md = m_primitivesData.front();
 
 		const auto backward = DirectX::XMFLOAT3(math::Vector3::Backward);
 
@@ -136,21 +136,21 @@ void ProjectiveTextureMappingDepthMapDemo::Initialize()
 	m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.5f);
 	m_proxyModel->SetCamera(*camera);
 	m_proxyModel->SetPosition(m_pointLight->GetPosition());
-	m_proxyModel->Initialize(app);
+	m_proxyModel->Initialize();
 
 	// specific
 	SetScaling(math::Vector3(10.f));
 
 	m_projector = std::make_unique<PerspectiveProjectorComponent>();
 	m_projector->SetPosition(m_pointLight->GetPosition());
-	m_projector->Initialize(app);
+	m_projector->Initialize();
 
 	m_projectorFrustum.SetProjectionMatrix(m_projector->GetProjectionMatrix());
 
 	m_renderableProjectorFrustum = std::make_unique<RenderableFrustumComponent>();
 	m_renderableProjectorFrustum->SetCamera(*camera);
 	m_renderableProjectorFrustum->SetPosition(m_pointLight->GetPosition());
-	m_renderableProjectorFrustum->Initialize(app);
+	m_renderableProjectorFrustum->Initialize();
 	m_renderableProjectorFrustum->InitializeGeometry(m_projectorFrustum);
 
 	InitializeProjectedTextureScalingMatrix();
@@ -185,7 +185,7 @@ void ProjectiveTextureMappingDepthMapDemo::Initialize()
 	m_uiDepthMap = std::make_unique<UIComponent>();
 	m_uiDepthMap->SetDestinationRect(k_depthMapDestinationRect);
 	m_uiDepthMap->SetTexture(m_depthMapRenderTarget->GetOutputTexture());
-	m_uiDepthMap->Initialize(app);
+	m_uiDepthMap->Initialize();
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -204,22 +204,22 @@ void ProjectiveTextureMappingDepthMapDemo::Initialize()
 			return woss.str();
 		}
 	);
-	m_text->Initialize(app);
+	m_text->Initialize();
 }
 
 //-------------------------------------------------------------------------
 
 void ProjectiveTextureMappingDepthMapDemo::Draw(const library::Time& time)
 {
-	auto deviceContext = GetApp()->GetDeviceContext();
+	auto deviceContext = GetApp().GetDeviceContext();
 
-	const auto& md = m_meshesData.front();
+	const auto& md = m_primitivesData.front();
 
 	//-------------------------------------------------------------------------
 	// depth map pass (render the teapot model only)
 	//-------------------------------------------------------------------------
 	{
-		GetApp()->GetRenderer()->SaveRenderState(RenderState::Rasterizer);
+		GetApp().GetRenderer()->SaveRenderState(RenderState::Rasterizer);
 		m_depthMapRenderTarget->Begin();
 
 		deviceContext->IASetPrimitiveTopology(md.primitiveTopology);
@@ -237,7 +237,7 @@ void ProjectiveTextureMappingDepthMapDemo::Draw(const library::Time& time)
 		const auto stride = m_depthMapMaterial->GetVertexSize();
 		const unsigned offset = 0;
 		deviceContext->IASetVertexBuffers(
-			0, 1, m_model.positionVertexBuffer.buffer.GetAddressOf(), &stride, &offset
+			0, 1, &m_model.positionVertexBuffer.buffer, &stride, &offset
 		);
 		if (m_model.indexBuffer)
 			deviceContext->IASetIndexBuffer(m_model.indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
@@ -253,7 +253,7 @@ void ProjectiveTextureMappingDepthMapDemo::Draw(const library::Time& time)
 			deviceContext->Draw(m_model.positionVertexBuffer.elementsCount, 0);
 
 		m_depthMapRenderTarget->End();
-		GetApp()->GetRenderer()->RestoreRenderState(RenderState::Rasterizer);
+		GetApp().GetRenderer()->RestoreRenderState(RenderState::Rasterizer);
 	}
 
 	//-------------------------------------------------------------------------
@@ -262,12 +262,12 @@ void ProjectiveTextureMappingDepthMapDemo::Draw(const library::Time& time)
 	{
 		// Draw plane
 		SceneComponent::Draw(time);
-		GetApp()->UnbindPixelShaderResources(0, 3);
+		GetApp().UnbindPixelShaderResources(0, 3);
 
 		// Draw teapot model
 		const auto stride = m_material->GetVertexSize();
 		const unsigned offset{ 0 };
-		deviceContext->IASetVertexBuffers(0, 1, m_model.vertexBuffer.buffer.GetAddressOf(), &stride, &offset);
+		deviceContext->IASetVertexBuffers(0, 1, &m_model.vertexBuffer.buffer, &stride, &offset);
 		if (m_model.indexBuffer)
 			deviceContext->IASetIndexBuffer(m_model.indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
@@ -305,11 +305,11 @@ void ProjectiveTextureMappingDepthMapDemo::Draw(const library::Time& time)
 		else
 			deviceContext->Draw(m_model.vertexBuffer.elementsCount, 0);
 
-		GetApp()->UnbindPixelShaderResources(0, 3);
+		GetApp().UnbindPixelShaderResources(0, 3);
 	}
 }
 
-void ProjectiveTextureMappingDepthMapDemo::Draw_SetData(const PrimitiveData& meshData)
+void ProjectiveTextureMappingDepthMapDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	const auto world = GetWorldMatrix();
 
@@ -334,7 +334,7 @@ void ProjectiveTextureMappingDepthMapDemo::Draw_SetData(const PrimitiveData& mes
 	m_material->GetLightPosition() << m_pointLight->GetPosition();
 	m_material->GetLightRadius() << m_pointLight->GetRadius();
 
-	m_material->GetColorTexture() << meshData.texture.Get();
+	m_material->GetColorTexture() << primitiveData.texture.Get();
 	m_material->GetProjectedTexture() << m_projectedTexture.Get();
 
 	m_material->GetProjectiveTextureMatrix() << projectiveTextureMatrix;
@@ -342,7 +342,7 @@ void ProjectiveTextureMappingDepthMapDemo::Draw_SetData(const PrimitiveData& mes
 	m_material->GetDepthMapTexture() << m_depthMapRenderTarget->GetOutputTexture();
 	m_material->GetDepthBias() << m_depthBias;
 
-	SceneComponent::Draw_SetData(meshData);
+	SceneComponent::Draw_SetData(primitiveData);
 }
 
 //-------------------------------------------------------------------------

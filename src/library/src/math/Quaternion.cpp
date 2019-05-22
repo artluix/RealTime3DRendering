@@ -101,7 +101,7 @@ bool Quaternion::operator==(const Quaternion& other) const
 
 bool Quaternion::operator!=(const Quaternion& other) const
 {
-	return DirectX::XMQuaternionEqual(XMVector(*this), XMVector(other));
+	return DirectX::XMQuaternionNotEqual(XMVector(*this), XMVector(other));
 }
 
 //-------------------------------------------------------------------------
@@ -115,7 +115,7 @@ Quaternion Quaternion::operator*(const Quaternion& other) const
 
 Quaternion& Quaternion::operator*=(const Quaternion& other)
 {
-	return *this = DirectX::XMVectorMultiply(XMVector(*this), XMVector(other));
+	return *this = DirectX::XMQuaternionMultiply(XMVector(*this), XMVector(other));
 }
 
 //-------------------------------------------------------------------------

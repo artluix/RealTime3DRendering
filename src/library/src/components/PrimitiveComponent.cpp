@@ -18,14 +18,6 @@ PrimitiveComponent::~PrimitiveComponent() = default;
 
 //-------------------------------------------------------------------------
 
-ID3D11InputLayout* PrimitiveComponent::GetInputLayout() const
-{
-	if (GetMaterial())
-		return m_inputLayout;
-
-	return m_dxInputLayout.Get();
-}
-
 ID3D11ShaderResourceView* PrimitiveComponent::GetTexture(const unsigned textureIdx) const
 {
 	assert(textureIdx < m_textures.size());
@@ -74,20 +66,6 @@ void PrimitiveComponent::Draw_SetIA(const PrimitiveData& primitiveData)
 	if (!!primitiveData.indexBuffer)
 	{
 		deviceContext->IASetIndexBuffer(primitiveData.indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-	}
-}
-
-void PrimitiveComponent::Draw_SetData(const PrimitiveData& primitiveData)
-{
-	auto deviceContext = GetApp().GetDeviceContext();
-
-	if (GetMaterial())
-	{
-		m_effectPass->Apply(0, deviceContext);
-	}
-	else
-	{
-		m_dxEffectPass->Apply(0, deviceContext);
 	}
 }
 

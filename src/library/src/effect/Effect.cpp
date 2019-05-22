@@ -14,7 +14,7 @@ namespace library
 {
 std::map<std::string, std::weak_ptr<Effect>> Effect::s_effectsCache;
 
-Effect::Effect(const Application& app, const std::string& name) : m_app(app), m_name(name)
+Effect::Effect(const Application& app, const std::string& name) : m_app(app), m_name(name), m_effectDesc{}
 {}
 
 Effect::~Effect() = default;

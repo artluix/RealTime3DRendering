@@ -27,8 +27,8 @@ GeometryShaderDemo::GeometryShaderDemo()
 
 void GeometryShaderDemo::Initialize()
 {
-	m_meshesData = { PrimitiveData() };
-	m_meshesData.front().primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
+	m_primitivesData = { PrimitiveData() };
+	m_primitivesData.front().primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
 
 	InitializeMaterial("PointSprite");
 
@@ -44,7 +44,7 @@ void GeometryShaderDemo::Initialize()
 			return woss.str();
 		}
 	);
-	m_text->Initialize(app);
+	m_text->Initialize();
 }
 
 void GeometryShaderDemo::Update(const Time& time)
@@ -82,7 +82,7 @@ void GeometryShaderDemo::Update(const Time& time)
 
 //-------------------------------------------------------------------------
 
-void GeometryShaderDemo::Draw_SetData(const PrimitiveData& meshData)
+void GeometryShaderDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	if (!!m_camera)
 	{
@@ -91,16 +91,16 @@ void GeometryShaderDemo::Draw_SetData(const PrimitiveData& meshData)
 		m_material->GetViewProjection() << m_camera->GetViewProjectionMatrix();
 	}
 
-	m_material->GetColorTexture() << meshData.texture.Get();
+	m_material->GetColorTexture() << primitiveData.texture.Get();
 
-	SceneComponent::Draw_SetData(meshData);
+	SceneComponent::Draw_SetData(primitiveData);
 }
 
 void GeometryShaderDemo::Draw_Render(const library::PrimitiveData& primitiveData)
 {
-	SceneComponent::Draw_Render(meshData);
+	SceneComponent::Draw_Render(primitiveData);
 
-	GetApp()->GetDeviceContext()->GSSetShader(nullptr, nullptr, 0);
+	GetApp().GetDeviceContext()->GSSetShader(nullptr, nullptr, 0);
 }
 
 //-------------------------------------------------------------------------
@@ -132,11 +132,11 @@ void GeometryShaderDemo::InitializeRandomPoints()
 		vertices.emplace_back(DirectX::XMFLOAT4(x, y, z, 1.f), DirectX::XMFLOAT2(size, size));
 	}
 
-	auto& md = m_meshesData.front();
+	auto& md = m_primitivesData.front();
 
 	md.vertexBuffer.elementsCount = vertices.size();
 	md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
-		GetApp()->GetDevice(),
+		GetApp().GetDevice(),
 		vertices
 	);
 }
@@ -157,11 +157,11 @@ void GeometryShaderDemo::InitializeFixedPoints()
 		);
 	}
 
-	auto& md = m_meshesData.front();
+	auto& md = m_primitivesData.front();
 
 	md.vertexBuffer.elementsCount = vertices.size();
 	md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
-		GetApp()->GetDevice(),
+		GetApp().GetDevice(),
 		vertices
 	);
 }

@@ -6,6 +6,7 @@
 #include <library/Application.h>
 #include <library/Utils.h>
 #include <library/Exception.h>
+#include <library/Math/Math.h>
 
 #include <d3dx11effect.h>
 #include <d3dcompiler.h>
@@ -14,65 +15,17 @@ using namespace library;
 
 void TriangleDemo::Initialize()
 {
-	
-
-	// shader
-	{
-		const auto path = app.GetEffectsPath() + Path("Basic.fx");
-
-		ComPtr<ID3DBlob> errorBlob;
-		ComPtr<ID3DBlob> shaderBlob;
-
-		auto hr = D3DCompileFromFile(
-			path.GetWideCString(),
-			nullptr,
-			nullptr,
-			nullptr,
-			"fx_5_0",
-#if defined(DEBUG) || defined(DEBUG)
-			D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
-#else
-			0,
-#endif
-			0,
-			shaderBlob.GetAddressOf(),
-			errorBlob.GetAddressOf()
-		);
-		if (FAILED(hr))
-		{
-			std::string error =
-				std::string("D3DX11CompileEffectFromFile() failed: ") +
-				std::string(
-					static_cast<const char*>(errorBlob->GetBufferPointer()), errorBlob->GetBufferSize()
-				);
-			throw Exception(error.c_str(), hr);
-		}
-
-		hr = D3DX11CreateEffectFromMemory(
-			shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
-			0,
-			app.GetDevice(),
-			m_effect.GetAddressOf()
-		);
-		if (FAILED(hr))
-		{
-			throw Exception("D3DX11CreateEffectFromMemory() failed.", hr);
-		}
-	}
+	InitializeEffect("Basic", true);
 
 	// Look up the technique, pass, and WVP variable from the effect
 	m_technique = m_effect->GetTechniqueByName("main11");
 	if (!m_technique)
-	{
 		throw Exception("ID3DX11Effect::GetTechniqueByName() could not find the specified technique.");
-	}
 
 	// get pass
 	m_pass = m_technique->GetPassByName("p0");
 	if (!m_pass)
-	{
 		throw Exception("ID3DX11Effect::GetPassByName() could not find the specified pass.");
-	}
 
 	// get abstract variable
 	if (auto variable = m_effect->GetVariableByName("WorldViewProjection"))
@@ -94,6 +47,7 @@ void TriangleDemo::Initialize()
 		D3DX11_PASS_DESC passDesc;
 		m_pass->GetDesc(&passDesc);
 
+		// clang-format off
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{
 			{
@@ -115,12 +69,14 @@ void TriangleDemo::Initialize()
 				0
 			},
 		};
+		// clang-format on
 
-		auto hr = app.GetDevice()->CreateInputLayout(
-			inputElementDescriptions.data(), inputElementDescriptions.size(),
-			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
-			m_currentInputLayout.GetAddressOf()
-		);
+		auto hr = GetApp().GetDevice()->CreateInputLayout(
+			inputElementDescriptions.data(),
+			inputElementDescriptions.size(),
+			passDesc.pIAInputSignature,
+			passDesc.IAInputSignatureSize,
+			&m_inputLayout);
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateInputLayout() failed.", hr);
@@ -133,8 +89,7 @@ void TriangleDemo::Initialize()
 
 		const float l = sqrt(3.f) / 2;
 
-		const std::array<VertexPositionColor, 3> vertices =
-		{
+		const std::array<VertexPositionColor, 3> vertices = {
 			// left red
 			VertexPositionColor(XMFLOAT4(-l, -0.5f, 0.0f, 1.0f), XMFLOAT4(1.0f, 0.0f, 0.0f, 1.0f)),
 			// up green
@@ -143,10 +98,12 @@ void TriangleDemo::Initialize()
 			VertexPositionColor(XMFLOAT4(l, -0.5f, 0.0f, 1.0f), XMFLOAT4(0.0f, 0.0f, 1.0f, 1.0f)),
 		};
 
-		m_meshesData = { PrimitiveData() };
-		auto& md = m_meshesData.front();
+		m_primitivesData.clear();
+		auto& pd = m_primitivesData.emplace_back(PrimitiveData());
 
-		md.vertexBuffer.elementsCount = vertices.size();
+		pd.stride = sizeof(VertexPositionColor);
+
+		pd.vertexBuffer.elementsCount = vertices.size();
 
 		D3D11_BUFFER_DESC vertexBufferDesc{};
 		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
@@ -156,11 +113,10 @@ void TriangleDemo::Initialize()
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = vertices.data();
 
-		auto hr = app.GetDevice()->CreateBuffer(
+		auto hr = GetApp().GetDevice()->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
-			md.vertexBuffer.buffer.GetAddressOf()
-		);
+			&pd.vertexBuffer.buffer);
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateBuffer() failed.", hr);
@@ -170,23 +126,20 @@ void TriangleDemo::Initialize()
 
 void TriangleDemo::Update(const Time& time)
 {
-	auto rotation = GetRotation();
-	rotation.z += math::Pi_Div_2 * time.elapsed.GetSeconds();
-	SetRotation(rotation);
+	const float rotationY = math::Pi_Div_2 * time.elapsed.GetSeconds();
+	const auto q = math::Quaternion::RotationPitchYawRoll(0.f, rotationY, 0.f);
+	Rotate(q);
 
-	SceneComponent::Update(time);
-}
-
-unsigned TriangleDemo::GetVertexSize() const
-{
-	return sizeof(VertexPositionColor);
+	SimplePrimitiveComponent::Update(time);
 }
 
 void TriangleDemo::Draw_SetData(const PrimitiveData& meshData)
 {
 	auto wvp = GetWorldMatrix();
-	if (!!m_camera)
-		wvp *= m_camera->GetViewProjectionMatrix();
+	if (auto camera = GetCamera())
+		wvp *= camera->GetViewProjectionMatrix();
 
-	m_pass->Apply(0, GetApp()->GetDeviceContext());
+	m_wvpVariable->SetMatrix(static_cast<const float*>(wvp));
+
+	m_pass->Apply(0, GetApp().GetDeviceContext());
 }

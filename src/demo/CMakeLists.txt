@@ -18,75 +18,75 @@ if(APPLICATION)
             src/TriangleDemo.h
             src/TriangleDemo.cpp
 
-            src/ModelDemo.h
-            src/ModelDemo.cpp
+            # src/ModelDemo.h
+            # src/ModelDemo.cpp
 
-            src/TextureModelDemo.h
-            src/TextureModelDemo.cpp
+            # src/TextureModelDemo.h
+            # src/TextureModelDemo.cpp
 
         # with materials
-            src/AnimationDemo.h
-            src/AnimationDemo.cpp
+            # src/AnimationDemo.h
+            # src/AnimationDemo.cpp
 
-            src/BasicMaterialDemo.h
-            src/BasicMaterialDemo.cpp
+            # src/BasicMaterialDemo.h
+            # src/BasicMaterialDemo.cpp
 
-            src/BasicTessellationDemo.h
-            src/BasicTessellationDemo.cpp
+            # src/BasicTessellationDemo.h
+            # src/BasicTessellationDemo.cpp
 
-            src/BloomDemo.h
-            src/BloomDemo.cpp
+            # src/BloomDemo.h
+            # src/BloomDemo.cpp
 
-            src/ColorFilterDemo.h
-            src/ColorFilterDemo.cpp
+            # src/ColorFilterDemo.h
+            # src/ColorFilterDemo.cpp
 
-            src/DiffuseLightingDemo.h
-            src/DiffuseLightingDemo.cpp
+            # src/DiffuseLightingDemo.h
+            # src/DiffuseLightingDemo.cpp
 
-            src/DirectionalShadowMappingDemo.h
-            src/DirectionalShadowMappingDemo.cpp
+            # src/DirectionalShadowMappingDemo.h
+            # src/DirectionalShadowMappingDemo.cpp
 
-            src/DisplacementMappingDemo.h
-            src/DisplacementMappingDemo.cpp
+            # src/DisplacementMappingDemo.h
+            # src/DisplacementMappingDemo.cpp
 
-            src/DistortionMappingDemo.h
-            src/DistortionMappingDemo.cpp
+            # src/DistortionMappingDemo.h
+            # src/DistortionMappingDemo.cpp
 
-            src/EnvironmentMappingDemo.h
-            src/EnvironmentMappingDemo.cpp
+            # src/EnvironmentMappingDemo.h
+            # src/EnvironmentMappingDemo.cpp
 
-            src/FogDemo.h
-            src/FogDemo.cpp
+            # src/FogDemo.h
+            # src/FogDemo.cpp
 
-            src/GaussianBlurDemo.h
-            src/GaussianBlurDemo.cpp
+            # src/GaussianBlurDemo.h
+            # src/GaussianBlurDemo.cpp
 
-            src/GeometryShaderDemo.h
-            src/GeometryShaderDemo.cpp
+            # src/GeometryShaderDemo.h
+            # src/GeometryShaderDemo.cpp
 
-            src/NormalMappingDemo.h
-            src/NormalMappingDemo.cpp
+            # src/NormalMappingDemo.h
+            # src/NormalMappingDemo.cpp
 
-            src/PointLightDemo.h
-            src/PointLightDemo.cpp
+            # src/PointLightDemo.h
+            # src/PointLightDemo.cpp
 
-            src/ProjectiveTextureMappingDemo.h
-            src/ProjectiveTextureMappingDemo.cpp
+            # src/ProjectiveTextureMappingDemo.h
+            # src/ProjectiveTextureMappingDemo.cpp
 
-            src/ProjectiveTextureMappingDepthMapDemo.h
-            src/ProjectiveTextureMappingDepthMapDemo.cpp
+            # src/ProjectiveTextureMappingDepthMapDemo.h
+            # src/ProjectiveTextureMappingDepthMapDemo.cpp
 
-            src/ShadowMappingDemo.h
-            src/ShadowMappingDemo.cpp
+            # src/ShadowMappingDemo.h
+            # src/ShadowMappingDemo.cpp
 
-            src/SpotlightDemo.h
-            src/SpotlightDemo.cpp
+            # src/SpotlightDemo.h
+            # src/SpotlightDemo.cpp
 
-            src/TextureMappingDemo.h
-            src/TextureMappingDemo.cpp
+            # src/TextureMappingDemo.h
+            # src/TextureMappingDemo.cpp
 
-            src/TransparencyMappingDemo.h
-            src/TransparencyMappingDemo.cpp
+            # src/TransparencyMappingDemo.h
+            # src/TransparencyMappingDemo.cpp
     )
 
     add_executable(demo WIN32 ${DEMO_SOURCES})

@@ -64,8 +64,8 @@ void TransparencyMappingDemo::Initialize()
 			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward),
 		};
 
-		m_meshesData = { PrimitiveData() };
-		auto& md = m_meshesData.front();
+		m_primitivesData = { PrimitiveData() };
+		auto& md = m_primitivesData.front();
 
 		md.vertexBuffer.elementsCount = vertices.size();
 		md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
@@ -86,7 +86,7 @@ void TransparencyMappingDemo::Initialize()
 	m_proxyModel->SetPosition(m_pointLight->GetPosition());
 	m_proxyModel->Rotate(math::Vector3(0.f, math::Pi_Div_2, 0.f));
 	m_proxyModel->SetCamera(*GetCamera());
-	m_proxyModel->Initialize(app);
+	m_proxyModel->Initialize();
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -102,7 +102,7 @@ void TransparencyMappingDemo::Initialize()
 			return woss.str();
 		}
 	);
-	m_text->Initialize(app);
+	m_text->Initialize();
 }
 
 void TransparencyMappingDemo::Update(const Time& time)
@@ -217,7 +217,7 @@ void TransparencyMappingDemo::UpdateSpecularLight(const Time& time)
 	}
 }
 
-void TransparencyMappingDemo::Draw_SetData(const PrimitiveData& meshData)
+void TransparencyMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
@@ -237,19 +237,19 @@ void TransparencyMappingDemo::Draw_SetData(const PrimitiveData& meshData)
 	m_material->GetSpecularPower() << m_specularPower;
 	m_material->GetSpecularColor() << m_specularColor;
 
-	m_material->GetColorTexture() << meshData.texture.Get();
+	m_material->GetColorTexture() << primitiveData.texture.Get();
 	m_material->GetTransparencyMap() << m_transparencyMapTexture.Get();
 
-	SceneComponent::Draw_SetData(meshData);
+	SceneComponent::Draw_SetData(primitiveData);
 }
 
-void TransparencyMappingDemo::Draw_Render(const PrimitiveData& meshData)
+void TransparencyMappingDemo::Draw_Render(const PrimitiveData& primitiveData)
 {
-	auto deviceContext = GetApp()->GetDeviceContext();
-	auto renderer = GetApp()->GetRenderer();
+	auto deviceContext = GetApp().GetDeviceContext();
+	auto renderer = GetApp().GetRenderer();
 
 	renderer->SaveRenderState(RenderState::Blend);
 	deviceContext->OMSetBlendState(BlendStates::Alpha, 0, 0xFFFFFFFF);
-	SceneComponent::Draw_Render(meshData);
+	SceneComponent::Draw_Render(primitiveData);
 	renderer->RestoreRenderState(RenderState::Blend);
 }

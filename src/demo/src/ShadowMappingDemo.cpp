@@ -92,8 +92,8 @@ void ShadowMappingDemo::Initialize()
 			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward),
 		};
 
-		m_meshesData = { PrimitiveData() };
-		auto& md = m_meshesData.front();
+		m_primitivesData = { PrimitiveData() };
+		auto& md = m_primitivesData.front();
 
 		md.vertexBuffer.elementsCount = vertices.size();
 		md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
@@ -134,21 +134,21 @@ void ShadowMappingDemo::Initialize()
 	m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.5f);
 	m_proxyModel->SetCamera(*camera);
 	m_proxyModel->SetPosition(m_pointLight->GetPosition());
-	m_proxyModel->Initialize(app);
+	m_proxyModel->Initialize();
 
 	// specific
 	SetScaling(math::Vector3(10.f));
 
 	m_projector = std::make_unique<PerspectiveProjectorComponent>();
 	m_projector->SetPosition(m_pointLight->GetPosition());
-	m_projector->Initialize(app);
+	m_projector->Initialize();
 
 	m_projectorFrustum.SetProjectionMatrix(m_projector->GetProjectionMatrix());
 
 	m_renderableProjectorFrustum = std::make_unique<RenderableFrustumComponent>();
 	m_renderableProjectorFrustum->SetCamera(*camera);
 	m_renderableProjectorFrustum->SetPosition(m_pointLight->GetPosition());
-	m_renderableProjectorFrustum->Initialize(app);
+	m_renderableProjectorFrustum->Initialize();
 	m_renderableProjectorFrustum->InitializeGeometry(m_projectorFrustum);
 
 	InitializeProjectedTextureScalingMatrix();
@@ -185,7 +185,7 @@ void ShadowMappingDemo::Initialize()
 	m_uiDepthMap = std::make_unique<UIComponent>();
 	m_uiDepthMap->SetDestinationRect(k_depthMapDestinationRect);
 	m_uiDepthMap->SetTexture(m_depthMapRenderTarget->GetOutputTexture());
-	m_uiDepthMap->Initialize(app);
+	m_uiDepthMap->Initialize();
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -212,22 +212,22 @@ void ShadowMappingDemo::Initialize()
 			return woss.str();
 		}
 	);
-	m_text->Initialize(app);
+	m_text->Initialize();
 }
 
 //-------------------------------------------------------------------------
 
 void ShadowMappingDemo::Draw(const library::Time& time)
 {
-	auto deviceContext = GetApp()->GetDeviceContext();
+	auto deviceContext = GetApp().GetDeviceContext();
 
-	const auto& md = m_meshesData.front();
+	const auto& md = m_primitivesData.front();
 
 	//-------------------------------------------------------------------------
 	// depth map pass (render the teapot model only)
 	//-------------------------------------------------------------------------
 	{
-		GetApp()->GetRenderer()->SaveRenderState(RenderState::Rasterizer);
+		GetApp().GetRenderer()->SaveRenderState(RenderState::Rasterizer);
 		m_depthMapRenderTarget->Begin();
 
 		deviceContext->IASetPrimitiveTopology(md.primitiveTopology);
@@ -247,7 +247,7 @@ void ShadowMappingDemo::Draw(const library::Time& time)
 		const auto stride = m_depthMapMaterial->GetVertexSize();
 		const unsigned offset = 0;
 		deviceContext->IASetVertexBuffers(
-			0, 1, m_model.positionVertexBuffer.buffer.GetAddressOf(), &stride, &offset
+			0, 1, &m_model.positionVertexBuffer.buffer, &stride, &offset
 		);
 		if (m_model.indexBuffer)
 			deviceContext->IASetIndexBuffer(m_model.indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
@@ -264,7 +264,7 @@ void ShadowMappingDemo::Draw(const library::Time& time)
 
 		m_depthMapRenderTarget->End();
 
-		GetApp()->GetRenderer()->RestoreRenderState(RenderState::Rasterizer);
+		GetApp().GetRenderer()->RestoreRenderState(RenderState::Rasterizer);
 	}
 
 	//-------------------------------------------------------------------------
@@ -273,12 +273,12 @@ void ShadowMappingDemo::Draw(const library::Time& time)
 	{
 		// Draw plane
 		SceneComponent::Draw(time);
-		GetApp()->UnbindPixelShaderResources(0, 3);
+		GetApp().UnbindPixelShaderResources(0, 3);
 
 		// Draw teapot model
 		const auto stride = m_material->GetVertexSize();
 		const unsigned offset{ 0 };
-		deviceContext->IASetVertexBuffers(0, 1, m_model.vertexBuffer.buffer.GetAddressOf(), &stride, &offset);
+		deviceContext->IASetVertexBuffers(0, 1, &m_model.vertexBuffer.buffer, &stride, &offset);
 		if (m_model.indexBuffer)
 			deviceContext->IASetIndexBuffer(m_model.indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
@@ -316,11 +316,11 @@ void ShadowMappingDemo::Draw(const library::Time& time)
 		else
 			deviceContext->Draw(m_model.vertexBuffer.elementsCount, 0);
 
-		GetApp()->UnbindPixelShaderResources(0, 3);
+		GetApp().UnbindPixelShaderResources(0, 3);
 	}
 }
 
-void ShadowMappingDemo::Draw_SetData(const PrimitiveData& meshData)
+void ShadowMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	const auto world = GetWorldMatrix();
 
@@ -346,14 +346,14 @@ void ShadowMappingDemo::Draw_SetData(const PrimitiveData& meshData)
 	m_material->GetLightRadius() << m_pointLight->GetRadius();
 
 	//m_material->GetDepthBias() << m_depthBias;
-	m_material->GetColorTexture() << meshData.texture.Get();
+	m_material->GetColorTexture() << primitiveData.texture.Get();
 	m_material->GetShadowMapTexture() << m_depthMapRenderTarget->GetOutputTexture();
 	m_material->GetProjectiveTextureMatrix() << projectiveTextureMatrix;
 
 	const math::Vector2 shadowMapSize(k_depthMapWidth, k_depthMapHeight);
 	m_material->GetShadowMapSize() << shadowMapSize;
 
-	SceneComponent::Draw_SetData(meshData);
+	SceneComponent::Draw_SetData(primitiveData);
 }
 
 //-------------------------------------------------------------------------
@@ -449,8 +449,8 @@ void ShadowMappingDemo::UpdateDepthBiasState()
 	rasterizerStateDesc.DepthBias = static_cast<int>(m_depthBias);
 	rasterizerStateDesc.SlopeScaledDepthBias = m_slopeScaledDepthBias;
 
-	const auto hr = GetApp()->GetDevice()->CreateRasterizerState(
-		&rasterizerStateDesc, m_depthBiasState.GetAddressOf()
+	const auto hr = GetApp().GetDevice()->CreateRasterizerState(
+		&rasterizerStateDesc, &m_depthBiasState
 	);
 	if (FAILED(hr))
 	{

@@ -32,6 +32,7 @@ if(APPLICATION)
                 include/library/Components/ProxyModelComponent.h
                 include/library/Components/RenderableFrustumComponent.h
                 include/library/Components/SceneComponent.h
+                include/library/Components/SimplePrimitiveComponent.h
                 include/library/Components/SkyboxComponent.h
                 include/library/Components/SpotlightComponent.h
                 include/library/Components/TextComponent.h
@@ -151,6 +152,7 @@ if(APPLICATION)
                 src/Components/ProxyModelComponent.cpp
                 src/Components/RenderableFrustumComponent.cpp
                 src/Components/SceneComponent.cpp
+                src/Components/SimplePrimitiveComponent.cpp
                 src/Components/SkyboxComponent.cpp
                 src/Components/SpotlightComponent.cpp
                 src/Components/TextComponent.cpp

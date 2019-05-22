@@ -181,30 +181,32 @@ void ProjectorComponent::Initialize()
 
 void ProjectorComponent::Update(const Time& time)
 {
-	const bool isViewUpdated = UpdateViewMatrix();
-	const bool isProjectionUpdated = UpdateProjectionMatrix();
+	SceneComponent::Update(time);
 
-	if (isViewUpdated || isProjectionUpdated)
+	const bool isViewProjectionMatrixDirty = m_isViewMatrixDirty || m_isProjectionMatrixDirty;
+
+	UpdateViewMatrix();
+	UpdateProjectionMatrix();
+
+	if (isViewProjectionMatrixDirty)
 		UpdateViewProjectionMatrix();
 }
 
 //-------------------------------------------------------------------------
 
-bool ProjectorComponent::UpdateViewMatrix()
+void ProjectorComponent::UpdateViewMatrix()
 {
 	if (!m_isViewMatrixDirty)
-		return false;
+		return;
 
 	m_viewMatrix = math::Matrix4::LookToRH(m_transform.position, m_direction, m_up);
 	m_isViewMatrixDirty = false;
-
-	return true;
 }
 
-bool ProjectorComponent::UpdateProjectionMatrix()
+void ProjectorComponent::UpdateProjectionMatrix()
 {
 	if (!m_isProjectionMatrixDirty)
-		return false;
+		return;
 
 	switch (m_projectionType)
 	{
@@ -217,19 +219,33 @@ bool ProjectorComponent::UpdateProjectionMatrix()
 			break;
 
 		case ProjectionType::Perspective:
-			m_projectionMatrix = math::Matrix4::
-				PerspectiveFovRH(m_fieldOfView, m_aspectRatio, m_nearPlaneDistance, m_farPlaneDistance);
+			m_projectionMatrix = math::Matrix4::PerspectiveFovRH(
+				m_fieldOfView,
+				m_aspectRatio,
+				m_nearPlaneDistance,
+				m_farPlaneDistance);
 			break;
 
 		default: break;
 	}
 
 	m_isProjectionMatrixDirty = false;
-	return true;
 }
 
 void ProjectorComponent::UpdateViewProjectionMatrix()
 {
 	m_viewProjectionMatrix = m_viewMatrix * m_projectionMatrix;
+}
+
+//-------------------------------------------------------------------------
+
+void ProjectorComponent::OnTranslation(const math::Vector3& translationDelta)
+{
+	m_isViewMatrixDirty = true;
+}
+
+void ProjectorComponent::OnRotation(const math::Quaternion& rotationDelta)
+{
+	m_isViewMatrixDirty = true;
 }
 } // namespace library

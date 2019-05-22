@@ -7,17 +7,16 @@
 
 namespace library
 {
-	class Path;
+class Path;
 
-	class KeyboardComponent;
-	class MouseComponent;
+class KeyboardComponent;
+class MouseComponent;
 
-	class GridComponent;
+class GridComponent;
 
-	class FullScreenRenderTarget;
-	class PostProcessingComponent;
+class FullScreenRenderTarget;
+class PostProcessingComponent;
 } // namespace library
-
 
 class DemoApplication : public library::Application
 {
@@ -26,8 +25,7 @@ public:
 		const HINSTANCE instanceHandle,
 		const std::wstring& windowClass,
 		const std::wstring& windowTitle,
-		const int showCmd
-	);
+		const int showCmd);
 	~DemoApplication();
 
 	void Initialize() override;
@@ -45,8 +43,8 @@ private:
 
 	std::shared_ptr<library::GridComponent> m_grid;
 
-	std::unique_ptr<library::FullScreenRenderTarget> m_sceneRenderTarget;
-	std::unique_ptr<library::PostProcessingComponent> m_postProcessing;
+// 	std::unique_ptr<library::FullScreenRenderTarget> m_sceneRenderTarget;
+// 	std::unique_ptr<library::PostProcessingComponent> m_postProcessing;
 	bool m_postProcessingEnabled;
 
 	library::ComPtr<IDirectInput8> m_directInput;

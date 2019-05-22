@@ -94,5 +94,5 @@ DerivePointerAlignment: false
 MaxEmptyLinesToKeep: 1
 
 PenaltyExcessCharacter: 80
-PenaltyBreakBeforeFirstCallParameter: 1000
+PenaltyBreakBeforeFirstCallParameter: 80
 PenaltyBreakFirstLessLess: 1000

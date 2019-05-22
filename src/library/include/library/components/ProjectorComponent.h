@@ -69,11 +69,13 @@ public:
 	void Update(const Time& time) override;
 
 	// void Reset();
-	bool UpdateViewMatrix();
-	bool UpdateProjectionMatrix();
-
 protected:
-	virtual void UpdateViewProjectionMatrix();
+	void UpdateViewMatrix();
+	void UpdateProjectionMatrix();
+	void UpdateViewProjectionMatrix();
+
+	void OnTranslation(const math::Vector3& translationDelta);
+	void OnRotation(const math::Quaternion& rotationDelta);
 
 	float m_nearPlaneDistance;
 	float m_farPlaneDistance;

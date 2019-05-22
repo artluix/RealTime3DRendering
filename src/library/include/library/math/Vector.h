@@ -144,6 +144,7 @@ struct Vector<3> : public VectorDef<3>
 
 	constexpr Vector(const float x, const float y, const float z) : x(x), y(y), z(z) {}
 	explicit constexpr Vector(const float v = 0.f) : Vector(v, v, v) {}
+	explicit constexpr Vector(const Vector2& vec2, const float z = 0.f) : Vector(vec2.x, vec2.y, z) {}
 	explicit constexpr Vector(const XMVector3& xmFloat3) : Vector(xmFloat3.x, xmFloat3.y, xmFloat3.z) {}
 	explicit constexpr Vector(const XMVector& xmVector)
 		: Vector(xmVector.m128_f32[0], xmVector.m128_f32[1], xmVector.m128_f32[2])
@@ -232,6 +233,7 @@ struct Vector<4> : public VectorDef<4>
 
 	constexpr Vector(const float x, const float y, const float z, const float w) : x(x), y(y), z(z), w(w) {}
 	explicit constexpr Vector(const float v = 0.f) : Vector(v, v, v, v) {}
+	explicit constexpr Vector(const Vector3& vec3, const float w = 0.f) : Vector(vec3.x, vec3.y, vec3.z, w) {}
 	explicit constexpr Vector(const XMVector4& xmFloat4)
 		: Vector(xmFloat4.x, xmFloat4.y, xmFloat4.z, xmFloat4.w)
 	{}

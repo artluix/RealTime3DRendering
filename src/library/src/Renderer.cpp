@@ -43,8 +43,9 @@ Renderer::Renderer(const Application& app)
 {
 	m_blendFactor.fill(0.f);
 
-	m_primitiveDrawables.reserve(20); // reserve some memory for drawables
-	m_uiDrawables.reserve(20);		  // reserve some memory for drawables
+	// reserve some memory for drawables
+	m_primitiveDrawables.reserve(20);
+	m_uiDrawables.reserve(20);
 }
 
 //-------------------------------------------------------------------------

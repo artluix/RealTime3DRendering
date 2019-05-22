@@ -1,13 +1,14 @@
 #pragma once
 #include "library/NonCopyable.hpp"
 
-#include <Unknwn.h>
-#include <Unknwnbase.h>
-#include <type_traits>
+// #include <Unknwn.h>
+// #include <Unknwnbase.h>
+// #include <type_traits>
 
 namespace library
 {
-template <typename T, typename = std::enable_if_t<std::is_base_of_v<IUnknown, T>>>
+// template <typename T, typename = std::enable_if_t<std::is_base_of_v<IUnknown, T>>>
+template <typename T>
 class ComPtr : public NonCopyable<ComPtr<T>>
 {
 public:
@@ -26,7 +27,11 @@ public:
 		return *this;
 	}
 
-	ComPtr& operator=(T* ptr) noexcept { Reset(ptr); }
+	ComPtr& operator=(T* ptr) noexcept
+	{
+		Reset(ptr);
+		return *this;
+	}
 
 	//-------------------------------------------------------------------------
 

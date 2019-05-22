@@ -8,11 +8,11 @@ namespace library
 {
 struct PrimitiveData
 {
-	unsigned stride;               // mandatory
+	unsigned stride;			   // mandatory
 	VertexBufferData vertexBuffer; // mandatory
 
 	std::optional<IndexBufferData> indexBuffer; // optional
-	D3D_PRIMITIVE_TOPOLOGY primitiveTopology;
+	D3D_PRIMITIVE_TOPOLOGY primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;
 
 	//-------------------------------------------------------------------------
 
@@ -20,9 +20,9 @@ struct PrimitiveData
 
 	PrimitiveData(
 		const unsigned stride,
+		const D3D_PRIMITIVE_TOPOLOGY primitiveTopology,
 		VertexBufferData&& vertexBuffer,
-		IndexBufferData&& indexBuffer = {},
-		const D3D_PRIMITIVE_TOPOLOGY primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST)
+		IndexBufferData&& indexBuffer = {})
 		: stride(stride)
 		, vertexBuffer(std::move(vertexBuffer))
 		, indexBuffer(std::move(indexBuffer))

@@ -50,7 +50,7 @@ void EnvironmentMappingDemo::Initialize()
 			return woss.str();
 		}
 	);
-	m_text->Initialize(app);
+	m_text->Initialize();
 }
 
 void EnvironmentMappingDemo::Update(const Time& time)
@@ -76,7 +76,7 @@ void EnvironmentMappingDemo::Update(const Time& time)
 	SceneComponent::Update(time);
 }
 
-void EnvironmentMappingDemo::Draw_SetData(const PrimitiveData& meshData)
+void EnvironmentMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
@@ -93,8 +93,8 @@ void EnvironmentMappingDemo::Draw_SetData(const PrimitiveData& meshData)
 	m_material->GetWorld() << GetWorldMatrix();
 	m_material->GetReflectionAmount() << m_reflectionAmount;
 
-	m_material->GetColorTexture() << meshData.texture.Get();
+	m_material->GetColorTexture() << primitiveData.texture.Get();
 	m_material->GetEnvironmentMap() << m_environmentMapTexture.Get();
 
-	SceneComponent::Draw_SetData(meshData);
+	SceneComponent::Draw_SetData(primitiveData);
 }

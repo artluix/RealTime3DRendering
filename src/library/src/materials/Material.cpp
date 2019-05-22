@@ -14,7 +14,7 @@
 namespace library
 {
 Material::Material(std::shared_ptr<Effect> effect, const std::string& defaultTechniqueName /* = "" */)
-	: m_effect(std::move(effect))
+	: m_effect(effect)
 	, m_defaultTechniqueName(defaultTechniqueName)
 	, m_currentTechnique(
 		  !defaultTechniqueName.empty() ? effect->GetTechnique(defaultTechniqueName)
@@ -30,7 +30,7 @@ EffectVariable& Material::operator[](const std::string& variableName)
 	return m_effect->GetVariable(variableName);
 }
 
-void Material::SetCurrentTechnique(const EffectTechnique& technique)
+void Material::SetCurrentTechnique(EffectTechnique& technique)
 {
 	m_currentTechnique = technique;
 }
@@ -99,9 +99,9 @@ PrimitiveData Material::CreatePrimitiveData(ID3D11Device* const device, const Me
 {
 	return PrimitiveData(
 		GetVertexSize(),
+		mesh.GetPrimitiveTopology(),
 		CreateVertexBufferData(device, mesh),
-		mesh.CreateIndexBufferData(),
-		mesh.GetPrimitiveTopology());
+		mesh.CreateIndexBufferData());
 }
 
 std::vector<PrimitiveData> Material::CreatePrimitivesData(ID3D11Device* const device, const Model& model) const

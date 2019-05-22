@@ -57,7 +57,7 @@ void DisplacementMappingDemo::Initialize()
 	m_proxyModel->SetPosition(m_pointLight->GetPosition());
 	m_proxyModel->Rotate(math::Vector3(0.f, math::Pi_Div_2, 0.f));
 	m_proxyModel->SetCamera(*GetCamera());
-	m_proxyModel->Initialize(app);
+	m_proxyModel->Initialize();
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -73,7 +73,7 @@ void DisplacementMappingDemo::Initialize()
 			return woss.str();
 		}
 	);
-	m_text->Initialize(app);
+	m_text->Initialize();
 
 	SetRotation(math::Vector3(math::Pi_Div_2, 0.f, 0.f));
 }
@@ -185,7 +185,7 @@ void DisplacementMappingDemo::UpdateDisplacement(const Time& time)
 	}
 }
 
-void DisplacementMappingDemo::Draw_SetData(const PrimitiveData& meshData)
+void DisplacementMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
@@ -206,8 +206,8 @@ void DisplacementMappingDemo::Draw_SetData(const PrimitiveData& meshData)
 	m_material->GetSpecularColor() << m_specularColor;
 	m_material->GetDisplacementScale() << m_displacementScale;
 
-	m_material->GetColorTexture() << meshData.texture.Get();
+	m_material->GetColorTexture() << primitiveData.texture.Get();
 	m_material->GetDisplacementMap() << m_displacementMapTexture.Get();
 
-	SceneComponent::Draw_SetData(meshData);
+	SceneComponent::Draw_SetData(primitiveData);
 }

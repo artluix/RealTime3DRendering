@@ -8,8 +8,12 @@ class CameraComponent : public ProjectorComponent
 	RTTI_CLASS(CameraComponent, ProjectorComponent)
 
 public:
-	using ProjectorComponent::ProjectorComponent;
 	CameraComponent();
+	CameraComponent(
+		const float nearPlaneDistance,
+		const float farPlaneDistance,
+		const float fieldOfView,
+		const float aspectRatio);
 
 	void Initialize() override;
 };

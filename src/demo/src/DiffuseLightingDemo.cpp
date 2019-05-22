@@ -58,7 +58,7 @@ void DiffuseLightingDemo::Initialize()
 	);
 	m_proxyModel->SetRotation(GetRotation() + k_proxyModelRotationOffset);
 	m_proxyModel->SetCamera(*GetCamera());
-	m_proxyModel->Initialize(app);
+	m_proxyModel->Initialize();
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -73,7 +73,7 @@ void DiffuseLightingDemo::Initialize()
 			return woss.str();
 		}
 	);
-	m_text->Initialize(app);
+	m_text->Initialize();
 }
 
 void DiffuseLightingDemo::Update(const Time& time)
@@ -163,7 +163,7 @@ void DiffuseLightingDemo::UpdateDirectionalLight(const Time& time)
 	}
 }
 	
-void DiffuseLightingDemo::Draw_SetData(const PrimitiveData& meshData)
+void DiffuseLightingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
@@ -174,7 +174,7 @@ void DiffuseLightingDemo::Draw_SetData(const PrimitiveData& meshData)
 	m_material->GetAmbientColor() << m_ambientColor;
 	m_material->GetLightColor() << m_directionalLight->GetColor();
 	m_material->GetLightDirection() << m_directionalLight->GetDirection();
-	m_material->GetColorTexture() << meshData.texture.Get();
+	m_material->GetColorTexture() << primitiveData.texture.Get();
 
-	SceneComponent::Draw_SetData(meshData);
+	SceneComponent::Draw_SetData(primitiveData);
 }

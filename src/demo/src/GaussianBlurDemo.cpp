@@ -43,9 +43,9 @@ void GaussianBlurDemo::Initialize()
 			return woss.str();
 		}
 	);
-	m_text->Initialize(app);
+	m_text->Initialize();
 
-	GaussianBlurComponent::Initialize(app);
+	GaussianBlurComponent::Initialize();
 }
 
 //-------------------------------------------------------------------------

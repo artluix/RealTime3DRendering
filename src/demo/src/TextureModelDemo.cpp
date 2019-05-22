@@ -19,10 +19,10 @@ using namespace library;
 
 namespace
 {
-	constexpr float k_rotationAngle = math::Pi_Div_2;
-	constexpr float k_movementRate = 0.01f;
-	constexpr float k_scaleRate = 0.01f;
-}
+constexpr float k_rotationAngle = math::Pi_Div_2;
+constexpr float k_movementRate = 0.01f;
+constexpr float k_scaleRate = 0.01f;
+} // namespace
 
 //-------------------------------------------------------------------------
 
@@ -30,15 +30,13 @@ using VertexType = VertexPositionTexture;
 
 //-------------------------------------------------------------------------
 
-TextureModelDemo::TextureModelDemo()
-	: m_wheel(0)
+TextureModelDemo::TextureModelDemo() : m_wheel(0)
 {
 	SetTextureName("EarthComposite");
 }
 
 void TextureModelDemo::Initialize()
 {
-	
 
 	// shader
 	{
@@ -52,12 +50,12 @@ void TextureModelDemo::Initialize()
 		}
 
 		auto hr = D3DX11CreateEffectFromMemory(
-			//shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
-			effectData.data(), effectData.size(),
+			// shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
+			effectData.data(),
+			effectData.size(),
 			0,
 			app.GetDevice(),
-			m_effect.GetAddressOf()
-		);
+			&m_effect);
 		if (FAILED(hr))
 		{
 			throw Exception("D3DX11CreateEffectFromMemory() failed.", hr);
@@ -113,6 +111,7 @@ void TextureModelDemo::Initialize()
 		D3DX11_PASS_DESC passDesc;
 		m_pass->GetDesc(&passDesc);
 
+		// clang-format off
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{
 			{
@@ -134,12 +133,14 @@ void TextureModelDemo::Initialize()
 				0
 			},
 		};
+		// clang-format on
 
 		auto hr = app.GetDevice()->CreateInputLayout(
-			inputElementDescriptions.data(), inputElementDescriptions.size(),
-			passDesc.pIAInputSignature, passDesc.IAInputSignatureSize,
-			m_currentInputLayout.GetAddressOf()
-		);
+			inputElementDescriptions.data(),
+			inputElementDescriptions.size(),
+			passDesc.pIAInputSignature,
+			passDesc.IAInputSignatureSize,
+			&m_currentInputLayout);
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateInputLayout() failed.", hr);
@@ -155,10 +156,8 @@ void TextureModelDemo::Initialize()
 
 	if (mesh.HasIndices())
 	{
-		m_meshesData.front().indexBuffer = std::make_optional(BufferData{
-			mesh.CreateIndexBuffer(),
-			mesh.GetIndicesCount()
-		});
+		m_primitivesData.front().indexBuffer =
+			std::make_optional(BufferData{mesh.CreateIndexBuffer(), mesh.GetIndicesCount()});
 	}
 }
 
@@ -177,29 +176,19 @@ void TextureModelDemo::Update(const Time& time)
 		{
 			math::Vector2 movementAmount;
 			if (m_keyboard->IsKeyDown(Key::Up))
-			{
 				movementAmount.y += 1.0f;
-			}
 
 			if (m_keyboard->IsKeyDown(Key::Down))
-			{
 				movementAmount.y -= 1.0f;
-			}
 
 			if (m_keyboard->IsKeyDown(Key::Left))
-			{
 				movementAmount.x -= 1.0f;
-			}
 
 			if (m_keyboard->IsKeyDown(Key::Right))
-			{
 				movementAmount.x += 1.0f;
-			}
 
 			if (movementAmount)
-			{
 				Translate(math::Vector3(movementAmount * k_movementRate));
-			}
 		}
 
 		// scaling
@@ -227,16 +216,16 @@ unsigned TextureModelDemo::GetVertexSize() const
 	return sizeof(VertexType);
 }
 
-void TextureModelDemo::Draw_SetData(const PrimitiveData& meshData)
+void TextureModelDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
-	auto deviceContext = GetApp()->GetDeviceContext();
+	auto deviceContext = GetApp().GetDeviceContext();
 
 	auto wvp = GetWorldMatrix();
 	if (!!m_camera)
 		wvp *= m_camera->GetViewProjectionMatrix();
 	m_wvpVariable->SetMatrix(static_cast<const float*>(wvp));
 
-	m_colorTextureVariable->SetResource(meshData.texture.Get());
+	m_colorTextureVariable->SetResource(primitiveData.texture.Get());
 
 	m_pass->Apply(0, deviceContext);
 }
@@ -247,8 +236,8 @@ void TextureModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, co
 
 	if (mesh.HasVertices())
 	{
-		m_meshesData = { PrimitiveData() };
-		auto& md = m_meshesData.front();
+		m_primitivesData = {PrimitiveData()};
+		auto& md = m_primitivesData.front();
 
 		const auto& meshVertices = mesh.GetVertices();
 		const auto& textureCoordinates = mesh.GetTextureCoordinates(0);
@@ -262,8 +251,7 @@ void TextureModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, co
 			const auto& uv = textureCoordinates[i];
 			vertexBuffer.emplace_back(
 				DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f),
-				DirectX::XMFLOAT2(uv.x, uv.y)
-			);
+				DirectX::XMFLOAT2(uv.x, uv.y));
 		}
 
 		D3D11_BUFFER_DESC vertexBufferDesc{};
@@ -274,11 +262,7 @@ void TextureModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, co
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 		vertexSubResourceData.pSysMem = vertexBuffer.data();
 
-		auto hr = device->CreateBuffer(
-			&vertexBufferDesc,
-			&vertexSubResourceData,
-			md.vertexBuffer.buffer.GetAddressOf()
-		);
+		auto hr = device->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, &md.vertexBuffer.buffer);
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateBuffer() failed.");

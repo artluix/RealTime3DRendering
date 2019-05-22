@@ -60,7 +60,7 @@ void SpotlightDemo::Initialize()
 	m_proxyModel->SetCamera(*GetCamera());
 	m_proxyModel->SetRotation(k_proxyModelRotationOffset);
 	m_proxyModel->SetPosition(m_spotlight->GetPosition());
-	m_proxyModel->Initialize(app);
+	m_proxyModel->Initialize();
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -81,7 +81,7 @@ void SpotlightDemo::Initialize()
 			return woss.str();
 		}
 	);
-	m_text->Initialize(app);
+	m_text->Initialize();
 
 	SetRotation(math::Vector3(math::Pi_Div_2, 0.f, 0.f));
 	SetScaling(math::Vector3(5.f));
@@ -276,7 +276,7 @@ void SpotlightDemo::UpdateSpecularLight(const Time& time)
 	}
 }
 
-void SpotlightDemo::Draw_SetData(const PrimitiveData& meshData)
+void SpotlightDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	auto world = GetWorldMatrix();
 	if (!!m_camera)
@@ -297,7 +297,7 @@ void SpotlightDemo::Draw_SetData(const PrimitiveData& meshData)
 	m_material->GetLightLookAt() << m_spotlight->GetDirection();
 	m_material->GetSpotlightInnerAngle() << m_spotlight->GetInnerAngle();
 	m_material->GetSpotlightOuterAngle() << m_spotlight->GetOuterAngle();
-	m_material->GetColorTexture() << meshData.texture.Get();
+	m_material->GetColorTexture() << primitiveData.texture.Get();
 
-	SceneComponent::Draw_SetData(meshData);
+	SceneComponent::Draw_SetData(primitiveData);
 }

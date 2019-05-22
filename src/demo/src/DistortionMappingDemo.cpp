@@ -44,7 +44,7 @@ DistortionMappingDemo::~DistortionMappingDemo() = default;
 
 void DistortionMappingDemo::Initialize()
 {
-	PostProcessingComponent::Initialize(app);
+	PostProcessingComponent::Initialize();
 
 	InitializeMaterial("DistortionMapping");
 	InitializeQuad(app, "distortion");
@@ -64,7 +64,7 @@ void DistortionMappingDemo::Initialize()
 		}
 	);
 	m_text->SetPosition(math::Vector2(0.f, 200.f));
-	m_text->Initialize(app);
+	m_text->Initialize();
 
 	// Load model
 	Model model(app, "Sphere", true);
@@ -98,7 +98,7 @@ void DistortionMappingDemo::Update(const Time& time)
 
 void DistortionMappingDemo::Draw(const Time& time)
 {
-	auto deviceContext = GetApp()->GetDeviceContext();
+	auto deviceContext = GetApp().GetDeviceContext();
 
 	switch (m_mode)
 	{
@@ -145,14 +145,14 @@ void DistortionMappingDemo::Draw(const Time& time)
 	
 	m_fullScreenQuad->Draw(time);
 
-	GetApp()->UnbindPixelShaderResources(0, 2);
+	GetApp().UnbindPixelShaderResources(0, 2);
 }
 
 //-------------------------------------------------------------------------
 
 void DistortionMappingDemo::DrawMeshForDistortionCutout()
 {
-	auto deviceContext = GetApp()->GetDeviceContext();
+	auto deviceContext = GetApp().GetDeviceContext();
 
 	// Set IA
 	{

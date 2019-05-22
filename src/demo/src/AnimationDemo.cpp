@@ -117,7 +117,7 @@ void AnimationDemo::Update(const Time& time)
 
 //-------------------------------------------------------------------------
 
-void AnimationDemo::Draw_SetData(const PrimitiveData& meshData)
+void AnimationDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	auto world = GetWorldMatrix();
 
@@ -139,11 +139,11 @@ void AnimationDemo::Draw_SetData(const PrimitiveData& meshData)
 	m_material->GetLightPosition() << m_pointLight->GetPosition();
 	m_material->GetLightRadius() << m_pointLight->GetRadius();
 
-	m_material->GetColorTexture() << meshData.texture.Get();
+	m_material->GetColorTexture() << primitiveData.texture.Get();
 
 	m_material->GetBoneTransforms() << m_animationPlayer->GetBoneTransforms();
 
-	SceneComponent::Draw_SetData(meshData);
+	SceneComponent::Draw_SetData(primitiveData);
 }
 
 //-------------------------------------------------------------------------

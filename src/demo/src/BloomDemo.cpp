@@ -45,9 +45,9 @@ void BloomDemo::Initialize()
 		}
 	);
 	m_text->SetPosition(math::Vector2(0.f, 200.f));
-	m_text->Initialize(app);
+	m_text->Initialize();
 
-	BloomComponent::Initialize(app);
+	BloomComponent::Initialize();
 }
 
 void BloomDemo::Update(const Time& time)

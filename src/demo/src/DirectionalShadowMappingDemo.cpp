@@ -5,7 +5,7 @@
 
 #include <library/Components/UIComponent.h>
 #include <library/Components/TextComponent.h>
-#include <library/Components/OrthographicProjectorComponent.h>
+#include <library/Components/ProjectorComponent.h>
 #include <library/Components/ProxyModelComponent.h>
 #include <library/Components/RenderableFrustumComponent.h>
 #include <library/Components/DirectionalLightComponent.h>
@@ -33,19 +33,19 @@ using namespace library;
 
 namespace
 {
-	constexpr float k_byteMax = static_cast<float>(0xFF);
+constexpr float k_byteMax = static_cast<float>(0xFF);
 
-	constexpr unsigned k_depthMapWidth = 1024;
-	constexpr unsigned k_depthMapHeight = 1024U;
-	const RECT k_depthMapDestinationRect = { 0, 512, 256, 768 };
-	constexpr float k_depthBiasModulationRate = 10000.f;
+constexpr unsigned k_depthMapWidth = 1024;
+constexpr unsigned k_depthMapHeight = 1024U;
+const RECT k_depthMapDestinationRect = {0, 512, 256, 768};
+constexpr float k_depthBiasModulationRate = 10000.f;
 
-	constexpr float k_lightModulationRate = 10.f;
-	constexpr auto k_lightRotationRate = math::Vector2(math::Pi_Div_2);
+constexpr float k_lightModulationRate = 10.f;
+constexpr auto k_lightRotationRate = math::Vector2(math::Pi_Div_2);
 
-	constexpr auto k_proxyModelRotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
-	constexpr float k_proxyModelDistanceOffset = -10.f;
-}
+constexpr auto k_proxyModelRotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
+constexpr float k_proxyModelDistanceOffset = -10.f;
+} // namespace
 
 //-------------------------------------------------------------------------
 
@@ -78,8 +78,8 @@ void DirectionalShadowMappingDemo::Initialize()
 
 	assert(camera);
 
-	m_meshesData = { PrimitiveData() };
-	auto& md = m_meshesData.front();
+	m_primitivesData = {PrimitiveData()};
+	auto& md = m_primitivesData.front();
 
 	// build plane vertices manually
 	{
@@ -87,8 +87,7 @@ void DirectionalShadowMappingDemo::Initialize()
 
 		const auto backward = DirectX::XMFLOAT3(math::Vector3::Backward);
 
-		const std::array<Vertex, 6> vertices =
-		{
+		const std::array<Vertex, 6> vertices = {
 			Vertex(DirectX::XMFLOAT4(-0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), backward),
 			Vertex(DirectX::XMFLOAT4(-0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f), backward),
 			Vertex(DirectX::XMFLOAT4(0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f), backward),
@@ -99,28 +98,20 @@ void DirectionalShadowMappingDemo::Initialize()
 		};
 
 		md.vertexBuffer.elementsCount = vertices.size();
-		md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
-			app.GetDevice(),
-			vertices
-		);
+		md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(app.GetDevice(), vertices);
 
 		//-------------------------------------------------------------------------
 
-		const std::array<VertexPosition, 6> positionVertices =
-		{
-			VertexPosition(vertices[0].position),
-			VertexPosition(vertices[1].position),
-			VertexPosition(vertices[2].position),
-			VertexPosition(vertices[3].position),
-			VertexPosition(vertices[4].position),
-			VertexPosition(vertices[5].position)
-		};
+		const std::array<VertexPosition, 6> positionVertices = {VertexPosition(vertices[0].position),
+																VertexPosition(vertices[1].position),
+																VertexPosition(vertices[2].position),
+																VertexPosition(vertices[3].position),
+																VertexPosition(vertices[4].position),
+																VertexPosition(vertices[5].position)};
 
 		m_positionVertexBuffer.elementsCount = vertices.size();
-		m_positionVertexBuffer.buffer = library::Material::CreateVertexBuffer(
-			app.GetDevice(),
-			positionVertices
-		);
+		m_positionVertexBuffer.buffer =
+			library::Material::CreateVertexBuffer(app.GetDevice(), positionVertices);
 	}
 
 	InitializeMaterial("DirectionalShadowMapping");
@@ -130,10 +121,8 @@ void DirectionalShadowMappingDemo::Initialize()
 	m_depthMapMaterial = std::make_unique<DepthMapMaterial>(*m_depthMapEffect);
 	m_depthMapMaterial->Initialize();
 
-	
-
 	m_directionalLight = std::make_unique<DirectionalLightComponent>();
-	//m_directionalLight->Rotate(math::Vector3(0.f, math::Pi, 0.f));
+	// m_directionalLight->Rotate(math::Vector3(0.f, math::Pi, 0.f));
 
 	const auto position = GetPosition() + m_directionalLight->GetDirection() * k_proxyModelDistanceOffset;
 
@@ -141,22 +130,22 @@ void DirectionalShadowMappingDemo::Initialize()
 	m_proxyModel->SetCamera(*camera);
 	m_proxyModel->SetPosition(position);
 	m_proxyModel->SetInitialTransform(math::Matrix4::RotationY(math::Pi_Div_2));
-	m_proxyModel->Initialize(app);
+	m_proxyModel->Initialize();
 
 	// specific
 	SetScaling(math::Vector3(10.f));
 
 	m_projector = std::make_unique<OrthographicProjectorComponent>();
 	m_projector->SetPosition(position);
-	m_projector->Initialize(app);
+	m_projector->Initialize();
 
 	m_projectorFrustum.SetProjectionMatrix(m_projector->GetProjectionMatrix());
 
 	m_renderableProjectorFrustum = std::make_unique<RenderableFrustumComponent>();
 	m_renderableProjectorFrustum->SetCamera(*camera);
 	m_renderableProjectorFrustum->SetPosition(position);
-	//m_renderableProjectorFrustum->SetRotation(k_proxyModelRotationOffset);
-	m_renderableProjectorFrustum->Initialize(app);
+	// m_renderableProjectorFrustum->SetRotation(k_proxyModelRotationOffset);
+	m_renderableProjectorFrustum->Initialize();
 	m_renderableProjectorFrustum->InitializeGeometry(m_projectorFrustum);
 
 	InitializeProjectedTextureScalingMatrix();
@@ -169,80 +158,70 @@ void DirectionalShadowMappingDemo::Initialize()
 		m_model.vertexBuffer.buffer = m_material->CreateVertexBuffer(app.GetDevice(), mesh);
 		m_model.positionVertexBuffer.buffer = m_depthMapMaterial->CreateVertexBuffer(app.GetDevice(), mesh);
 
-		m_model.vertexBuffer.elementsCount = 
-			m_model.positionVertexBuffer.elementsCount = 
-				mesh.GetVerticesCount();
+		m_model.vertexBuffer.elementsCount = m_model.positionVertexBuffer.elementsCount =
+			mesh.GetVerticesCount();
 
 		if (mesh.HasIndices())
 		{
-			m_model.indexBuffer = std::make_optional(
-				BufferData{ mesh.CreateIndexBuffer(), mesh.GetIndicesCount() }
-			);
+			m_model.indexBuffer =
+				std::make_optional(BufferData{mesh.CreateIndexBuffer(), mesh.GetIndicesCount()});
 		}
 
-		m_model.worldMatrix =
-			math::Matrix4::Scaling(math::Vector3(0.1f)) * 
-			math::Matrix4::Translation(math::Vector3(0.f, 0.f, 5.f));
-
+		m_model.worldMatrix = math::Matrix4::Scaling(math::Vector3(0.1f)) *
+							  math::Matrix4::Translation(math::Vector3(0.f, 0.f, 5.f));
 	}
-	
+
 	m_depthMapRenderTarget = std::make_unique<DepthMapRenderTarget>(app, k_depthMapWidth, k_depthMapHeight);
 
 	m_uiDepthMap = std::make_unique<UIComponent>();
 	m_uiDepthMap->SetDestinationRect(k_depthMapDestinationRect);
 	m_uiDepthMap->SetTexture(m_depthMapRenderTarget->GetOutputTexture());
-	m_uiDepthMap->Initialize(app);
+	m_uiDepthMap->Initialize();
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
-	m_text->SetTextUpdateFunction(
-		[this]() -> std::wstring
+	m_text->SetTextUpdateFunction([this]() -> std::wstring {
+		std::wostringstream woss;
+		woss << L"Ambient Intensity (+PageUp/-PageDown): " << m_ambientColor.a << "\n"
+			 << L"Directional Light Intensity (+Home/-End): " << m_directionalLight->GetColor().a << "\n"
+			 << L"Specular Power (+Insert/-Delete): " << m_specularPower << "\n"
+			 << L"Rotate Projector (Arrow Keys)\n"
+			 << L"Show Depth Map (Enter): " << (m_drawDepthMap ? "Yes" : "No") << '\n'
+			 << L"Active Technique (Space): "
+			 << DirectionalShadowMappingTechnique::ToDisplayString(m_techniqueType) << '\n';
+
+		if (m_techniqueType == DirectionalShadowMappingTechnique::PCF)
 		{
-			std::wostringstream woss;
-			woss <<
-				L"Ambient Intensity (+PageUp/-PageDown): " << m_ambientColor.a << "\n" <<
-				L"Directional Light Intensity (+Home/-End): " << m_directionalLight->GetColor().a << "\n" <<
-				L"Specular Power (+Insert/-Delete): " << m_specularPower << "\n" <<
-				L"Rotate Projector (Arrow Keys)\n" <<
-				L"Show Depth Map (Enter): " << (m_drawDepthMap ? "Yes" : "No") << '\n' <<
-				L"Active Technique (Space): " << DirectionalShadowMappingTechnique::ToDisplayString(m_techniqueType) << '\n';
-
-				if (m_techniqueType == DirectionalShadowMappingTechnique::PCF)
-				{
-					woss << std::setprecision(5)
-						<< L"Depth Bias Amount (+J/-K): " << (int)m_depthBias << '\n'
-						<< L"Slope-Scaled Depth Bias (+O/-P): " << m_slopeScaledDepthBias;
-				}
-
-			return woss.str();
+			woss << std::setprecision(5) << L"Depth Bias Amount (+J/-K): " << (int)m_depthBias << '\n'
+				 << L"Slope-Scaled Depth Bias (+O/-P): " << m_slopeScaledDepthBias;
 		}
-	);
-	m_text->Initialize(app);
+
+		return woss.str();
+	});
+	m_text->Initialize();
 }
 
 //-------------------------------------------------------------------------
 
 void DirectionalShadowMappingDemo::Draw(const library::Time& time)
 {
-	auto deviceContext = GetApp()->GetDeviceContext();
+	auto deviceContext = GetApp().GetDeviceContext();
 
-	const auto& md = m_meshesData.front();
+	const auto& md = m_primitivesData.front();
 
 	//-------------------------------------------------------------------------
 	// depth map pass (render the teapot model only)
 	//-------------------------------------------------------------------------
 	{
-		GetApp()->GetRenderer()->SaveRenderState(RenderState::Rasterizer);
+		GetApp().GetRenderer()->SaveRenderState(RenderState::Rasterizer);
 		m_depthMapRenderTarget->Begin();
-
 
 		deviceContext->IASetPrimitiveTopology(md.primitiveTopology);
 		deviceContext->ClearDepthStencilView(
 			m_depthMapRenderTarget->GetDepthStencilView(),
 			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 			1.0f,
-			0
-		);
+			0);
 
 		auto& pass = m_depthMapMaterial->GetCurrentTechnique().GetPass(0);
 		auto inputLayout = m_depthMapMaterial->GetInputLayout(pass);
@@ -252,14 +231,12 @@ void DirectionalShadowMappingDemo::Draw(const library::Time& time)
 
 		const auto stride = m_depthMapMaterial->GetVertexSize();
 		const unsigned offset = 0;
-		deviceContext->IASetVertexBuffers(
-			0, 1, m_model.positionVertexBuffer.buffer.GetAddressOf(), &stride, &offset
-		);
+		deviceContext->IASetVertexBuffers(0, 1, &m_model.positionVertexBuffer.buffer, &stride, &offset);
 		if (m_model.indexBuffer)
 			deviceContext->IASetIndexBuffer(m_model.indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
-		m_depthMapMaterial->GetWorldLightViewProjection() << 
-			m_model.worldMatrix * m_projector->GetViewProjectionMatrix();
+		m_depthMapMaterial->GetWorldLightViewProjection()
+			<< m_model.worldMatrix * m_projector->GetViewProjectionMatrix();
 
 		pass.Apply(0, deviceContext);
 
@@ -270,7 +247,7 @@ void DirectionalShadowMappingDemo::Draw(const library::Time& time)
 
 		m_depthMapRenderTarget->End();
 
-		GetApp()->GetRenderer()->RestoreRenderState(RenderState::Rasterizer);
+		GetApp().GetRenderer()->RestoreRenderState(RenderState::Rasterizer);
 	}
 
 	//-------------------------------------------------------------------------
@@ -279,12 +256,12 @@ void DirectionalShadowMappingDemo::Draw(const library::Time& time)
 	{
 		// Draw plane
 		SceneComponent::Draw(time);
-		GetApp()->UnbindPixelShaderResources(0, 3);
+		GetApp().UnbindPixelShaderResources(0, 3);
 
 		// Draw teapot model
 		const auto stride = m_material->GetVertexSize();
-		const unsigned offset{ 0 };
-		deviceContext->IASetVertexBuffers(0, 1, m_model.vertexBuffer.buffer.GetAddressOf(), &stride, &offset);
+		const unsigned offset{0};
+		deviceContext->IASetVertexBuffers(0, 1, &m_model.vertexBuffer.buffer, &stride, &offset);
 		if (m_model.indexBuffer)
 			deviceContext->IASetIndexBuffer(m_model.indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
@@ -321,11 +298,11 @@ void DirectionalShadowMappingDemo::Draw(const library::Time& time)
 		else
 			deviceContext->Draw(m_model.vertexBuffer.elementsCount, 0);
 
-		GetApp()->UnbindPixelShaderResources(0, 3);
+		GetApp().UnbindPixelShaderResources(0, 3);
 	}
 }
 
-void DirectionalShadowMappingDemo::Draw_SetData(const PrimitiveData& meshData)
+void DirectionalShadowMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	const auto world = GetWorldMatrix();
 
@@ -349,15 +326,15 @@ void DirectionalShadowMappingDemo::Draw_SetData(const PrimitiveData& meshData)
 	m_material->GetLightColor() << m_directionalLight->GetColor();
 	m_material->GetLightDirection() << m_directionalLight->GetDirection();
 
-	//m_material->GetDepthBias() << m_depthBias;
-	m_material->GetColorTexture() << meshData.texture.Get();
+	// m_material->GetDepthBias() << m_depthBias;
+	m_material->GetColorTexture() << primitiveData.texture.Get();
 	m_material->GetShadowMapTexture() << m_depthMapRenderTarget->GetOutputTexture();
 	m_material->GetProjectiveTextureMatrix() << projectiveTextureMatrix;
 
 	const math::Vector2 shadowMapSize(k_depthMapWidth, k_depthMapHeight);
 	m_material->GetShadowMapSize() << shadowMapSize;
 
-	SceneComponent::Draw_SetData(meshData);
+	SceneComponent::Draw_SetData(primitiveData);
 }
 
 //-------------------------------------------------------------------------
@@ -398,13 +375,12 @@ void DirectionalShadowMappingDemo::UpdateTechnique()
 		{
 			m_techniqueType = DirectionalShadowMappingTechnique::Next(m_techniqueType);
 			m_material->SetCurrentTechnique(
-				m_effect->GetTechnique(DirectionalShadowMappingTechnique::ToString(m_techniqueType))
-			);
+				m_effect->GetTechnique(DirectionalShadowMappingTechnique::ToString(m_techniqueType)));
 
-			const auto depthMapTechnique = DirectionalShadowMappingTechnique::GetDepthMapTechniqueType(m_techniqueType);
+			const auto depthMapTechnique =
+				DirectionalShadowMappingTechnique::GetDepthMapTechniqueType(m_techniqueType);
 			m_depthMapMaterial->SetCurrentTechnique(
-				m_depthMapEffect->GetTechnique(DepthMappingTechnique::ToString(depthMapTechnique))
-			);
+				m_depthMapEffect->GetTechnique(DepthMappingTechnique::ToString(depthMapTechnique)));
 		}
 	}
 }
@@ -453,9 +429,7 @@ void DirectionalShadowMappingDemo::UpdateDepthBiasState()
 	rasterizerStateDesc.DepthBias = static_cast<int>(m_depthBias);
 	rasterizerStateDesc.SlopeScaledDepthBias = m_slopeScaledDepthBias;
 
-	const auto hr = GetApp()->GetDevice()->CreateRasterizerState(
-		&rasterizerStateDesc, m_depthBiasState.GetAddressOf()
-	);
+	const auto hr = GetApp().GetDevice()->CreateRasterizerState(&rasterizerStateDesc, &m_depthBiasState);
 	if (FAILED(hr))
 	{
 		throw Exception("ID3D11Device::CreateReasterizerState() failed.", hr);
@@ -533,9 +507,8 @@ void DirectionalShadowMappingDemo::UpdatePointLightAndProjector(const Time& time
 				m_proxyModel->Rotate(rotation);
 				m_renderableProjectorFrustum->Rotate(rotation);
 
-				const auto pitchMatrix = math::Matrix4::RotationAxis(
-					m_projector->GetRight(), rotationAmount.y
-				);
+				const auto pitchMatrix =
+					math::Matrix4::RotationAxis(m_projector->GetRight(), rotationAmount.y);
 				const auto yawMatrix = math::Matrix4::RotationY(rotationAmount.x);
 				m_projector->ApplyRotation(pitchMatrix * yawMatrix);
 			}
@@ -556,7 +529,8 @@ void DirectionalShadowMappingDemo::UpdateSpecularLight(const Time& time)
 			specularLightIntensity += k_lightModulationRate * elapsedTime;
 			specularLightIntensity = math::Min(specularLightIntensity, k_byteMax);
 
-			m_specularPower = specularLightIntensity;;
+			m_specularPower = specularLightIntensity;
+			;
 		}
 
 		if (m_keyboard->IsKeyDown(Key::Delete) && specularLightIntensity > 0)

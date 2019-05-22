@@ -93,7 +93,7 @@ void ColorFilterDemo::Initialize()
 			return utils::ToWideString(oss.str());
 		}
 	);
-	m_text->Initialize(app);
+	m_text->Initialize();
 }
 
 void ColorFilterDemo::Update(const Time& time)

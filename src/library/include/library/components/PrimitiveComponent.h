@@ -9,7 +9,6 @@
 namespace library
 {
 class CameraComponent;
-class EffectPass;
 
 class PrimitiveComponent
 	: public DrawableComponent
@@ -27,28 +26,17 @@ public:
 	void Update(const Time& time) override;
 	void Draw(const Time& time) override;
 
-	ID3D11InputLayout* GetInputLayout() const;
+	virtual ID3D11InputLayout* GetInputLayout() const = 0;
+
 	ID3D11ShaderResourceView* GetTexture(const unsigned textureIdx) const;
 
 protected:
 	virtual void Draw_SetIA(const PrimitiveData& primitiveData);
-	virtual void Draw_SetData(const PrimitiveData& primitiveData);
+	virtual void Draw_SetData(const PrimitiveData& primitiveData) = 0;
 	virtual void Draw_Render(const PrimitiveData& primitiveData);
 
 	std::vector<PrimitiveData> m_primitivesData;
 	std::vector<ComPtr<ID3D11ShaderResourceView>> m_textures;
-
-	union
-	{
-		ComPtr<ID3D11InputLayout> m_dxInputLayout;
-		ID3D11InputLayout* m_inputLayout = nullptr;
-	};
-
-	union
-	{
-		ComPtr<ID3DX11EffectPass> m_dxEffectPass;
-		EffectPass* m_effectPass = nullptr;
-	};
 
 private:
 	const CameraComponent* m_camera = nullptr;

@@ -27,6 +27,7 @@ public:
 	void Update(const Time& time) override;
 
 	const Material* GetMaterial() const override { return m_material; }
+	ID3D11InputLayout* GetInputLayout() const { return m_inputLayout; }
 
 protected:
 	void Draw_SetData(const PrimitiveData& primitiveData) override;
@@ -36,8 +37,7 @@ protected:
 	MaterialUpdateFunction m_materialUpdateFunction;
 	Material* m_material = nullptr;
 
-private:
-	using PrimitiveComponent::m_dxEffectPass;
-	using PrimitiveComponent::m_dxInputLayout;
+	EffectPass* m_pass = nullptr;
+	ID3D11InputLayout* m_inputLayout = nullptr;
 };
 } // namespace library

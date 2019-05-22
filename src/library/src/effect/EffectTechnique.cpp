@@ -37,13 +37,27 @@ bool EffectTechnique::HasPass(const std::string& passName) const
 	return m_passesMap.find(passName) != m_passesMap.end();
 }
 
-EffectPass& EffectTechnique::GetPass(const std::string& passName) const
+const EffectPass& EffectTechnique::GetPass(const std::string& passName) const
 {
 	assert(HasPass(passName));
 	return *m_passesMap.at(passName);
 }
 
-EffectPass& EffectTechnique::GetPass(const unsigned passIdx) const
+EffectPass& EffectTechnique::GetPass(const std::string& passName)
+{
+	assert(HasPass(passName));
+	return *m_passesMap.at(passName);
+}
+
+//-------------------------------------------------------------------------
+
+const EffectPass& EffectTechnique::GetPass(const unsigned passIdx) const
+{
+	assert(passIdx < m_passes.size());
+	return *m_passes[passIdx];
+}
+
+EffectPass& EffectTechnique::GetPass(const unsigned passIdx)
 {
 	assert(passIdx < m_passes.size());
 	return *m_passes[passIdx];
