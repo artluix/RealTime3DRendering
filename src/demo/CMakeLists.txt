@@ -18,11 +18,11 @@ if(APPLICATION)
             src/TriangleDemo.h
             src/TriangleDemo.cpp
 
-            # src/ModelDemo.h
-            # src/ModelDemo.cpp
+            src/ModelDemo.h
+            src/ModelDemo.cpp
 
-            # src/TextureModelDemo.h
-            # src/TextureModelDemo.cpp
+            src/TextureModelDemo.h
+            src/TextureModelDemo.cpp
 
         # with materials
             # src/AnimationDemo.h

@@ -8,7 +8,7 @@
 #include <library/Application.h>
 #include <library/Utils.h>
 #include <library/Exception.h>
-#include <library/math/Color.h>
+#include <library/Math/Math.h>
 
 #include <library/Model/Model.h>
 #include <library/Model/Mesh.h>
@@ -22,59 +22,27 @@ namespace
 constexpr float k_rotationAngle = math::Pi_Div_2;
 constexpr float k_movementRate = 0.01f;
 constexpr float k_scaleRate = 0.01f;
+const std::string k_defaultTextureName = "EarthComposite";
 } // namespace
 
 //-------------------------------------------------------------------------
 
-using VertexType = VertexPositionTexture;
-
-//-------------------------------------------------------------------------
-
 TextureModelDemo::TextureModelDemo() : m_wheel(0)
-{
-	SetTextureName("EarthComposite");
-}
+{}
 
 void TextureModelDemo::Initialize()
 {
-
-	// shader
-	{
-		const auto path = app.GetTexturesPath() + Path("TextureMapping.fxc");
-
-		std::vector<std::byte> effectData;
-		utils::LoadBinaryFile(path, effectData);
-		if (effectData.empty())
-		{
-			throw Exception("Load compiled effect failed.");
-		}
-
-		auto hr = D3DX11CreateEffectFromMemory(
-			// shaderBlob->GetBufferPointer(), shaderBlob->GetBufferSize(),
-			effectData.data(),
-			effectData.size(),
-			0,
-			app.GetDevice(),
-			&m_effect);
-		if (FAILED(hr))
-		{
-			throw Exception("D3DX11CreateEffectFromMemory() failed.", hr);
-		}
-	}
+	InitializeEffect("TextureMapping");
 
 	// Look up the technique, pass, and WVP variable from the effect
 	m_technique = m_effect->GetTechniqueByName("main10");
 	if (!m_technique)
-	{
 		throw Exception("ID3DX11Effect::GetTechniqueByName() could not find the specified technique.");
-	}
 
 	// get pass
 	m_pass = m_technique->GetPassByName("p0");
 	if (!m_pass)
-	{
 		throw Exception("ID3DX11Effect::GetPassByName() could not find the specified pass.");
-	}
 
 	// get wvp variable
 	if (auto variable = m_effect->GetVariableByName("wvp"))
@@ -82,9 +50,7 @@ void TextureModelDemo::Initialize()
 		// cast variable to specific type
 		m_wvpVariable = variable->AsMatrix();
 		if (!m_wvpVariable->IsValid())
-		{
 			throw Exception("Invalid effect variable cast.");
-		}
 	}
 	else
 	{
@@ -97,9 +63,7 @@ void TextureModelDemo::Initialize()
 		// cast variable to specific type
 		m_colorTextureVariable = variable->AsShaderResource();
 		if (!m_colorTextureVariable->IsValid())
-		{
 			throw Exception("Invalid effect variable cast.");
-		}
 	}
 	else
 	{
@@ -135,12 +99,12 @@ void TextureModelDemo::Initialize()
 		};
 		// clang-format on
 
-		auto hr = app.GetDevice()->CreateInputLayout(
+		auto hr = GetApp().GetDevice()->CreateInputLayout(
 			inputElementDescriptions.data(),
 			inputElementDescriptions.size(),
 			passDesc.pIAInputSignature,
 			passDesc.IAInputSignatureSize,
-			&m_currentInputLayout);
+			&m_inputLayout);
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateInputLayout() failed.", hr);
@@ -148,17 +112,14 @@ void TextureModelDemo::Initialize()
 	}
 
 	// Load the model
-	Model model(app, "Sphere", true);
+	Model model(GetApp(), "Sphere", true);
 
 	// Create the vertex and index buffers
 	const auto& mesh = model.GetMesh(0);
-	CreateVertexBuffer(app.GetDevice(), mesh);
+	CreatePrimitivesData(GetApp().GetDevice(), mesh);
 
-	if (mesh.HasIndices())
-	{
-		m_primitivesData.front().indexBuffer =
-			std::make_optional(BufferData{mesh.CreateIndexBuffer(), mesh.GetIndicesCount()});
-	}
+	m_textures.resize(Texture::Count);
+	m_textures[Texture::Default] = GetApp().LoadTexture(k_defaultTextureName);
 }
 
 void TextureModelDemo::Update(const Time& time)
@@ -169,7 +130,7 @@ void TextureModelDemo::Update(const Time& time)
 		if (m_keyboard->IsKeyDown(Key::R))
 		{
 			const auto rotationDelta = k_rotationAngle * time.elapsed.GetSeconds();
-			Rotate(rotationDelta);
+			Rotate(math::Quaternion::RotationPitchYawRoll(math::Vector3(rotationDelta)));
 		}
 
 		// movement
@@ -208,12 +169,7 @@ void TextureModelDemo::Update(const Time& time)
 		}
 	}
 
-	DrawableComponent::Update(time);
-}
-
-unsigned TextureModelDemo::GetVertexSize() const
-{
-	return sizeof(VertexType);
+	SimplePrimitiveComponent::Update(time);
 }
 
 void TextureModelDemo::Draw_SetData(const PrimitiveData& primitiveData)
@@ -221,48 +177,58 @@ void TextureModelDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	auto deviceContext = GetApp().GetDeviceContext();
 
 	auto wvp = GetWorldMatrix();
-	if (!!m_camera)
-		wvp *= m_camera->GetViewProjectionMatrix();
+	if (auto camera = GetCamera())
+		wvp *= camera->GetViewProjectionMatrix();
+
 	m_wvpVariable->SetMatrix(static_cast<const float*>(wvp));
 
-	m_colorTextureVariable->SetResource(primitiveData.texture.Get());
+	m_colorTextureVariable->SetResource(m_textures[Texture::Default].Get());
 
-	m_pass->Apply(0, deviceContext);
+	SimplePrimitiveComponent::Draw_SetData(primitiveData);
 }
 
-void TextureModelDemo::CreateVertexBuffer(const ComPtr<ID3D11Device>& device, const Mesh& mesh)
+void TextureModelDemo::CreatePrimitivesData(ID3D11Device* const device, const Mesh& mesh)
 {
-	std::vector<VertexType> vertexBuffer;
+	using VertexType = VertexPositionTexture;
 
 	if (mesh.HasVertices())
 	{
-		m_primitivesData = {PrimitiveData()};
-		auto& md = m_primitivesData.front();
+		std::vector<VertexType> vertices;
 
 		const auto& meshVertices = mesh.GetVertices();
 		const auto& textureCoordinates = mesh.GetTextureCoordinates(0);
-		md.vertexBuffer.elementsCount = meshVertices.size();
+		const auto verticesCount = meshVertices.size();
 
-		vertexBuffer.reserve(md.vertexBuffer.elementsCount);
+		vertices.reserve(verticesCount);
 
-		for (unsigned i = 0; i < md.vertexBuffer.elementsCount; i++)
+		for (unsigned i = 0; i < verticesCount; i++)
 		{
 			const auto& position = meshVertices[i];
 			const auto& uv = textureCoordinates[i];
-			vertexBuffer.emplace_back(
+			vertices.emplace_back(
 				DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f),
 				DirectX::XMFLOAT2(uv.x, uv.y));
 		}
 
 		D3D11_BUFFER_DESC vertexBufferDesc{};
-		vertexBufferDesc.ByteWidth = sizeof(VertexType) * md.vertexBuffer.elementsCount;
+		vertexBufferDesc.ByteWidth = sizeof(VertexType) * verticesCount;
 		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
 		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
 
 		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
-		vertexSubResourceData.pSysMem = vertexBuffer.data();
+		vertexSubResourceData.pSysMem = vertices.data();
 
-		auto hr = device->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, &md.vertexBuffer.buffer);
+		m_primitivesData.clear();
+		auto& pd = m_primitivesData.emplace_back(PrimitiveData{});
+
+		pd.stride = sizeof(VertexType);
+
+		if (mesh.HasIndices())
+			pd.indexBuffer = mesh.CreateIndexBufferData();
+
+		pd.vertexBuffer.elementsCount = verticesCount;
+
+		auto hr = device->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, &pd.vertexBuffer.buffer);
 		if (FAILED(hr))
 		{
 			throw Exception("ID3D11Device::CreateBuffer() failed.");
