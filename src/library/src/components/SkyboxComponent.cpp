@@ -21,7 +21,6 @@ SkyboxComponent::SkyboxComponent(const std::string& cubeMapName, const float sca
 void SkyboxComponent::Initialize()
 {
 	InitializeMaterial("Skybox");
-	PrimitiveComponent::Initialize();
 
 	Model model(GetApp(), "Sphere", true);
 	m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);
@@ -38,7 +37,7 @@ void SkyboxComponent::Update(const Time& time)
 		SetPosition(position);
 	}
 
-	SceneComponent::Update(time);
+	ConcreteMaterialPrimitiveComponent::Update(time);
 }
 
 void SkyboxComponent::Draw_SetData(const PrimitiveData& primitiveData)
@@ -50,6 +49,6 @@ void SkyboxComponent::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetWorldViewProjection() << math::XMMatrix(wvp);
 	m_material->GetSkyboxTexture() << GetTexture(Texture::Skybox);
 
-	PrimitiveComponent::Draw_SetData(primitiveData);
+	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }
 } // namespace library

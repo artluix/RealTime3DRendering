@@ -39,7 +39,7 @@
 #include <library/Components/MouseComponent.h>
 #include <library/Components/GridComponent.h>
 #include <library/Components/FirstPersonCameraComponent.h>
-// #include <library/Components/SkyboxComponent.h>
+#include <library/Components/SkyboxComponent.h>
 // #include <library/Components/FullScreenQuadComponent.h>
 //
 // #include <library/RenderTargets/FullScreenRenderTarget.h>
@@ -140,8 +140,8 @@ void DemoApplication::Initialize()
 	auto fps = std::make_shared<FpsComponent>();
 
 	// skybox
-	// auto skybox = std::make_shared<SkyboxComponent>("Maskonaive2_1024", 100.f);
-	// skybox->SetCamera(*camera);
+	auto skybox = std::make_shared<SkyboxComponent>("Maskonaive2_1024", 100.f);
+	skybox->SetCamera(*camera);
 
 	// grid
 	m_grid = std::make_shared<GridComponent>();
@@ -278,9 +278,9 @@ void DemoApplication::Initialize()
 	// m_components.push_back(triangle);
 	// m_components.push_back(cube);
 	// m_components.push_back(model);
-	m_components.push_back(textureModel);
+	// m_components.push_back(textureModel);
 	// m_components.push_back(cube);
-	// m_components.push_back(skybox);
+	m_components.push_back(skybox);
 	m_components.push_back(postProcessingText);
 	// m_components.push_back(shadowMapping);
 	// m_components.push_back(directionalShadowMapping);
