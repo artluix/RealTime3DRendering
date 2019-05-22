@@ -126,7 +126,7 @@ void Application::Update(const Time& time)
 void Application::Draw(const Time& time)
 {
 	m_renderer->RenderScene(time);
-	//m_renderer->RenderUI(time);
+	m_renderer->RenderUI(time);
 }
 
 //-------------------------------------------------------------------------

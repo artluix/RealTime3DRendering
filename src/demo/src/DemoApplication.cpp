@@ -32,7 +32,7 @@
 //
 // #include "GeometryShaderDemo.h"
 //
-// //-------------------------------------------------------------------------
+//-------------------------------------------------------------------------
 //
 #include <library/Components/FpsComponent.h>
 #include <library/Components/KeyboardComponent.h>
@@ -273,7 +273,7 @@ void DemoApplication::Initialize()
 	m_components.push_back(m_keyboard);
 	m_components.push_back(m_mouse);
 	m_components.push_back(camera);
-	// m_components.push_back(m_grid);
+	m_components.push_back(m_grid);
 	m_components.push_back(fps);
 	// m_components.push_back(triangle);
 	// m_components.push_back(cube);
