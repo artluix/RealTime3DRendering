@@ -22,7 +22,6 @@ namespace
 constexpr float k_rotationAngle = math::Pi_Div_2;
 constexpr float k_movementRate = 0.01f;
 constexpr float k_scaleRate = 0.01f;
-const std::string k_defaultTextureName = "EarthComposite";
 } // namespace
 
 //-------------------------------------------------------------------------
@@ -119,7 +118,7 @@ void TextureModelDemo::Initialize()
 	CreatePrimitivesData(GetApp().GetDevice(), mesh);
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture(k_defaultTextureName);
+	m_textures[Texture::Default] = GetApp().LoadTexture("EarthComposite");
 }
 
 void TextureModelDemo::Update(const Time& time)

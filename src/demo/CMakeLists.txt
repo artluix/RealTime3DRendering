@@ -82,8 +82,8 @@ if(APPLICATION)
             # src/SpotlightDemo.h
             # src/SpotlightDemo.cpp
 
-            # src/TextureMappingDemo.h
-            # src/TextureMappingDemo.cpp
+            src/TextureMappingDemo.h
+            src/TextureMappingDemo.cpp
 
             # src/TransparencyMappingDemo.h
             # src/TransparencyMappingDemo.cpp

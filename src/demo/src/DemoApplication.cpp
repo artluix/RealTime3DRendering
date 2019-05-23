@@ -10,7 +10,7 @@
 //#include "SpotlightDemo.h"
 
 #include "BasicMaterialDemo.h"
-//#include "TextureMappingDemo.h"
+#include "TextureMappingDemo.h"
 
 // #include "EnvironmentMappingDemo.h"
 // #include "DisplacementMappingDemo.h"
@@ -173,9 +173,9 @@ void DemoApplication::Initialize()
 	basic->SetKeyboard(*m_keyboard);
 
 	// texture mapping
-	// auto textureMapping = std::make_shared<TextureMappingDemo>();
-	// textureMapping->SetCamera(*camera);
-	// textureMapping->SetKeyboard(*m_keyboard);
+	auto textureMapping = std::make_shared<TextureMappingDemo>();
+	textureMapping->SetCamera(*camera);
+	textureMapping->SetKeyboard(*m_keyboard);
 
 	// diffuse lighting
 	// auto diffuseLighting = std::make_shared<DiffuseLightingDemo>();
@@ -281,7 +281,8 @@ void DemoApplication::Initialize()
 	// m_components.push_back(model);
 	// m_components.push_back(textureModel);
 	m_components.push_back(skybox);
-	m_components.push_back(basic);
+	// m_components.push_back(basic);
+	m_components.push_back(textureMapping);
 	// m_components.push_back(shadowMapping);
 	// m_components.push_back(directionalShadowMapping);
 	m_components.push_back(postProcessingText);

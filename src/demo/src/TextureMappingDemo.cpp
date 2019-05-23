@@ -7,6 +7,9 @@
 #include <library/Utils.h>
 #include <library/Path.h>
 #include <library/Exception.h>
+#include <library/Math/Math.h>
+
+#include <library/Model/Model.h>
 
 #include <library/Effect/Effect.h>
 #include <library/Effect/EffectTechnique.h>
@@ -20,15 +23,15 @@ namespace
 	constexpr float k_movementRate = 0.01f;
 }
 
-TextureMappingDemo::TextureMappingDemo()
-{
-	SetModelName("Sphere");
-	SetTextureName("EarthComposite");
-}
-
 void TextureMappingDemo::Initialize()
 {
 	InitializeMaterial("TextureMapping");
+
+	Model model(GetApp(), "Sphere", true);
+	m_primitivesData = GetMaterial()->CreatePrimitivesData(GetApp().GetDevice(), model);
+
+	m_textures.resize(Texture::Count);
+	m_textures[Texture::Default] = GetApp().LoadTexture("EarthComposite");
 }
 
 void TextureMappingDemo::Update(const Time& time)
@@ -39,50 +42,40 @@ void TextureMappingDemo::Update(const Time& time)
 		if (m_keyboard->IsKeyDown(Key::R))
 		{
 			const auto rotationDelta = k_rotationAngle * time.elapsed.GetSeconds();
-			Rotate(rotationDelta);
+			Rotate(math::Quaternion::RotationPitchYawRoll(math::Vector3(rotationDelta)));
 		}
 
 		// movement
 		{
 			math::Vector2 movementAmount;
 			if (m_keyboard->IsKeyDown(Key::Up))
-			{
 				movementAmount.y += 1.0f;
-			}
 
 			if (m_keyboard->IsKeyDown(Key::Down))
-			{
 				movementAmount.y -= 1.0f;
-			}
 
 			if (m_keyboard->IsKeyDown(Key::Left))
-			{
 				movementAmount.x -= 1.0f;
-			}
 
 			if (m_keyboard->IsKeyDown(Key::Right))
-			{
 				movementAmount.x += 1.0f;
-			}
 
 			if (movementAmount)
-			{
 				Translate(math::Vector3(movementAmount * k_movementRate));
-			}
 		}
 	}
 
-	DrawableComponent::Update(time);
+	PrimitiveComponent::Update(time);
 }
 
 void TextureMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	auto wvp = GetWorldMatrix();
-	if (!!m_camera)
-		wvp *= m_camera->GetViewProjectionMatrix();
-	m_material->GetWVP() << wvp;
+	if (auto camera = GetCamera())
+		wvp *= camera->GetViewProjectionMatrix();
 
-	m_material->GetColorTexture() << primitiveData.texture.Get();
+	m_material->GetWVP() << math::XMMatrix(wvp);
+	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 
-	SceneComponent::Draw_SetData(primitiveData);
+	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }
