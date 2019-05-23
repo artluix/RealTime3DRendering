@@ -1,8 +1,7 @@
 #pragma once
 #include "library/NonCopyable.hpp"
 
-// #include <Unknwn.h>
-// #include <Unknwnbase.h>
+ #include <Unknwn.h>
 // #include <type_traits>
 
 namespace library
@@ -48,7 +47,7 @@ public:
 	//-------------------------------------------------------------------------
 
 	template <typename U>
-	HRESULT As(ComPtr<U>& other) const throw()
+	HRESULT As(ComPtr<U>& other) const noexcept(false)
 	{
 		return m_ptr->QueryInterface(__uuidof(U), reinterpret_cast<void**>(&other));
 	}

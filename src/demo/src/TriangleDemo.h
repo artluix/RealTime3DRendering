@@ -3,10 +3,10 @@
 
 class TriangleDemo : public library::SimplePrimitiveComponent
 {
-	RTTI_CLASS(TriangleDemo, library::SimplePrimitiveComponent)
+	RTTI_CLASS(TriangleDemo, library::PrimitiveComponent)
 
 public:
-	explicit TriangleDemo() = default;
+	TriangleDemo() = default;
 
 	void Initialize() override;
 	void Update(const library::Time& time) override;

@@ -11,10 +11,10 @@ class TextureModelDemo
 	: public library::SimplePrimitiveComponent
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(TextureModelDemo, library::SimplePrimitiveComponent, library::InputReceivableComponent)
+	RTTI_CLASS(TextureModelDemo, library::PrimitiveComponent, library::InputReceivableComponent)
 
 public:
-	explicit TextureModelDemo();
+	TextureModelDemo();
 
 	void Initialize() override;
 	void Update(const library::Time& time) override;

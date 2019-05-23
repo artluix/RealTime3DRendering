@@ -28,8 +28,8 @@ if(APPLICATION)
             # src/AnimationDemo.h
             # src/AnimationDemo.cpp
 
-            # src/BasicMaterialDemo.h
-            # src/BasicMaterialDemo.cpp
+            src/BasicMaterialDemo.h
+            src/BasicMaterialDemo.cpp
 
             # src/BasicTessellationDemo.h
             # src/BasicTessellationDemo.cpp

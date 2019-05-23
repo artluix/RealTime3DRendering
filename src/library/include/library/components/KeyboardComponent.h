@@ -11,7 +11,7 @@ class KeyboardComponent : public InputComponent
 	RTTI_CLASS(KeyboardComponent, InputComponent)
 
 public:
-	KeyboardComponent(IDirectInput8& directInput);
+	explicit KeyboardComponent(IDirectInput8& directInput);
 
 	void Update(const Time& time) override;
 

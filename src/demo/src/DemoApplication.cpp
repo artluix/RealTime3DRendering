@@ -5,35 +5,35 @@
 #include "ModelDemo.h"
 #include "TextureModelDemo.h"
 
-// #include "DiffuseLightingDemo.h"
-// #include "PointLightDemo.h"
-// #include "SpotlightDemo.h"
-//
-// #include "BasicMaterialDemo.h"
-// #include "TextureMappingDemo.h"
-//
+//#include "DiffuseLightingDemo.h"
+//#include "PointLightDemo.h"
+//#include "SpotlightDemo.h"
+
+#include "BasicMaterialDemo.h"
+//#include "TextureMappingDemo.h"
+
 // #include "EnvironmentMappingDemo.h"
 // #include "DisplacementMappingDemo.h"
 // #include "NormalMappingDemo.h"
 // #include "TransparencyMappingDemo.h"
 // #include "FogDemo.h"
-//
+
 // #include "ColorFilterDemo.h"
 // #include "GaussianBlurDemo.h"
 // #include "BloomDemo.h"
 // #include "DistortionMappingDemo.h"
-//
+
 // #include "ProjectiveTextureMappingDemo.h"
 // #include "ProjectiveTextureMappingDepthMapDemo.h"
 // #include "ShadowMappingDemo.h"
 // #include "DirectionalShadowMappingDemo.h"
-//
+
 // #include "AnimationDemo.h"
-//
+
 // #include "GeometryShaderDemo.h"
-//
+
 //-------------------------------------------------------------------------
-//
+
 #include <library/Components/FpsComponent.h>
 #include <library/Components/KeyboardComponent.h>
 #include <library/Components/MouseComponent.h>
@@ -41,7 +41,7 @@
 #include <library/Components/FirstPersonCameraComponent.h>
 #include <library/Components/SkyboxComponent.h>
 // #include <library/Components/FullScreenQuadComponent.h>
-//
+
 // #include <library/RenderTargets/FullScreenRenderTarget.h>
 
 //-------------------------------------------------------------------------
@@ -134,7 +134,7 @@ void DemoApplication::Initialize()
 	auto camera = std::make_shared<FirstPersonCameraComponent>();
 	camera->SetMouse(*m_mouse);
 	camera->SetKeyboard(*m_keyboard);
-	camera->SetPosition(math::Vector3(0.0f, 0.0f, 50.0f));
+	camera->SetPosition(math::Vector3(0.0f, 0.0f, 30.0f));
 
 	// fps
 	auto fps = std::make_shared<FpsComponent>();
@@ -168,9 +168,9 @@ void DemoApplication::Initialize()
 	textureModel->SetMouse(*m_mouse);
 
 	// basic
-	// auto basic = std::make_shared<BasicMaterialDemo>();
-	// basic->SetCamera(*camera);
-	// basic->SetKeyboard(*m_keyboard);
+	auto basic = std::make_shared<BasicMaterialDemo>();
+	basic->SetCamera(*camera);
+	basic->SetKeyboard(*m_keyboard);
 
 	// texture mapping
 	// auto textureMapping = std::make_shared<TextureMappingDemo>();
@@ -275,15 +275,16 @@ void DemoApplication::Initialize()
 	m_components.push_back(camera);
 	m_components.push_back(m_grid);
 	m_components.push_back(fps);
+
 	// m_components.push_back(triangle);
 	// m_components.push_back(cube);
 	// m_components.push_back(model);
 	// m_components.push_back(textureModel);
-	// m_components.push_back(cube);
 	m_components.push_back(skybox);
-	m_components.push_back(postProcessingText);
+	m_components.push_back(basic);
 	// m_components.push_back(shadowMapping);
 	// m_components.push_back(directionalShadowMapping);
+	m_components.push_back(postProcessingText);
 	// m_components.push_back(animation);
 	// m_components.push_back(geometryShader);
 
@@ -309,7 +310,7 @@ void DemoApplication::Update(const Time& time)
 	if (m_postProcessingEnabled)
 	{
 	}
-	// 		m_postProcessing->Update(time);
+	// 	m_postProcessing->Update(time);
 
 	Application::Update(time);
 }

@@ -11,10 +11,10 @@ class ModelDemo
 	: public library::SimplePrimitiveComponent
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(ModelDemo, library::SimplePrimitiveComponent, library::InputReceivableComponent)
+	RTTI_CLASS(ModelDemo, library::PrimitiveComponent, library::InputReceivableComponent)
 
 public:
-	explicit ModelDemo() = default;
+	ModelDemo() = default;
 
 	void Initialize() override;
 	void Update(const library::Time& time) override;

@@ -6,10 +6,10 @@ class CubeDemo
 	: public library::SimplePrimitiveComponent
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(CubeDemo, library::SimplePrimitiveComponent, library::InputReceivableComponent)
+	RTTI_CLASS(CubeDemo, library::PrimitiveComponent, library::InputReceivableComponent)
 
 public:
-	explicit CubeDemo() = default;
+	CubeDemo() = default;
 
 	void Initialize() override;
 	void Update(const library::Time& time) override;
