@@ -13,7 +13,6 @@ class InputComponent : public virtual Component
 public:
 	virtual ~InputComponent();
 
-	void Initialize() override;
 
 protected:
 	InputComponent(
@@ -21,6 +20,8 @@ protected:
 		const DIDATAFORMAT& dataFormat,
 		const GUID& guid,
 		const DWORD cooperativeLevel);
+
+	void InitializeInternal() override;
 
 	void GetState(const std::size_t bufferSize, void* buffer);
 

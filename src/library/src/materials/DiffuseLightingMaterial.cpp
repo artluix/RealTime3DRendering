@@ -24,7 +24,7 @@ DiffuseLightingMaterial::~DiffuseLightingMaterial() = default;
 void DiffuseLightingMaterial::InitializeInternal()
 {
 	// clang-format off
-	std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions = {
+	m_inputElementDescriptions = {
 		{
 			"POSITION",
 			0,

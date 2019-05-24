@@ -44,10 +44,11 @@ public:
 	BloomDrawMode GetDrawMode() const { return m_drawMode; }
 	void SetDrawMode(const BloomDrawMode drawMode);
 
-	void Initialize() override;
 	void Draw(const Time& time) override;
 
 protected:
+	void InitializeInternal() override;
+
 	BloomDrawMode m_drawMode;
 
 private:

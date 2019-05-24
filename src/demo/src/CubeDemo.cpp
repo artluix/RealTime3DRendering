@@ -20,7 +20,7 @@ constexpr float k_rotationAngle = math::Pi_Div_2;
 constexpr float k_movementRate = 0.01f;
 } // namespace
 
-void CubeDemo::Initialize()
+void CubeDemo::InitializeInternal()
 {
 	InitializeEffect("Basic", true);
 

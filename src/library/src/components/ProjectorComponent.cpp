@@ -169,7 +169,7 @@ const math::Matrix4& ProjectorComponent::GetViewProjectionMatrix() const
 
 //-------------------------------------------------------------------------
 
-void ProjectorComponent::Initialize()
+void ProjectorComponent::InitializeInternal()
 {
 	// First time init matrices
 	UpdateViewMatrix();

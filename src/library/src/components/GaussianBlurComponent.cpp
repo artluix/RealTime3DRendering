@@ -34,10 +34,8 @@ GaussianBlurComponent::~GaussianBlurComponent() = default;
 
 //-------------------------------------------------------------------------
 
-void GaussianBlurComponent::Initialize()
+void GaussianBlurComponent::InitializeInternal()
 {
-	PostProcessingComponent::Initialize();
-
 	InitializeMaterial("GaussianBlur");
 	InitializeQuad("blur");
 

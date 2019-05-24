@@ -17,9 +17,8 @@ public:
 
 	void InitializeGeometry(const Frustum& frustum);
 
-	void Initialize() override;
-
 protected:
+	void InitializeInternal() override;
 	void Draw_SetData(const PrimitiveData& primitiveData) override;
 
 private:

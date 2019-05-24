@@ -65,7 +65,7 @@ void GridComponent::SetColor(const Color& color)
 
 //-------------------------------------------------------------------------
 
-void GridComponent::Initialize()
+void GridComponent::InitializeInternal()
 {
 	InitializeMaterial("Basic");
 	Build();

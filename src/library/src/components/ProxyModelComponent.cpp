@@ -23,19 +23,12 @@ ProxyModelComponent::~ProxyModelComponent() = default;
 
 //-------------------------------------------------------------------------
 
-void ProxyModelComponent::SetWireframeVisible(const bool visible)
-{
-	m_isWireframeVisible = visible;
-}
-
-void ProxyModelComponent::Initialize()
+void ProxyModelComponent::InitializeInternal()
 {
 	InitializeMaterial("Basic");
 
-	const auto& app = GetApp();
-
-	Model model(app, m_modelName, true);
-	m_primitivesData = m_material->CreatePrimitivesData(app.GetDevice(), model);
+	Model model(GetApp(), m_modelName, true);
+	m_primitivesData = GetMaterial()->CreatePrimitivesData(GetApp().GetDevice(), model);
 }
 
 void ProxyModelComponent::Draw_SetData(const PrimitiveData& primitiveData)
@@ -43,16 +36,17 @@ void ProxyModelComponent::Draw_SetData(const PrimitiveData& primitiveData)
 	auto wvp = GetWorldMatrix();
 	if (auto camera = GetCamera())
 		wvp *= camera->GetViewProjectionMatrix();
+
 	m_material->GetWorldViewProjection() << math::XMMatrix(wvp);
 
-	PrimitiveComponent::Draw_SetData(primitiveData);
+	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }
 
 void ProxyModelComponent::Draw_Render(const PrimitiveData& primitiveData)
 {
 	auto deviceContext = GetApp().GetDeviceContext();
 
-	if (m_isWireframeVisible)
+	if (m_wireframeVisible)
 	{
 		deviceContext->RSSetState(RasterizerStates::Wireframe);
 		PrimitiveComponent::Draw_Render(primitiveData);

@@ -65,17 +65,18 @@ public:
 	const math::Matrix4& GetProjectionMatrix() const;
 	const math::Matrix4& GetViewProjectionMatrix() const;
 
-	void Initialize() override;
 	void Update(const Time& time) override;
 
 	// void Reset();
 protected:
+	void InitializeInternal() override;
+
 	void UpdateViewMatrix();
 	void UpdateProjectionMatrix();
 	void UpdateViewProjectionMatrix();
 
-	void OnTranslation(const math::Vector3& translationDelta);
-	void OnRotation(const math::Quaternion& rotationDelta);
+	void OnTranslation(const math::Vector3& translationDelta) override;
+	void OnRotation(const math::Quaternion& rotationDelta) override;
 
 	float m_nearPlaneDistance;
 	float m_farPlaneDistance;

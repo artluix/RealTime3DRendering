@@ -50,12 +50,12 @@ ID3D11InputLayout* Material::GetInputLayout(const EffectPass& pass) const
 
 void Material::Initialize()
 {
-	if (m_isInitialized)
+	if (m_initialized)
 		return;
 
 	InitializeInternal();
 
-	m_isInitialized = true;
+	m_initialized = true;
 }
 
 //-------------------------------------------------------------------------

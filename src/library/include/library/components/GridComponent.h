@@ -24,9 +24,8 @@ public:
 	void SetScale(const unsigned scale);
 	void SetColor(const Color& color);
 
-	void Initialize() override;
-
 protected:
+	void InitializeInternal() override;
 	void Draw_SetData(const PrimitiveData& primitiveData) override;
 
 private:

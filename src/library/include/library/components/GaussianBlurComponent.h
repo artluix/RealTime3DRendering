@@ -16,11 +16,13 @@ public:
 	float GetBlurAmount() const { return m_blurAmount; }
 	void SetBlurAmount(const float blurAmount);
 
-	void Initialize() override;
 	void Draw(const Time& time) override;
 
 	void DrawToTexture(const Time& time);
 	ID3D11ShaderResourceView* GetOutputTexture() const { return m_outputTexture; }
+
+protected:
+	void InitializeInternal() override;
 
 private:
 	void InitializeSampleOffsets();

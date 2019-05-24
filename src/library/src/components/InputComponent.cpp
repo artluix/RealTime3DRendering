@@ -26,7 +26,9 @@ InputComponent::~InputComponent()
 	}
 }
 
-void InputComponent::Initialize()
+//-------------------------------------------------------------------------
+
+void InputComponent::InitializeInternal()
 {
 	auto hr = m_directInput.CreateDevice(m_guid, &m_directInputDevice, nullptr);
 	if (FAILED(hr))

@@ -67,8 +67,7 @@ void Application::Initialize()
 
 	for (const auto& component : m_components)
 	{
-		component->m_app = this;
-		component->Initialize();
+		component->Initialize(*this);
 	}
 }
 

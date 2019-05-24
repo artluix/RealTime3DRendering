@@ -18,7 +18,7 @@ SkyboxComponent::SkyboxComponent(const std::string& cubeMapName, const float sca
 
 //-------------------------------------------------------------------------
 
-void SkyboxComponent::Initialize()
+void SkyboxComponent::InitializeInternal()
 {
 	InitializeMaterial("Skybox");
 

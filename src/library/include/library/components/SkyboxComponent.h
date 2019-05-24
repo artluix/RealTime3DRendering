@@ -14,7 +14,6 @@ public:
 	SkyboxComponent(const std::string& cubeMapName, const float scale);
 	~SkyboxComponent() = default;
 
-	void Initialize() override;
 	void Update(const Time& time) override;
 
 protected:
@@ -29,8 +28,9 @@ protected:
 		};
 	};
 
-	std::string m_cubeMapName;
-
+	void InitializeInternal() override;
 	void Draw_SetData(const PrimitiveData& primitiveData) override;
+
+	std::string m_cubeMapName;
 };
 } // namespace library

@@ -23,13 +23,13 @@ public:
 	void SetActiveTechnique(const std::string& techniqueName, const std::string& passName = "p0");
 	void SetMaterialUpdateFunction(const MaterialUpdateFunction& func);
 
-	void Initialize() override;
 	void Update(const Time& time) override;
 
 	const Material* GetMaterial() const override { return m_material; }
-	ID3D11InputLayout* GetInputLayout() const { return m_inputLayout; }
+	ID3D11InputLayout* GetInputLayout() const override { return m_inputLayout; }
 
 protected:
+	void InitializeInternal() override;
 	void Draw_SetData(const PrimitiveData& primitiveData) override;
 
 	Material* GetMaterial() override { return m_material; }

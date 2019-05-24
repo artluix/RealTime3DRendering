@@ -8,10 +8,10 @@ class TriangleDemo : public library::SimplePrimitiveComponent
 public:
 	TriangleDemo() = default;
 
-	void Initialize() override;
 	void Update(const library::Time& time) override;
 
 protected:
+	void InitializeInternal() override;
 	void Draw_SetData(const library::PrimitiveData& primitiveData) override;
 
 private:

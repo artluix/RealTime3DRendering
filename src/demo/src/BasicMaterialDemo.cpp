@@ -16,11 +16,11 @@ using namespace library;
 
 namespace
 {
-	constexpr float k_rotationAngle = math::Pi_Div_2;
-	constexpr float k_movementRate = 0.01f;
-}
+constexpr float k_rotationAngle = math::Pi_Div_2;
+constexpr float k_movementRate = 0.01f;
+} // namespace
 
-void BasicMaterialDemo::Initialize()
+void BasicMaterialDemo::InitializeInternal()
 {
 	InitializeMaterial("Basic");
 

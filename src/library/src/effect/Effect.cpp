@@ -129,7 +129,7 @@ void Effect::SetEffect(ComPtr<ID3DX11Effect>&& effect)
 	m_variablesMapping.clear();
 	m_variables.clear();
 
-	m_isInitialized = false;
+	m_initialized = false;
 
 	m_effect = std::move(effect);
 
@@ -222,7 +222,7 @@ Effect::Variable& Effect::GetVariable(const unsigned variableIdx)
 
 void Effect::Initialize()
 {
-	if (m_isInitialized)
+	if (m_initialized)
 		return;
 
 	auto hr = m_effect->GetDesc(&m_effectDesc);
@@ -247,6 +247,6 @@ void Effect::Initialize()
 		m_variables.push_back(std::move(variable));
 	}
 
-	m_isInitialized = true;
+	m_initialized = true;
 }
 } // namespace library

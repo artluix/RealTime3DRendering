@@ -20,7 +20,6 @@ public:
 	UIComponent();
 	~UIComponent();
 
-	void Initialize() override;
 	void Update(const Time& time) override;
 	void Draw(const Time& time) override;
 
@@ -33,6 +32,8 @@ public:
 	void SetDestinationRect(const RECT& rect);
 
 protected:
+	void InitializeInternal() override;
+
 	void Begin();
 	void End();
 

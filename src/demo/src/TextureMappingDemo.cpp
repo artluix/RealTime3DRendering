@@ -19,11 +19,11 @@ using namespace library;
 
 namespace
 {
-	constexpr float k_rotationAngle = math::Pi_Div_2;
-	constexpr float k_movementRate = 0.01f;
-}
+constexpr float k_rotationAngle = math::Pi_Div_2;
+constexpr float k_movementRate = 0.01f;
+} // namespace
 
-void TextureMappingDemo::Initialize()
+void TextureMappingDemo::InitializeInternal()
 {
 	InitializeMaterial("TextureMapping");
 

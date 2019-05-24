@@ -31,10 +31,10 @@ CameraComponent::CameraComponent(
 	: ProjectorComponent(nearPlaneDistance, farPlaneDistance, fieldOfView, aspectRatio)
 {}
 
-void CameraComponent::Initialize()
+void CameraComponent::InitializeInternal()
 {
 	m_aspectRatio = GetApp().GetAspectRatio();
 
-	ProjectorComponent::Initialize();
+	ProjectorComponent::InitializeInternal();
 }
 } // namespace library

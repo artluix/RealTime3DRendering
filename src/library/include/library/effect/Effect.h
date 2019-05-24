@@ -66,7 +66,7 @@ public:
 
 	//-------------------------------------------------------------------------
 
-	bool IsInitialized() const { return m_isInitialized; }
+	bool IsInitialized() const { return m_initialized; }
 
 private:
 	using TechniquePtr = std::unique_ptr<Technique>;
@@ -88,7 +88,7 @@ private:
 	ComPtr<ID3DX11Effect> m_effect;
 	D3DX11_EFFECT_DESC m_effectDesc;
 
-	bool m_isInitialized = false;
+	bool m_initialized = false;
 
 	std::vector<TechniquePtr> m_techniques;
 	std::map<std::string, unsigned> m_techniquesMapping;

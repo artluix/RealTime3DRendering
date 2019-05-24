@@ -34,11 +34,12 @@ public:
 
 	void SetTextUpdateFunction(const TextUpdateFunction& textUpdateFunction);
 
-	void Initialize() override;
 	void Update(const Time& time) override;
 	void Draw(const Time& time) override;
 
 protected:
+	void InitializeInternal() override;
+
 	TextUpdateFunction m_textUpdateFunction;
 
 	math::Vector2 m_position;

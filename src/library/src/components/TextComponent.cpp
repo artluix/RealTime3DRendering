@@ -52,9 +52,9 @@ void TextComponent::SetTextUpdateFunction(const TextUpdateFunction& textUpdateFu
 	m_textUpdateFunction = textUpdateFunction;
 }
 
-void TextComponent::Initialize()
+void TextComponent::InitializeInternal()
 {
-	UIComponent::Initialize();
+	UIComponent::InitializeInternal();
 
 	SetFontPath(m_fontPath);
 }

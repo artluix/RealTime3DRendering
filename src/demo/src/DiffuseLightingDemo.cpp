@@ -10,6 +10,9 @@
 #include <library/Utils.h>
 #include <library/Path.h>
 #include <library/Exception.h>
+#include <library/Math/Math.h>
+
+#include <library/Model/Model.h>
 
 #include <library/Effect/Effect.h>
 #include <library/Effect/EffectPass.h>
@@ -22,58 +25,55 @@ using namespace library;
 
 namespace
 {
-	constexpr float k_byteMax = static_cast<float>(0xFF);
+constexpr float k_byteMax = static_cast<float>(0xFF);
 
-	constexpr float k_lightModulationRate = k_byteMax / 40;
-	constexpr auto k_lightRotationRate = math::Vector2(math::Pi_2);
+constexpr float k_lightModulationRate = k_byteMax / 40;
+constexpr auto k_lightRotationRate = math::Vector2(math::Pi);
 
-	constexpr auto k_proxyModelRotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
-	constexpr float k_proxyModelDistanceOffset = 10.f;
-}
+constexpr auto k_proxyModelRotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
+constexpr float k_proxyModelDistanceOffset = 10.f;
+} // namespace
 
 //-------------------------------------------------------------------------
 
-DiffuseLightingDemo::DiffuseLightingDemo()
-	: m_ambientColor(1.f, 1.f, 1.f, 0.f)
-{
-	SetModelName("Sphere");
-	SetTextureName("EarthComposite");
-}
+DiffuseLightingDemo::DiffuseLightingDemo() : m_ambientColor(1.f, 1.f, 1.f, 0.f)
+{}
 
 DiffuseLightingDemo::~DiffuseLightingDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void DiffuseLightingDemo::Initialize()
+void DiffuseLightingDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
 	InitializeMaterial("DiffuseLighting");
 
+	Model model(GetApp(), "Sphere", true);
+	m_primitivesData = GetMaterial()->CreatePrimitivesData(GetApp().GetDevice(), model);
+
+	m_textures.resize(Texture::Count);
+	m_textures[Texture::Default] = GetApp().LoadTexture("EarthComposite");
+
 	m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
 	m_proxyModel = std::make_unique<ProxyModelComponent>("DirectionalLightProxy", 0.5f);
 	m_proxyModel->SetPosition(
-		GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset
-	);
-	m_proxyModel->SetRotation(GetRotation() + k_proxyModelRotationOffset);
+		GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
+	m_proxyModel->SetInitialTransform(math::Matrix4::RotationPitchYawRoll(k_proxyModelRotationOffset));
 	m_proxyModel->SetCamera(*GetCamera());
-	m_proxyModel->Initialize();
+	m_proxyModel->Initialize(GetApp());
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
-	m_text->SetTextUpdateFunction(
-		[this]() -> std::wstring
-		{
-			std::wostringstream woss;
-			woss <<
-				L"Ambient Intensity (+PageUp/-PageDown): " << m_ambientColor.a << "\n" <<
-				L"Directional Light Intensity (+Home/-End): " << m_directionalLight->GetColor().a << "\n" <<
-				L"Rotate Directional Light (Arrow Keys)\n";
-			return woss.str();
-		}
-	);
-	m_text->Initialize();
+	m_text->SetTextUpdateFunction([this]() -> std::wstring {
+		std::wostringstream woss;
+		woss << L"Ambient Intensity (+PageUp/-PageDown): " << m_ambientColor.a << "\n"
+			 << L"Directional Light Intensity (+Home/-End): " << m_directionalLight->GetColor().a << "\n"
+			 << L"Rotate Directional Light (Arrow Keys)\n";
+		return woss.str();
+	});
+	m_text->Component::Initialize(GetApp());
 }
 
 void DiffuseLightingDemo::Update(const Time& time)
@@ -84,7 +84,7 @@ void DiffuseLightingDemo::Update(const Time& time)
 	m_text->Update(time);
 	m_proxyModel->Update(time);
 
-	SceneComponent::Update(time);
+	PrimitiveComponent::Update(time);
 }
 
 void DiffuseLightingDemo::UpdateAmbientLight(const Time& time)
@@ -119,9 +119,10 @@ void DiffuseLightingDemo::UpdateDirectionalLight(const Time& time)
 		if (m_keyboard->IsKeyDown(Key::Home) && directionalLightIntensity < k_byteMax)
 		{
 			directionalLightIntensity += k_lightModulationRate * elapsedTime;
-				
+
 			auto directionalLightColor = m_directionalLight->GetColor();
 			directionalLightColor.a = math::Min(directionalLightIntensity, k_byteMax);
+			m_directionalLight->SetColor(directionalLightColor);
 		}
 
 		if (m_keyboard->IsKeyDown(Key::End) && directionalLightIntensity > 0)
@@ -149,32 +150,28 @@ void DiffuseLightingDemo::UpdateDirectionalLight(const Time& time)
 
 		if (rotationAmount)
 		{
-			m_directionalLight->Rotate(math::Vector3(rotationAmount.y, rotationAmount.x, 0.f));
-
-			const auto dirLightRot = m_directionalLight->GetRotation();
+			m_directionalLight->Rotate(math::Quaternion::RotationPitchYawRoll(
+				math::Vector3(rotationAmount.y, rotationAmount.x, 0.f)));
 
 			m_proxyModel->SetPosition(
-				GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset
-			);
-			m_proxyModel->SetRotation(
-				math::Vector3(dirLightRot.z, dirLightRot.y, dirLightRot.x) + k_proxyModelRotationOffset
-			);
+				GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
+			m_proxyModel->SetRotation(m_directionalLight->GetRotation());
 		}
 	}
 }
-	
+
 void DiffuseLightingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	auto wvp = GetWorldMatrix();
-	if (!!m_camera)
-		wvp *= m_camera->GetViewProjectionMatrix();
-		
-	m_material->GetWVP() << wvp;
-	m_material->GetWorld() << GetWorldMatrix();
-	m_material->GetAmbientColor() << m_ambientColor;
-	m_material->GetLightColor() << m_directionalLight->GetColor();
-	m_material->GetLightDirection() << m_directionalLight->GetDirection();
-	m_material->GetColorTexture() << primitiveData.texture.Get();
+	if (auto camera = GetCamera())
+		wvp *= camera->GetViewProjectionMatrix();
 
-	SceneComponent::Draw_SetData(primitiveData);
+	m_material->GetWVP() << math::XMMatrix(wvp);
+	m_material->GetWorld() << math::XMMatrix(GetWorldMatrix());
+	m_material->GetAmbientColor() << math::XMVector(m_ambientColor);
+	m_material->GetLightColor() << math::XMVector(m_directionalLight->GetColor());
+	m_material->GetLightDirection() << math::XMVector(m_directionalLight->GetDirection());
+	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
+
+	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }

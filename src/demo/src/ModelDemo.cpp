@@ -25,7 +25,7 @@ constexpr float k_movementRate = 0.01f;
 
 //-------------------------------------------------------------------------
 
-void ModelDemo::Initialize()
+void ModelDemo::InitializeInternal()
 {
 	InitializeEffect("Basic", true);
 

@@ -13,7 +13,7 @@
 
 using namespace library;
 
-void TriangleDemo::Initialize()
+void TriangleDemo::InitializeInternal()
 {
 	InitializeEffect("Basic", true);
 

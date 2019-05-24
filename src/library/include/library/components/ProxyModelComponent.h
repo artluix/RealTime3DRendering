@@ -15,16 +15,15 @@ public:
 	ProxyModelComponent(const std::string& modelName, const float scale);
 	~ProxyModelComponent();
 
-	bool IsWireframeVisible() const { return m_isWireframeVisible; }
-	void SetWireframeVisible(const bool visible);
-
-	void Initialize() override;
+	bool IsWireframeVisible() const { return m_wireframeVisible; }
+	void SetWireframeVisible(const bool visible) { m_wireframeVisible = visible; }
 
 protected:
+	void InitializeInternal() override;
 	void Draw_SetData(const PrimitiveData& primitiveData) override;
 	void Draw_Render(const PrimitiveData& primitiveData) override;
 
-	bool m_isWireframeVisible = true;
+	bool m_wireframeVisible = true;
 
 	std::string m_modelName;
 };

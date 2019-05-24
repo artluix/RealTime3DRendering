@@ -28,7 +28,7 @@ void PostProcessingComponent::InitializeQuad()
 		m_fullScreenQuad->SetMaterial(*material);
 	}
 
-	m_fullScreenQuad->Initialize();
+	m_fullScreenQuad->Initialize(GetApp());
 }
 
 void PostProcessingComponent::InitializeQuad(
@@ -43,6 +43,6 @@ void PostProcessingComponent::InitializeQuad(
 		m_fullScreenQuad->SetMaterial(*material, techniqueName, passName);
 	}
 
-	m_fullScreenQuad->Initialize();
+	m_fullScreenQuad->Initialize(GetApp());
 }
 } // namespace library

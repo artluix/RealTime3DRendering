@@ -29,24 +29,28 @@ const auto k_backgroundColor = Color::Black;
 
 std::string BloomDrawModeToString(const BloomDrawMode bloomDrawMode)
 {
+	// clang-format off
 	switch (bloomDrawMode)
 	{
-		case BloomDrawMode::Normal: return "Normal";
-		case BloomDrawMode::ExtractedTexture: return "Extracted Texture";
-		case BloomDrawMode::BlurredTexture: return "Blurred Texture";
-		default: return "";
+		case BloomDrawMode::Normal:				return "Normal";
+		case BloomDrawMode::ExtractedTexture:	return "Extracted Texture";
+		case BloomDrawMode::BlurredTexture:		return "Blurred Texture";
+		default:								return "";
 	}
+	// clang-format on
 }
 
 BloomDrawMode BloomDrawModeNext(const BloomDrawMode bloomDrawMode)
 {
+	// clang-format off
 	switch (bloomDrawMode)
 	{
-		case BloomDrawMode::Normal: return BloomDrawMode::ExtractedTexture;
-		case BloomDrawMode::ExtractedTexture: return BloomDrawMode::BlurredTexture;
-		case BloomDrawMode::BlurredTexture: return BloomDrawMode::Normal;
-		default: return BloomDrawMode::Normal; // to skip warning
+		case BloomDrawMode::Normal:				return BloomDrawMode::ExtractedTexture;
+		case BloomDrawMode::ExtractedTexture:	return BloomDrawMode::BlurredTexture;
+		case BloomDrawMode::BlurredTexture:		return BloomDrawMode::Normal;
+		default:								return BloomDrawMode::Normal; // to skip warning
 	}
+	// clang-format on
 }
 
 //-------------------------------------------------------------------------
@@ -71,10 +75,8 @@ void BloomComponent::SetDrawMode(const BloomDrawMode drawMode)
 
 //-------------------------------------------------------------------------
 
-void BloomComponent::Initialize()
+void BloomComponent::InitializeInternal()
 {
-	PostProcessingComponent::Initialize();
-
 	InitializeMaterial("Bloom");
 	InitializeQuad();
 
@@ -82,7 +84,7 @@ void BloomComponent::Initialize()
 
 	m_gaussianBlur = std::make_unique<GaussianBlurComponent>();
 	m_gaussianBlur->SetSceneTexture(*m_renderTarget->GetOutputTexture());
-	m_gaussianBlur->Initialize();
+	m_gaussianBlur->Initialize(GetApp());
 	m_gaussianBlur->SetBlurAmount(m_settings.blurAmount);
 }
 

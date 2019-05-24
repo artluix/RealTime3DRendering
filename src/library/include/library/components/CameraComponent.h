@@ -15,6 +15,7 @@ public:
 		const float fieldOfView,
 		const float aspectRatio);
 
-	void Initialize() override;
+protected:
+	void InitializeInternal() override;
 };
 } // namespace library

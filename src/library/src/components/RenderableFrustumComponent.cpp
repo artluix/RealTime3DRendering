@@ -36,10 +36,9 @@ RenderableFrustumComponent::RenderableFrustumComponent(const Color& color) : m_c
 
 //-------------------------------------------------------------------------
 
-void RenderableFrustumComponent::Initialize()
+void RenderableFrustumComponent::InitializeInternal()
 {
 	InitializeMaterial("Basic");
-	PrimitiveComponent::Initialize();
 
 	InitializeIndexBuffer();
 }
@@ -48,9 +47,7 @@ void RenderableFrustumComponent::Draw_SetData(const PrimitiveData& primitiveData
 {
 	auto wvp = GetWorldMatrix();
 	if (auto camera = GetCamera())
-	{
 		wvp *= camera->GetViewProjectionMatrix();
-	}
 
 	GetMaterial()->GetWorldViewProjection() << math::XMMatrix(wvp);
 

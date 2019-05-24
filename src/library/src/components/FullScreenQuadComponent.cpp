@@ -56,12 +56,9 @@ void FullScreenQuadComponent::SetMaterialUpdateFunction(const MaterialUpdateFunc
 	m_materialUpdateFunction = func;
 }
 
-void FullScreenQuadComponent::Initialize()
+void FullScreenQuadComponent::InitializeInternal()
 {
-	PrimitiveComponent::Initialize();
-
 	m_primitivesData.clear();
-
 	auto& pd = m_primitivesData.emplace_back(PrimitiveData());
 
 	// vertex buffer

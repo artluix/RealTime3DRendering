@@ -19,7 +19,7 @@ UIComponent::~UIComponent() = default;
 
 //-------------------------------------------------------------------------
 
-void UIComponent::Initialize()
+void UIComponent::InitializeInternal()
 {
 	m_spriteBatch = std::make_unique<DirectX::SpriteBatch>(GetApp().GetDeviceContext());
 }

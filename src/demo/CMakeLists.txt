@@ -40,8 +40,8 @@ if(APPLICATION)
             # src/ColorFilterDemo.h
             # src/ColorFilterDemo.cpp
 
-            # src/DiffuseLightingDemo.h
-            # src/DiffuseLightingDemo.cpp
+            src/DiffuseLightingDemo.h
+            src/DiffuseLightingDemo.cpp
 
             # src/DirectionalShadowMappingDemo.h
             # src/DirectionalShadowMappingDemo.cpp

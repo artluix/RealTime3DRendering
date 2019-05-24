@@ -29,7 +29,7 @@ constexpr float k_scaleRate = 0.01f;
 TextureModelDemo::TextureModelDemo() : m_wheel(0)
 {}
 
-void TextureModelDemo::Initialize()
+void TextureModelDemo::InitializeInternal()
 {
 	InitializeEffect("TextureMapping");
 

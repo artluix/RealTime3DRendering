@@ -46,7 +46,7 @@ public:
 	ID3D11InputLayout* GetInputLayout(const EffectPass& pass) const;
 
 	void Initialize();
-	bool IsInitialized() const { return m_isInitialized; }
+	bool IsInitialized() const { return m_initialized; }
 
 	virtual VertexBufferData CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh) const = 0;
 
@@ -72,6 +72,6 @@ protected:
 	std::map<const EffectPass*, ComPtr<ID3D11InputLayout>> m_inputLayouts;
 
 private:
-	bool m_isInitialized = false;
+	bool m_initialized = false;
 };
 } // namespace library
