@@ -188,9 +188,9 @@ void DemoApplication::Initialize()
 	pointLight->SetKeyboard(*m_keyboard);
 
 	// spotlight
-	// auto spotlight = std::make_shared<SpotlightDemo>();
-	// spotlight->SetCamera(*camera);
-	// spotlight->SetKeyboard(*m_keyboard);
+	auto spotlight = std::make_shared<SpotlightDemo>();
+	spotlight->SetCamera(*camera);
+	spotlight->SetKeyboard(*m_keyboard);
 
 	// normal mapping
 	// auto normalMapping = std::make_shared<NormalMappingDemo>();
@@ -284,7 +284,8 @@ void DemoApplication::Initialize()
 	// m_components.push_back(basic);
 	// m_components.push_back(textureMapping);
 	// m_components.push_back(diffuseLighting);
-	m_components.push_back(pointLight);
+	// m_components.push_back(pointLight);
+	m_components.push_back(spotlight);
 	// m_components.push_back(shadowMapping);
 	// m_components.push_back(directionalShadowMapping);
 	m_components.push_back(postProcessingText);
