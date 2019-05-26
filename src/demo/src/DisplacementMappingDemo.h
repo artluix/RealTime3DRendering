@@ -1,38 +1,47 @@
 #pragma once
 #include <library/Materials/DisplacementMappingMaterial.h>
-
 #include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
-
-#include <library/DirectXForwardDeclarations.h>
-#include <library/math/Color.h>
+#include <library/Color.h>
 
 #include <memory>
 
 namespace library
 {
-	class PointLightComponent;
-	class ProxyModelComponent;
-	class TextComponent;
+class PointLightComponent;
+class ProxyModelComponent;
+class TextComponent;
 } // namespace library
 
 class DisplacementMappingDemo
 	: public library::ConcreteMaterialPrimitiveComponent<library::DisplacementMappingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(DisplacementMappingDemo, library::SceneComponent, library::InputReceivableComponent)
+	RTTI_CLASS(DisplacementMappingDemo, library::PrimitiveComponent, library::InputReceivableComponent)
 
 public:
-	explicit DisplacementMappingDemo();
+	DisplacementMappingDemo();
 	~DisplacementMappingDemo();
 
-	void Initialize() override;
 	void Update(const library::Time& time) override;
 
 protected:
+	void InitializeInternal() override;
 	void Draw_SetData(const library::PrimitiveData& primitiveData) override;
 
 private:
+	struct Texture
+	{
+		enum Type : unsigned
+		{
+			Default = 0,
+			DisplacementMap,
+
+			//# Count
+			Count
+		};
+	};
+
 	void UpdateAmbientLight(const library::Time& time);
 	void UpdatePointLight(const library::Time& time);
 
