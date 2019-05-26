@@ -60,7 +60,7 @@ void NormalMappingMaterial::InitializeInternal()
 	};
 	// clang-format on
 
-	DirectionalLightMaterial::InitializeInternal();
+	Material::InitializeInternal();
 }
 
 VertexBufferData NormalMappingMaterial::CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh)

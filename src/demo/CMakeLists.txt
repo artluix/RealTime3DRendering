@@ -46,14 +46,14 @@ if(APPLICATION)
             # src/DirectionalShadowMappingDemo.h
             # src/DirectionalShadowMappingDemo.cpp
 
-            # src/DisplacementMappingDemo.h
-            # src/DisplacementMappingDemo.cpp
+            src/DisplacementMappingDemo.h
+            src/DisplacementMappingDemo.cpp
 
             # src/DistortionMappingDemo.h
             # src/DistortionMappingDemo.cpp
 
-            # src/EnvironmentMappingDemo.h
-            # src/EnvironmentMappingDemo.cpp
+            src/EnvironmentMappingDemo.h
+            src/EnvironmentMappingDemo.cpp
 
             # src/FogDemo.h
             # src/FogDemo.cpp
@@ -64,8 +64,8 @@ if(APPLICATION)
             # src/GeometryShaderDemo.h
             # src/GeometryShaderDemo.cpp
 
-            # src/NormalMappingDemo.h
-            # src/NormalMappingDemo.cpp
+            src/NormalMappingDemo.h
+            src/NormalMappingDemo.cpp
 
             src/PointLightDemo.h
             src/PointLightDemo.cpp
@@ -85,8 +85,8 @@ if(APPLICATION)
             src/TextureMappingDemo.h
             src/TextureMappingDemo.cpp
 
-            # src/TransparencyMappingDemo.h
-            # src/TransparencyMappingDemo.cpp
+            src/TransparencyMappingDemo.h
+            src/TransparencyMappingDemo.cpp
     )
 
     add_executable(demo WIN32 ${DEMO_SOURCES})

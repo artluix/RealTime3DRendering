@@ -29,6 +29,8 @@ constexpr float k_scaleRate = 0.01f;
 TextureModelDemo::TextureModelDemo() : m_wheel(0)
 {}
 
+//-------------------------------------------------------------------------
+
 void TextureModelDemo::InitializeInternal()
 {
 	InitializeEffect("TextureMapping");
@@ -173,8 +175,6 @@ void TextureModelDemo::Update(const Time& time)
 
 void TextureModelDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
-	auto deviceContext = GetApp().GetDeviceContext();
-
 	auto wvp = GetWorldMatrix();
 	if (auto camera = GetCamera())
 		wvp *= camera->GetViewProjectionMatrix();

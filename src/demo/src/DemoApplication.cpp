@@ -12,10 +12,11 @@
 #include "PointLightDemo.h"
 #include "SpotlightDemo.h"
 
+#include "NormalMappingDemo.h"
 // #include "EnvironmentMappingDemo.h"
-// #include "DisplacementMappingDemo.h"
-// #include "NormalMappingDemo.h"
 // #include "TransparencyMappingDemo.h"
+// #include "DisplacementMappingDemo.h"
+
 // #include "FogDemo.h"
 
 // #include "ColorFilterDemo.h"
@@ -193,9 +194,9 @@ void DemoApplication::Initialize()
 	spotlight->SetKeyboard(*m_keyboard);
 
 	// normal mapping
-	// auto normalMapping = std::make_shared<NormalMappingDemo>();
-	// normalMapping->SetCamera(*camera);
-	// normalMapping->SetKeyboard(*m_keyboard);
+	auto normalMapping = std::make_shared<NormalMappingDemo>();
+	normalMapping->SetCamera(*camera);
+	normalMapping->SetKeyboard(*m_keyboard);
 
 	// environment mapping
 	// auto environmentMapping = std::make_shared<EnvironmentMappingDemo>();
@@ -285,7 +286,8 @@ void DemoApplication::Initialize()
 	// m_components.push_back(textureMapping);
 	// m_components.push_back(diffuseLighting);
 	// m_components.push_back(pointLight);
-	m_components.push_back(spotlight);
+	// m_components.push_back(spotlight);
+	m_components.push_back(normalMapping);
 	// m_components.push_back(shadowMapping);
 	// m_components.push_back(directionalShadowMapping);
 	m_components.push_back(postProcessingText);

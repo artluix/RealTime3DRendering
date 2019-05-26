@@ -282,15 +282,17 @@ void SpotlightDemo::UpdateSpecularLight(const Time& time)
 
 void SpotlightDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
-	auto world = GetWorldMatrix();
+	const auto& world = GetWorldMatrix();
+	auto wvp = world;
+
 	if (auto camera = GetCamera())
 	{
-		auto wvp = world * camera->GetViewProjectionMatrix();
+		wvp *= camera->GetViewProjectionMatrix();
 
 		m_material->GetCameraPosition() << math::XMVector(camera->GetPosition());
-		m_material->GetWVP() << math::XMMatrix(wvp);
 	}
 
+	m_material->GetWVP() << math::XMMatrix(wvp);
 	m_material->GetWorld() << math::XMMatrix(world);
 	m_material->GetSpecularPower() << m_specularPower;
 	m_material->GetSpecularColor() << math::XMVector(m_specularColor);

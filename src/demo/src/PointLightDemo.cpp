@@ -191,7 +191,9 @@ void PointLightDemo::UpdateSpecularLight(const Time& time)
 
 void PointLightDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
-	auto wvp = GetWorldMatrix();
+	const auto& world = GetWorldMatrix();
+	auto wvp = world;
+
 	if (auto camera = GetCamera())
 	{
 		wvp *= camera->GetViewProjectionMatrix();
@@ -200,7 +202,7 @@ void PointLightDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	}
 
 	m_material->GetWVP() << math::XMMatrix(wvp);
-	m_material->GetWorld() << math::XMMatrix(GetWorldMatrix());
+	m_material->GetWorld() << math::XMMatrix(world);
 	m_material->GetSpecularPower() << m_specularPower;
 	m_material->GetSpecularColor() << math::XMVector(m_specularColor);
 	m_material->GetAmbientColor() << math::XMVector(m_ambientColor);
