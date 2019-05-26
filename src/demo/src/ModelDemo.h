@@ -4,7 +4,7 @@
 
 namespace library
 {
-	class Mesh;
+class Mesh;
 } // namespace library
 
 class ModelDemo

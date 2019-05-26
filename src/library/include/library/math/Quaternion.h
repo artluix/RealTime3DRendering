@@ -49,6 +49,7 @@ struct Quaternion
 	static Quaternion RotationMatrix(const Matrix4& matrix);
 	static Quaternion RotationPitchYawRoll(const float pitch, const float yaw, const float roll);
 	static Quaternion RotationPitchYawRoll(const Vector3& vector);
+
 	static Quaternion SLerp(const Quaternion& lhs, const Quaternion& rhs, const float factor);
 
 	//-------------------------------------------------------------------------

@@ -10,6 +10,9 @@
 #include <library/Utils.h>
 #include <library/Path.h>
 #include <library/Exception.h>
+#include <library/Math/Math.h>
+
+#include <library/Model/Model.h>
 
 #include <library/Effect/Effect.h>
 #include <library/Effect/EffectPass.h>
@@ -22,27 +25,33 @@ using namespace library;
 
 namespace
 {
-	constexpr float k_byteMax = static_cast<float>(0xFF);
-	constexpr float k_lightModulationRate = 10.f;
-	constexpr float k_lightMovementRate = 10.f;
-}
+constexpr float k_byteMax = static_cast<float>(0xFF);
+constexpr float k_lightModulationRate = 10.f;
+constexpr float k_lightMovementRate = 10.f;
+constexpr auto k_proxyModelRotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
+} // namespace
 
 PointLightDemo::PointLightDemo()
 	: m_specularPower(25.f)
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
 	, m_ambientColor(1.f, 1.f, 1.f, 0.f)
-{
-	SetModelName("Sphere");
-	SetTextureName("EarthAtDay");
-}
+{}
 
 PointLightDemo::~PointLightDemo() = default;
 
-void PointLightDemo::Initialize()
+//-------------------------------------------------------------------------
+
+void PointLightDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
 	InitializeMaterial("PointLight");
+
+	Model model(GetApp(), "Sphere", true);
+	m_primitivesData = GetMaterial()->CreatePrimitivesData(GetApp().GetDevice(), model);
+
+	m_textures.resize(Texture::Count);
+	m_textures[Texture::Default] = GetApp().LoadTexture("EarthAtDay");
 
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetRadius(500.f);
@@ -50,25 +59,21 @@ void PointLightDemo::Initialize()
 
 	m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.5f);
 	m_proxyModel->SetPosition(m_pointLight->GetPosition());
-	m_proxyModel->Rotate(math::Vector3(0.f, math::Pi_Div_2, 0.f));
+	m_proxyModel->SetInitialTransform(math::Matrix4::RotationPitchYawRoll(k_proxyModelRotationOffset));
 	m_proxyModel->SetCamera(*GetCamera());
-	m_proxyModel->Initialize();
+	m_proxyModel->Initialize(GetApp());
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
-	m_text->SetTextUpdateFunction(
-		[this]() -> std::wstring
-		{
-			std::wostringstream woss;
-			woss <<
-				L"Ambient Intensity (+PageUp/-PageDown): " << m_ambientColor.a << "\n" <<
-				L"Point Light Intensity (+Home/-End): " << m_pointLight->GetColor().a << "\n" <<
-				L"Specular Power (+Insert/-Delete): " << m_specularPower << "\n" <<
-				L"Move Point Light (Numpad: 8/2, 4/6, 3/9)\n";
-			return woss.str();
-		}
-	);
-	m_text->Initialize();
+	m_text->SetTextUpdateFunction([this]() -> std::wstring {
+		std::wostringstream woss;
+		woss << L"Ambient Intensity (+PageUp/-PageDown): " << m_ambientColor.a << "\n"
+			 << L"Point Light Intensity (+Home/-End): " << m_pointLight->GetColor().a << "\n"
+			 << L"Specular Power (+Insert/-Delete): " << m_specularPower << "\n"
+			 << L"Move Point Light (Numpad: 8/2, 4/6, 3/9)\n";
+		return woss.str();
+	});
+	m_text->Initialize(GetApp());
 }
 
 void PointLightDemo::Update(const Time& time)
@@ -80,7 +85,7 @@ void PointLightDemo::Update(const Time& time)
 	m_text->Update(time);
 	m_proxyModel->Update(time);
 
-	SceneComponent::Update(time);
+	PrimitiveComponent::Update(time);
 }
 
 void PointLightDemo::UpdateAmbientLight(const Time& time)
@@ -171,7 +176,7 @@ void PointLightDemo::UpdateSpecularLight(const Time& time)
 			specularLightIntensity += k_lightModulationRate * elapsedTime;
 			specularLightIntensity = math::Min(specularLightIntensity, k_byteMax);
 
-			m_specularPower = specularLightIntensity;;
+			m_specularPower = specularLightIntensity;
 		}
 
 		if (m_keyboard->IsKeyDown(Key::Delete) && specularLightIntensity > 0)
@@ -187,22 +192,22 @@ void PointLightDemo::UpdateSpecularLight(const Time& time)
 void PointLightDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	auto wvp = GetWorldMatrix();
-	if (!!m_camera)
+	if (auto camera = GetCamera())
 	{
-		wvp *= m_camera->GetViewProjectionMatrix();
+		wvp *= camera->GetViewProjectionMatrix();
 
-		m_material->GetCameraPosition() << m_camera->GetPosition();
+		m_material->GetCameraPosition() << math::XMVector(camera->GetPosition());
 	}
 
-	m_material->GetWVP() << wvp;
-	m_material->GetWorld() << GetWorldMatrix();
+	m_material->GetWVP() << math::XMMatrix(wvp);
+	m_material->GetWorld() << math::XMMatrix(GetWorldMatrix());
 	m_material->GetSpecularPower() << m_specularPower;
-	m_material->GetSpecularColor() << m_specularColor;
-	m_material->GetAmbientColor() << m_ambientColor;
-	m_material->GetLightColor() << m_pointLight->GetColor();
-	m_material->GetLightPosition() << m_pointLight->GetPosition();
+	m_material->GetSpecularColor() << math::XMVector(m_specularColor);
+	m_material->GetAmbientColor() << math::XMVector(m_ambientColor);
+	m_material->GetLightColor() << math::XMVector(m_pointLight->GetColor());
+	m_material->GetLightPosition() << math::XMVector(m_pointLight->GetPosition());
 	m_material->GetLightRadius() << m_pointLight->GetRadius();
-	m_material->GetColorTexture() << primitiveData.texture.Get();
+	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 
-	SceneComponent::Draw_SetData(primitiveData);
+	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }

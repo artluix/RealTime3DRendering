@@ -67,8 +67,8 @@ if(APPLICATION)
             # src/NormalMappingDemo.h
             # src/NormalMappingDemo.cpp
 
-            # src/PointLightDemo.h
-            # src/PointLightDemo.cpp
+            src/PointLightDemo.h
+            src/PointLightDemo.cpp
 
             # src/ProjectiveTextureMappingDemo.h
             # src/ProjectiveTextureMappingDemo.cpp
@@ -79,8 +79,8 @@ if(APPLICATION)
             # src/ShadowMappingDemo.h
             # src/ShadowMappingDemo.cpp
 
-            # src/SpotlightDemo.h
-            # src/SpotlightDemo.cpp
+            src/SpotlightDemo.h
+            src/SpotlightDemo.cpp
 
             src/TextureMappingDemo.h
             src/TextureMappingDemo.cpp

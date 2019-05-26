@@ -9,8 +9,8 @@
 #include "TextureMappingDemo.h"
 
 #include "DiffuseLightingDemo.h"
-//#include "PointLightDemo.h"
-//#include "SpotlightDemo.h"
+#include "PointLightDemo.h"
+#include "SpotlightDemo.h"
 
 // #include "EnvironmentMappingDemo.h"
 // #include "DisplacementMappingDemo.h"
@@ -183,9 +183,9 @@ void DemoApplication::Initialize()
 	diffuseLighting->SetKeyboard(*m_keyboard);
 
 	// point light
-	// auto pointLight = std::make_shared<PointLightDemo>();
-	// pointLight->SetCamera(*camera);
-	// pointLight->SetKeyboard(*m_keyboard);
+	auto pointLight = std::make_shared<PointLightDemo>();
+	pointLight->SetCamera(*camera);
+	pointLight->SetKeyboard(*m_keyboard);
 
 	// spotlight
 	// auto spotlight = std::make_shared<SpotlightDemo>();
@@ -283,7 +283,8 @@ void DemoApplication::Initialize()
 	m_components.push_back(skybox);
 	// m_components.push_back(basic);
 	// m_components.push_back(textureMapping);
-	m_components.push_back(diffuseLighting);
+	// m_components.push_back(diffuseLighting);
+	m_components.push_back(pointLight);
 	// m_components.push_back(shadowMapping);
 	// m_components.push_back(directionalShadowMapping);
 	m_components.push_back(postProcessingText);

@@ -8,9 +8,9 @@
 
 namespace library
 {
-	class DirectionalLightComponent;
-	class ProxyModelComponent;
-	class TextComponent;
+class DirectionalLightComponent;
+class ProxyModelComponent;
+class TextComponent;
 } // namespace library
 
 class DiffuseLightingDemo
