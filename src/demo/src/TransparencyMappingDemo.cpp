@@ -11,6 +11,7 @@
 #include <library/Path.h>
 #include <library/Exception.h>
 #include <library/Renderer.h>
+#include <library/Math/Math.h>
 
 #include <library/Effect/Effect.h>
 #include <library/Effect/EffectPass.h>
@@ -26,26 +27,27 @@ using namespace library;
 
 namespace
 {
-	constexpr float k_byteMax = static_cast<float>(0xFF);
-	constexpr float k_lightModulationRate = 10.f;
-	constexpr float k_lightMovementRate = 10.f;
-}
+constexpr float k_byteMax = static_cast<float>(0xFF);
+constexpr float k_lightModulationRate = 10.f;
+constexpr float k_lightMovementRate = 10.f;
+constexpr auto k_proxyModelRotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
+} // namespace
 
 TransparencyMappingDemo::TransparencyMappingDemo()
 	: m_specularPower(25.f)
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
 	, m_ambientColor(1.f, 1.f, 1.f, 0.f)
-{
-	SetTextureName("Checkerboard");
-}
+{}
 
 TransparencyMappingDemo::~TransparencyMappingDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void TransparencyMappingDemo::Initialize()
+void TransparencyMappingDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
+
+	InitializeMaterial("TransparencyMapping");
 
 	// build vertexBuffer manually
 	{
@@ -53,8 +55,7 @@ void TransparencyMappingDemo::Initialize()
 
 		const auto backward = DirectX::XMFLOAT3(math::Vector3::Backward);
 
-		const std::array<Vertex, 6> vertices =
-		{
+		const std::array<Vertex, 6> vertices = {
 			Vertex(DirectX::XMFLOAT4(-0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), backward),
 			Vertex(DirectX::XMFLOAT4(-0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f), backward),
 			Vertex(DirectX::XMFLOAT4(0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f), backward),
@@ -64,19 +65,17 @@ void TransparencyMappingDemo::Initialize()
 			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward),
 		};
 
-		m_primitivesData = { PrimitiveData() };
-		auto& md = m_primitivesData.front();
+		m_primitivesData.clear();
+		auto& pd = m_primitivesData.emplace_back(PrimitiveData{});
 
-		md.vertexBuffer.elementsCount = vertices.size();
-		md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
-			app.GetDevice(),
-			vertices
-		);
+		pd.stride = sizeof(Vertex);
+
+		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
 	}
 
-	InitializeMaterial("TransparencyMapping");
-
-	m_transparencyMapTexture = app.LoadTexture("AlphaMask_32bpp");
+	m_textures.resize(Texture::Count);
+	m_textures[Texture::Default] = GetApp().LoadTexture("Checkerboard");
+	m_textures[Texture::TransparencyMap] = GetApp().LoadTexture("AlphaMask_32bpp");
 
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetRadius(50.f);
@@ -84,25 +83,21 @@ void TransparencyMappingDemo::Initialize()
 
 	m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.2f);
 	m_proxyModel->SetPosition(m_pointLight->GetPosition());
-	m_proxyModel->Rotate(math::Vector3(0.f, math::Pi_Div_2, 0.f));
+	m_proxyModel->SetInitialTransform(math::Matrix4::RotationPitchYawRoll(k_proxyModelRotationOffset));
 	m_proxyModel->SetCamera(*GetCamera());
-	m_proxyModel->Initialize();
+	m_proxyModel->Initialize(GetApp());
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
-	m_text->SetTextUpdateFunction(
-		[this]() -> std::wstring
-		{
-			std::wostringstream woss;
-			woss <<
-				L"Ambient Intensity (+PageUp/-PageDown): " << m_ambientColor.a << "\n" <<
-				L"Point Light Intensity (+Home/-End): " << m_pointLight->GetColor().a << "\n" <<
-				L"Specular Power (+Insert/-Delete): " << m_specularPower << "\n" <<
-				L"Move Point Light (Numpad: 8/2, 4/6, 3/9)\n";
-			return woss.str();
-		}
-	);
-	m_text->Initialize();
+	m_text->SetTextUpdateFunction([this]() -> std::wstring {
+		std::wostringstream woss;
+		woss << L"Ambient Intensity (+PageUp/-PageDown): " << m_ambientColor.a << "\n"
+			 << L"Point Light Intensity (+Home/-End): " << m_pointLight->GetColor().a << "\n"
+			 << L"Specular Power (+Insert/-Delete): " << m_specularPower << "\n"
+			 << L"Move Point Light (Numpad: 8/2, 4/6, 3/9)\n";
+		return woss.str();
+	});
+	m_text->Initialize(GetApp());
 }
 
 void TransparencyMappingDemo::Update(const Time& time)
@@ -114,7 +109,7 @@ void TransparencyMappingDemo::Update(const Time& time)
 	m_text->Update(time);
 	m_proxyModel->Update(time);
 
-	DrawableComponent::Update(time);
+	PrimitiveComponent::Update(time);
 }
 
 void TransparencyMappingDemo::UpdateAmbientLight(const Time& time)
@@ -204,7 +199,8 @@ void TransparencyMappingDemo::UpdateSpecularLight(const Time& time)
 			specularLightIntensity += k_lightModulationRate * elapsedTime;
 			specularLightIntensity = math::Min(specularLightIntensity, k_byteMax);
 
-			m_specularPower = specularLightIntensity;;
+			m_specularPower = specularLightIntensity;
+			;
 		}
 
 		if (m_keyboard->IsKeyDown(Key::Delete) && specularLightIntensity > 0)
@@ -219,28 +215,30 @@ void TransparencyMappingDemo::UpdateSpecularLight(const Time& time)
 
 void TransparencyMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
-	auto wvp = GetWorldMatrix();
-	if (!!m_camera)
-	{
-		wvp *= m_camera->GetViewProjectionMatrix();
+	const auto& world = GetWorldMatrix();
+	auto wvp = world;
 
-		m_material->GetCameraPosition() << m_camera->GetPosition();
+	if (auto camera = GetCamera())
+	{
+		wvp *= camera->GetViewProjectionMatrix();
+
+		m_material->GetCameraPosition() << math::XMVector(camera->GetPosition());
 	}
 
-	m_material->GetAmbientColor() << m_ambientColor;
-	m_material->GetLightColor() << m_pointLight->GetColor();
-	m_material->GetLightPosition() << m_pointLight->GetPosition();
+	m_material->GetAmbientColor() << math::XMVector(m_ambientColor);
+	m_material->GetLightColor() << math::XMVector(m_pointLight->GetColor());
+	m_material->GetLightPosition() << math::XMVector(m_pointLight->GetPosition());
 	m_material->GetLightRadius() << m_pointLight->GetRadius();
 
-	m_material->GetWVP() << wvp;
-	m_material->GetWorld() << GetWorldMatrix();
+	m_material->GetWVP() << math::XMMatrix(wvp);
+	m_material->GetWorld() << math::XMMatrix(world);
 	m_material->GetSpecularPower() << m_specularPower;
-	m_material->GetSpecularColor() << m_specularColor;
+	m_material->GetSpecularColor() << math::XMVector(m_specularColor);
 
-	m_material->GetColorTexture() << primitiveData.texture.Get();
-	m_material->GetTransparencyMap() << m_transparencyMapTexture.Get();
+	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
+	m_material->GetTransparencyMap() << m_textures[Texture::TransparencyMap].Get();
 
-	SceneComponent::Draw_SetData(primitiveData);
+	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }
 
 void TransparencyMappingDemo::Draw_Render(const PrimitiveData& primitiveData)
@@ -249,7 +247,7 @@ void TransparencyMappingDemo::Draw_Render(const PrimitiveData& primitiveData)
 	auto renderer = GetApp().GetRenderer();
 
 	renderer->SaveRenderState(RenderState::Blend);
-	deviceContext->OMSetBlendState(BlendStates::Alpha, 0, 0xFFFFFFFF);
-	SceneComponent::Draw_Render(primitiveData);
+	deviceContext->OMSetBlendState(BlendStates::Alpha, nullptr, 0xFFFFFFFF);
+	PrimitiveComponent::Draw_Render(primitiveData);
 	renderer->RestoreRenderState(RenderState::Blend);
 }

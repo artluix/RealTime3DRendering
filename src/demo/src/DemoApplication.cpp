@@ -14,7 +14,7 @@
 
 #include "NormalMappingDemo.h"
 #include "EnvironmentMappingDemo.h"
-// #include "TransparencyMappingDemo.h"
+#include "TransparencyMappingDemo.h"
 // #include "DisplacementMappingDemo.h"
 
 // #include "FogDemo.h"
@@ -204,9 +204,9 @@ void DemoApplication::Initialize()
 	environmentMapping->SetKeyboard(*m_keyboard);
 
 	// transparency mapping
-	// auto transparencyMapping = std::make_shared<TransparencyMappingDemo>();
-	// transparencyMapping->SetCamera(*camera);
-	// transparencyMapping->SetKeyboard(*m_keyboard);
+	auto transparencyMapping = std::make_shared<TransparencyMappingDemo>();
+	transparencyMapping->SetCamera(*camera);
+	transparencyMapping->SetKeyboard(*m_keyboard);
 
 	//// displacement mapping
 	// auto displacementMapping = std::make_shared<DisplacementMappingDemo>();
@@ -288,9 +288,9 @@ void DemoApplication::Initialize()
 	// m_components.push_back(pointLight);
 	// m_components.push_back(spotlight);
 	// m_components.push_back(normalMapping);
-	m_components.push_back(environmentMapping);
+	// m_components.push_back(environmentMapping);
+	m_components.push_back(transparencyMapping);
 	// m_components.push_back(displacementMapping);
-	// m_components.push_back(transparencyMapping);
 	// m_components.push_back(shadowMapping);
 	// m_components.push_back(directionalShadowMapping);
 	m_components.push_back(postProcessingText);
