@@ -10,6 +10,7 @@
 #include <library/Utils.h>
 #include <library/Path.h>
 #include <library/Application.h>
+#include <library/Math/Math.h>
 
 #include <sstream>
 
@@ -17,33 +18,37 @@ using namespace library;
 
 namespace
 {
-	constexpr float k_brightnessModulationRate = 3.0f;
+constexpr float k_brightnessModulationRate = 3.0f;
 }
 
 //-------------------------------------------------------------------------
 
 std::string ColorFilterDemo::ToTechniqueName(const Type t)
 {
+	// clang-format off
 	switch (t)
 	{
 		case Grayscale:		return "grayscale_filter";
 		case Inverse:		return "inverse_filter";
 		case Sepia:			return "sepia_filter";
 		case Generic:		return "generic_filter";
-		default:				return "";
+		default:			return "";
 	}
+	// clang-format on
 }
 
 std::string ColorFilterDemo::ToString(const Type t)
 {
+	// clang-format off
 	switch (t)
 	{
 		case Grayscale:		return "Grayscale";
 		case Inverse:		return "Inverse";
 		case Sepia:			return "Sepia";
 		case Generic:		return "Generic";
-		default:				return "";
+		default:			return "";
 	}
+	// clang-format on
 }
 
 ColorFilterDemo::Type ColorFilterDemo::Next(const Type t)
@@ -56,44 +61,37 @@ ColorFilterDemo::Type ColorFilterDemo::Next(const Type t)
 
 //-------------------------------------------------------------------------
 
-ColorFilterDemo::ColorFilterDemo()
-	: m_type(ColorFilterDemo::First)
-	, m_genericFilter(math::Matrix4::Identity)
-{
-}
+ColorFilterDemo::ColorFilterDemo() : m_type(ColorFilterDemo::First), m_genericFilter(math::Matrix4::Identity)
+{}
 
 ColorFilterDemo::~ColorFilterDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void ColorFilterDemo::Initialize()
+void ColorFilterDemo::InitializeInternal()
 {
 	InitializeMaterial("ColorFilter");
-	InitializeQuad(app, "grayscale_filter");
+	InitializeQuad("grayscale_filter");
 
-	m_fullScreenQuad->SetMaterialUpdateFunction(
-		[this]()
-		{
-			m_material->GetSceneTexture() << GetSceneTexture();
-			m_material->GetColorFilter() << m_genericFilter;
-		}
-	);
+	m_fullScreenQuad->SetMaterialUpdateFunction([this]() {
+		m_material->GetSceneTexture() << GetSceneTexture();
+		m_material->GetColorFilter() << math::XMMatrix(m_genericFilter);
+	});
 
 	m_text = std::make_unique<TextComponent>();
-	m_text->SetPosition(math::Vector2(0.f, 45.f));
-	m_text->SetTextUpdateFunction(
-		[this]() -> std::wstring
-		{
-			std::ostringstream oss;
-			oss << "Color Filter (Space Bar): " << ColorFilterDemo::ToString(m_type) << "\n";
+	m_text->SetPosition(math::Vector2(0.f, 70.f));
+	m_text->SetTextUpdateFunction([this]() -> std::wstring {
+		std::ostringstream oss;
+		oss << "Color Filter (Space Bar): " << ColorFilterDemo::ToString(m_type);
 
-			if (m_type == ColorFilterDemo::Generic)
-				oss << "Brightness (+Comma/-Period): " << m_genericFilter._11;
+		if (m_type == ColorFilterDemo::Generic)
+			oss << ", Brightness (+Comma/-Period): " << m_genericFilter._11;
 
-			return utils::ToWideString(oss.str());
-		}
-	);
-	m_text->Initialize();
+		oss << '\n';
+
+		return utils::ToWideString(oss.str());
+	});
+	m_text->Initialize(GetApp());
 }
 
 void ColorFilterDemo::Update(const Time& time)

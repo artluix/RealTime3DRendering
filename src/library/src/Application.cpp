@@ -28,6 +28,8 @@ constexpr unsigned k_defaultMultiSamplingCount = 4;
 constexpr bool k_defaultIsFullscreen = false;
 } // namespace
 
+//-------------------------------------------------------------------------
+
 Application::Application(
 	const HINSTANCE instanceHandle,
 	const std::wstring& windowClass,

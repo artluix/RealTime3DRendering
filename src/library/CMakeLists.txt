@@ -108,6 +108,7 @@ if(APPLICATION)
             include/library/Application.h
             include/library/Color.h
             include/library/BlendStates.h
+            include/library/BufferData.h
             include/library/CommonTypes.h
             include/library/ComPtr.hpp
             include/library/DirectXForwardDeclarations.h

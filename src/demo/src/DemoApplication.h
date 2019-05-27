@@ -43,8 +43,8 @@ private:
 
 	std::shared_ptr<library::GridComponent> m_grid;
 
-// 	std::unique_ptr<library::FullScreenRenderTarget> m_sceneRenderTarget;
-// 	std::unique_ptr<library::PostProcessingComponent> m_postProcessing;
+	std::unique_ptr<library::FullScreenRenderTarget> m_sceneRenderTarget;
+	std::unique_ptr<library::PostProcessingComponent> m_postProcessing;
 	bool m_postProcessingEnabled;
 
 	library::ComPtr<IDirectInput8> m_directInput;

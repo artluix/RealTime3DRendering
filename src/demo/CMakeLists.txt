@@ -37,8 +37,8 @@ if(APPLICATION)
             # src/BloomDemo.h
             # src/BloomDemo.cpp
 
-            # src/ColorFilterDemo.h
-            # src/ColorFilterDemo.cpp
+            src/ColorFilterDemo.h
+            src/ColorFilterDemo.cpp
 
             src/DiffuseLightingDemo.h
             src/DiffuseLightingDemo.cpp

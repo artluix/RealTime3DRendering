@@ -1,22 +1,19 @@
 #pragma once
 #include <library/Materials/ColorFilterMaterial.h>
-
 #include <library/Components/ConcreteMaterialPostProcessingComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
-
 #include <library/Math/Matrix.h>
-#include <library/DirectXForwardDeclarations.h>
 
 namespace library
 {
-	class TextComponent;
+class TextComponent;
 } // namespace library
 
 class ColorFilterDemo
 	: public library::ConcreteMaterialPostProcessingComponent<library::ColorFilterMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(ColorFilterDemo, library::InputReceivableComponent)
+	RTTI_CLASS(ColorFilterDemo, library::PostProcessingComponent, library::InputReceivableComponent)
 
 public:
 	enum Type
@@ -37,12 +34,14 @@ public:
 
 	//-------------------------------------------------------------------------
 
-	explicit ColorFilterDemo();
+	ColorFilterDemo();
 	~ColorFilterDemo();
 
-	void Initialize() override;
 	void Update(const library::Time& time) override;
 	void Draw(const library::Time& time) override;
+
+protected:
+	void InitializeInternal() override;
 
 private:
 	void UpdateGenericFilter(const library::Time& time);

@@ -65,55 +65,21 @@ void FullScreenQuadComponent::InitializeInternal()
 	{
 		using Vertex = VertexPositionTexture;
 
-		std::array<Vertex, 4> vertices = {
+		const std::array<Vertex, 4> vertices = {
 			Vertex(DirectX::XMFLOAT4(-1.0f, -1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f)),
 			Vertex(DirectX::XMFLOAT4(-1.0f, 1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f)),
 			Vertex(DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f)),
 			Vertex(DirectX::XMFLOAT4(1.0f, -1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f)),
 		};
-		pd.vertexBuffer.elementsCount = static_cast<unsigned>(vertices.size());
 
-		D3D11_BUFFER_DESC vertexBufferDesc{};
-		vertexBufferDesc.ByteWidth = sizeof(Vertex) * pd.vertexBuffer.elementsCount;
-		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
-		vertexSubResourceData.pSysMem = vertices.data();
-
-		auto hr = GetApp().GetDevice()->CreateBuffer(
-			&vertexBufferDesc,
-			&vertexSubResourceData,
-			&pd.vertexBuffer.buffer);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11Device::CreateBuffer", hr);
-		}
+		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
+		pd.stride = sizeof(Vertex);
 	}
 
 	// index buffer
 	{
-		pd.indexBuffer = std::make_optional(IndexBufferData());
-
-		std::array<unsigned, 6> indices = {0, 1, 2, 0, 2, 3};
-		pd.indexBuffer->elementsCount = static_cast<unsigned>(indices.size());
-
-		D3D11_BUFFER_DESC indexBufferDesc{};
-		indexBufferDesc.ByteWidth = sizeof(unsigned) * pd.indexBuffer->elementsCount;
-		indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-		indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-
-		D3D11_SUBRESOURCE_DATA indexSubResourceData{};
-		indexSubResourceData.pSysMem = indices.data();
-
-		auto hr = GetApp().GetDevice()->CreateBuffer(
-			&indexBufferDesc,
-			&indexSubResourceData,
-			&pd.indexBuffer->buffer);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11Device::CreateBuffer", hr);
-		}
+		const std::array<unsigned, 6> indices = {0, 1, 2, 0, 2, 3};
+		pd.indexBuffer = IndexBufferData(GetApp().GetDevice(), indices);
 	}
 }
 

@@ -19,7 +19,7 @@
 
 #include "FogDemo.h"
 
-// #include "ColorFilterDemo.h"
+#include "ColorFilterDemo.h"
 // #include "GaussianBlurDemo.h"
 // #include "BloomDemo.h"
 // #include "DistortionMappingDemo.h"
@@ -41,9 +41,9 @@
 #include <library/Components/GridComponent.h>
 #include <library/Components/FirstPersonCameraComponent.h>
 #include <library/Components/SkyboxComponent.h>
-// #include <library/Components/FullScreenQuadComponent.h>
+#include <library/Components/FullScreenQuadComponent.h>
 
-// #include <library/RenderTargets/FullScreenRenderTarget.h>
+#include <library/RenderTargets/FullScreenRenderTarget.h>
 
 //-------------------------------------------------------------------------
 
@@ -219,19 +219,19 @@ void DemoApplication::Initialize()
 	fog->SetKeyboard(*m_keyboard);
 
 	// render target
-	// m_sceneRenderTarget = std::make_unique<FullScreenRenderTarget>(*this);
+	m_sceneRenderTarget = std::make_unique<FullScreenRenderTarget>(*this);
 
 	// post-processing
 	{
-		// auto postProcessing = new ColorFilter();
+		auto postProcessing = new ColorFilterDemo();
 		// auto postProcessing = new GaussianBlurDemo();
 		// auto postProcessing = new BloomDemo();
 		// auto postProcessing = new DistortionMappingDemo();
-		// 		postProcessing->SetKeyboard(*m_keyboard);
-		// 		postProcessing->SetCamera(*camera);
-		// 		postProcessing->SetSceneTexture(*(m_sceneRenderTarget->GetOutputTexture()));
+		postProcessing->SetKeyboard(*m_keyboard);
+		// postProcessing->SetCamera(*camera);
+		postProcessing->SetSceneTexture(*(m_sceneRenderTarget->GetOutputTexture()));
 
-		// 		m_postProcessing = std::unique_ptr<PostProcessingComponent>(postProcessing);
+		m_postProcessing = std::unique_ptr<PostProcessingComponent>(postProcessing);
 	}
 
 	// post-processing text component
@@ -241,7 +241,7 @@ void DemoApplication::Initialize()
 		woss << L"Post-Processing: " << (m_postProcessingEnabled ? L"Enabled" : L"Disabled");
 		return woss.str();
 	});
-	postProcessingText->SetPosition(math::Vector2(0.f, 70.f));
+	postProcessingText->SetPosition(math::Vector2(0.f, 45.f));
 
 	// projection
 	// auto projectiveTextureMapping = std::make_shared<ProjectiveTextureMappingDemo>();
@@ -289,9 +289,9 @@ void DemoApplication::Initialize()
 	// m_components.push_back(spotlight);
 	// m_components.push_back(normalMapping);
 	// m_components.push_back(environmentMapping);
-	// m_components.push_back(transparencyMapping);
+	m_components.push_back(transparencyMapping);
 	// m_components.push_back(displacementMapping);
-	m_components.push_back(fog);
+	// m_components.push_back(fog);
 	// m_components.push_back(shadowMapping);
 	// m_components.push_back(directionalShadowMapping);
 	m_components.push_back(postProcessingText);
@@ -300,7 +300,7 @@ void DemoApplication::Initialize()
 
 	Application::Initialize();
 
-	// m_postProcessing->Initialize(*this);
+	m_postProcessing->Initialize(*this);
 }
 
 void DemoApplication::Update(const Time& time)
@@ -318,50 +318,45 @@ void DemoApplication::Update(const Time& time)
 	}
 
 	if (m_postProcessingEnabled)
-	{
-	}
-	// 	m_postProcessing->Update(time);
+		m_postProcessing->Update(time);
 
 	Application::Update(time);
 }
 
 void DemoApplication::Draw(const Time& time)
 {
-	/*if (m_postProcessingEnabled)
+	if (m_postProcessingEnabled)
 	{
 		// Render the scene to an off-screen texture
 		m_sceneRenderTarget->Begin();
 
 		m_deviceContext->ClearRenderTargetView(
 			m_sceneRenderTarget->GetRenderTargetView(),
-			static_cast<const float*>(k_backgroundColor)
-		);
+			static_cast<const float*>(k_backgroundColor));
 		m_deviceContext->ClearDepthStencilView(
 			m_sceneRenderTarget->GetDepthStencilView(),
 			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-			1.0f, 0
-		);
+			1.0f,
+			0);
 
 		m_renderer->RenderScene(time);
 
 		m_sceneRenderTarget->End();
 
 		// Render a full-screen quad with a post-processing effect
-		m_deviceContext->ClearRenderTargetView(
-			m_renderTargetView.Get(),
-			static_cast<const float*>(k_backgroundColor)
-		);
+		m_deviceContext
+			->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
 		m_deviceContext->ClearDepthStencilView(
 			m_depthStencilView.Get(),
 			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-			1.0f, 0
-		);
+			1.0f,
+			0);
 
 		m_postProcessing->Draw(time);
 
 		m_renderer->RenderUI(time);
 	}
-	else*/
+	else
 	{
 		m_deviceContext
 			->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
@@ -376,9 +371,7 @@ void DemoApplication::Draw(const Time& time)
 
 	HRESULT hr = m_swapChain->Present(0, 0);
 	if (FAILED(hr))
-	{
 		throw Exception("IDXGISwapChain::Present() failed.", hr);
-	}
 }
 
 void DemoApplication::Shutdown()
