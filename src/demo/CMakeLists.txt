@@ -58,8 +58,8 @@ if(APPLICATION)
             src/FogDemo.h
             src/FogDemo.cpp
 
-            # src/GaussianBlurDemo.h
-            # src/GaussianBlurDemo.cpp
+            src/GaussianBlurDemo.h
+            src/GaussianBlurDemo.cpp
 
             # src/GeometryShaderDemo.h
             # src/GeometryShaderDemo.cpp

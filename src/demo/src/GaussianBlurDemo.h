@@ -4,7 +4,7 @@
 
 namespace library
 {
-	class TextComponent;
+class TextComponent;
 } // namespace library
 
 class GaussianBlurDemo
@@ -14,11 +14,13 @@ class GaussianBlurDemo
 	RTTI_CLASS(GaussianBlurDemo, library::InputReceivableComponent)
 
 public:
-	explicit GaussianBlurDemo();
+	GaussianBlurDemo();
 	~GaussianBlurDemo();
 
-	void Initialize() override;
 	void Update(const library::Time& time) override;
+
+protected:
+	void InitializeInternal() override;
 
 private:
 	void UpdateBlurAmount(const library::Time& time);

@@ -20,7 +20,7 @@
 #include "FogDemo.h"
 
 #include "ColorFilterDemo.h"
-// #include "GaussianBlurDemo.h"
+#include "GaussianBlurDemo.h"
 // #include "BloomDemo.h"
 // #include "DistortionMappingDemo.h"
 
@@ -223,8 +223,8 @@ void DemoApplication::Initialize()
 
 	// post-processing
 	{
-		auto postProcessing = new ColorFilterDemo();
-		// auto postProcessing = new GaussianBlurDemo();
+		// auto postProcessing = new ColorFilterDemo();
+		auto postProcessing = new GaussianBlurDemo();
 		// auto postProcessing = new BloomDemo();
 		// auto postProcessing = new DistortionMappingDemo();
 		postProcessing->SetKeyboard(*m_keyboard);
@@ -285,11 +285,11 @@ void DemoApplication::Initialize()
 	// m_components.push_back(basic);
 	// m_components.push_back(textureMapping);
 	// m_components.push_back(diffuseLighting);
-	// m_components.push_back(pointLight);
+	m_components.push_back(pointLight);
 	// m_components.push_back(spotlight);
 	// m_components.push_back(normalMapping);
 	// m_components.push_back(environmentMapping);
-	m_components.push_back(transparencyMapping);
+	// 	m_components.push_back(transparencyMapping);
 	// m_components.push_back(displacementMapping);
 	// m_components.push_back(fog);
 	// m_components.push_back(shadowMapping);
