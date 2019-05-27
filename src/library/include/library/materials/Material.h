@@ -56,22 +56,20 @@ public:
 	virtual unsigned GetVertexSize() const = 0;
 
 protected:
+	virtual void InitializeInternal();
 	virtual void CreateInputLayout(const std::string& techniqueName, const std::string& passName = "p0");
 	virtual void CreateInputLayout(const EffectPass& pass);
-
-	void CreateInputLayout();
-
-	virtual void InitializeInternal();
-
-	std::shared_ptr<Effect> m_effect;
-	std::string m_defaultTechniqueName;
-
-	std::reference_wrapper<EffectTechnique> m_currentTechnique;
 
 	std::vector<D3D11_INPUT_ELEMENT_DESC> m_inputElementDescriptions;
 	std::map<const EffectPass*, ComPtr<ID3D11InputLayout>> m_inputLayouts;
 
 private:
+	void CreateInputLayout();
+
+	std::shared_ptr<Effect> m_effect;
+	std::reference_wrapper<EffectTechnique> m_currentTechnique;
+
+	std::string m_defaultTechniqueName;
 	bool m_initialized = false;
 };
 } // namespace library

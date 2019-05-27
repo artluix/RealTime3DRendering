@@ -17,7 +17,7 @@
 #include "TransparencyMappingDemo.h"
 #include "DisplacementMappingDemo.h"
 
-// #include "FogDemo.h"
+#include "FogDemo.h"
 
 // #include "ColorFilterDemo.h"
 // #include "GaussianBlurDemo.h"
@@ -214,9 +214,9 @@ void DemoApplication::Initialize()
 	displacementMapping->SetKeyboard(*m_keyboard);
 
 	// fog
-	// auto fog = std::make_shared<FogDemo>();
-	// fog->SetCamera(*camera);
-	// fog->SetKeyboard(*m_keyboard);
+	auto fog = std::make_shared<FogDemo>();
+	fog->SetCamera(*camera);
+	fog->SetKeyboard(*m_keyboard);
 
 	// render target
 	// m_sceneRenderTarget = std::make_unique<FullScreenRenderTarget>(*this);
@@ -290,7 +290,8 @@ void DemoApplication::Initialize()
 	// m_components.push_back(normalMapping);
 	// m_components.push_back(environmentMapping);
 	// m_components.push_back(transparencyMapping);
-	m_components.push_back(displacementMapping);
+	// m_components.push_back(displacementMapping);
+	m_components.push_back(fog);
 	// m_components.push_back(shadowMapping);
 	// m_components.push_back(directionalShadowMapping);
 	m_components.push_back(postProcessingText);

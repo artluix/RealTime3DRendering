@@ -55,8 +55,8 @@ if(APPLICATION)
             src/EnvironmentMappingDemo.h
             src/EnvironmentMappingDemo.cpp
 
-            # src/FogDemo.h
-            # src/FogDemo.cpp
+            src/FogDemo.h
+            src/FogDemo.cpp
 
             # src/GaussianBlurDemo.h
             # src/GaussianBlurDemo.cpp

@@ -15,6 +15,9 @@ public:
 	EffectVariable& GetFogStart() { return m_fogStart; }
 	EffectVariable& GetFogRange() { return m_fogRange; }
 
+protected:
+	void InitializeInternal() override;
+
 private:
 	EffectVariable& m_fogColor;
 	EffectVariable& m_fogStart;

@@ -10,6 +10,9 @@
 #include <library/Utils.h>
 #include <library/Path.h>
 #include <library/Exception.h>
+#include <library/Math/Math.h>
+
+#include <library/Model/Model.h>
 
 #include <library/Effect/Effect.h>
 #include <library/Effect/EffectPass.h>
@@ -22,16 +25,16 @@ using namespace library;
 
 namespace
 {
-	const auto k_fogColor = Color::CornFlower;
+const auto k_fogColor = Color::CornFlower;
 
-	constexpr float k_byteMax = static_cast<float>(0xFF);
+constexpr float k_byteMax = static_cast<float>(0xFF);
 
-	constexpr float k_lightModulationRate = k_byteMax / 40;
-	constexpr auto k_lightRotationRate = math::Vector2(math::Pi_2);
+constexpr float k_lightModulationRate = k_byteMax / 40;
+constexpr auto k_lightRotationRate = math::Vector2(math::Pi_2);
 
-	constexpr auto k_proxyModelRotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
-	constexpr float k_proxyModelDistanceOffset = 10.f;
-}
+constexpr auto k_proxyModelRotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
+constexpr float k_proxyModelDistanceOffset = 10.f;
+} // namespace
 
 //-------------------------------------------------------------------------
 
@@ -40,48 +43,46 @@ FogDemo::FogDemo()
 	, m_fogStart(15.0f)
 	, m_fogRange(20.0f)
 	, m_fogEnabled(true)
-{
-	SetModelName("Sphere");
-	SetTextureName("EarthComposite");
-}
+{}
 
 FogDemo::~FogDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void FogDemo::Initialize()
+void FogDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
 	InitializeMaterial("Fog");
 
+	Model model(GetApp(), "Sphere", true);
+	m_primitivesData = GetMaterial()->CreatePrimitivesData(GetApp().GetDevice(), model);
+
+	m_textures.resize(Texture::Count);
+	m_textures[Texture::Default] = GetApp().LoadTexture("EarthComposite");
+
 	m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
 	m_proxyModel = std::make_unique<ProxyModelComponent>("DirectionalLightProxy", 0.2f);
 	m_proxyModel->SetPosition(
-		GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset
-	);
-	m_proxyModel->SetRotation(GetRotation() + k_proxyModelRotationOffset);
+		GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
+	m_proxyModel->SetInitialTransform(math::Matrix4::RotationPitchYawRoll(k_proxyModelRotationOffset));
 	m_proxyModel->SetCamera(*GetCamera());
-	m_proxyModel->Initialize();
+	m_proxyModel->Initialize(GetApp());
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
-	m_text->SetTextUpdateFunction(
-		[this]() -> std::wstring
-		{
-			std::wostringstream woss;
-			woss <<
-				L"Ambient Intensity (+PageUp/-PageDown): " << m_ambientColor.a << "\n" <<
-				L"Directional Light Intensity (+Home/-End): " << m_directionalLight->GetColor().a << "\n" <<
-				L"Rotate Directional Light (Arrow Keys)\n" <<
-				L"Fog enabled (Space): " << (m_fogEnabled ? "Yes" : "No") << "\n" <<
-				L"Fog start: " << m_fogStart << "\n" <<
-				L"Fog range: " << m_fogRange << "\n";
-			return woss.str();
-		}
-	);
-	m_text->Initialize();
+	m_text->SetTextUpdateFunction([this]() -> std::wstring {
+		std::wostringstream woss;
+		woss << L"Ambient Intensity (+PageUp/-PageDown): " << m_ambientColor.a << "\n"
+			 << L"Directional Light Intensity (+Home/-End): " << m_directionalLight->GetColor().a << "\n"
+			 << L"Rotate Directional Light (Arrow Keys)\n"
+			 << L"Fog enabled (Space): " << (m_fogEnabled ? "Yes" : "No") << "\n"
+			 << L"Fog start: " << m_fogStart << "\n"
+			 << L"Fog range: " << m_fogRange << "\n";
+		return woss.str();
+	});
+	m_text->Initialize(GetApp());
 
 	SetActiveTechnique();
 }
@@ -100,7 +101,7 @@ void FogDemo::Update(const Time& time)
 	m_text->Update(time);
 	m_proxyModel->Update(time);
 
-	SceneComponent::Update(time);
+	PrimitiveComponent::Update(time);
 }
 
 void FogDemo::UpdateAmbientLight(const Time& time)
@@ -166,50 +167,49 @@ void FogDemo::UpdateDirectionalLight(const Time& time)
 
 		if (rotationAmount)
 		{
-			m_directionalLight->Rotate(math::Vector3(rotationAmount.y, rotationAmount.x, 0.f));
-
-			const auto dirLightRot = m_directionalLight->GetRotation();
+			m_directionalLight->Rotate(math::Quaternion::RotationPitchYawRoll(
+				math::Vector3(rotationAmount.y, rotationAmount.x, 0.f)));
 
 			m_proxyModel->SetPosition(
-				GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset
-			);
-			m_proxyModel->SetRotation(
-				math::Vector3(dirLightRot.z, dirLightRot.y, dirLightRot.x) + k_proxyModelRotationOffset
-			);
+				GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
+			m_proxyModel->SetRotation(m_directionalLight->GetRotation());
 		}
 	}
 }
 
 void FogDemo::SetActiveTechnique()
 {
-	const std::string techniqueName = m_fogEnabled ? "fogEnabled" : "fogDisabled";
-	const auto& technique = m_material->GetEffect().GetTechnique(techniqueName);
-	const auto& pass = technique.GetPass("p0");
+	static const std::array<std::string, 2> techniques = {"fogDisabled", "fogEnabled"};
+	const auto& techniqueName = techniques[unsigned(m_fogEnabled)];
 
-	m_currentInputLayout = m_material->GetInputLayout(pass);
+	m_technique = &m_material->GetEffect().GetTechnique(techniqueName);
+	m_pass = &m_technique->GetPass("p0");
+	m_inputLayout = m_material->GetInputLayout(*m_pass);
 }
 
 void FogDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
-	auto wvp = GetWorldMatrix();
-	if (!!m_camera)
-	{
-		wvp *= m_camera->GetViewProjectionMatrix();
+	const auto& world = GetWorldMatrix();
+	auto wvp = world;
 
-		m_material->GetCameraPosition() << m_camera->GetPosition();
+	if (auto camera = GetCamera())
+	{
+		wvp *= camera->GetViewProjectionMatrix();
+
+		m_material->GetCameraPosition() << math::XMVector(camera->GetPosition());
 	}
 
-	m_material->GetAmbientColor() << m_ambientColor;
-	m_material->GetLightColor() << m_directionalLight->GetColor();
-	m_material->GetLightDirection() << m_directionalLight->GetDirection();
-	m_material->GetFogColor() << k_fogColor;
+	m_material->GetAmbientColor() << math::XMVector(m_ambientColor);
+	m_material->GetLightColor() << math::XMVector(m_directionalLight->GetColor());
+	m_material->GetLightDirection() << math::XMVector(m_directionalLight->GetDirection());
+	m_material->GetFogColor() << math::XMVector(k_fogColor);
 	m_material->GetFogStart() << m_fogStart;
 	m_material->GetFogRange() << m_fogRange;
 
-	m_material->GetWVP() << wvp;
-	m_material->GetWorld() << GetWorldMatrix();
+	m_material->GetWVP() << math::XMMatrix(wvp);
+	m_material->GetWorld() << math::XMMatrix(world);
 
-	m_material->GetColorTexture() << primitiveData.texture.Get();
+	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 
-	SceneComponent::Draw_SetData(primitiveData);
+	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }

@@ -55,7 +55,7 @@ void PointSpriteMaterial::InitializeInternal()
 
 	for (unsigned i = 0, techniquesCount = GetEffect().GetTechniquesCount(); i < techniquesCount; i++)
 	{
-		const auto& technique = m_effect->GetTechnique(i);
+		const auto& technique = GetEffect().GetTechnique(i);
 
 		for (unsigned j = 0, passesCount = technique.GetPassesCount(); j < passesCount; j++)
 		{

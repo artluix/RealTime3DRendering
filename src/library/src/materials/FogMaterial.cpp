@@ -14,4 +14,13 @@ FogMaterial::FogMaterial(std::shared_ptr<Effect> effect)
 {}
 
 FogMaterial::~FogMaterial() = default;
+
+//-------------------------------------------------------------------------
+
+void FogMaterial::InitializeInternal()
+{
+	DirectionalLightMaterial::InitializeInternal();
+
+	CreateInputLayout("fogDisabled");
+}
 } // namespace library

@@ -1,38 +1,46 @@
 #pragma once
 #include <library/Materials/FogMaterial.h>
-
 #include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
-
-#include <library/DirectXForwardDeclarations.h>
-#include <library/math/Color.h>
+#include <library/Color.h>
 
 #include <memory>
 
 namespace library
 {
-	class DirectionalLightComponent;
-	class ProxyModelComponent;
-	class TextComponent;
+class DirectionalLightComponent;
+class ProxyModelComponent;
+class TextComponent;
 } // namespace library
 
 class FogDemo
 	: public library::ConcreteMaterialPrimitiveComponent<library::FogMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(FogDemo, library::SceneComponent, library::InputReceivableComponent)
+	RTTI_CLASS(FogDemo, library::PrimitiveComponent, library::InputReceivableComponent)
 
 public:
-	explicit FogDemo();
+	FogDemo();
 	~FogDemo();
 
-	void Initialize() override;
 	void Update(const library::Time& time) override;
 
 protected:
+	void InitializeInternal() override;
 	void Draw_SetData(const library::PrimitiveData& primitiveData) override;
 
 private:
+	struct Texture
+	{
+		enum Type : unsigned
+		{
+			Default = 0,
+
+			//# Count
+			Count
+		};
+	};
+
 	void UpdateAmbientLight(const library::Time& time);
 	void UpdateDirectionalLight(const library::Time& time);
 	void SetActiveTechnique();
