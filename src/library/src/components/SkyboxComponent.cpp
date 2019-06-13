@@ -46,7 +46,7 @@ void SkyboxComponent::Draw_SetData(const PrimitiveData& primitiveData)
 	if (auto camera = GetCamera())
 		wvp *= camera->GetViewProjectionMatrix();
 
-	m_material->GetWorldViewProjection() << math::XMMatrix(wvp);
+	m_material->GetWorldViewProjection() << wvp;
 	m_material->GetSkyboxTexture() << GetTexture(Texture::Skybox);
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);

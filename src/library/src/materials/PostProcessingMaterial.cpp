@@ -20,7 +20,6 @@ PostProcessingMaterial::~PostProcessingMaterial() = default;
 
 void PostProcessingMaterial::InitializeInternal()
 {
-	// clang-format off
 	m_inputElementDescriptions =
 	{
 		{
@@ -42,7 +41,6 @@ void PostProcessingMaterial::InitializeInternal()
 			0
 		},
 	};
-	// clang-format on
 
 	for (unsigned i = 0, techniquesCount = GetEffect().GetTechniquesCount(); i < techniquesCount; i++)
 	{
@@ -56,8 +54,10 @@ void PostProcessingMaterial::InitializeInternal()
 	}
 }
 
-VertexBufferData PostProcessingMaterial::CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh)
-	const
+VertexBufferData PostProcessingMaterial::CreateVertexBufferData(
+	ID3D11Device* const device,
+	const Mesh& mesh
+) const
 {
 	if (!mesh.HasVertices())
 		return VertexBufferData();
@@ -76,8 +76,9 @@ VertexBufferData PostProcessingMaterial::CreateVertexBufferData(ID3D11Device* co
 		const auto& uv = textureCoordinates[i];
 
 		vertices.emplace_back(
-			DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f),
-			DirectX::XMFLOAT2(uv.x, uv.y));
+			math::Vector4(position.x, position.y, position.z, 1.0f),
+			uv.xy
+		);
 	}
 
 	return VertexBufferData(device, vertices);

@@ -9,9 +9,8 @@
 #include <library/Application.h>
 #include <library/Utils.h>
 #include <library/Path.h>
-#include <library/Exception.h>
-#include <library/Math/Math.h>
 
+#include <library/Math/Math.h>
 #include <library/Model/Model.h>
 
 #include <library/Effect/Effect.h>
@@ -25,7 +24,7 @@ using namespace library;
 
 namespace
 {
-const auto k_fogColor = Color::CornFlower;
+constexpr auto k_fogColor = colors::CornFlower;
 
 constexpr float k_byteMax = static_cast<float>(0xFF);
 
@@ -196,18 +195,18 @@ void FogDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	{
 		wvp *= camera->GetViewProjectionMatrix();
 
-		m_material->GetCameraPosition() << math::XMVector(camera->GetPosition());
+		m_material->GetCameraPosition() << camera->GetPosition();
 	}
 
-	m_material->GetAmbientColor() << math::XMVector(m_ambientColor);
-	m_material->GetLightColor() << math::XMVector(m_directionalLight->GetColor());
-	m_material->GetLightDirection() << math::XMVector(m_directionalLight->GetDirection());
-	m_material->GetFogColor() << math::XMVector(k_fogColor);
+	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
+	m_material->GetLightColor() << m_directionalLight->GetColor().ToVector4();
+	m_material->GetLightDirection() << m_directionalLight->GetDirection();
+	m_material->GetFogColor() << k_fogColor.ToVector4();
 	m_material->GetFogStart() << m_fogStart;
 	m_material->GetFogRange() << m_fogRange;
 
-	m_material->GetWVP() << math::XMMatrix(wvp);
-	m_material->GetWorld() << math::XMMatrix(world);
+	m_material->GetWVP() << wvp;
+	m_material->GetWorld() << world;
 
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 

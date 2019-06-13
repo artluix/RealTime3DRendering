@@ -2,12 +2,11 @@
 #include "library/SamplerStates.h"
 
 #include "library/Utils.h"
-#include "library/Exception.h"
-#include "library/Color.h"
+#include "library/math/Color.h"
 
-#include <cassert>
-#include <algorithm>
 #include <d3d11_1.h>
+#include <cassert>
+#include <cstring>
 
 namespace library
 {
@@ -20,10 +19,7 @@ void CreateSamplerState(
 	ID3D11SamplerState*& samplerState)
 {
 	auto hr = device->CreateSamplerState(&samplerStateDesc, &samplerState);
-	if (FAILED(hr))
-	{
-		throw Exception("ID3D11Device::CreateSamplerState() failed.", hr);
-	}
+	assert("ID3D11Device::CreateSamplerState() failed." && SUCCEEDED(hr));
 }
 } // namespace
 
@@ -75,7 +71,7 @@ void SamplerStates::Initialize(ID3D11Device* const device)
 
 	// Trilinear Border
 	{
-		const auto borderColor = Color(0.f, 0.f, 0.f, 1.f);
+		constexpr auto borderColor = math::Color(0.f, 0.f, 0.f, 1.f);
 
 		D3D11_SAMPLER_DESC samplerStateDesc{};
 		samplerStateDesc.Filter = D3D11_FILTER_MIN_MAG_MIP_LINEAR;
@@ -83,7 +79,7 @@ void SamplerStates::Initialize(ID3D11Device* const device)
 		samplerStateDesc.AddressV = D3D11_TEXTURE_ADDRESS_BORDER;
 		samplerStateDesc.AddressW = D3D11_TEXTURE_ADDRESS_BORDER;
 
-		std::copy(borderColor._data.begin(), borderColor._data.end(), std::begin(samplerStateDesc.BorderColor));
+		memcpy(samplerStateDesc.BorderColor, static_cast<const float*>(borderColor), sizeof(borderColor));
 
 		CreateSamplerState(device, samplerStateDesc, TrilinearBorder);
 	}

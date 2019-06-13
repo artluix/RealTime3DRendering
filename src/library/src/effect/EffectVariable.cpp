@@ -1,8 +1,6 @@
 #include "StdAfx.h"
 #include "library/Effect/EffectVariable.h"
 
-#include "library/Exception.h"
-
 namespace library
 {
 EffectVariable::EffectVariable(const Effect& effect, ID3DX11EffectVariable* const variable)
@@ -19,110 +17,68 @@ EffectVariable::~EffectVariable() = default;
 
 //-------------------------------------------------------------------------
 
-EffectVariable& EffectVariable::operator<<(const float value)
+ID3DX11EffectScalarVariable* EffectVariable::ToScalarVariable()
 {
 	auto variable = m_variable->AsScalar();
-	if (!variable->IsValid())
-	{
-		throw Exception("Invalid effect variable cast.");
-	}
+	if (variable->IsValid())
+		return variable;
 
-	variable->SetFloat(value);
-	return *this;
+	assert("Invalid effect variable cast to scalar." && false);
+	return nullptr;
 }
 
-EffectVariable& EffectVariable::operator<<(const std::vector<float>& value)
+ID3DX11EffectVectorVariable* EffectVariable::ToVectorVariable()
 {
-	SetScalarArray(value.data(), value.size());
-	return *this;
+	auto variable = m_variable->AsVector();
+	if (variable->IsValid())
+		return variable;
+
+	assert("Invalid effect variable cast to vector." && false);
+	return nullptr;
+}
+
+ID3DX11EffectMatrixVariable* EffectVariable::ToMatrixVariable()
+{
+	auto variable = m_variable->AsMatrix();
+	if (variable->IsValid())
+		return variable;
+
+	assert("Invalid effect variable cast to matrix." && false);
+	return nullptr;
+}
+
+ID3DX11EffectShaderResourceVariable* EffectVariable::ToShaderResourceVariable()
+{
+	auto variable = m_variable->AsShaderResource();
+	if (variable->IsValid())
+		return variable;
+
+	assert("Invalid effect variable cast to shader resource." && false);
+	return nullptr;
 }
 
 //-------------------------------------------------------------------------
 
 EffectVariable& EffectVariable::operator<<(ID3D11ShaderResourceView* const value)
 {
-	auto variable = m_variable->AsShaderResource();
-	if (!variable->IsValid())
-	{
-		throw Exception("Invalid effect variable cast to shader resource.");
-	}
+	if (auto shaderResourceVariable = ToShaderResourceVariable())
+		shaderResourceVariable->SetResource(value);
 
-	variable->SetResource(value);
 	return *this;
 }
 
 //-------------------------------------------------------------------------
 
-EffectVariable& EffectVariable::operator<<(const math::XMVector& value)
+void EffectVariable::SetMatrix(ID3DX11EffectMatrixVariable* const matrixVariable, const float* data)
 {
-	auto variable = m_variable->AsVector();
-	if (!variable->IsValid())
-	{
-		throw Exception("Invalid effect variable cast to vector.");
-	}
-
-	variable->SetFloatVector(reinterpret_cast<const float*>(&value));
-	return *this;
+	matrixVariable->SetMatrix(data);
 }
 
-EffectVariable& EffectVariable::operator<<(const std::vector<math::XMVector>& value)
+void EffectVariable::SetMatrixArray(
+	ID3DX11EffectMatrixVariable* const matrixVariable,
+	const float* data, const std::size_t count
+)
 {
-	SetVectorArray(value.data(), value.size());
-	return *this;
-}
-
-//-------------------------------------------------------------------------
-
-EffectVariable& EffectVariable::operator<<(const math::XMMatrix& value)
-{
-	auto variable = m_variable->AsMatrix();
-	if (!variable->IsValid())
-	{
-		throw Exception("Invalid effect variable cast to matrix.");
-	}
-
-	variable->SetMatrix(reinterpret_cast<const float*>(&value));
-	return *this;
-}
-
-EffectVariable& EffectVariable::operator<<(const std::vector<math::XMMatrix>& value)
-{
-	SetMatrixArray(value.data(), value.size());
-	return *this;
-}
-
-//-------------------------------------------------------------------------
-
-void EffectVariable::SetScalarArray(const float* data, const std::size_t count)
-{
-	auto variable = m_variable->AsScalar();
-	if (!variable->IsValid())
-	{
-		throw Exception("Invalid effect variable cast to scalar.");
-	}
-
-	variable->SetFloatArray(data, 0, static_cast<unsigned>(count));
-}
-
-void EffectVariable::SetVectorArray(const math::XMVector* data, const std::size_t count)
-{
-	auto variable = m_variable->AsVector();
-	if (!variable->IsValid())
-	{
-		throw Exception("Invalid effect variable cast to vector.");
-	}
-
-	variable->SetFloatVectorArray(reinterpret_cast<const float*>(data), 0, static_cast<unsigned>(count));
-}
-
-void EffectVariable::SetMatrixArray(const math::XMMatrix* data, const std::size_t count)
-{
-	auto variable = m_variable->AsMatrix();
-	if (!variable->IsValid())
-	{
-		throw Exception("Invalid effect variable cast to matrix.");
-	}
-
-	variable->SetMatrixArray(reinterpret_cast<const float*>(data), 0, static_cast<unsigned>(count));
+	matrixVariable->SetMatrixArray(data, 0, static_cast<unsigned>(count));
 }
 } // namespace library

@@ -6,9 +6,8 @@
 #include <library/Application.h>
 #include <library/Utils.h>
 #include <library/Path.h>
-#include <library/Exception.h>
-#include <library/Math/Math.h>
 
+#include <library/Math/Math.h>
 #include <library/Model/Model.h>
 
 #include <library/Effect/Effect.h>
@@ -47,18 +46,18 @@ void TextureMappingDemo::Update(const Time& time)
 
 		// movement
 		{
-			math::Vector2 movementAmount;
+			math::Vector2i movementAmount;
 			if (m_keyboard->IsKeyDown(Key::Up))
-				movementAmount.y += 1.0f;
+				movementAmount.y++;
 
 			if (m_keyboard->IsKeyDown(Key::Down))
-				movementAmount.y -= 1.0f;
+				movementAmount.y--;
 
 			if (m_keyboard->IsKeyDown(Key::Left))
-				movementAmount.x -= 1.0f;
+				movementAmount.x--;
 
 			if (m_keyboard->IsKeyDown(Key::Right))
-				movementAmount.x += 1.0f;
+				movementAmount.x++;
 
 			if (movementAmount)
 				Translate(math::Vector3(movementAmount * k_movementRate));
@@ -74,7 +73,7 @@ void TextureMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	if (auto camera = GetCamera())
 		wvp *= camera->GetViewProjectionMatrix();
 
-	m_material->GetWVP() << math::XMMatrix(wvp);
+	m_material->GetWVP() << wvp;
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);

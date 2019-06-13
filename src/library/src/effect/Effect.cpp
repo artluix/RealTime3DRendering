@@ -3,7 +3,6 @@
 
 #include "library/Application.h"
 #include "library/Utils.h"
-#include "library/Exception.h"
 
 #include "library/Effect/EffectTechnique.h"
 #include "library/Effect/EffectVariable.h"
@@ -70,13 +69,12 @@ void Effect::Compile()
 #endif
 		0,
 		&shaderBlob,
-		&errorBlob);
+		&errorBlob
+	);
 	if (FAILED(hr))
 	{
-		std::string error =
-			std::string("D3DX11CompileEffectFromFile() failed: ") +
-			std::string(static_cast<const char*>(errorBlob->GetBufferPointer()), errorBlob->GetBufferSize());
-		throw Exception(error.c_str(), hr);
+		Logger::Log(Logger::Level::Error, static_cast<const char*>(errorBlob->GetBufferPointer()));
+		assert("D3DX11CompileEffectFromFile() failed" && false);
 	}
 
 	hr = D3DX11CreateEffectFromMemory(
@@ -84,11 +82,9 @@ void Effect::Compile()
 		shaderBlob->GetBufferSize(),
 		0,
 		m_app.GetDevice(),
-		&m_effect);
-	if (FAILED(hr))
-	{
-		throw Exception("D3DX11CreateEffectFromMemory() failed.", hr);
-	}
+		&m_effect
+	);
+	assert("D3DX11CreateEffectFromMemory() failed." && SUCCEEDED(hr));
 
 	Initialize();
 }
@@ -104,17 +100,15 @@ void Effect::LoadCompiled()
 
 	std::vector<std::byte> effectData;
 	utils::LoadBinaryFile(m_path, effectData);
-	if (effectData.empty())
-	{
-		throw Exception("Load compiled effect failed.");
-	}
+	assert("Load compiled effect failed." && !effectData.empty());
 
-	auto hr =
-		D3DX11CreateEffectFromMemory(effectData.data(), effectData.size(), 0, m_app.GetDevice(), &m_effect);
-	if (FAILED(hr))
-	{
-		throw Exception("D3DX11CreateEffectFromMemory() failed.", hr);
-	}
+	auto hr = D3DX11CreateEffectFromMemory(
+		effectData.data(), effectData.size(),
+		0,
+		m_app.GetDevice(),
+		&m_effect
+	);
+	assert("D3DX11CreateEffectFromMemory() failed." && SUCCEEDED(hr));
 
 	Initialize();
 }
@@ -226,10 +220,7 @@ void Effect::Initialize()
 		return;
 
 	auto hr = m_effect->GetDesc(&m_effectDesc);
-	if (FAILED(hr))
-	{
-		throw Exception("ID3DX11Effect::GetDesc() failed.", hr);
-	}
+	assert("ID3DX11Effect::GetDesc() failed." && SUCCEEDED(hr));
 
 	for (unsigned i = 0; i < m_effectDesc.Techniques; i++)
 	{

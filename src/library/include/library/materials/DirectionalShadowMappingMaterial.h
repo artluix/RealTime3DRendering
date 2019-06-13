@@ -51,7 +51,6 @@ struct DirectionalShadowMappingTechnique
 
 	static constexpr char* ToDisplayString(const Type t)
 	{
-		// clang-format off
 		switch (t)
 		{
 			case Simple:		return "Simple";
@@ -59,12 +58,10 @@ struct DirectionalShadowMappingTechnique
 			case PCF:			return "PCF";
 			default:			return "";
 		};
-		// clang-format on
 	}
 
 	static constexpr char* ToString(const Type t)
 	{
-		// clang-format off
 		switch (t)
 		{
 			case Simple:		return "directional_shadow_mapping";
@@ -72,7 +69,6 @@ struct DirectionalShadowMappingTechnique
 			case PCF:			return "directional_shadow_mapping_pcf";
 			default:			return "";
 		};
-		// clang-format on
 	}
 };
 } // namespace library

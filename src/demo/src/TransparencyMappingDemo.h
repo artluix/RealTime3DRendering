@@ -2,7 +2,7 @@
 #include <library/Materials/TransparencyMappingMaterial.h>
 #include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
-#include <library/Color.h>
+#include <library/math/Color.h>
 
 #include <memory>
 
@@ -49,8 +49,8 @@ private:
 
 	library::ComPtr<ID3D11ShaderResourceView> m_transparencyMapTexture;
 
-	library::Color m_ambientColor;
-	library::Color m_specularColor;
+	library::math::Color m_ambientColor;
+	library::math::Color m_specularColor;
 	float m_specularPower;
 
 	std::unique_ptr<library::PointLightComponent> m_pointLight;

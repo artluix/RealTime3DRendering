@@ -18,7 +18,6 @@ SkinnedModelMaterial::~SkinnedModelMaterial() = default;
 
 void SkinnedModelMaterial::InitializeInternal()
 {
-	// clang-format off
 	m_inputElementDescriptions =
 	{
 		{
@@ -67,7 +66,6 @@ void SkinnedModelMaterial::InitializeInternal()
 			0
 		}
 	};
-	// clang-format on
 
 	Material::InitializeInternal();
 }
@@ -95,11 +93,9 @@ VertexBufferData SkinnedModelMaterial::CreateVertexBufferData(ID3D11Device* cons
 		const auto& normal = normals[i];
 		const auto& vertexWeights = boneWeights[i];
 
-		std::array<float, Bone::VertexWeights::MaxPerVertex> weights;
-		std::array<unsigned, Bone::VertexWeights::MaxPerVertex> indices;
-
-		weights.fill(0.f);
-
+		math::Vector4 weights;
+		math::Vector4u indices;
+		
 		for (unsigned j = 0, count = vertexWeights.GetCount(); j < count; j++)
 		{
 			weights[j] = vertexWeights[j].weight;
@@ -107,11 +103,12 @@ VertexBufferData SkinnedModelMaterial::CreateVertexBufferData(ID3D11Device* cons
 		}
 
 		vertices.emplace_back(
-			DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f),
-			DirectX::XMFLOAT2(uv.x, uv.y),
+			math::Vector4(position, 1.0f),
+			uv.xy,
 			normal,
-			DirectX::XMUINT4(indices.data()),
-			DirectX::XMFLOAT4(weights.data()));
+			indices,
+			weights
+		);
 	}
 
 	return VertexBufferData(device, vertices);

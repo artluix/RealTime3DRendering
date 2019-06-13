@@ -45,7 +45,7 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 
 /************* Pixel Shader *************/
 
-float4 blur_pixel_shader(VS_OUTPUT IN) : SV_Target
+float4 pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 color = (float4)0;
 
@@ -65,6 +65,6 @@ technique11 blur
     {
         SetVertexShader(CompileShader(vs_5_0, vertex_shader()));
         SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_5_0, blur_pixel_shader()));
+        SetPixelShader(CompileShader(ps_5_0, pixel_shader()));
     }
 }

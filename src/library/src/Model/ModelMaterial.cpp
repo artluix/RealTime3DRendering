@@ -2,7 +2,6 @@
 #include "library/Model/ModelMaterial.h"
 
 #include "library/Model/Model.h"
-#include "library/Exception.h"
 
 #include <cassert>
 

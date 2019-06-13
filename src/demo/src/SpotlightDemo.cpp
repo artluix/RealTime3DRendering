@@ -9,9 +9,8 @@
 #include <library/Application.h>
 #include <library/Utils.h>
 #include <library/Path.h>
-#include <library/Exception.h>
-#include <library/Math/Math.h>
 
+#include <library/Math/Math.h>
 #include <library/Model/Model.h>
 
 #include <library/Effect/Effect.h>
@@ -151,22 +150,22 @@ void SpotlightDemo::UpdateSpotlight(const Time& time)
 
 		// move
 		{
-			math::Vector3 movementAmount;
+			math::Vector3i movementAmount;
 
 			if (m_keyboard->IsKeyDown(Key::Num_4))
-				movementAmount.x = -1.0f;
+				movementAmount.x--;
 			if (m_keyboard->IsKeyDown(Key::Num_6))
-				movementAmount.x = 1.0f;
+				movementAmount.x++;
 
 			if (m_keyboard->IsKeyDown(Key::Num_9))
-				movementAmount.y = -1.0f;
+				movementAmount.y--;
 			if (m_keyboard->IsKeyDown(Key::Num_3))
-				movementAmount.y = 1.0f;
+				movementAmount.y++;
 
 			if (m_keyboard->IsKeyDown(Key::Num_8))
-				movementAmount.z = -1.0f;
+				movementAmount.z--;
 			if (m_keyboard->IsKeyDown(Key::Num_2))
-				movementAmount.z = 1.0f;
+				movementAmount.z++;
 
 			if (movementAmount)
 			{
@@ -289,18 +288,18 @@ void SpotlightDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	{
 		wvp *= camera->GetViewProjectionMatrix();
 
-		m_material->GetCameraPosition() << math::XMVector(camera->GetPosition());
+		m_material->GetCameraPosition() << camera->GetPosition();
 	}
 
-	m_material->GetWVP() << math::XMMatrix(wvp);
-	m_material->GetWorld() << math::XMMatrix(world);
+	m_material->GetWVP() << wvp;
+	m_material->GetWorld() << world;
 	m_material->GetSpecularPower() << m_specularPower;
-	m_material->GetSpecularColor() << math::XMVector(m_specularColor);
-	m_material->GetAmbientColor() << math::XMVector(m_ambientColor);
-	m_material->GetLightColor() << math::XMVector(m_spotlight->GetColor());
-	m_material->GetLightPosition() << math::XMVector(m_spotlight->GetPosition());
+	m_material->GetSpecularColor() << m_specularColor.ToVector4();
+	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
+	m_material->GetLightColor() << m_spotlight->GetColor().ToVector4();
+	m_material->GetLightPosition() << m_spotlight->GetPosition();
 	m_material->GetLightRadius() << m_spotlight->GetRadius();
-	m_material->GetLightLookAt() << math::XMVector(m_spotlight->GetDirection());
+	m_material->GetLightLookAt() << m_spotlight->GetDirection();
 	m_material->GetSpotlightInnerAngle() << m_spotlight->GetInnerAngle();
 	m_material->GetSpotlightOuterAngle() << m_spotlight->GetOuterAngle();
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();

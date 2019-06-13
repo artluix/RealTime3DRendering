@@ -23,7 +23,6 @@ DiffuseLightingMaterial::~DiffuseLightingMaterial() = default;
 
 void DiffuseLightingMaterial::InitializeInternal()
 {
-	// clang-format off
 	m_inputElementDescriptions = {
 		{
 			"POSITION",
@@ -53,7 +52,6 @@ void DiffuseLightingMaterial::InitializeInternal()
 			0
 		},
 	};
-	// clang-format on
 
 	Material::InitializeInternal();
 }
@@ -80,9 +78,10 @@ VertexBufferData DiffuseLightingMaterial::CreateVertexBufferData(ID3D11Device* c
 		const auto& normal = normals[i];
 
 		vertices.emplace_back(
-			DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f),
-			DirectX::XMFLOAT2(uv.x, uv.y),
-			normal);
+			math::Vector4(position, 1.0f),
+			math::Vector2(uv.x, uv.y),
+			normal
+		);
 	}
 
 	return VertexBufferData(device, vertices);

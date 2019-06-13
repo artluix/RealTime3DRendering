@@ -5,7 +5,6 @@
 #include "library/Model/ModelMaterial.h"
 
 #include "library/Application.h"
-#include "library/Exception.h"
 #include "library/Path.h"
 
 #include <assimp/scene.h>
@@ -26,7 +25,7 @@ Mesh::Mesh(Model& model, const aiMesh& aiMesh)
 
 		for (unsigned i = 0; i < aiMesh.mNumVertices; i++)
 		{
-			m_vertices.push_back(reinterpret_cast<const DirectX::XMFLOAT3&>(aiMesh.mVertices[i]));
+			m_vertices.push_back(reinterpret_cast<const math::Vector3&>(aiMesh.mVertices[i]));
 		}
 	}
 
@@ -37,7 +36,7 @@ Mesh::Mesh(Model& model, const aiMesh& aiMesh)
 
 		for (unsigned i = 0; i < aiMesh.mNumVertices; i++)
 		{
-			m_normals.push_back(reinterpret_cast<const DirectX::XMFLOAT3&>(aiMesh.mNormals[i]));
+			m_normals.push_back(reinterpret_cast<const math::Vector3&>(aiMesh.mNormals[i]));
 		}
 	}
 
@@ -48,8 +47,8 @@ Mesh::Mesh(Model& model, const aiMesh& aiMesh)
 
 		for (unsigned i = 0; i < aiMesh.mNumVertices; i++)
 		{
-			const auto& tangent = reinterpret_cast<const DirectX::XMFLOAT3&>(aiMesh.mTangents[i]);
-			const auto& binormal = reinterpret_cast<const DirectX::XMFLOAT3&>(aiMesh.mBitangents[i]);
+			const auto& tangent = reinterpret_cast<const math::Vector3&>(aiMesh.mTangents[i]);
+			const auto& binormal = reinterpret_cast<const math::Vector3&>(aiMesh.mBitangents[i]);
 			m_tangentBinormals.emplace_back(tangent, binormal);
 		}
 	}
@@ -61,14 +60,14 @@ Mesh::Mesh(Model& model, const aiMesh& aiMesh)
 
 		for (unsigned i = 0; i < uvChannelsCount; i++)
 		{
-			DirectX::XMFLOAT3Vector textureCoordinates;
+			std::vector<math::Vector3> textureCoordinates;
 			textureCoordinates.reserve(aiMesh.mNumVertices);
 
 			const auto aiTextureCoords = aiMesh.mTextureCoords[i];
 
 			for (unsigned j = 0; j < aiMesh.mNumVertices; j++)
 			{
-				textureCoordinates.push_back(reinterpret_cast<const DirectX::XMFLOAT3&>(aiTextureCoords[j]));
+				textureCoordinates.push_back(reinterpret_cast<const math::Vector3&>(aiTextureCoords[j]));
 			}
 
 			m_texturesCoordinates.push_back(textureCoordinates);
@@ -82,14 +81,14 @@ Mesh::Mesh(Model& model, const aiMesh& aiMesh)
 
 		for (unsigned i = 0; i < colorChannelsCount; i++)
 		{
-			DirectX::XMFLOAT4Vector vertexColors;
+			std::vector<math::Color> vertexColors;
 			vertexColors.reserve(aiMesh.mNumVertices);
 
-			const auto aiVertexColors = aiMesh.mTextureCoords[i];
+			const auto aiVertexColors = aiMesh.mColors[i];
 
 			for (unsigned j = 0; j < aiMesh.mNumVertices; j++)
 			{
-				vertexColors.push_back(reinterpret_cast<const DirectX::XMFLOAT4&>(aiVertexColors[j]));
+				vertexColors.push_back(reinterpret_cast<const math::Color&>(aiVertexColors[j]));
 			}
 
 			m_verticesColors.push_back(vertexColors);
@@ -137,9 +136,9 @@ Mesh::Mesh(Model& model, const aiMesh& aiMesh)
 				m_model.m_bonesMapping.emplace(boneName, boneIdx);
 			}
 
-			for (unsigned i = 0; i < aiBone->mNumWeights; i++)
+			for (unsigned j = 0; j < aiBone->mNumWeights; j++)
 			{
-				const auto& aiVertexWeight = aiBone->mWeights[i];
+				const auto& aiVertexWeight = aiBone->mWeights[j];
 				auto& boneWeight = m_boneWeights[aiVertexWeight.mVertexId];
 				boneWeight.Push(Bone::VertexWeight(aiVertexWeight.mWeight, boneIdx));
 			}
@@ -162,12 +161,12 @@ Mesh::~Mesh() = default;
 
 //-------------------------------------------------------------------------
 
-const DirectX::XMFLOAT3Vector& Mesh::GetTextureCoordinates(const unsigned textureIdx) const
+const std::vector<math::Vector3>& Mesh::GetTextureCoordinates(const unsigned textureIdx) const
 {
 	return m_texturesCoordinates[textureIdx];
 }
 
-const DirectX::XMFLOAT4Vector& Mesh::GetVertexColors(const unsigned vertexIdx) const
+const std::vector<math::Color>& Mesh::GetVertexColors(const unsigned vertexIdx) const
 {
 	return m_verticesColors[vertexIdx];
 }

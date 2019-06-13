@@ -13,7 +13,7 @@ namespace library
 AnimationPlayerComponent::AnimationPlayerComponent(
 	const Model& model,
 	const bool enableInterpolation /*= true*/
-	)
+)
 	: m_model(model)
 	, m_isInterpolationEnabled(enableInterpolation)
 	, m_inverseRootTransform(math::Matrix4::Identity)

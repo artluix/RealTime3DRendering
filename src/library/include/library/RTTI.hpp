@@ -55,7 +55,7 @@ template <class To, class From>
 To* CastTo(From* self)
 {
 	if (!!self)
-		return self->As<To>();
+		return self->template As<To>();
 
 	return nullptr;
 }
@@ -64,7 +64,7 @@ template <class To, class From>
 const To* CastTo(const From* self)
 {
 	if (!!self)
-		return self->As<To>();
+		return self->template As<To>();
 
 	return nullptr;
 }
@@ -83,7 +83,6 @@ std::shared_ptr<To> CastTo(std::shared_ptr<From> self)
 
 //-------------------------------------------------------------------------
 
-// clang-format off
 #define RTTI_CLASS_BASE(Class)														\
 public:																				\
 virtual bool Is(const library::rtti::TypeId typeId) const							\
@@ -146,5 +145,14 @@ const void* CastTo(const library::rtti::TypeId typeId) const override				\
 		return self;																\
 																					\
 	return library::rtti::detail::ParentCast<Class, __VA_ARGS__>()(self, typeId);	\
+}																					\
+template <class T>																	\
+T* As()																				\
+{																					\
+	return static_cast<T*>(CastTo(library::rtti::GetTypeId<T>()));					\
+}																					\
+template <class T>																	\
+const T* As() const																	\
+{																					\
+	return static_cast<const T*>(CastTo(library::rtti::GetTypeId<T>()));			\
 }
-// clang-format on

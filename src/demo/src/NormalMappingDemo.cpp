@@ -9,9 +9,8 @@
 #include <library/Application.h>
 #include <library/Utils.h>
 #include <library/Path.h>
-#include <library/Exception.h>
-#include <library/Math/Math.h>
 
+#include <library/Math/Math.h>
 #include <library/Model/Model.h>
 
 #include <library/Effect/Effect.h>
@@ -56,21 +55,16 @@ void NormalMappingDemo::InitializeInternal()
 	// build vertices manually
 	{
 		using Vertex = NormalMappingMaterial::Vertex;
+		using namespace library::math;;
 
-		using DirectX::XMFLOAT2;
-		using DirectX::XMFLOAT4;
+		constexpr std::array<Vertex, 6> vertices = {
+			Vertex(Vector4(-0.5f, -0.5f, 0.0f, 1.0f), Vector2(0.0f, 1.0f), Direction::Backward, Direction::Right),
+			Vertex(Vector4(-0.5f, 0.5f, 0.0f, 1.0f), Vector2(0.0f, 0.0f), Direction::Backward, Direction::Right),
+			Vertex(Vector4(0.5f, 0.5f, 0.0f, 1.0f), Vector2(1.0f, 0.0f), Direction::Backward, Direction::Right),
 
-		const auto right = DirectX::XMFLOAT3(math::Vector3::Right);
-		const auto backward = DirectX::XMFLOAT3(math::Vector3::Backward);
-
-		const std::array<Vertex, 6> vertices = {
-			Vertex(XMFLOAT4(-0.5f, -0.5f, 0.0f, 1.0f), XMFLOAT2(0.0f, 1.0f), backward, right),
-			Vertex(XMFLOAT4(-0.5f, 0.5f, 0.0f, 1.0f), XMFLOAT2(0.0f, 0.0f), backward, right),
-			Vertex(XMFLOAT4(0.5f, 0.5f, 0.0f, 1.0f), XMFLOAT2(1.0f, 0.0f), backward, right),
-
-			Vertex(XMFLOAT4(-0.5f, -0.5f, 0.0f, 1.0f), XMFLOAT2(0.0f, 1.0f), backward, right),
-			Vertex(XMFLOAT4(0.5f, 0.5f, 0.0f, 1.0f), XMFLOAT2(1.0f, 0.0f), backward, right),
-			Vertex(XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), XMFLOAT2(1.0f, 1.0f), backward, right),
+			Vertex(Vector4(-0.5f, -0.5f, 0.0f, 1.0f), Vector2(0.0f, 1.0f), Direction::Backward, Direction::Right),
+			Vertex(Vector4(0.5f, 0.5f, 0.0f, 1.0f), Vector2(1.0f, 0.0f), Direction::Backward, Direction::Right),
+			Vertex(Vector4(0.5f, -0.5f, 0.0f, 1.0f), Vector2(1.0f, 1.0f), Direction::Backward, Direction::Right),
 		};
 
 		m_primitivesData.clear();
@@ -230,16 +224,16 @@ void NormalMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	{
 		wvp *= camera->GetViewProjectionMatrix();
 
-		m_material->GetCameraPosition() << math::XMVector(camera->GetPosition());
+		m_material->GetCameraPosition() << camera->GetPosition();
 	}
 
-	m_material->GetWVP() << math::XMMatrix(wvp);
-	m_material->GetWorld() << math::XMMatrix(world);
+	m_material->GetWVP() << wvp;
+	m_material->GetWorld() << world;
 	m_material->GetSpecularPower() << m_specularPower;
-	m_material->GetSpecularColor() << math::XMVector(m_specularColor);
-	m_material->GetAmbientColor() << math::XMVector(m_ambientColor);
-	m_material->GetLightColor() << math::XMVector(m_directionalLight->GetColor());
-	m_material->GetLightDirection() << math::XMVector(m_directionalLight->GetDirection());
+	m_material->GetSpecularColor() << m_specularColor.ToVector4();
+	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
+	m_material->GetLightColor() << m_directionalLight->GetColor().ToVector4();
+	m_material->GetLightDirection() << m_directionalLight->GetDirection();
 
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 	m_material->GetNormalMap() << m_textures[Texture::NormalMap].Get();

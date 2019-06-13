@@ -4,7 +4,7 @@
 
 namespace library
 {
-	class TextComponent;
+class TextComponent;
 } // namespace library
 
 class BloomDemo
@@ -17,8 +17,10 @@ public:
 	explicit BloomDemo();
 	~BloomDemo();
 
-	void Initialize() override;
 	void Update(const library::Time& time) override;
+
+protected:
+	void InitializeInternal() override;
 
 private:
 	void UpdateSettings(const library::Time& time);

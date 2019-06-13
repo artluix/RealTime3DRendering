@@ -2,35 +2,26 @@
 #include "library/NonCopyable.hpp"
 #include "library/Model/Bone.h"
 #include "library/Model/TextureType.h"
-#include "library/CommonTypes.h"
+#include "library/Common.h"
 #include "library/BufferData.h"
 #include "library/DirectXForwardDeclarations.h"
 
-#include <DirectXMath.h>
 #include <d3dcommon.h>
-#include <string>
-#include <vector>
 
 struct aiMesh;
 struct ID3D11Buffer;
-
-namespace DirectX
-{
-using XMFLOAT3Vector = std::vector<DirectX::XMFLOAT3>;
-using XMFLOAT4Vector = std::vector<DirectX::XMFLOAT4>;
-} // namespace DirectX
 
 namespace library
 {
 struct TangentBinormal
 {
-	TangentBinormal(const DirectX::XMFLOAT3& tangent, const DirectX::XMFLOAT3& binormal)
+	TangentBinormal(const math::Vector3& tangent, const math::Vector3& binormal)
 		: tangent(tangent)
 		, binormal(binormal)
 	{}
 
-	DirectX::XMFLOAT3 tangent;
-	DirectX::XMFLOAT3 binormal;
+	math::Vector3 tangent;
+	math::Vector3 binormal;
 };
 
 using TangentBinormalVector = std::vector<TangentBinormal>;
@@ -56,12 +47,12 @@ public:
 	//  vertices
 	bool HasVertices() const { return !m_vertices.empty(); }
 	std::size_t GetVerticesCount() const { return m_vertices.size(); }
-	const DirectX::XMFLOAT3Vector& GetVertices() const { return m_vertices; }
+	const std::vector<math::Vector3>& GetVertices() const { return m_vertices; }
 
 	// normals
 	bool HasNormals() const { return !m_normals.empty(); }
 	std::size_t GetNormalsCount() const { return m_normals.size(); }
-	const DirectX::XMFLOAT3Vector& GetNormals() const { return m_normals; }
+	const std::vector<math::Vector3>& GetNormals() const { return m_normals; }
 
 	// tangents & binormals
 	bool HasTangentBinormals() const { return !m_tangentBinormals.empty(); }
@@ -71,17 +62,14 @@ public:
 	// textures coordinates
 	bool HasTexturesCoordinates() const { return !m_texturesCoordinates.empty(); }
 	std::size_t GetTexturesCoordinatesCount() const { return m_texturesCoordinates.size(); }
-	const std::vector<DirectX::XMFLOAT3Vector>& GetTexturesCoordinates() const
-	{
-		return m_texturesCoordinates;
-	}
-	const DirectX::XMFLOAT3Vector& GetTextureCoordinates(const unsigned textureIdx) const;
+	const std::vector<std::vector<math::Vector3>>& GetTexturesCoordinates() const { return m_texturesCoordinates; }
+	const std::vector<math::Vector3>& GetTextureCoordinates(const unsigned textureIdx) const;
 
 	// vertices colors
 	bool HasVerticesColors() const { return !m_verticesColors.empty(); }
 	std::size_t GetVerticesColorsCount() const { return m_verticesColors.size(); }
-	const std::vector<DirectX::XMFLOAT4Vector>& GetVerticesColors() const { return m_verticesColors; }
-	const DirectX::XMFLOAT4Vector& GetVertexColors(const unsigned vertexIdx) const;
+	const std::vector<std::vector<math::Color>>& GetVerticesColors() const { return m_verticesColors; }
+	const std::vector<math::Color>& GetVertexColors(const unsigned vertexIdx) const;
 
 	// indices
 	bool HasIndices() const { return !m_indices.empty(); }
@@ -110,11 +98,11 @@ private:
 
 	D3D_PRIMITIVE_TOPOLOGY m_primitiveTopology;
 
-	DirectX::XMFLOAT3Vector m_vertices;
-	DirectX::XMFLOAT3Vector m_normals;
+	std::vector<math::Vector3> m_vertices;
+	std::vector<math::Vector3> m_normals;
 	TangentBinormalVector m_tangentBinormals;
-	std::vector<DirectX::XMFLOAT3Vector> m_texturesCoordinates;
-	std::vector<DirectX::XMFLOAT4Vector> m_verticesColors;
+	std::vector<std::vector<math::Vector3>> m_texturesCoordinates;
+	std::vector<std::vector<math::Color>> m_verticesColors;
 
 	std::size_t m_facesCount;
 	std::vector<unsigned> m_indices;

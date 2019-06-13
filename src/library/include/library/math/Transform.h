@@ -7,7 +7,7 @@ namespace library::math
 struct Transform
 {
 	Quaternion rotation = Quaternion::Identity;
-	Vector3 scaling = Vector3::One;
+	Vector3 scaling = Vector3::Zero;
 	Vector3 position = Vector3::Zero;
 };
 } // namespace library::math

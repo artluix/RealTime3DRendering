@@ -123,7 +123,7 @@ unsigned AnimationClip::GetKeyframeIdx(const Bone& bone, const TimePoint& timePo
 	if (HasBoneAnimation(bone))
 		return GetBoneAnimation(bone).GetKeyframeIdx(timePoint);
 
-	return -1;
+	return unsigned(-1);
 }
 
 const math::Matrix4& AnimationClip::GetTransform(const Bone& bone, const TimePoint& timePoint) const

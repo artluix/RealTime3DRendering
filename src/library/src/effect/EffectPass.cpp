@@ -3,7 +3,6 @@
 
 #include "library/Effect/EffectTechnique.h"
 #include "library/Application.h"
-#include "library/Exception.h"
 
 namespace library
 {
@@ -28,11 +27,9 @@ ComPtr<ID3D11InputLayout> EffectPass::CreateInputLayout(
 		static_cast<UINT>(inputElementDescriptions.size()),
 		m_passDesc.pIAInputSignature,
 		m_passDesc.IAInputSignatureSize,
-		&inputLayout);
-	if (FAILED(hr))
-	{
-		throw Exception("ID3D11Device::CreateInputLayout() failed.", hr);
-	}
+		&inputLayout
+	);
+	assert("ID3D11Device::CreateInputLayout() failed." && SUCCEEDED(hr));
 
 	return inputLayout;
 }

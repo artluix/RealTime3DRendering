@@ -4,8 +4,6 @@
 #include "library/Components/CameraComponent.h"
 
 #include "library/Application.h"
-#include "library/Exception.h"
-
 #include "library/Frustum.h"
 
 #include "library/Effect/EffectVariable.h"
@@ -17,7 +15,7 @@ namespace library
 
 namespace
 {
-const auto k_defaultColor = Color::Green;
+constexpr auto k_defaultColor = colors::Green;
 
 constexpr std::size_t k_verticesCount = 8;
 
@@ -28,10 +26,12 @@ constexpr std::size_t k_indicesCount = k_primitivesCount * k_indicesPerPrimitive
 
 //-------------------------------------------------------------------------
 
-RenderableFrustumComponent::RenderableFrustumComponent() : RenderableFrustumComponent(k_defaultColor)
+RenderableFrustumComponent::RenderableFrustumComponent()
+	: RenderableFrustumComponent(k_defaultColor)
 {}
 
-RenderableFrustumComponent::RenderableFrustumComponent(const Color& color) : m_color(color)
+RenderableFrustumComponent::RenderableFrustumComponent(const math::Color& color)
+	: m_color(color)
 {}
 
 //-------------------------------------------------------------------------
@@ -49,7 +49,7 @@ void RenderableFrustumComponent::Draw_SetData(const PrimitiveData& primitiveData
 	if (auto camera = GetCamera())
 		wvp *= camera->GetViewProjectionMatrix();
 
-	GetMaterial()->GetWorldViewProjection() << math::XMMatrix(wvp);
+	GetMaterial()->GetWorldViewProjection() << wvp;
 
 	PrimitiveComponent::Draw_SetData(primitiveData);
 }
@@ -64,7 +64,6 @@ void RenderableFrustumComponent::InitializeGeometry(const Frustum& frustum)
 void RenderableFrustumComponent::InitializeVertexBuffer(const Frustum& frustum)
 {
 	using Vertex = Material::Vertex;
-	using DirectX::XMFLOAT4;
 
 	auto& pd = m_primitivesData.front();
 
@@ -75,7 +74,7 @@ void RenderableFrustumComponent::InitializeVertexBuffer(const Frustum& frustum)
 
 	for (const auto& corner : frustum.GetCorners())
 	{
-		vertices.emplace_back(XMFLOAT4(corner.x, corner.y, corner.z, 1.f), XMFLOAT4(m_color));
+		vertices.emplace_back(math::Vector4(corner, 1.f), m_color);
 	}
 
 	D3D11_BUFFER_DESC vertexBufferDesc{};
@@ -86,12 +85,12 @@ void RenderableFrustumComponent::InitializeVertexBuffer(const Frustum& frustum)
 	D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 	vertexSubResourceData.pSysMem = vertices.data();
 
-	auto hr =
-		GetApp().GetDevice()->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, &pd.vertexBuffer.buffer);
-	if (FAILED(hr))
-	{
-		throw Exception("ID3D11Device::CreateBuffer() failed.", hr);
-	}
+	auto hr = GetApp().GetDevice()->CreateBuffer(
+		&vertexBufferDesc,
+		&vertexSubResourceData,
+		&pd.vertexBuffer.buffer
+	);
+	assert("ID3D11Device::CreateBuffer() failed." && SUCCEEDED(hr));
 }
 
 void RenderableFrustumComponent::InitializeIndexBuffer()
@@ -101,8 +100,8 @@ void RenderableFrustumComponent::InitializeIndexBuffer()
 
 	pd.primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
 
-	// clang-format off
-	constexpr std::array<unsigned, k_indicesCount> k_indices = {// Near plane lines
+	constexpr std::array<unsigned, k_indicesCount> k_indices = {
+		// Near plane lines
 		0, 1,
 		1, 2,
 		2, 3,
@@ -120,7 +119,6 @@ void RenderableFrustumComponent::InitializeIndexBuffer()
 		6, 7,
 		7, 4
 	};
-	// clang-format on
 
 	pd.indexBuffer = std::make_optional<IndexBufferData>();
 	pd.indexBuffer->elementsCount = k_indicesCount;
@@ -133,11 +131,11 @@ void RenderableFrustumComponent::InitializeIndexBuffer()
 	D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
 	vertexSubResourceData.pSysMem = k_indices.data();
 
-	auto hr =
-		GetApp().GetDevice()->CreateBuffer(&indexBufferDesc, &vertexSubResourceData, &pd.indexBuffer->buffer);
-	if (FAILED(hr))
-	{
-		throw Exception("ID3D11Device::CreateBuffer() failed.", hr);
-	}
+	auto hr = GetApp().GetDevice()->CreateBuffer(
+		&indexBufferDesc,
+		&vertexSubResourceData,
+		&pd.indexBuffer->buffer
+	);
+	assert("ID3D11Device::CreateBuffer() failed." && SUCCEEDED(hr));
 }
 } // namespace library

@@ -8,7 +8,7 @@
 
 #include "library/Application.h"
 #include "library/RenderTargets/FullScreenRenderTarget.h"
-#include "library/Color.h"
+#include "library/math/Color.h"
 
 namespace library
 {
@@ -24,12 +24,11 @@ const BloomSettings k_defaultBloomSettings = {
 	1.0f,  // sceneSaturation
 };
 
-const auto k_backgroundColor = Color::Black;
+constexpr auto k_backgroundColor = colors::Black;
 } // anonymous namespace
 
 std::string BloomDrawModeToString(const BloomDrawMode bloomDrawMode)
 {
-	// clang-format off
 	switch (bloomDrawMode)
 	{
 		case BloomDrawMode::Normal:				return "Normal";
@@ -37,12 +36,10 @@ std::string BloomDrawModeToString(const BloomDrawMode bloomDrawMode)
 		case BloomDrawMode::BlurredTexture:		return "Blurred Texture";
 		default:								return "";
 	}
-	// clang-format on
 }
 
 BloomDrawMode BloomDrawModeNext(const BloomDrawMode bloomDrawMode)
 {
-	// clang-format off
 	switch (bloomDrawMode)
 	{
 		case BloomDrawMode::Normal:				return BloomDrawMode::ExtractedTexture;
@@ -50,14 +47,11 @@ BloomDrawMode BloomDrawModeNext(const BloomDrawMode bloomDrawMode)
 		case BloomDrawMode::BlurredTexture:		return BloomDrawMode::Normal;
 		default:								return BloomDrawMode::Normal; // to skip warning
 	}
-	// clang-format on
 }
 
 //-------------------------------------------------------------------------
 
-BloomComponent::BloomComponent() : m_settings(k_defaultBloomSettings), m_drawMode(BloomDrawMode::Normal)
-{}
-
+BloomComponent::BloomComponent() : m_settings(k_defaultBloomSettings), m_drawMode(BloomDrawMode::Normal) {}
 BloomComponent::~BloomComponent() = default;
 
 //-------------------------------------------------------------------------
@@ -92,9 +86,9 @@ void BloomComponent::Draw(const Time& time)
 {
 	switch (m_drawMode)
 	{
-		case BloomDrawMode::Normal: DrawNormal(time); break;
-		case BloomDrawMode::ExtractedTexture: DrawExtractedTexture(time); break;
-		case BloomDrawMode::BlurredTexture: DrawBlurredTexture(time); break;
+		case BloomDrawMode::Normal:				DrawNormal(time); break;
+		case BloomDrawMode::ExtractedTexture:	DrawExtractedTexture(time); break;
+		case BloomDrawMode::BlurredTexture:		DrawBlurredTexture(time); break;
 		default: break;
 	};
 }
@@ -126,18 +120,11 @@ void BloomComponent::DrawNormal(const Time& time)
 	// Extract bright spots in the scene
 	m_renderTarget->Begin();
 
-	deviceContext->ClearRenderTargetView(
-		m_renderTarget->GetRenderTargetView(),
-		static_cast<const float*>(k_backgroundColor));
-	deviceContext->ClearDepthStencilView(
-		m_renderTarget->GetDepthStencilView(),
-		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-		1.0f,
-		0);
+	deviceContext->ClearRenderTargetView(m_renderTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
+	deviceContext->ClearDepthStencilView(m_renderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	m_fullScreenQuad->SetActiveTechnique("bloom_extract", "p0");
-	m_fullScreenQuad->SetMaterialUpdateFunction(
-		std::bind(&BloomComponent::UpdateExtractMaterial, this, std::ref(*m_material)));
+	m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&BloomComponent::UpdateExtractMaterial, this, std::ref(*m_material)));
 	m_fullScreenQuad->Draw(time);
 
 	m_renderTarget->End();
@@ -149,10 +136,9 @@ void BloomComponent::DrawNormal(const Time& time)
 
 	// Combine the original scene with the blurred bright spot image
 	m_fullScreenQuad->SetActiveTechnique("bloom_composite", "p0");
-	m_fullScreenQuad->SetMaterialUpdateFunction(
-		std::bind(&BloomComponent::UpdateCompositeMaterial, this, std::ref(*m_material)));
+	m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&BloomComponent::UpdateCompositeMaterial, this, std::ref(*m_material)));
 	m_fullScreenQuad->Draw(time);
-	GetApp().UnbindPixelShaderResources(0, 1);
+	GetApp().UnbindPixelShaderResources(0, 2);
 }
 
 void BloomComponent::DrawExtractedTexture(const Time& time)
@@ -170,18 +156,11 @@ void BloomComponent::DrawBlurredTexture(const Time& time)
 	// Extract bright spots in the scene
 	m_renderTarget->Begin();
 
-	deviceContext->ClearRenderTargetView(
-		m_renderTarget->GetRenderTargetView(),
-		static_cast<const float*>(k_backgroundColor));
-	deviceContext->ClearDepthStencilView(
-		m_renderTarget->GetDepthStencilView(),
-		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-		1.0f,
-		0);
+	deviceContext->ClearRenderTargetView(m_renderTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
+	deviceContext->ClearDepthStencilView(m_renderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
 
 	m_fullScreenQuad->SetActiveTechnique("bloom_extract", "p0");
-	m_fullScreenQuad->SetMaterialUpdateFunction(
-		std::bind(&BloomComponent::UpdateExtractMaterial, this, std::ref(*m_material)));
+	m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&BloomComponent::UpdateExtractMaterial, this, std::ref(*m_material)));
 	m_fullScreenQuad->Draw(time);
 
 	m_renderTarget->End();

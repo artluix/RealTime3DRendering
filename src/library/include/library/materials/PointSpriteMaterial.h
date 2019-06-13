@@ -20,8 +20,7 @@ public:
 
 	EffectVariable& GetColorTexture() { return m_colorTexture; }
 
-	virtual VertexBufferData CreateVertexBufferData(
-		ID3D11Device* const device, const Mesh& mesh) const override;
+	VertexBufferData CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh) const override;
 
 	unsigned GetVertexSize() const override { return sizeof(Vertex); }
 

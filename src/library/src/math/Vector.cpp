@@ -8,42 +8,91 @@
 
 namespace library::math
 {
-//-------------------------------------------------------------------------
-// Vector2
-//-------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// VectorType2<T>
+// -----------------------------------------------------------------------------
 
-Vector<2>& Vector<2>::operator=(const XMVector& xmVector)
+template<typename T>
+const VectorType<T, 2> VectorType<T, 2>::Zero{ 0 };
+template<typename T>
+const VectorType<T, 2> VectorType<T, 2>::One{ 1 };
+
+// -----------------------------------------------------------------------------
+
+template<typename T>
+template<typename U>
+constexpr VectorType<T, 2>::VectorType(const VectorType2<U>& other)
+	: VectorType(
+		static_cast<T>(other.x),
+		static_cast<T>(other.y)
+	)
+{}
+
+template<typename T>
+VectorType<T, 2>::VectorType(const dx::VECTOR& dxVEC)
 {
-	DirectX::XMStoreFloat2(reinterpret_cast<XMVector2*>(this), xmVector);
+	dx::StaticVector2<T>::Store(dxVEC, _dxVec);
+}
+
+template<typename T>
+VectorType<T, 2>& VectorType<T, 2>::operator=(const dx::VECTOR& dxVEC)
+{
+	dx::StaticVector2<T>::Store(dxVEC, _dxVec);
 	return *this;
 }
 
+template<typename T>
+VectorType<T, 2>::operator dx::VECTOR() const
+{
+	return dx::StaticVector2<T>::Load(_dxVec);
+}
+
 //-------------------------------------------------------------------------
 
-Vector<2>::operator XMVector() const
+template<typename T>
+VectorType<T, 2>::operator bool() const
 {
-	return DirectX::XMLoadFloat2(reinterpret_cast<const XMVector2*>(this));
-}
-
-Vector<2>::operator const XMVector2&() const
-{
-	return reinterpret_cast<const XMVector2&>(*this);
-}
-
-Vector<2>::operator bool() const
-{
-	static constexpr Vector zero;
+	static constexpr VectorType zero;
 	return *this != zero;
 }
 
+template<typename T>
+VectorType2<float> VectorType<T, 2>::Normalize() const
+{
+	return VectorType2<float>(dx::VectorNormalize<2>(dx::VECTOR(*this)));
+}
+
+template<typename T>
+template<typename U, typename>
+float VectorType<T, 2>::Length() const
+{
+	return dx::VectorLength<2>(dx::VECTOR(*this));
+}
+
+template<typename T>
+template<typename U, typename C>
+C VectorType<T, 2>::Dot(const VectorType2<U>& other) const
+{
+	return static_cast<C>(dx::VectorDot<2>(dx::VECTOR(*this), dx::VECTOR(other)));
+}
+
+template<typename T>
+template<typename U, typename C>
+VectorType2<C> VectorType<T, 2>::Cross(const VectorType2<U>& other) const
+{
+	return VectorType2<C>(dx::VectorCross<2>(dx::VECTOR(*this), dx::VECTOR(other)));
+}
+
+template<typename T>
+VectorType2<float> VectorType<T, 2>::Transform(const Matrix4& mat) const
+{
+	return VectorType2<float>(dx::VectorTransform<2>(dx::VECTOR(*this), dx::MATRIX(mat)));
+}
+
 //-------------------------------------------------------------------------
 
-constexpr Vector2 Vector<2>::Zero;
-constexpr Vector2 Vector<2>::One{1.f};
-
-//-------------------------------------------------------------------------
-
-std::string Vector<2>::ToString() const
+template<typename T>
+std::string VectorType<T, 2>::ToString() const
 {
 	std::ostringstream oss;
 	oss << std::setprecision(4) << '(' << x << ", " << y << ')';
@@ -51,280 +100,207 @@ std::string Vector<2>::ToString() const
 }
 
 //-------------------------------------------------------------------------
+// VectorType3<T>
+// -----------------------------------------------------------------------------
 
-float Vector<2>::Length() const
+template<typename T>
+const VectorType<T, 3> VectorType<T, 3>::Zero{ 0 };
+template<typename T>
+const VectorType<T, 3> VectorType<T, 3>::One{ 1 };
+
+// -----------------------------------------------------------------------------
+
+template<typename T>
+constexpr VectorType<T, 3>::VectorType(const VectorType<T, 2>& xy, const T z /* = T(0) */)
+	: VectorType(xy.x, xy.y, z)
+{}
+
+template<typename T>
+template<typename U>
+constexpr VectorType<T, 3>::VectorType(const VectorType3<U>& other)
+	: VectorType(
+		static_cast<T>(other.x),
+		static_cast<T>(other.y),
+		static_cast<T>(other.z)
+	)
+{}
+
+template<typename T>
+VectorType<T, 3>::VectorType(const dx::VECTOR& dxVEC)
 {
-	return DirectX::XMVectorGetX(DirectX::XMVector2Length(XMVector(*this)));
+	dx::StaticVector3<T>::Store(dxVEC, _dxVec);
 }
 
-float Vector<2>::LengthSq() const
+template<typename T>
+VectorType<T, 3>& VectorType<T, 3>::operator=(const dx::VECTOR& dxVEC)
 {
-	return DirectX::XMVectorGetX(DirectX::XMVector2LengthSq(XMVector(*this)));
-}
-
-float Vector<2>::Dot(const Vector& other) const
-{
-	return DirectX::XMVectorGetX(DirectX::XMVector2Dot(XMVector(*this), XMVector(other)));
-}
-
-Vector<2> Vector<2>::Normalize() const
-{
-	return Vector(DirectX::XMVector2Normalize(XMVector(*this)));
-}
-
-Vector<2> Vector<2>::Transform(const Matrix3& matrix) const
-{
-	return Vector(DirectX::XMVector2Transform(XMVector(*this), XMMatrix(matrix)));
-}
-
-//-------------------------------------------------------------------------
-
-bool Vector<2>::operator==(const Vector& other) const
-{
-	return DirectX::XMVector2Equal(XMVector(*this), XMVector(other));
-}
-
-bool Vector<2>::operator!=(const Vector& other) const
-{
-	return DirectX::XMVector2NotEqual(XMVector(*this), XMVector(other));
-}
-
-bool Vector<2>::operator<(const Vector& other) const
-{
-	return DirectX::XMVector2Less(XMVector(*this), XMVector(other));
-}
-
-bool Vector<2>::operator<=(const Vector& other) const
-{
-	return DirectX::XMVector2LessOrEqual(XMVector(*this), XMVector(other));
-}
-
-bool Vector<2>::operator>(const Vector& other) const
-{
-	return DirectX::XMVector2Greater(XMVector(*this), XMVector(other));
-}
-
-bool Vector<2>::operator>=(const Vector& other) const
-{
-	return DirectX::XMVector2GreaterOrEqual(XMVector(*this), XMVector(other));
-}
-
-//-------------------------------------------------------------------------
-// Vector3
-//-------------------------------------------------------------------------
-
-Vector<3>& Vector<3>::operator=(const XMVector& xmVector)
-{
-	DirectX::XMStoreFloat3(reinterpret_cast<XMVector3*>(this), xmVector);
+	dx::StaticVector3<T>::Store(dxVEC, _dxVec);
 	return *this;
 }
 
+template<typename T>
+VectorType<T, 3>::operator dx::VECTOR() const
+{
+	return dx::StaticVector3<T>::Load(_dxVec);
+}
+
 //-------------------------------------------------------------------------
 
-Vector<3>::operator XMVector() const
+template<typename T>
+VectorType<T, 3>::operator bool() const
 {
-	return DirectX::XMLoadFloat3(reinterpret_cast<const XMVector3*>(this));
-}
-
-Vector<3>::operator const XMVector3&() const
-{
-	return reinterpret_cast<const XMVector3&>(*this);
-}
-
-Vector<3>::operator bool() const
-{
-	static constexpr Vector zero;
+	static constexpr VectorType zero;
 	return *this != zero;
 }
 
+template<typename T>
+VectorType3<float> VectorType<T, 3>::Normalize() const
+{
+	return VectorType3<float>(dx::VectorNormalize<3>(dx::VECTOR(*this)));
+}
+
+template<typename T>
+template<typename U, typename>
+float VectorType<T, 3>::Length() const
+{
+	return dx::VectorLength<3>(dx::VECTOR(*this));
+}
+
+template<typename T>
+template<typename U, typename C>
+C VectorType<T, 3>::Dot(const VectorType3<U>& other) const
+{
+	return static_cast<C>(dx::VectorDot<2>(dx::VECTOR(*this), dx::VECTOR(other)));
+}
+
+template<typename T>
+template<typename U, typename C>
+VectorType3<C> VectorType<T, 3>::Cross(const VectorType3<U>& other) const
+{
+	return VectorType3<C>(dx::VectorCross<3>(dx::VECTOR(*this), dx::VECTOR(other)));
+}
+
+template<typename T>
+VectorType3<float> VectorType<T, 3>::Transform(const Matrix4& mat) const
+{
+	return VectorType3<float>(dx::VectorTransform<3>(dx::VECTOR(*this), dx::MATRIX(mat)));
+}
+
 //-------------------------------------------------------------------------
 
-constexpr Vector3 Vector<3>::Zero;
-constexpr Vector3 Vector<3>::One{1.f};
-
-constexpr Vector3 Vector<3>::Forward{0.f, 0.f, -1.f};
-constexpr Vector3 Vector<3>::Backward{0.f, 0.f, 1.f};
-constexpr Vector3 Vector<3>::Up{0.f, 1.f, 0.f};
-constexpr Vector3 Vector<3>::Down{0.f, -1.f, 0.f};
-constexpr Vector3 Vector<3>::Right{1.f, 0.f, 0.f};
-constexpr Vector3 Vector<3>::Left{-1.f, 0.f, 0.f};
-
-//-------------------------------------------------------------------------
-
-std::string Vector<3>::ToString() const
+template<typename T>
+std::string VectorType<T, 3>::ToString() const
 {
 	std::ostringstream oss;
 	oss << std::setprecision(4) << '(' << x << ", " << y << ", " << z << ')';
 	return oss.str();
 }
 
-//-------------------------------------------------------------------------
+// -----------------------------------------------------------------------------
+// VectorType4<T>
+// -----------------------------------------------------------------------------
 
-float Vector<3>::Length() const
+template<typename T>
+const VectorType<T, 4> VectorType<T, 4>::Zero{ 0 };
+template<typename T>
+const VectorType<T, 4> VectorType<T, 4>::One{ 1 };
+
+// -----------------------------------------------------------------------------
+
+template<typename T>
+constexpr VectorType<T, 4>::VectorType(const VectorType<T, 3>& xyz, const T w /* = T(0) */)
+	: VectorType(xyz.x, xyz.y, xyz.z, w)
+{}
+
+template<typename T>
+template<typename U>
+constexpr VectorType<T, 4>::VectorType(const VectorType4<U>& other)
+	: VectorType(
+		static_cast<T>(other.x),
+		static_cast<T>(other.y),
+		static_cast<T>(other.z),
+		static_cast<T>(other.w)
+	)
+{}
+
+template<typename T>
+VectorType<T, 4>::VectorType(const dx::VECTOR& dxVEC)
 {
-	return DirectX::XMVectorGetX(DirectX::XMVector3Length(XMVector(*this)));
+	dx::StaticVector4<T>::Store(dxVEC, _dxVec);
 }
 
-float Vector<3>::LengthSq() const
+template<typename T>
+VectorType<T, 4>& VectorType<T, 4>::operator=(const dx::VECTOR& dxVEC)
 {
-	return DirectX::XMVectorGetX(DirectX::XMVector3LengthSq(XMVector(*this)));
-}
-
-float Vector<3>::Dot(const Vector& other) const
-{
-	return DirectX::XMVectorGetX(DirectX::XMVector3Dot(XMVector(*this), XMVector(other)));
-}
-
-Vector<3> Vector<3>::Cross(const Vector3& other) const
-{
-	return Vector(DirectX::XMVector3Cross(XMVector(*this), XMVector(other)));
-}
-
-Vector<3> Vector<3>::Normalize() const
-{
-	return Vector(DirectX::XMVector3Normalize(XMVector(*this)));
-}
-
-Vector<3> Vector<3>::Transform(const Matrix4& matrix) const
-{
-	return Vector(DirectX::XMVector3Transform(XMVector(*this), XMMatrix(matrix)));
-}
-
-Vector<3> Vector<3>::TransformNormal(const Matrix3& matrix) const
-{
-	return Vector(DirectX::XMVector3TransformNormal(XMVector(*this), XMMatrix(matrix)));
-}
-
-//-------------------------------------------------------------------------
-
-bool Vector<3>::operator==(const Vector& other) const
-{
-	return DirectX::XMVector3Equal(XMVector(*this), XMVector(other));
-}
-
-bool Vector<3>::operator!=(const Vector& other) const
-{
-	return DirectX::XMVector3NotEqual(XMVector(*this), XMVector(other));
-}
-
-bool Vector<3>::operator<(const Vector& other) const
-{
-	return DirectX::XMVector3Less(XMVector(*this), XMVector(other));
-}
-
-bool Vector<3>::operator<=(const Vector& other) const
-{
-	return DirectX::XMVector3LessOrEqual(XMVector(*this), XMVector(other));
-}
-
-bool Vector<3>::operator>(const Vector& other) const
-{
-	return DirectX::XMVector3Greater(XMVector(*this), XMVector(other));
-}
-
-bool Vector<3>::operator>=(const Vector& other) const
-{
-	return DirectX::XMVector3GreaterOrEqual(XMVector(*this), XMVector(other));
-}
-
-//-------------------------------------------------------------------------
-// Vector4
-//-------------------------------------------------------------------------
-
-Vector<4>& Vector<4>::operator=(const XMVector& xmVector)
-{
-	DirectX::XMStoreFloat4(reinterpret_cast<XMVector4*>(this), xmVector);
+	dx::StaticVector4<T>::Store(dxVEC, _dxVec);
 	return *this;
 }
 
+template<typename T>
+VectorType<T, 4>::operator dx::VECTOR() const
+{
+	return dx::StaticVector4<T>::Load(_dxVec);
+}
+
 //-------------------------------------------------------------------------
 
-Vector<4>::operator XMVector() const
+template<typename T>
+VectorType<T, 4>::operator bool() const
 {
-	return DirectX::XMLoadFloat4(reinterpret_cast<const XMVector4*>(this));
-}
-
-Vector<4>::operator const XMVector4&() const
-{
-	return reinterpret_cast<const XMVector4&>(*this);
-}
-
-Vector<4>::operator bool() const
-{
-	static constexpr Vector zero;
+	static constexpr VectorType zero;
 	return *this != zero;
 }
 
+template<typename T>
+VectorType4<float> VectorType<T, 4>::Normalize() const
+{
+	return VectorType4<float>(dx::VectorNormalize<4>(dx::VECTOR(*this)));
+}
+
+template<typename T>
+template<typename U, typename>
+float VectorType<T, 4>::Length() const
+{
+	return dx::VectorLength<4>(dx::VECTOR(*this));
+}
+
+template<typename T>
+template<typename U, typename C>
+C VectorType<T, 4>::Dot(const VectorType4<U>& other) const
+{
+	return static_cast<C>(dx::VectorDot<2>(dx::VECTOR(*this), dx::VECTOR(other)));
+}
+
+template<typename T>
+VectorType4<float> VectorType<T, 4>::Transform(const Matrix4& mat) const
+{
+	return VectorType4<float>(dx::VectorTransform<4>(dx::VECTOR(*this), dx::MATRIX(mat)));
+}
+
 //-------------------------------------------------------------------------
 
-constexpr Vector4 Vector<4>::Zero;
-constexpr Vector4 Vector<4>::One{1.f};
-
-//-------------------------------------------------------------------------
-
-std::string Vector<4>::ToString() const
+template<typename T>
+std::string VectorType<T, 4>::ToString() const
 {
 	std::ostringstream oss;
 	oss << std::setprecision(4) << '(' << x << ", " << y << ", " << z << ", " << w << ')';
 	return oss.str();
 }
 
-//-------------------------------------------------------------------------
+//--------------------------------------------------------------------------
+// template instantiation
+//--------------------------------------------------------------------------
 
-float Vector<4>::Length() const
-{
-	return DirectX::XMVectorGetX(DirectX::XMVector4Length(XMVector(*this)));
-}
+template struct VectorType<float, 2>;
+template struct VectorType<s32, 2>;
+template struct VectorType<u32, 2>;
 
-float Vector<4>::LengthSq() const
-{
-	return DirectX::XMVectorGetX(DirectX::XMVector4LengthSq(XMVector(*this)));
-}
+template struct VectorType<float, 3>;
+template struct VectorType<s32, 3>;
+template struct VectorType<u32, 3>;
 
-float Vector<4>::Dot(const Vector& other) const
-{
-	return DirectX::XMVectorGetX(DirectX::XMVector4Dot(XMVector(*this), XMVector(other)));
-}
+template struct VectorType<float, 4>;
+template struct VectorType<s32, 4>;
+template struct VectorType<u32, 4>;
 
-Vector<4> Vector<4>::Normalize() const
-{
-	return Vector(DirectX::XMVector4Normalize(XMVector(*this)));
-}
-
-Vector<4> Vector<4>::Transform(const Matrix4& matrix) const
-{
-	return Vector(DirectX::XMVector4Transform(XMVector(*this), XMMatrix(matrix)));
-}
-
-//-------------------------------------------------------------------------
-
-bool Vector<4>::operator==(const Vector& other) const
-{
-	return DirectX::XMVector4Equal(XMVector(*this), XMVector(other));
-}
-
-bool Vector<4>::operator!=(const Vector& other) const
-{
-	return DirectX::XMVector4NotEqual(XMVector(*this), XMVector(other));
-}
-
-bool Vector<4>::operator<(const Vector& other) const
-{
-	return DirectX::XMVector4Less(XMVector(*this), XMVector(other));
-}
-
-bool Vector<4>::operator<=(const Vector& other) const
-{
-	return DirectX::XMVector4LessOrEqual(XMVector(*this), XMVector(other));
-}
-
-bool Vector<4>::operator>(const Vector& other) const
-{
-	return DirectX::XMVector4Greater(XMVector(*this), XMVector(other));
-}
-
-bool Vector<4>::operator>=(const Vector& other) const
-{
-	return DirectX::XMVector4GreaterOrEqual(XMVector(*this), XMVector(other));
-}
 } // namespace library::math

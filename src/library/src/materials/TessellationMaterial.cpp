@@ -21,7 +21,6 @@ TessellationMaterial::TessellationMaterial(
 
 void TessellationMaterial::InitializeInternal()
 {
-	// clang-format off
 	m_inputElementDescriptions =
 	{
 		{
@@ -34,7 +33,6 @@ void TessellationMaterial::InitializeInternal()
 			0
 		}
 	};
-	// clang-format on
 
 	Material::InitializeInternal();
 }
@@ -55,7 +53,7 @@ VertexBufferData TessellationMaterial::CreateVertexBufferData(ID3D11Device* cons
 	for (unsigned i = 0; i < verticesCount; i++)
 	{
 		const auto& position = meshVertices[i];
-		vertices.emplace_back(DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f));
+		vertices.emplace_back(math::Vector4(position, 1.0f));
 	}
 
 	return VertexBufferData(device, vertices);

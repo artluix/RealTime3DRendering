@@ -22,7 +22,7 @@ using namespace library;
 
 namespace
 {
-const auto k_environmentColor = Color::White;
+constexpr auto k_environmentColor = colors::White;
 }
 
 EnvironmentMappingDemo::EnvironmentMappingDemo()
@@ -87,15 +87,15 @@ void EnvironmentMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	{
 		wvp *= camera->GetViewProjectionMatrix();
 
-		m_material->GetCameraPosition() << math::XMVector(camera->GetPosition());
+		m_material->GetCameraPosition() << camera->GetPosition();
 	}
 
-	m_material->GetWVP() << math::XMMatrix(wvp);
-	m_material->GetWorld() << math::XMMatrix(world);
+	m_material->GetWVP() << wvp;
+	m_material->GetWorld() << world;
 	m_material->GetReflectionAmount() << m_reflectionAmount;
 
-	m_material->GetAmbientColor() << math::XMVector(m_ambientColor);
-	m_material->GetEnvironmentColor() << math::XMVector(k_environmentColor);
+	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
+	m_material->GetEnvironmentColor() << k_environmentColor.ToVector4();
 
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 	m_material->GetEnvironmentMap() << m_textures[Texture::EnvironmentMap].Get();

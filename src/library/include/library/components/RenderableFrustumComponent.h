@@ -1,7 +1,7 @@
 #pragma once
 #include "library/Materials/BasicMaterial.h"
 #include "library/Components/ConcreteMaterialPrimitiveComponent.hpp"
-#include "library/Color.h"
+#include "library/math/Color.h"
 
 namespace library
 {
@@ -13,7 +13,7 @@ class RenderableFrustumComponent : public ConcreteMaterialPrimitiveComponent<Bas
 
 public:
 	RenderableFrustumComponent();
-	explicit RenderableFrustumComponent(const Color& color);
+	explicit RenderableFrustumComponent(const math::Color& color);
 
 	void InitializeGeometry(const Frustum& frustum);
 
@@ -25,6 +25,6 @@ private:
 	void InitializeVertexBuffer(const Frustum& frustum);
 	void InitializeIndexBuffer();
 
-	Color m_color;
+	math::Color m_color;
 };
 } // namespace library

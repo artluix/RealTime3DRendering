@@ -18,7 +18,6 @@ NormalMappingMaterial::~NormalMappingMaterial() = default;
 
 void NormalMappingMaterial::InitializeInternal()
 {
-	// clang-format off
 	m_inputElementDescriptions =
 	{
 		{
@@ -58,7 +57,6 @@ void NormalMappingMaterial::InitializeInternal()
 			0
 		},
 	};
-	// clang-format on
 
 	Material::InitializeInternal();
 }
@@ -89,10 +87,11 @@ VertexBufferData NormalMappingMaterial::CreateVertexBufferData(ID3D11Device* con
 		const auto& tangent = tangentBinormals[i].tangent;
 
 		vertices.emplace_back(
-			DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f),
-			DirectX::XMFLOAT2(uv.x, uv.y),
+			math::Vector4(position, 1.0f),
+			uv.xy,
 			normal,
-			tangent);
+			tangent
+		);
 	}
 
 	return VertexBufferData(device, vertices);

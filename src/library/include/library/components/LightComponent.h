@@ -1,6 +1,6 @@
 #pragma once
 #include "library/Components/Component.h"
-#include "library/Color.h"
+#include "library/math/Color.h"
 
 namespace library
 {
@@ -9,16 +9,16 @@ class LightComponent : public virtual Component
 	RTTI_CLASS(LightComponent, Component)
 
 public:
-	const Color& GetColor() const { return m_color; }
-	void SetColor(const Color& color);
+	const math::Color& GetColor() const { return m_color; }
+	void SetColor(const math::Color& color);
 
 	void Update(const Time& time) override {}
 
 protected:
-	explicit LightComponent(const Color& color = Color::White);
+	explicit LightComponent(const math::Color& color = colors::White);
 	
 	void InitializeInternal() override {}
 
-	Color m_color;
+	math::Color m_color;
 };
 } // namespace library

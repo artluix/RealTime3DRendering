@@ -1,5 +1,5 @@
 #pragma once
-#include "library/CommonTypes.h"
+#include "library/Common.h"
 #include "library/NonCopyable.hpp"
 
 #include <d3dx11effect.h>

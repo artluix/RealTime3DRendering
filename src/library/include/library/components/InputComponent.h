@@ -1,6 +1,6 @@
 #pragma once
 #include "library/Components/Component.h"
-#include "library/CommonTypes.h"
+#include "library/Common.h"
 
 #include <dinput.h>
 

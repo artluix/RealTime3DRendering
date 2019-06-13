@@ -14,7 +14,7 @@ using namespace library;
 
 namespace
 {
-	constexpr float k_modulationRate = 1.0f;
+constexpr float k_modulationRate = 1.0f;
 }
 
 //-------------------------------------------------------------------------
@@ -24,30 +24,26 @@ BloomDemo::~BloomDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void BloomDemo::Initialize()
+void BloomDemo::InitializeInternal()
 {
 	m_text = std::make_unique<TextComponent>();
-	m_text->SetTextUpdateFunction(
-		[this]() -> std::wstring
-		{
-			const auto& settings = GetSettings();
+	m_text->SetTextUpdateFunction([this]() -> std::wstring {
+		const auto& settings = GetSettings();
 
-			std::wostringstream woss;
-			woss <<
-				std::setprecision(2) << L"Draw Mode (Enter): " << 
-					utils::ToWideString(BloomDrawModeToString(GetDrawMode())) << "\n"
+		std::wostringstream woss;
+		woss << std::setprecision(2) << L"Draw Mode (Enter): "
+			 << utils::ToWideString(BloomDrawModeToString(GetDrawMode())) << "\n"
 
-				<< L"Bloom Threshold (+U/-I): " << settings.bloomThreshold << "\n"
-				<< L"Blur Amount (+J/-K): " << settings.blurAmount << "\n"
-				<< L"Bloom Intensity (+N/-M): " << settings.bloomIntensity << "\n"
-				<< L"Bloom Saturation (+G/-H): " << settings.bloomSaturation << "\n";
-			return woss.str();
-		}
-	);
+			 << L"Bloom Threshold (+U/-I): " << settings.bloomThreshold << "\n"
+			 << L"Blur Amount (+J/-K): " << settings.blurAmount << "\n"
+			 << L"Bloom Intensity (+N/-M): " << settings.bloomIntensity << "\n"
+			 << L"Bloom Saturation (+F/-H): " << settings.bloomSaturation << "\n";
+		return woss.str();
+	});
 	m_text->SetPosition(math::Vector2(0.f, 200.f));
-	m_text->Initialize();
+	m_text->Initialize(GetApp());
 
-	BloomComponent::Initialize();
+	BloomComponent::InitializeInternal();
 }
 
 void BloomDemo::Update(const Time& time)
@@ -114,7 +110,7 @@ void BloomDemo::UpdateSettings(const Time& time)
 		}
 
 		// bloom saturation
-		if (m_keyboard->IsKeyDown(Key::G))
+		if (m_keyboard->IsKeyDown(Key::F))
 		{
 			settings.bloomSaturation += k_modulationRate * elapsedTime;
 			SetSettings(settings);

@@ -5,8 +5,6 @@
 #include "library/Effect/EffectTechnique.h"
 #include "library/Effect/EffectPass.h"
 
-#include "library/Exception.h"
-
 namespace library
 {
 PointSpriteMaterial::PointSpriteMaterial(std::shared_ptr<Effect> effect)
@@ -24,12 +22,12 @@ PointSpriteMaterial::PointSpriteMaterial(std::shared_ptr<Effect> effect)
 
 VertexBufferData PointSpriteMaterial::CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh) const
 {
-	throw Exception("This method is unsupported for model meshes.");
+	assert("This method is unsupported for model meshes." && false);
+	return VertexBufferData();
 }
 
 void PointSpriteMaterial::InitializeInternal()
 {
-	// clang-format off
 	m_inputElementDescriptions =
 	{
 		{
@@ -51,7 +49,6 @@ void PointSpriteMaterial::InitializeInternal()
 			0
 		},
 	};
-	// clang-format on
 
 	for (unsigned i = 0, techniquesCount = GetEffect().GetTechniquesCount(); i < techniquesCount; i++)
 	{

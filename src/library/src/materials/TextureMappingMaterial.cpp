@@ -16,7 +16,6 @@ TextureMappingMaterial::~TextureMappingMaterial() = default;
 
 void TextureMappingMaterial::InitializeInternal()
 {
-	// clang-format off
 	m_inputElementDescriptions =
 	{
 		{
@@ -38,13 +37,14 @@ void TextureMappingMaterial::InitializeInternal()
 			0
 		},
 	};
-	// clang-format on
 
 	Material::InitializeInternal();
 }
 
-VertexBufferData TextureMappingMaterial::CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh)
-	const
+VertexBufferData TextureMappingMaterial::CreateVertexBufferData(
+	ID3D11Device* const device,
+	const Mesh& mesh
+) const
 {
 	if (!mesh.HasVertices())
 		return VertexBufferData();
@@ -63,8 +63,9 @@ VertexBufferData TextureMappingMaterial::CreateVertexBufferData(ID3D11Device* co
 		const auto& uv = textureCoordinates[i];
 
 		vertices.emplace_back(
-			DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f),
-			DirectX::XMFLOAT2(uv.x, uv.y));
+			math::Vector4(position, 1.0f),
+			uv.xy
+		);
 	}
 
 	return VertexBufferData(device, vertices);

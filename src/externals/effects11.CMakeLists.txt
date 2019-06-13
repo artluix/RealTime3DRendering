@@ -42,7 +42,6 @@ if(APPLICATION)
         PRIVATE
             /W3
             /fp:fast
-            /EHsc
             /openmp-
             /GR-
             /Yupchfx.h

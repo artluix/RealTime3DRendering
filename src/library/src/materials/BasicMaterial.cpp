@@ -3,7 +3,7 @@
 
 #include "library/Effect/Effect.h"
 #include "library/Model/Mesh.h"
-#include "library/Color.h"
+#include "library/math/Color.h"
 
 namespace library
 {
@@ -18,7 +18,6 @@ BasicMaterial::~BasicMaterial() = default;
 
 void BasicMaterial::InitializeInternal()
 {
-	// clang-format off
 	m_inputElementDescriptions = {
 		{
 			"POSITION",
@@ -39,7 +38,6 @@ void BasicMaterial::InitializeInternal()
 			0
 		},
 	};
-	// clang-format on
 
 	Material::InitializeInternal();
 }
@@ -64,7 +62,7 @@ VertexBufferData BasicMaterial::CreateVertexBufferData(ID3D11Device* const devic
 		{
 			const auto& position = meshVertices[i];
 			const auto& color = vertexColors[i];
-			vertices.emplace_back(DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f), color);
+			vertices.emplace_back(math::Vector4(position, 1.0f), color);
 		}
 	}
 	else
@@ -72,8 +70,7 @@ VertexBufferData BasicMaterial::CreateVertexBufferData(ID3D11Device* const devic
 		for (unsigned i = 0; i < verticesCount; i++)
 		{
 			const auto& position = meshVertices[i];
-			const auto& color = DirectX::XMFLOAT4(Color::White);
-			vertices.emplace_back(DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f), color);
+			vertices.emplace_back(math::Vector4(position, 1.0f), colors::White);
 		}
 	}
 

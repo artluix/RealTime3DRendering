@@ -9,7 +9,6 @@
 
 #include "library/VertexTypes.h"
 #include "library/Application.h"
-#include "library/Exception.h"
 
 #include <array>
 #include <cassert>
@@ -66,10 +65,10 @@ void FullScreenQuadComponent::InitializeInternal()
 		using Vertex = VertexPositionTexture;
 
 		const std::array<Vertex, 4> vertices = {
-			Vertex(DirectX::XMFLOAT4(-1.0f, -1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f)),
-			Vertex(DirectX::XMFLOAT4(-1.0f, 1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f)),
-			Vertex(DirectX::XMFLOAT4(1.0f, 1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f)),
-			Vertex(DirectX::XMFLOAT4(1.0f, -1.0f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f)),
+			Vertex(math::Vector4(-1.0f, -1.0f, 0.0f, 1.0f), math::Vector2(0.0f, 1.0f)),
+			Vertex(math::Vector4(-1.0f, 1.0f, 0.0f, 1.0f), math::Vector2(0.0f, 0.0f)),
+			Vertex(math::Vector4(1.0f, 1.0f, 0.0f, 1.0f), math::Vector2(1.0f, 0.0f)),
+			Vertex(math::Vector4(1.0f, -1.0f, 0.0f, 1.0f), math::Vector2(1.0f, 1.0f)),
 		};
 
 		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);

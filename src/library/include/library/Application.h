@@ -2,7 +2,7 @@
 #include "library/RenderTargets/RenderTarget.h"
 
 #include "library/Stopwatch.h"
-#include "library/CommonTypes.h"
+#include "library/Common.h"
 #include "library/Renderer.h"
 
 #include <Windows.h>

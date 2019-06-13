@@ -34,8 +34,8 @@ if(APPLICATION)
             # src/BasicTessellationDemo.h
             # src/BasicTessellationDemo.cpp
 
-            # src/BloomDemo.h
-            # src/BloomDemo.cpp
+            src/BloomDemo.h
+            src/BloomDemo.cpp
 
             src/ColorFilterDemo.h
             src/ColorFilterDemo.cpp

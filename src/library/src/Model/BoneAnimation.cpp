@@ -33,8 +33,11 @@ BoneAnimation::BoneAnimation(const Model& model, const aiNodeAnim& aiNodeAnim)
 		const auto position = reinterpret_cast<const math::Vector3&>(positionKey.mValue);
 
 		// assimp stores quaternions differently
-		const auto rotation = math::
-			Vector4(rotationKey.mValue.x, rotationKey.mValue.y, rotationKey.mValue.z, rotationKey.mValue.w);
+		const auto rotation = math::Quaternion(
+			rotationKey.mValue.x,
+			rotationKey.mValue.y,
+			rotationKey.mValue.z,
+			rotationKey.mValue.w);
 
 		const auto scale = reinterpret_cast<const math::Vector3&>(scaleKey.mValue);
 
@@ -64,13 +67,18 @@ unsigned BoneAnimation::GetKeyframeIdx(const TimePoint& timePoint) const
 	};
 
 	const auto keyframeToFind =
-		KeyframePtr(new Keyframe(timePoint, math::Vector3::Zero, math::Vector4::Zero, math::Vector3::Zero));
+		KeyframePtr(new Keyframe(
+			timePoint,
+			math::Vector3::Zero,
+			math::Quaternion::Zero,
+			math::Vector3::Zero
+		));
 
 	const auto it = std::
 		upper_bound(std::next(m_keyframes.cbegin()), std::prev(m_keyframes.cend()), keyframeToFind, findPred);
 
-	return static_cast<unsigned>(std::distance(m_keyframes.cbegin(), it)) -
-		   1; // std::distance return index, but we need -1
+	// std::distance return index, but we need -1
+	return static_cast<unsigned>(std::distance(m_keyframes.cbegin(), it)) - 1;
 }
 
 const math::Matrix4& BoneAnimation::GetTransform(const std::size_t keyframeIdx) const
@@ -108,7 +116,6 @@ math::Matrix4 BoneAnimation::GetInterpolatedTransform(const TimePoint& timePoint
 		math::Lerp(leftKeyframe.GetRotationQuat(), rightKeyframe.GetRotationQuat(), lerpFactor);
 
 	const auto scale = math::Lerp(leftKeyframe.GetScale(), rightKeyframe.GetScale(), lerpFactor);
-
 	return math::Matrix4::AffineTransformation(scale, math::Vector4::Zero, rotationQuat, translation);
 }
 } // namespace library

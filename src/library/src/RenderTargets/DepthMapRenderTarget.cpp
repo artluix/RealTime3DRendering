@@ -2,7 +2,6 @@
 #include "library/RenderTargets/DepthMapRenderTarget.h"
 
 #include "library/Application.h"
-#include "library/Exception.h"
 
 namespace library
 {
@@ -25,10 +24,7 @@ DepthMapRenderTarget::DepthMapRenderTarget(const Application& app, const unsigne
 		textureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 
 		auto hr = device->CreateTexture2D(&textureDesc, nullptr, &texture);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11::CreateTexture2D() failed.", hr);
-		}
+		assert("ID3D11::CreateTexture2D() failed." && SUCCEEDED(hr));
 
 		D3D11_SHADER_RESOURCE_VIEW_DESC resourceViewDesc{};
 		resourceViewDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
@@ -36,10 +32,7 @@ DepthMapRenderTarget::DepthMapRenderTarget(const Application& app, const unsigne
 		resourceViewDesc.Texture2D.MipLevels = 1;
 
 		hr = device->CreateShaderResourceView(texture.Get(), &resourceViewDesc, &m_outputTexture);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11::CreateShaderResourceView() failed.", hr);
-		}
+		assert("ID3D11::CreateShaderResourceView() failed." && SUCCEEDED(hr));
 	}
 
 	// depth stencil view
@@ -50,10 +43,7 @@ DepthMapRenderTarget::DepthMapRenderTarget(const Application& app, const unsigne
 		depthStencilViewDesc.Texture2D.MipSlice = 0;
 
 		auto hr = device->CreateDepthStencilView(texture.Get(), &depthStencilViewDesc, &m_depthStencilView);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11::CreateDepthStencilView() failed.", hr);
-		}
+		assert("ID3D11::CreateDepthStencilView() failed." && SUCCEEDED(hr));
 	}
 
 	// viewport

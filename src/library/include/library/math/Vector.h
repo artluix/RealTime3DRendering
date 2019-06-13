@@ -1,445 +1,247 @@
 #pragma once
-#include "library/Math/XmTypes.h"
+#include "library/Math/DxMath.h"
 
-#include <array>
-#include <vector>
 #include <string>
 
 namespace library::math
 {
-template <unsigned Size>
-struct Vector;
-
-using Vector2 = Vector<2>;
-using Vector3 = Vector<3>;
-using Vector4 = Vector<4>;
-
-template <class T>
-constexpr bool IsVector2 = std::is_base_of_v<Vector2, T>;
-
-template <class T>
-constexpr bool IsVector3 = std::is_base_of_v<Vector3, T>;
-
-template <class T>
-constexpr bool IsVector4 = std::is_base_of_v<Vector4, T>;
-
-template <class T>
-constexpr bool IsVector = IsVector2<T> || IsVector3<T> || IsVector4<T>;
-
+//-------------------------------------------------------------------------
+// VectorType<T, 2>
 //-------------------------------------------------------------------------
 
-template <unsigned Size>
-struct Matrix;
-
-// using Matrix2 = Matrix<2>;
-using Matrix3 = Matrix<3>;
-using Matrix4 = Matrix<4>;
-
-template <class T>
-constexpr bool IsMatrix3 = std::is_base_of_v<Matrix3, T>;
-
-template <class T>
-constexpr bool IsMatrix4 = std::is_base_of_v<Matrix3, T>;
-
-template <class T>
-constexpr bool IsMatrix = IsMatrix3<T> || IsMatrix4<T>;
-
-//-------------------------------------------------------------------------
-// VectorDef<T>
-//-------------------------------------------------------------------------
-
-template <unsigned Size>
-struct VectorDef
-{
-	static constexpr unsigned Size = Size;
-};
-
-//-------------------------------------------------------------------------
-// Vector2
-//-------------------------------------------------------------------------
-
-template <>
-struct Vector<2> : public VectorDef<2>
+template<typename T>
+struct VectorType<T, 2>
 {
 	union
 	{
 		struct
 		{
-			float x, y;
+			T x, y;
 		};
 
-		std::array<float, 2> _data;
+		dx::Vector2<T> _dxVec;
+		T _data[2];
 	};
 
-	//-------------------------------------------------------------------------
+	constexpr VectorType(const T x, const T y) : x(x), y(y) {}
+	explicit constexpr VectorType(const T v = T(0)) : VectorType(v, v) {}
 
-	constexpr Vector(const float x, const float y) : x(x), y(y) {}
-	explicit constexpr Vector(const float v = 0.f) : Vector(v, v) {}
-	explicit constexpr Vector(const XMVector2& xmFloat2) : Vector(xmFloat2.x, xmFloat2.y) {}
-	explicit constexpr Vector(const XMVector& xmVector) : Vector(xmVector.m128_f32[0], xmVector.m128_f32[1])
-	{}
+	template<typename U>
+	explicit constexpr VectorType(const VectorType2<U>& other);
 
-	Vector& operator=(const XMVector& xmVector);
-
-	//-------------------------------------------------------------------------
-
-	const float& operator[](const unsigned idx) const { return _data[idx]; }
-	float& operator[](const unsigned idx) { return _data[idx]; }
-	operator const float*() const { return _data.data(); }
+	explicit VectorType(const dx::VECTOR& dxVEC);
+	VectorType& operator=(const dx::VECTOR& dxVEC);
+	explicit operator dx::VECTOR() const;
 
 	//-------------------------------------------------------------------------
 
-	explicit operator XMVector() const;
-	explicit operator const XMVector2&() const;
+	static const VectorType Zero;
+	static const VectorType One;
+	
+	//-------------------------------------------------------------------------
+
 	explicit operator bool() const;
 
+	const T& operator [](const unsigned idx) const { return _data[idx]; }
+	T& operator [](const unsigned idx) { return _data[idx]; }
+	explicit operator const T*() const { return _data; }
+
 	//-------------------------------------------------------------------------
 
-	static const Vector Zero;
-	static const Vector One;
+	VectorType2<float> Normalize() const;
+
+	template<typename U = T, typename = enable_if_float_t<U, T>>
+	float Length() const;
+
+	template<typename U, typename C = std::common_type_t<U, T>>
+	C Dot(const VectorType2<U>& other) const;
+
+	template<typename U, typename C = std::common_type_t<U, T>>
+	VectorType2<C> Cross(const VectorType2<U>& other) const;
+
+	T LengthSq() const { return Dot(*this); }
+
+	VectorType2<float> Transform(const Matrix4& mat) const;
 
 	//-------------------------------------------------------------------------
 
 	std::string ToString() const;
-
-	//-------------------------------------------------------------------------
-
-	float Length() const;
-	float LengthSq() const;
-	float Dot(const Vector& other) const;
-
-	Vector Normalize() const;
-	Vector Transform(const Matrix3& matrix) const;
-
-	//-------------------------------------------------------------------------
-	// logical operators
-	//-------------------------------------------------------------------------
-
-	bool operator==(const Vector& other) const;
-	bool operator!=(const Vector& other) const;
-	bool operator<(const Vector& other) const;
-	bool operator<=(const Vector& other) const;
-	bool operator>(const Vector& other) const;
-	bool operator>=(const Vector& other) const;
 };
 
 //-------------------------------------------------------------------------
-// Vector3
+// VectorType<T, 3>
 //-------------------------------------------------------------------------
 
-template <>
-struct Vector<3> : public VectorDef<3>
+template<typename T>
+struct VectorType<T, 3>
 {
 	union
 	{
 		struct
 		{
-			float x, y, z;
+			T x, y, z;
 		};
 
-		std::array<float, 3> _data;
+		VectorType2<T> xy;
+
+		dx::Vector3<T> _dxVec;
+		T _data[3];
 	};
 
-	//-------------------------------------------------------------------------
+	constexpr VectorType(const T x, const T y, const T z) : x(x), y(y), z(z) {}
+	explicit constexpr VectorType(const T v = T(0)) : VectorType(v, v, v) {}
+	explicit constexpr VectorType(const VectorType<T, 2>& xy, const T z = T(0));
 
-	constexpr Vector(const float x, const float y, const float z) : x(x), y(y), z(z) {}
-	explicit constexpr Vector(const float v = 0.f) : Vector(v, v, v) {}
-	explicit constexpr Vector(const Vector2& vec2, const float z = 0.f) : Vector(vec2.x, vec2.y, z) {}
-	explicit constexpr Vector(const XMVector3& xmFloat3) : Vector(xmFloat3.x, xmFloat3.y, xmFloat3.z) {}
-	explicit constexpr Vector(const XMVector& xmVector)
-		: Vector(xmVector.m128_f32[0], xmVector.m128_f32[1], xmVector.m128_f32[2])
-	{}
+	template<typename U>
+	explicit constexpr VectorType(const VectorType3<U>& other);
 
-	Vector& operator=(const XMVector& xmVector);
-
-	//-------------------------------------------------------------------------
-
-	const float& operator[](const unsigned idx) const { return _data[idx]; }
-	float& operator[](const unsigned idx) { return _data[idx]; }
-	operator const float*() const { return _data.data(); }
+	explicit VectorType(const dx::VECTOR& dxVEC);
+	VectorType& operator=(const dx::VECTOR& dxVEC);
+	explicit operator dx::VECTOR() const;
 
 	//-------------------------------------------------------------------------
 
-	explicit operator XMVector() const;
-	explicit operator const XMVector3&() const;
+	static const VectorType Zero;
+	static const VectorType One;
+
+	//-------------------------------------------------------------------------
+
 	explicit operator bool() const;
 
-	//-------------------------------------------------------------------------
-
-	static const Vector Zero;
-	static const Vector One;
-
-	static const Vector Forward;
-	static const Vector Backward;
-	static const Vector Up;
-	static const Vector Down;
-	static const Vector Right;
-	static const Vector Left;
+	const T& operator [](const unsigned idx) const { return _data[idx]; }
+	T& operator [](const unsigned idx) { return _data[idx]; }
+	explicit operator const T*() const { return _data; }
 
 	//-------------------------------------------------------------------------
+
+	VectorType3<float> Normalize() const;
+
+	template<typename U = T, typename = enable_if_float_t<U, T>>
+	float Length() const;
+
+	template<typename U, typename C = std::common_type_t<U, T>>
+	C Dot(const VectorType3<U>& other) const;
+
+	template<typename U, typename C = std::common_type_t<U, T>>
+	VectorType3<C> Cross(const VectorType3<U>& other) const;
+
+	T LengthSq() const { return Dot(*this); }
+
+	VectorType3<float> Transform(const Matrix4& mat) const;
 
 	std::string ToString() const;
-
-	//-------------------------------------------------------------------------
-
-	float Length() const;
-	float LengthSq() const;
-
-	float Dot(const Vector& other) const;
-	Vector Cross(const Vector& other) const;
-
-	Vector Normalize() const;
-	Vector Transform(const Matrix4& matrix) const;
-	Vector TransformNormal(const Matrix3& matrix) const;
-
-	//-------------------------------------------------------------------------
-	// logical operators
-	//-------------------------------------------------------------------------
-
-	bool operator==(const Vector& other) const;
-	bool operator!=(const Vector& other) const;
-	bool operator<(const Vector& other) const;
-	bool operator<=(const Vector& other) const;
-	bool operator>(const Vector& other) const;
-	bool operator>=(const Vector& other) const;
 };
 
 //-------------------------------------------------------------------------
-// Vector4
+// VectorType<T, 4>
 //-------------------------------------------------------------------------
 
-template <>
-struct Vector<4> : public VectorDef<4>
+template<typename T>
+struct VectorType<T, 4>
 {
 	union
 	{
-		// Vector components
 		struct
 		{
-			float x, y, z, w;
+			T x, y, z, w;
 		};
 
-		// Vector3 & w
-		struct
-		{
-			Vector3 xyz;
-			float _w;
-		};
+		VectorType3<T> xyz;
 
-		std::array<float, 4> _data;
+		dx::Vector4<T> _dxVec;
+		T _data[4];
 	};
 
-	//-------------------------------------------------------------------------
+	constexpr VectorType(const T x, const T y, const T z, const T w) : x(x), y(y), z(z), w(w) {}
+	explicit constexpr VectorType(const T v = T(0)) : VectorType(v, v, v, v) {}
+	explicit constexpr VectorType(const VectorType<T, 3>& xyz, const T w = T(0));
 
-	constexpr Vector(const float x, const float y, const float z, const float w) : x(x), y(y), z(z), w(w) {}
-	explicit constexpr Vector(const float v = 0.f) : Vector(v, v, v, v) {}
-	explicit constexpr Vector(const Vector3& vec3, const float w = 0.f) : Vector(vec3.x, vec3.y, vec3.z, w) {}
-	explicit constexpr Vector(const XMVector4& xmFloat4)
-		: Vector(xmFloat4.x, xmFloat4.y, xmFloat4.z, xmFloat4.w)
-	{}
-	explicit constexpr Vector(const XMVector& xmVector)
-		: Vector(xmVector.m128_f32[0], xmVector.m128_f32[1], xmVector.m128_f32[2], xmVector.m128_f32[3])
-	{}
+	template<typename U>
+	explicit constexpr VectorType(const VectorType4<U>& other);
 
-	Vector& operator=(const XMVector& xmVector);
+	explicit VectorType(const dx::VECTOR& dxVEC);
+	VectorType& operator=(const dx::VECTOR& dxVEC);
+	explicit operator dx::VECTOR() const;
 
 	//-------------------------------------------------------------------------
 
-	const float& operator[](const unsigned idx) const { return _data[idx]; }
-	float& operator[](const unsigned idx) { return _data[idx]; }
-	operator const float*() const { return _data.data(); }
+	static const VectorType Zero;
+	static const VectorType One;
 
 	//-------------------------------------------------------------------------
 
-	explicit operator XMVector() const;
-	explicit operator const XMVector4&() const;
 	explicit operator bool() const;
 
+	const T& operator [](const unsigned idx) const { return _data[idx]; }
+	T& operator [](const unsigned idx) { return _data[idx]; }
+	explicit operator const T*() const { return _data; }
+
 	//-------------------------------------------------------------------------
 
-	static const Vector Zero;
-	static const Vector One;
+	VectorType4<float> Normalize() const;
+
+	template<typename U = T, typename = enable_if_float_t<U, T>>
+	float Length() const;
+
+	template<typename U, typename C = std::common_type_t<U, T>>
+	C Dot(const VectorType4<U>& other) const;
+
+	T LengthSq() const { return Dot(*this); }
+
+	VectorType4<float> Transform(const Matrix4& mat) const;
 
 	//-------------------------------------------------------------------------
 
 	std::string ToString() const;
-
-	//------------------------------------------------------------------------
-
-	float Length() const;
-	float LengthSq() const;
-	float Dot(const Vector& other) const;
-
-	Vector Normalize() const;
-	Vector Transform(const Matrix4& matrix) const;
-
-	//-------------------------------------------------------------------------
-	// logical operators
-	//-------------------------------------------------------------------------
-
-	bool operator==(const Vector& other) const;
-	bool operator!=(const Vector& other) const;
-	bool operator<(const Vector& other) const;
-	bool operator<=(const Vector& other) const;
-	bool operator>(const Vector& other) const;
-	bool operator>=(const Vector& other) const;
 };
 
 //-------------------------------------------------------------------------
-// explicit template instantiation
+// extern template instantiation
 //-------------------------------------------------------------------------
 
-template struct Vector<2>;
-template struct Vector<3>;
-template struct Vector<4>;
+extern template struct VectorType<float, 2>;
+extern template struct VectorType<s32, 2>;
+extern template struct VectorType<u32, 2>;
 
-//-------------------------------------------------------------------------
-// arithmetic operators
-//-------------------------------------------------------------------------
+extern template struct VectorType<float, 3>;
+extern template struct VectorType<s32, 3>;
+extern template struct VectorType<u32, 3>;
 
-//-------------------------------------------------------------------------
-// add
-//-------------------------------------------------------------------------
+extern template struct VectorType<float, 4>;
+extern template struct VectorType<s32, 4>;
+extern template struct VectorType<u32, 4>;
 
-template <unsigned Size>
-inline Vector<Size> operator+(const Vector<Size>& lhs, const Vector<Size>& rhs)
+// -----------------------------------------------------------------------------
+// Clamp and Lerp
+// -----------------------------------------------------------------------------
+
+template<typename T, unsigned Size>
+inline VectorType<T, Size> Clamp(
+	const VectorType<T, Size>& v,
+	const VectorType<T, Size>& min,
+	const VectorType<T, Size>& max
+)
 {
-	return Vector<Size>(DirectX::XMVectorAdd(XMVector(lhs), XMVector(rhs)));
+	return VectorType<T, Size>(dx::XMVectorClamp(dx::VECTOR(v), dx::VECTOR(min), dx::VECTOR(max)));
 }
 
-template <unsigned Size>
-inline Vector<Size>& operator+=(Vector<Size>& lhs, const Vector<Size>& rhs)
+template<typename T, unsigned Size>
+inline VectorType<T, Size> Lerp(
+	const VectorType<T, Size>& from,
+	const VectorType<T, Size>& to,
+	const float factor)
 {
-	return lhs = Vector<Size>(DirectX::XMVectorAdd(XMVector(lhs), XMVector(rhs)));
+	return VectorType<T, Size>(dx::XMVectorLerp(dx::VECTOR(from), dx::VECTOR(to), factor));
 }
 
-//-------------------------------------------------------------------------
-
-template <unsigned Size>
-inline Vector<Size> operator+(const Vector<Size>& lhs, const float value)
+template<typename T, unsigned Size>
+inline VectorType<T, Size> Lerp(
+	const VectorType<T, Size>& from,
+	const VectorType<T, Size>& to,
+	const VectorType<float, Size>& factor)
 {
-	return lhs + Vector<Size>(value);
-}
-
-template <unsigned Size>
-inline Vector<Size>& operator+=(Vector<Size>& lhs, const float value)
-{
-	return lhs += Vector<Size>(value);
-}
-
-//-------------------------------------------------------------------------
-// negate
-//-------------------------------------------------------------------------
-
-template <unsigned Size>
-inline Vector<Size> operator-(const Vector<Size>& vector)
-{
-	return Vector<Size>(DirectX::XMVectorNegate(XMVector(vector)));
-}
-
-//-------------------------------------------------------------------------
-// subtract
-//-------------------------------------------------------------------------
-
-template <unsigned Size>
-inline Vector<Size> operator-(const Vector<Size>& lhs, const Vector<Size>& rhs)
-{
-	return Vector<Size>(DirectX::XMVectorSubtract(XMVector(lhs), XMVector(rhs)));
-}
-
-template <unsigned Size>
-inline Vector<Size>& operator-=(Vector<Size>& lhs, const Vector<Size>& rhs)
-{
-	return lhs = Vector<Size>(DirectX::XMVectorSubtract(XMVector(lhs), XMVector(rhs)));
-}
-
-//-------------------------------------------------------------------------
-
-template <unsigned Size>
-inline Vector<Size> operator-(const Vector<Size>& lhs, const float value)
-{
-	return lhs - Vector<Size>(value);
-}
-
-template <unsigned Size>
-inline Vector<Size>& operator-=(Vector<Size>& lhs, const float value)
-{
-	return lhs -= Vector<Size>(value);
-}
-
-//-------------------------------------------------------------------------
-// multiply
-//-------------------------------------------------------------------------
-
-template <unsigned Size>
-inline Vector<Size> operator*(const Vector<Size>& lhs, const Vector<Size>& rhs)
-{
-	return Vector<Size>(DirectX::XMVectorMultiply(XMVector(lhs), XMVector(rhs)));
-}
-
-template <unsigned Size>
-inline Vector<Size>& operator*=(Vector<Size>& lhs, const Vector<Size>& rhs)
-{
-	return lhs = Vector<Size>(DirectX::XMVectorMultiply(XMVector(lhs), XMVector(rhs)));
-}
-
-//-------------------------------------------------------------------------
-
-template <unsigned Size>
-inline Vector<Size> operator*(const Vector<Size>& lhs, const float value)
-{
-	return lhs * Vector<Size>(value);
-}
-
-template <unsigned Size>
-inline Vector<Size>& operator*=(Vector<Size>& lhs, const float value)
-{
-	return lhs *= Vector<Size>(value);
-}
-
-//-------------------------------------------------------------------------
-// divide
-//-------------------------------------------------------------------------
-
-template <unsigned Size>
-inline Vector<Size> operator/(const Vector<Size>& lhs, const Vector<Size>& rhs)
-{
-	return Vector<Size>(DirectX::XMVectorDivide(XMVector(lhs), XMVector(rhs)));
-}
-
-template <unsigned Size>
-inline Vector<Size> operator/=(Vector<Size>& lhs, const Vector<Size>& rhs)
-{
-	return lhs = Vector<Size>(DirectX::XMVectorDivide(XMVector(lhs), XMVector(rhs)));
-}
-
-//-------------------------------------------------------------------------
-
-template <unsigned Size>
-inline Vector<Size> operator/(const Vector<Size>& lhs, const float value)
-{
-	return lhs / Vector<Size>(value);
-}
-
-template <unsigned Size>
-inline Vector<Size>& operator/=(Vector<Size>& lhs, const float value)
-{
-	return lhs /= Vector<Size>(value);
-}
-
-//-------------------------------------------------------------------------
-// Lerp
-//-------------------------------------------------------------------------
-
-template <unsigned Size>
-Vector<Size> Lerp(const Vector<Size>& lhs, const Vector<Size>& rhs, const float factor)
-{
-	return Vector<Size>(DirectX::XMVectorLerp(XMVector(lhs), XMVector(rhs), factor));
-}
-
-template <unsigned Size>
-Vector<Size> Lerp(const Vector<Size>& lhs, const Vector<Size>& rhs, const Vector<Size> factor)
-{
-	return Vector<Size>(DirectX::XMVectorLerpV(XMVector(lhs), XMVector(rhs), XMVector(factor)));
+	return VectorType<T, Size>(dx::XMVectorLerpV(dx::VECTOR(from), dx::VECTOR(to), dx::VECTOR(factor)));
 }
 } // namespace library::math
+
+#include "library/Math/Vector-inl.h"

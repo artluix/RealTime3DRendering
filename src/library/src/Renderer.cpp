@@ -18,8 +18,8 @@ namespace library
 
 namespace
 {
-constexpr unsigned k_defaultSampleMask = -1;
-constexpr unsigned k_defaultStencilRef = -1;
+constexpr auto k_defaultSampleMask = unsigned(-1);
+constexpr auto k_defaultStencilRef = unsigned(-1);
 
 template <class Drawable>
 class Finder

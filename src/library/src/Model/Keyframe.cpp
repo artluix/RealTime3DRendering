@@ -6,7 +6,7 @@ namespace library
 Keyframe::Keyframe(
 	const TimePoint& timePoint,
 	const math::Vector3& translation,
-	const math::Vector4& rotationQuat,
+	const math::Quaternion& rotationQuat,
 	const math::Vector3& scale)
 	: m_timePoint(timePoint)
 
@@ -21,7 +21,7 @@ Keyframe::Keyframe(
 Keyframe::Keyframe(
 	const float time,
 	const math::Vector3& translation,
-	const math::Vector4& rotationQuat,
+	const math::Quaternion& rotationQuat,
 	const math::Vector3& scale)
 	: Keyframe(TimePoint(animation::Duration(time)), translation, rotationQuat, scale)
 {}

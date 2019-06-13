@@ -1,6 +1,7 @@
 #pragma once
 #include "library/Components/DrawableComponent.h"
-#include "library/Color.h"
+#include "library/math/Color.h"
+#include "library/Common.h"
 
 #include <memory>
 #include <optional>
@@ -8,7 +9,7 @@
 namespace DirectX
 {
 class SpriteBatch;
-} // namespace DirectX
+} // namespace dx
 
 namespace library
 {
@@ -26,8 +27,8 @@ public:
 	void SetTexture(ID3D11ShaderResourceView* const texture);
 	ID3D11ShaderResourceView* GetTexture() { return m_texture; }
 
-	void SetColor(const Color& color);
-	const Color& GetColor() const { return m_color; }
+	void SetColor(const math::Color& color);
+	const math::Color& GetColor() const { return m_color; }
 
 	void SetDestinationRect(const RECT& rect);
 
@@ -37,11 +38,11 @@ protected:
 	void Begin();
 	void End();
 
-	std::unique_ptr<DirectX::SpriteBatch> m_spriteBatch;
-	Color m_color;
+	std::unique_ptr<dx::SpriteBatch> m_spriteBatch;
+	math::Color m_color;
 
 private:
 	ID3D11ShaderResourceView* m_texture;
-	std::optional<RECT> m_destionationRect;
+	std::optional<RECT> m_destinationRect;
 };
 } // namespace library

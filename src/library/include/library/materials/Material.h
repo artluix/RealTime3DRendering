@@ -1,7 +1,7 @@
 #pragma once
 #include "library/RTTI.hpp"
 #include "library/NonCopyable.hpp"
-#include "library/CommonTypes.h"
+#include "library/Common.h"
 #include "library/PrimitiveData.h"
 #include "library/DirectXForwardDeclarations.h"
 

@@ -19,7 +19,6 @@ DepthMapMaterial::~DepthMapMaterial() = default;
 
 void DepthMapMaterial::InitializeInternal()
 {
-	// clang-format off
 	m_inputElementDescriptions = {
 		{
 			"POSITION",
@@ -30,7 +29,6 @@ void DepthMapMaterial::InitializeInternal()
 			D3D11_INPUT_PER_VERTEX_DATA,
 		}
 	};
-	// clang-format on
 
 	Material::InitializeInternal();
 
@@ -53,7 +51,7 @@ VertexBufferData DepthMapMaterial::CreateVertexBufferData(ID3D11Device* const de
 	for (unsigned i = 0; i < verticesCount; i++)
 	{
 		const auto& position = meshVertices[i];
-		vertices.emplace_back(DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f));
+		vertices.emplace_back(math::Vector4(position, 1.0f));
 	}
 
 	return VertexBufferData(device, vertices);

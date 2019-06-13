@@ -25,7 +25,6 @@ EnvironmentMappingMaterial::~EnvironmentMappingMaterial() = default;
 
 void EnvironmentMappingMaterial::InitializeInternal()
 {
-	// clang-format off
 	m_inputElementDescriptions = {
 		{
 			"POSITION",
@@ -55,7 +54,6 @@ void EnvironmentMappingMaterial::InitializeInternal()
 			0
 		},
 	};
-	// clang-format on
 
 	Material::InitializeInternal();
 }
@@ -83,8 +81,8 @@ VertexBufferData EnvironmentMappingMaterial::CreateVertexBufferData(
 		const auto& normal = normals[i];
 
 		vertices.emplace_back(
-			DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f),
-			DirectX::XMFLOAT2(uv.x, uv.y),
+			math::Vector4(position, 1.0f),
+			math::Vector2(uv.x, uv.y),
 			normal);
 	}
 

@@ -44,6 +44,7 @@ if(APPLICATION)
                 include/library/Effect/EffectPass.h
                 include/library/Effect/EffectTechnique.h
                 include/library/Effect/EffectVariable.h
+                include/library/Effect/EffectVariable-inl.h
 
             # Materials
                 include/library/Materials/Material.h
@@ -76,15 +77,20 @@ if(APPLICATION)
 
             # Math
                 include/library/Math/Math.h
+                include/library/Math/MathFwd.h
 
                 include/library/Math/Color.h
+                include/library/Math/Direction.h
+                include/library/Math/DxMath.h
                 include/library/Math/Matrix.h
+                include/library/Math/Matrix-inl.h
                 include/library/Math/Plane.h
                 include/library/Math/Quaternion.h
                 include/library/Math/Ray.h
                 include/library/Math/Transform.h
                 include/library/Math/Vector.h
-                include/library/Math/XmTypes.h
+                include/library/Math/Vector-inl.h
+                include/library/Math/DXMath.h
 
             # Model
                 include/library/Model/Model.h
@@ -106,13 +112,11 @@ if(APPLICATION)
                 include/library/RenderTargets/FullScreenRenderTarget.h
 
             include/library/Application.h
-            include/library/Color.h
             include/library/BlendStates.h
             include/library/BufferData.h
-            include/library/CommonTypes.h
+            include/library/Common.h
             include/library/ComPtr.hpp
             include/library/DirectXForwardDeclarations.h
-            include/library/Exception.h
             include/library/Frustum.h
             include/library/Key.h
             include/library/Logger.h
@@ -221,7 +225,6 @@ if(APPLICATION)
 
             src/Application.cpp
             src/BlendStates.cpp
-            src/Exception.cpp
             src/Frustum.cpp
             src/Logger.cpp
             src/Path.cpp

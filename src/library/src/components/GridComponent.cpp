@@ -5,7 +5,6 @@
 
 #include "library/Application.h"
 #include "library/Utils.h"
-#include "library/Exception.h"
 #include "library/VertexTypes.h"
 
 #include "library/Effect/Effect.h"
@@ -20,13 +19,13 @@ namespace
 {
 constexpr unsigned k_defaultSize = 16;
 constexpr unsigned k_defaultScale = 16;
-const auto k_defaultColor = Color::White;
+constexpr auto k_defaultColor = colors::White;
 } // namespace
 
 GridComponent::GridComponent() : m_size(k_defaultSize), m_scale(k_defaultScale), m_color(k_defaultColor)
 {}
 
-GridComponent::GridComponent(const unsigned size, const unsigned scale, const Color& color)
+GridComponent::GridComponent(const unsigned size, const unsigned scale, const math::Color& color)
 	: m_size(size)
 	, m_scale(scale)
 	, m_color(color)
@@ -54,7 +53,7 @@ void GridComponent::SetScale(const unsigned scale)
 	}
 }
 
-void GridComponent::SetColor(const Color& color)
+void GridComponent::SetColor(const math::Color& color)
 {
 	if (m_color != color)
 	{
@@ -79,7 +78,7 @@ void GridComponent::Draw_SetData(const PrimitiveData& primitiveData)
 	if (auto camera = GetCamera())
 		wvp *= camera->GetViewProjectionMatrix();
 
-	GetMaterial()->GetWorldViewProjection() << math::XMMatrix(wvp);
+	GetMaterial()->GetWorldViewProjection() << wvp;
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }
@@ -104,19 +103,17 @@ void GridComponent::Build()
 	std::vector<VertexPositionColor> vertices;
 	vertices.reserve(verticesCount);
 
-	const DirectX::XMFLOAT4 color(m_color);
-
 	for (unsigned i = 0; i < m_size + 1; i++)
 	{
 		const float position = maxPosition - (i * adjustedScale);
 
 		// vertical line
-		vertices.emplace_back(DirectX::XMFLOAT4(position, maxPosition, 0.0f, 1.0f), color);
-		vertices.emplace_back(DirectX::XMFLOAT4(position, -maxPosition, 0.0f, 1.0f), color);
+		vertices.emplace_back(math::Vector4(position, maxPosition, 0.0f, 1.0f), m_color);
+		vertices.emplace_back(math::Vector4(position, -maxPosition, 0.0f, 1.0f), m_color);
 
 		// horizontal line
-		vertices.emplace_back(DirectX::XMFLOAT4(maxPosition, position, 0.0f, 1.0f), color);
-		vertices.emplace_back(DirectX::XMFLOAT4(-maxPosition, position, 0.0f, 1.0f), color);
+		vertices.emplace_back(math::Vector4(maxPosition, position, 0.0f, 1.0f), m_color);
+		vertices.emplace_back(math::Vector4(-maxPosition, position, 0.0f, 1.0f), m_color);
 	}
 
 	pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);

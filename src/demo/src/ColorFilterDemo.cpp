@@ -25,7 +25,6 @@ constexpr float k_brightnessModulationRate = 3.0f;
 
 std::string ColorFilterDemo::ToTechniqueName(const Type t)
 {
-	// clang-format off
 	switch (t)
 	{
 		case Grayscale:		return "grayscale_filter";
@@ -34,12 +33,10 @@ std::string ColorFilterDemo::ToTechniqueName(const Type t)
 		case Generic:		return "generic_filter";
 		default:			return "";
 	}
-	// clang-format on
 }
 
 std::string ColorFilterDemo::ToString(const Type t)
 {
-	// clang-format off
 	switch (t)
 	{
 		case Grayscale:		return "Grayscale";
@@ -48,7 +45,6 @@ std::string ColorFilterDemo::ToString(const Type t)
 		case Generic:		return "Generic";
 		default:			return "";
 	}
-	// clang-format on
 }
 
 ColorFilterDemo::Type ColorFilterDemo::Next(const Type t)
@@ -75,7 +71,7 @@ void ColorFilterDemo::InitializeInternal()
 
 	m_fullScreenQuad->SetMaterialUpdateFunction([this]() {
 		m_material->GetSceneTexture() << GetSceneTexture();
-		m_material->GetColorFilter() << math::XMMatrix(m_genericFilter);
+		m_material->GetColorFilter() << m_genericFilter;
 	});
 
 	m_text = std::make_unique<TextComponent>();

@@ -37,7 +37,7 @@ void ProxyModelComponent::Draw_SetData(const PrimitiveData& primitiveData)
 	if (auto camera = GetCamera())
 		wvp *= camera->GetViewProjectionMatrix();
 
-	m_material->GetWorldViewProjection() << math::XMMatrix(wvp);
+	m_material->GetWorldViewProjection() << wvp;
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }

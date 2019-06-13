@@ -19,7 +19,7 @@ using namespace library;
 namespace
 {
 constexpr float k_blurModulationRate = 1.0f;
-const auto k_backgroundColor = Color::Black;
+constexpr auto k_backgroundColor = colors::Black;
 } // namespace
 
 //-------------------------------------------------------------------------

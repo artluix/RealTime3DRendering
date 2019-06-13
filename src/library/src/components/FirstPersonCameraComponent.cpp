@@ -71,7 +71,7 @@ void FirstPersonCameraComponent::Update(const Time& time)
 			const auto rotation = rotationDelta * m_rotationRate * elapsedTime;
 
 			const auto pitchQuat = math::Quaternion::RotationAxis(GetRight(), rotation.y);
-			const auto yawQuat = math::Quaternion::RotationAxis(math::Vector3::Up, rotation.x);
+			const auto yawQuat = math::Quaternion::RotationAxis(math::Direction::Up, rotation.x);
 
 			Rotate(pitchQuat * yawQuat);
 		}
@@ -80,19 +80,19 @@ void FirstPersonCameraComponent::Update(const Time& time)
 	// compute movement
 	if (!!m_keyboard)
 	{
-		math::Vector2 movementAmount;
+		math::Vector2i movementAmount;
 
 		if (m_keyboard->IsKeyDown(Key::W))
-			movementAmount.y += 1.0f;
+			movementAmount.y++;
 
 		if (m_keyboard->IsKeyDown(Key::S))
-			movementAmount.y -= 1.0f;
+			movementAmount.y--;
 
 		if (m_keyboard->IsKeyDown(Key::A))
-			movementAmount.x -= 1.0f;
+			movementAmount.x--;
 
 		if (m_keyboard->IsKeyDown(Key::D))
-			movementAmount.x += 1.0f;
+			movementAmount.x++;
 
 		if (movementAmount)
 		{

@@ -27,7 +27,6 @@ struct TextureType
 
 	static constexpr Type FromAiTextureType(const aiTextureType aiTt)
 	{
-		// clang-format off
 		switch (aiTt)
 		{
 			case aiTextureType_DIFFUSE:		return Diffuse;
@@ -40,12 +39,10 @@ struct TextureType
 			case aiTextureType_LIGHTMAP:	return LightMap;
 			default: return None;
 		}
-		// clang-format on
 	}
 
 	static constexpr aiTextureType ToAiTextureType(const Type t)
 	{
-		// clang-format off
 		switch (t)
 		{
 			case Diffuse:					return aiTextureType_DIFFUSE;
@@ -58,7 +55,6 @@ struct TextureType
 			case LightMap:					return aiTextureType_LIGHTMAP;
 			default:						return aiTextureType_NONE;
 		}
-		// clang-format on
 	}
 
 	static constexpr std::array<Type, Count> GetValues()

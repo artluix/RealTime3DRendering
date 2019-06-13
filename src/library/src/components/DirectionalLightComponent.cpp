@@ -1,14 +1,15 @@
 #include "StdAfx.h"
 #include "library/Components/DirectionalLightComponent.h"
 
+#include "library/Math/Direction.h"
 #include "library/Math/Matrix.h"
 
 namespace library
 {
 DirectionalLightComponent::DirectionalLightComponent()
-	: m_direction(math::Vector3::Forward)
-	, m_up(math::Vector3::Up)
-	, m_right(math::Vector3::Right)
+	: m_direction(math::Direction::Forward)
+	, m_up(math::Direction::Up)
+	, m_right(math::Direction::Right)
 
 	, m_rotation(math::Quaternion::Identity)
 {}

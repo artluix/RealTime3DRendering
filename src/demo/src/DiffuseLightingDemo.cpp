@@ -9,9 +9,8 @@
 #include <library/Application.h>
 #include <library/Utils.h>
 #include <library/Path.h>
-#include <library/Exception.h>
-#include <library/Math/Math.h>
 
+#include <library/Math/Math.h>
 #include <library/Model/Model.h>
 
 #include <library/Effect/Effect.h>
@@ -162,15 +161,16 @@ void DiffuseLightingDemo::UpdateDirectionalLight(const Time& time)
 
 void DiffuseLightingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
-	auto wvp = GetWorldMatrix();
+	const auto &world = GetWorldMatrix();
+	auto wvp = world;
 	if (auto camera = GetCamera())
 		wvp *= camera->GetViewProjectionMatrix();
 
-	m_material->GetWVP() << math::XMMatrix(wvp);
-	m_material->GetWorld() << math::XMMatrix(GetWorldMatrix());
-	m_material->GetAmbientColor() << math::XMVector(m_ambientColor);
-	m_material->GetLightColor() << math::XMVector(m_directionalLight->GetColor());
-	m_material->GetLightDirection() << math::XMVector(m_directionalLight->GetDirection());
+	m_material->GetWVP() << wvp;
+	m_material->GetWorld() << world;
+	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
+	m_material->GetLightColor() << m_directionalLight->GetColor().ToVector4();
+	m_material->GetLightDirection() << m_directionalLight->GetDirection();
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);

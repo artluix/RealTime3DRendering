@@ -3,44 +3,27 @@
 
 namespace library::math
 {
-struct Quaternion
+struct Quaternion : Vector4
 {
-	union
-	{
-		struct
-		{
-			float x, y, z, w;
-		};
+	using Vector4::xyz;
 
-		std::array<float, 4> _data;
-	};
+public:
+	using Vector4::x;
+	using Vector4::y;
+	using Vector4::z;
+	using Vector4::w;
 
-	//-------------------------------------------------------------------------
+	using Vector4::Vector4;
+	using Vector4::operator=;
 
-	constexpr Quaternion(const float x, const float y, const float z, const float w) : x(x), y(y), z(z), w(w)
-	{}
-	explicit constexpr Quaternion(const float v = 0.f) : Quaternion(v, v, v, v) {}
-	explicit constexpr Quaternion(const XMVector4& xmFloat4)
-		: Quaternion(xmFloat4.x, xmFloat4.y, xmFloat4.z, xmFloat4.w)
-	{}
-	explicit constexpr Quaternion(const XMVector& xmVector)
-		: Quaternion(xmVector.m128_f32[0], xmVector.m128_f32[1], xmVector.m128_f32[2], xmVector.m128_f32[3])
-	{}
+	constexpr Quaternion(const Vector4& vec4) : Quaternion(vec4.x, vec4.y, vec4.z, vec4.w) {}
+	Quaternion& operator=(const Vector4& vec4) { Vector4::operator=(vec4); return *this; }
 
-	Quaternion& operator=(const XMVector& xmVector);
+	Quaternion& operator=(const dx::VECTOR& VEC) { Vector4::operator=(VEC); return *this; }
 
 	//-------------------------------------------------------------------------
 
-	const float& operator[](const unsigned idx) const { return _data[idx]; }
-	float& operator[](const unsigned idx) { return _data[idx]; }
-	operator const float*() const { return _data.data(); }
-
-	explicit operator XMVector() const;
-	explicit operator const XMVector4&() const;
-	explicit operator bool() const;
-
-	//-------------------------------------------------------------------------
-
+	static const Quaternion Zero;
 	static const Quaternion Identity;
 
 	//-------------------------------------------------------------------------
@@ -54,9 +37,7 @@ struct Quaternion
 
 	//-------------------------------------------------------------------------
 
-	float Length() const;
-	float LengthSq() const;
-	float Dot(const Quaternion& other) const;
+	float Dot(const Quaternion& other) const { return Vector4::Dot(other); }
 
 	Quaternion Normalize() const;
 	Quaternion Conjugate() const;
@@ -80,4 +61,10 @@ struct Quaternion
 	Quaternion operator*(const float value) const;
 	Quaternion& operator*=(const float value);
 };
+
+//-------------------------------------------------------------------------
+
+Quaternion Clamp(const Quaternion& q, const Quaternion& min, const Quaternion& max);
+Quaternion Lerp(const Quaternion& from, const Quaternion& to, const float factor);
+Quaternion Lerp(const Quaternion& from, const Quaternion& to, const Vector4& factor);
 } // namespace library::math

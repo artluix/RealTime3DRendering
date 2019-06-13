@@ -2,7 +2,6 @@
 #include "library/RenderTargets/FullScreenRenderTarget.h"
 
 #include "library/Application.h"
-#include "library/Exception.h"
 
 namespace library
 {
@@ -26,22 +25,13 @@ FullScreenRenderTarget::FullScreenRenderTarget(const Application& app) : m_app(a
 		fullScreenTextureDesc.Usage = D3D11_USAGE_DEFAULT;
 
 		auto hr = device->CreateTexture2D(&fullScreenTextureDesc, nullptr, &fullScreenTexture);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11::CreateTexture2D() failed.", hr);
-		}
+		assert("ID3D11::CreateTexture2D() failed." && SUCCEEDED(hr));
 
 		hr = device->CreateShaderResourceView(fullScreenTexture.Get(), nullptr, &m_outputTexture);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11::CreateShaderResourceView() failed.", hr);
-		}
+		assert("ID3D11::CreateShaderResourceView() failed." && SUCCEEDED(hr));
 
 		hr = device->CreateRenderTargetView(fullScreenTexture.Get(), nullptr, &m_renderTargetView);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11::CreateRenderTargetView() failed.", hr);
-		}
+		assert("ID3D11::CreateRenderTargetView() failed." && SUCCEEDED(hr));
 	}
 
 	// depth stencil view
@@ -60,16 +50,10 @@ FullScreenRenderTarget::FullScreenRenderTarget(const Application& app) : m_app(a
 		depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
 
 		auto hr = device->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencilBuffer);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11::CreateTexture2D() failed.", hr);
-		}
+		assert("ID3D11::CreateTexture2D() failed." && SUCCEEDED(hr));
 
 		hr = device->CreateDepthStencilView(depthStencilBuffer.Get(), nullptr, &m_depthStencilView);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11::CreateDepthStencilView() failed.", hr);
-		}
+		assert("ID3D11::CreateDepthStencilView() failed." && SUCCEEDED(hr));
 	}
 }
 

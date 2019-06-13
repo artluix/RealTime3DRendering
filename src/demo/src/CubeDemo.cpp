@@ -6,7 +6,6 @@
 #include <library/VertexTypes.h>
 #include <library/Application.h>
 #include <library/Utils.h>
-#include <library/Exception.h>
 #include <library/Math/Math.h>
 
 #include <d3dx11effect.h>
@@ -26,27 +25,22 @@ void CubeDemo::InitializeInternal()
 
 	// Look up the technique, pass, and WVP variable from the effect
 	m_technique = m_effect->GetTechniqueByName("main11");
-	if (!m_technique)
-		throw Exception("ID3DX11Effect::GetTechniqueByName() could not find the specified technique.");
+	assert("ID3DX11Effect::GetTechniqueByName() could not find the specified technique." && m_technique);
 
 	// get pass
 	m_pass = m_technique->GetPassByName("p0");
-	if (!m_pass)
-		throw Exception("ID3DX11Effect::GetPassByName() could not find the specified pass.");
+	assert("ID3DX11Effect::GetPassByName() could not find the specified pass." && m_pass);
 
 	// get abstract variable
 	if (auto variable = m_effect->GetVariableByName("WorldViewProjection"))
 	{
 		// cast variable to specific type
 		m_wvpVariable = variable->AsMatrix();
-		if (!m_wvpVariable->IsValid())
-		{
-			throw Exception("Invalid effect variable cast.");
-		}
+		assert("Invalid effect variable cast." && m_wvpVariable->IsValid());
 	}
 	else
 	{
-		throw Exception("ID3DX11Effect::GetVariableByName() could not find the specified variable.");
+		assert("ID3DX11Effect::GetVariableByName() could not find the specified variable." && false);
 	}
 
 	// Create the input layout
@@ -54,7 +48,6 @@ void CubeDemo::InitializeInternal()
 		D3DX11_PASS_DESC passDesc;
 		m_pass->GetDesc(&passDesc);
 
-		// clang-format off
 		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{
 			{
@@ -76,18 +69,15 @@ void CubeDemo::InitializeInternal()
 				0
 			},
 		};
-		// clang-format on
 
 		auto hr = GetApp().GetDevice()->CreateInputLayout(
 			inputElementDescriptions.data(),
 			inputElementDescriptions.size(),
 			passDesc.pIAInputSignature,
 			passDesc.IAInputSignatureSize,
-			&m_inputLayout);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11Device::CreateInputLayout() failed.", hr);
-		}
+			&m_inputLayout
+		);
+		assert("ID3D11Device::CreateInputLayout() failed." && SUCCEEDED(hr));
 	}
 
 	m_primitivesData.clear();
@@ -97,7 +87,6 @@ void CubeDemo::InitializeInternal()
 
 	// index buffer
 	{
-		// clang-format off
 		constexpr std::array<unsigned, 2 * 3 * 6> k_indices =
 		{
 			0, 1, 2,
@@ -118,7 +107,6 @@ void CubeDemo::InitializeInternal()
 			1, 5, 6,
 			1, 6, 2
 		};
-		// clang-format on
 
 		pd.indexBuffer = std::make_optional(IndexBufferData());
 		pd.indexBuffer->elementsCount = k_indices.size();
@@ -134,29 +122,28 @@ void CubeDemo::InitializeInternal()
 		auto hr = GetApp().GetDevice()->CreateBuffer(
 			&indexBufferDesc,
 			&vertexSubResourceData,
-			&pd.indexBuffer->buffer);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11Device::CreateBuffer() failed.", hr);
-		}
+			&pd.indexBuffer->buffer
+		);
+		assert("ID3D11Device::CreateBuffer() failed." && SUCCEEDED(hr));
 	}
 
 	// vertex buffer
 	{
-		using DirectX::XMFLOAT4;
+		using math::Vector4;
+		using math::Color;
 
-		const std::array<VertexPositionColor, 8> vertices = {
+		constexpr std::array<VertexPositionColor, 8> vertices = {
 			// bottom
-			VertexPositionColor(XMFLOAT4(-1.0f, -1.0f, -1.0f, 1.0f), XMFLOAT4(0.5f, 0.5f, 0.5f, 1.0f)),
-			VertexPositionColor(XMFLOAT4(-1.0f, 1.0f, -1.0f, 1.0f), XMFLOAT4(0.5f, 1.0f, 0.5f, 1.0f)),
-			VertexPositionColor(XMFLOAT4(1.0f, 1.0f, -1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 0.5f, 1.0f)),
-			VertexPositionColor(XMFLOAT4(1.0f, -1.0f, -1.0f, 1.0f), XMFLOAT4(1.0f, 0.5f, 0.5f, 1.0f)),
+			VertexPositionColor(Vector4(-1.0f, -1.0f, -1.0f, 1.0f), Color(0.5f, 0.5f, 0.5f, 1.0f)),
+			VertexPositionColor(Vector4(-1.0f, 1.0f, -1.0f, 1.0f), Color(0.5f, 1.0f, 0.5f, 1.0f)),
+			VertexPositionColor(Vector4(1.0f, 1.0f, -1.0f, 1.0f), Color(1.0f, 1.0f, 0.5f, 1.0f)),
+			VertexPositionColor(Vector4(1.0f, -1.0f, -1.0f, 1.0f), Color(1.0f, 0.5f, 0.5f, 1.0f)),
 
 			// top
-			VertexPositionColor(XMFLOAT4(-1.0f, -1.0f, 1.0f, 1.0f), XMFLOAT4(0.5f, 0.5f, 1.0f, 1.0f)),
-			VertexPositionColor(XMFLOAT4(-1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT4(0.5f, 1.0f, 1.0f, 1.0f)),
-			VertexPositionColor(XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 1.0f, 1.0f, 1.0f)),
-			VertexPositionColor(XMFLOAT4(1.0f, -1.0f, 1.0f, 1.0f), XMFLOAT4(1.0f, 0.5f, 1.0f, 1.0f)),
+			VertexPositionColor(Vector4(-1.0f, -1.0f, 1.0f, 1.0f), Color(0.5f, 0.5f, 1.0f, 1.0f)),
+			VertexPositionColor(Vector4(-1.0f, 1.0f, 1.0f, 1.0f), Color(0.5f, 1.0f, 1.0f, 1.0f)),
+			VertexPositionColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)),
+			VertexPositionColor(Vector4(1.0f, -1.0f, 1.0f, 1.0f), Color(1.0f, 0.5f, 1.0f, 1.0f)),
 		};
 
 		pd.vertexBuffer.elementsCount = vertices.size();
@@ -172,11 +159,9 @@ void CubeDemo::InitializeInternal()
 		auto hr = GetApp().GetDevice()->CreateBuffer(
 			&vertexBufferDesc,
 			&vertexSubResourceData,
-			&pd.vertexBuffer.buffer);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11Device::CreateBuffer() failed.", hr);
-		}
+			&pd.vertexBuffer.buffer
+		);
+		assert("ID3D11Device::CreateBuffer() failed." && SUCCEEDED(hr));
 	}
 }
 
@@ -193,18 +178,18 @@ void CubeDemo::Update(const Time& time)
 
 		// movement
 		{
-			math::Vector2 movementAmount;
+			math::Vector2i movementAmount;
 			if (m_keyboard->IsKeyDown(Key::Up))
-				movementAmount.y += 1.0f;
+				movementAmount.y++;
 
 			if (m_keyboard->IsKeyDown(Key::Down))
-				movementAmount.y -= 1.0f;
+				movementAmount.y--;
 
 			if (m_keyboard->IsKeyDown(Key::Left))
-				movementAmount.x -= 1.0f;
+				movementAmount.x--;
 
 			if (m_keyboard->IsKeyDown(Key::Right))
-				movementAmount.x += 1.0f;
+				movementAmount.x++;
 
 			if (movementAmount)
 				Translate(math::Vector3(movementAmount * k_movementRate));

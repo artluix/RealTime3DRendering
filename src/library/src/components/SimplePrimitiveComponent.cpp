@@ -4,6 +4,7 @@
 #include "library/Application.h"
 #include "library/Path.h"
 #include "library/Utils.h"
+#include "library/Logger.h"
 
 namespace library
 {
@@ -34,13 +35,12 @@ void SimplePrimitiveComponent::InitializeEffect(const std::string& effectName, c
 #endif
 			0,
 			&shaderBlob,
-			&errorBlob);
+			&errorBlob
+		);
 		if (FAILED(hr))
 		{
-			std::string error =
-				std::string("D3DX11CompileEffectFromFile() failed: ") +
-				std::string(static_cast<const char*>(errorBlob->GetBufferPointer()), errorBlob->GetBufferSize());
-			throw Exception(error.c_str(), hr);
+			Logger::Log(Logger::Level::Error, static_cast<const char*>(errorBlob->GetBufferPointer()));
+			assert("D3DX11CompileEffectFromFile() failed" && false);
 		}
 
 		hr = D3DX11CreateEffectFromMemory(
@@ -48,9 +48,9 @@ void SimplePrimitiveComponent::InitializeEffect(const std::string& effectName, c
 			shaderBlob->GetBufferSize(),
 			0,
 			GetApp().GetDevice(),
-			&m_effect);
-		if (FAILED(hr))
-			throw Exception("D3DX11CreateEffectFromMemory() failed.", hr);
+			&m_effect
+		);
+		assert("D3DX11CreateEffectFromMemory() failed." && SUCCEEDED(hr));
 	}
 	else
 	{
@@ -58,13 +58,15 @@ void SimplePrimitiveComponent::InitializeEffect(const std::string& effectName, c
 
 		std::vector<std::byte> effectData;
 		utils::LoadBinaryFile(path, effectData);
-		if (effectData.empty())
-			throw Exception("Load compiled effect failed.");
+		assert("Load compiled effect failed." && !effectData.empty());
 
-		auto hr =
-			D3DX11CreateEffectFromMemory(effectData.data(), effectData.size(), 0, GetApp().GetDevice(), &m_effect);
-		if (FAILED(hr))
-			throw Exception("D3DX11CreateEffectFromMemory() failed.", hr);
+		auto hr = D3DX11CreateEffectFromMemory(
+			effectData.data(), effectData.size(),
+			0,
+			GetApp().GetDevice(),
+			&m_effect
+		);
+		assert("D3DX11CreateEffectFromMemory() failed." && SUCCEEDED(hr));
 	}
 }
 

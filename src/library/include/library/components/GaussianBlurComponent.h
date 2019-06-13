@@ -28,8 +28,8 @@ private:
 	void InitializeSampleOffsets();
 	void InitializeSampleWeights();
 
-	void UpdateHorizontalOffsets(Material& material) const;
-	void UpdateVerticalOffsets(Material& material) const;
+	void UpdateHorizontalOffsets(Material& material);
+	void UpdateVerticalOffsets(Material& material);
 
 	float GetWeight(const float x);
 

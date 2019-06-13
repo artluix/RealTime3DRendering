@@ -7,7 +7,6 @@
 #include "library/Model/AnimationClip.h"
 
 #include "library/Application.h"
-#include "library/Exception.h"
 #include "library/Path.h"
 #include "library/Logger.h"
 
@@ -21,12 +20,10 @@ Model::Model(const Application& app, const std::string& name, const bool flipUVs
 {
 	Assimp::Importer importer;
 
-	// clang-format off
 	unsigned flags = aiProcess_Triangulate |
 					 aiProcess_JoinIdenticalVertices |
 					 aiProcess_SortByPType |
 					 aiProcess_FlipWindingOrder;
-	// clang-format on
 
 	if (flipUVs)
 		flags |= aiProcess_FlipUVs;
@@ -76,7 +73,8 @@ Model::Model(const Application& app, const std::string& name, const bool flipUVs
 	}
 	else
 	{
-		throw Exception(importer.GetErrorString());
+		Logger::Error(importer.GetErrorString());
+		assert(false);
 	}
 
 #if defined DEBUG || defined _DEBUG

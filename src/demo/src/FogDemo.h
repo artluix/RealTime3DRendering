@@ -2,7 +2,7 @@
 #include <library/Materials/FogMaterial.h>
 #include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
-#include <library/Color.h>
+#include <library/math/Color.h>
 
 #include <memory>
 
@@ -45,7 +45,7 @@ private:
 	void UpdateDirectionalLight(const library::Time& time);
 	void SetActiveTechnique();
 
-	library::Color m_ambientColor;
+	library::math::Color m_ambientColor;
 
 	float m_fogStart;
 	float m_fogRange;

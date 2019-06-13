@@ -3,10 +3,11 @@
 
 namespace library
 {
-LightComponent::LightComponent(const Color& color /* = Color::White*/) : m_color(color)
+LightComponent::LightComponent(const math::Color& color /* = colors::White*/)
+	: m_color(color)
 {}
 
-void LightComponent::SetColor(const Color& color)
+void LightComponent::SetColor(const math::Color& color)
 {
 	m_color = color;
 }

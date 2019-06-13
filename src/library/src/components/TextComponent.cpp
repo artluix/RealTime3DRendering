@@ -76,8 +76,8 @@ void TextComponent::Draw(const Time& time)
 	m_spriteFont->DrawString(
 		m_spriteBatch.get(),
 		m_text.c_str(),
-		static_cast<const math::XMVector2&>(m_position),
-		math::XMVector(m_color));
+		dx::VECTOR(m_position),
+		dx::VECTOR(m_color));
 
 	End();
 }

@@ -1,8 +1,7 @@
 #pragma once
-#include "library/CommonTypes.h"
+#include "library/Common.h"
 #include "library/VertexTypes.h"
 #include "library/DirectXForwardDeclarations.h"
-#include "library/Exception.h"
 
 namespace library
 {
@@ -113,10 +112,7 @@ namespace library
 			&subResourceData,
 			&buffer
 		);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11Device::CreateBuffer() failed.");
-		}
+		assert("ID3D11Device::CreateBuffer() failed." && SUCCEEDED(hr));
 	}
 
 	//-------------------------------------------------------------------------

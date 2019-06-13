@@ -1,7 +1,9 @@
 #pragma once
 #include "library/Math/Vector.h"
 
-namespace library::math
+namespace library
+{
+namespace math
 {
 struct Color
 {
@@ -12,129 +14,58 @@ struct Color
 			float r, g, b, a;
 		};
 
-		std::array<float, 4> _data;
+		Vector4 _vec4;
 	};
 
-	//-------------------------------------------------------------------------
-
-	constexpr Color(const float r, const float g, const float b, const float a) : r(r), g(g), b(b), a(a) {}
+	constexpr Color(const float r, const float g, const float b, const float a = 1.f) : r(r), g(g), b(b), a(a) {}
 	explicit constexpr Color(const float v = 0.f) : Color(v, v, v, v) {}
-	explicit constexpr Color(const XMVector4& xmFloat4)
-		: Color(xmFloat4.x, xmFloat4.y, xmFloat4.z, xmFloat4.w)
-	{}
-	explicit constexpr Color(const XMVector& xmVector)
-		: Color(xmVector.m128_f32[0], xmVector.m128_f32[1], xmVector.m128_f32[2], xmVector.m128_f32[3])
-	{}
 
-	Color& operator=(const XMVector& xmVector);
+	explicit constexpr Color(const Vector4& vec4) : Color(vec4.x, vec4.y, vec4.z, vec4.w) {}
+	Color& operator=(const Vector4& vec4) { _vec4 = vec4; return *this; }
+	explicit operator const Vector4&() const { return ToVector4(); }
+	const Vector4& ToVector4() const { return _vec4; }
 
-	//-------------------------------------------------------------------------
+	explicit Color(const dx::VECTOR& dxVEC) : _vec4(dxVEC) { }
+	Color& operator=(const dx::VECTOR& dxVEC) { _vec4 = dxVEC; return *this; }
+	explicit operator dx::VECTOR() const { return static_cast<dx::VECTOR>(_vec4); }
 
-	const float& operator[](const unsigned idx) const { return _data[idx]; }
-	float& operator[](const unsigned idx) { return _data[idx]; }
-	operator const float*() const { return _data.data(); }
+	explicit operator const float*() const { return &r; }
 
-	//-------------------------------------------------------------------------
+	bool operator==(const Color& other) const { return _vec4 == other._vec4; }
+	bool operator!=(const Color& other) const { return _vec4 != other._vec4; }
+	bool operator>(const Color& other) const { return _vec4 > other._vec4; }
+	bool operator>=(const Color& other) const { return _vec4 >= other._vec4; }
+	bool operator<(const Color& other) const { return _vec4 < other._vec4; }
+	bool operator<=(const Color& other) const { return _vec4 <= other._vec4; }
 
-	explicit operator XMVector() const;
-	explicit operator const XMVector4&() const;
-	explicit operator bool() const;
+	static Color Random(const float a = 1.f);
 
-	//-------------------------------------------------------------------------
-
-	static const Color Zero;
-
-	static const Color White;
-	static const Color Black;
-	static const Color Red;
-	static const Color Green;
-	static const Color Blue;
-	static const Color Cyan;
-	static const Color Magenta;
-	static const Color Yellow;
-	static const Color CornFlower;
-
-	static Color Random();
-
-	//-------------------------------------------------------------------------
-
-	std::string ToString() const;
-
-	//-------------------------------------------------------------------------
-	// logical operators
-	//-------------------------------------------------------------------------
-
-	bool operator==(const Color& other) const;
-	bool operator!=(const Color& other) const;
-	bool operator<(const Color& other) const;
-	bool operator<=(const Color& other) const;
-	bool operator>(const Color& other) const;
-	bool operator>=(const Color& other) const;
-
-	//-------------------------------------------------------------------------
-	// arithmetic operators
-	//-------------------------------------------------------------------------
-
-	//-------------------------------------------------------------------------
-	// add
-	//-------------------------------------------------------------------------
-
-	Color operator+(const Color& other) const;
-	Color& operator+=(const Color& other);
-
-	//-------------------------------------------------------------------------
-
-	Color operator+(const float value) const;
-	Color& operator+=(const float value);
-
-	//-------------------------------------------------------------------------
-	// negate
-	//-------------------------------------------------------------------------
-
-	Color operator-() const;
-
-	//-------------------------------------------------------------------------
-	// subtract
-	//-------------------------------------------------------------------------
-
-	Color operator-(const Color& other) const;
-	Color& operator-=(const Color& other);
-
-	//-------------------------------------------------------------------------
-
-	Color operator-(const float value) const;
-	Color& operator-=(const float value);
-
-	//-------------------------------------------------------------------------
-	// multiply
-	//-------------------------------------------------------------------------
-
-	Color operator*(const Color& other) const;
-	Color& operator*=(const Color& other);
-
-	//-------------------------------------------------------------------------
-
-	Color operator*(const float value) const;
-	Color& operator*=(const float value);
-
-	//-------------------------------------------------------------------------
-	// divide
-	//-------------------------------------------------------------------------
-
-	Color operator/(const Color& other) const;
-	Color& operator/=(const Color& other);
-
-	//-------------------------------------------------------------------------
-
-	Color operator/(const float value) const;
-	Color& operator/=(const float value);
+	static constexpr Color FromBytes(const u8 r, const u8 g, const u8 b, const u8 a = 255)
+	{
+		return Color(r / 255.f, g / 255.f, b / 255.f, a / 255.f);
+	}
 };
 
 //-------------------------------------------------------------------------
-// Lerp
+
+Color Clamp(const Color& c, const Color& min, const Color& max);
+Color Lerp(const Color& from, const Color& to, const float factor);
+Color Lerp(const Color& from, const Color& to, const Vector4& factor);
+} // namespace math
+
 //-------------------------------------------------------------------------
 
-Color Lerp(const Color& lhs, const Color& rhs, const float factor);
-Color Lerp(const Color& lhs, const Color& rhs, const Vector4& factor);
+namespace colors
+{
+using math::Color;
 
-} // namespace library::math
+inline constexpr Color Red =			Color::FromBytes(255, 0, 0);
+inline constexpr Color Green =			Color::FromBytes(255, 0, 0);
+inline constexpr Color Blue =			Color::FromBytes(255, 0, 0);
+
+inline constexpr Color Black =			Color::FromBytes(0, 0, 0);
+inline constexpr Color White =			Color::FromBytes(255, 255, 255);
+
+inline constexpr Color CornFlower =		Color::FromBytes(100, 149, 237);
+} // namespace colors
+} // namespace library

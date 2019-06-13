@@ -20,7 +20,6 @@ void Logger::Log(const Level level, const char* fmt, const va_list ap)
 
 	std::string prefixMsg;
 
-	// clang-format off
 	switch (level)
 	{
 		case Level::Info:		prefixMsg = "Info"; break;
@@ -29,7 +28,6 @@ void Logger::Log(const Level level, const char* fmt, const va_list ap)
 		case Level::Error:		prefixMsg = "Error"; break;
 		default: break;
 	}
-	// clang-format on
 
 	std::string message = prefixMsg + ": " + std::string(buffer);
 	Message(message);

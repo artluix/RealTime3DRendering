@@ -1,6 +1,6 @@
 #pragma once
 #include "library/RenderTargets/RenderTarget.h"
-#include "library/CommonTypes.h"
+#include "library/Common.h"
 
 namespace library
 {

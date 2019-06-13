@@ -1,6 +1,5 @@
 #include "DemoApplication.h"
 
-#include <library/Exception.h>
 #include <library/Utils.h>
 
 #include <memory>
@@ -24,19 +23,7 @@ int WINAPI WinMain(HINSTANCE instance, HINSTANCE prevInstance, LPSTR cmdLine, in
 		showCmd
 	);
 
-	try
-	{
-		app->Run();
-	}
-	catch (library::Exception ex)
-	{
-		MessageBox(
-			app->GetWindowHandle(),
-			library::utils::ToWideString(ex.GetWhatString()).c_str(),
-			app->GetWindowTitle().c_str(),
-			MB_ABORTRETRYIGNORE
-		);
-	}
+	app->Run();
 
 	return 0;
 }

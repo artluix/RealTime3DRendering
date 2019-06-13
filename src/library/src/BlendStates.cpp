@@ -2,7 +2,6 @@
 #include "library/BlendStates.h"
 
 #include "library/Utils.h"
-#include "library/Exception.h"
 
 #include <cassert>
 #include <d3d11_1.h>
@@ -18,10 +17,7 @@ void CreateBlendState(
 	ID3D11BlendState*& blendState)
 {
 	auto hr = device->CreateBlendState(&blendStateDesc, &blendState);
-	if (FAILED(hr))
-	{
-		throw Exception("ID3D11Device::CreateBlendState() failed.", hr);
-	}
+	assert("ID3D11Device::CreateBlendState() failed." && SUCCEEDED(hr));
 }
 } // namespace
 

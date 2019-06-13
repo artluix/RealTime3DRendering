@@ -1,17 +1,17 @@
 #pragma once
-#include "library/CommonTypes.h"
-#include "library/Math/XmTypes.h"
+#include "library/Common.h"
 #include "library/NonCopyable.hpp"
+#include "library/Math/Vector.h"
+#include "library/Math/Matrix.h"
 
-#include <array>
 #include <d3dx11effect.h>
 #include <string>
-#include <vector>
 
 interface ID3D11ShaderResourceView;
 
 namespace library
 {
+
 class Effect;
 
 class EffectVariable : public NonCopyable<EffectVariable>
@@ -30,30 +30,64 @@ public:
 	const D3DX11_EFFECT_TYPE_DESC& GetTypeDesc() const { return m_typeDesc; }
 
 	// scalar
-	EffectVariable& operator<<(const float value);
-	EffectVariable& operator<<(const std::vector<float>& value);
-	template <std::size_t Count>
-	EffectVariable& operator<<(const std::array<float, Count>& value);
+	template<typename T>
+	EffectVariable& operator<<(const T value);
+	template<typename T>
+	EffectVariable& operator<<(const std::vector<T>& value);
+	template <typename T, std::size_t Count>
+	EffectVariable& operator<<(const std::array<T, Count>& value);
+
+	// vector
+	template<typename T, unsigned Size>
+	EffectVariable& operator<<(const math::VectorType<T, Size>& value);
+	template<typename T, unsigned Size>
+	EffectVariable& operator<<(const math::VectorArray<T, Size>& value);
+	template <typename T, unsigned Size, std::size_t Count>
+	EffectVariable& operator<<(const math::VectorFixedArray<T, Size, Count>& value);
+
+	// matrix
+	template<unsigned Size>
+	EffectVariable& operator<<(const math::Matrix<Size>& value);
+	template<unsigned Size>
+	EffectVariable& operator<<(const math::MatrixArray<Size>& value);
+	template <unsigned Size, std::size_t Count>
+	EffectVariable& operator<<(const math::MatrixFixedArray<Size, Count>& value);
 
 	// texture
 	EffectVariable& operator<<(ID3D11ShaderResourceView* const value);
 
-	// vector
-	EffectVariable& operator<<(const math::XMVector& value);
-	EffectVariable& operator<<(const std::vector<math::XMVector>& value);
-	template <std::size_t Count>
-	EffectVariable& operator<<(const std::array<math::XMVector, Count>& value);
-
-	// matrix
-	EffectVariable& operator<<(const math::XMMatrix& value);
-	EffectVariable& operator<<(const std::vector<math::XMMatrix>& value);
-	template <std::size_t Count>
-	EffectVariable& operator<<(const std::array<math::XMMatrix, Count>& value);
-
 private:
-	void SetScalarArray(const float* data, const std::size_t count);
-	void SetVectorArray(const math::XMVector* data, const std::size_t count);
-	void SetMatrixArray(const math::XMMatrix* data, const std::size_t count);
+	ID3DX11EffectScalarVariable* ToScalarVariable();
+	ID3DX11EffectVectorVariable* ToVectorVariable();
+	ID3DX11EffectMatrixVariable* ToMatrixVariable();
+	ID3DX11EffectShaderResourceVariable* ToShaderResourceVariable();
+
+	//-------------------------------------------------------------------------
+
+	template<typename T>
+	void SetScalar(ID3DX11EffectScalarVariable* const scalarVariable, const T value);
+	template<typename T>
+	void SetScalarArray(
+		ID3DX11EffectScalarVariable* const scalarVariable,
+		const T* data, const std::size_t count
+	);
+
+	template<typename T>
+	void SetVector(ID3DX11EffectVectorVariable* const vectorVariable, const T* data);
+	template<typename T>
+	void SetVectorArray(
+		ID3DX11EffectVectorVariable* const vectorVariable,
+		const T* data,
+		const std::size_t count
+	);
+
+	void SetMatrix(ID3DX11EffectMatrixVariable* const matrixVariable, const float* data);
+	void SetMatrixArray(
+		ID3DX11EffectMatrixVariable* const matrixVariable,
+		const float* data, const std::size_t count
+	);
+
+	//-------------------------------------------------------------------------
 
 	const Effect& m_effect;
 	std::string m_name;
@@ -64,27 +98,6 @@ private:
 	ComPtr<ID3DX11EffectType> m_type;
 	D3DX11_EFFECT_TYPE_DESC m_typeDesc;
 };
-
-// ----------------------------------------------------------------------------------------------------------
-
-template <std::size_t Count>
-EffectVariable& library::EffectVariable::operator<<(const std::array<float, Count>& value)
-{
-	SetScalarArray(value.data(), Count);
-	return *this;
-}
-
-template <std::size_t Count>
-EffectVariable& library::EffectVariable::operator<<(const std::array<math::XMVector, Count>& value)
-{
-	SetVectorArray(value.data(), Count);
-	return *this;
-}
-
-template <std::size_t Count>
-EffectVariable& library::EffectVariable::operator<<(const std::array<math::XMMatrix, Count>& value)
-{
-	SetMatrixArray(value.data(), Count);
-	return *this;
-}
 } // namespace library
+
+#include "library/Effect/EffectVariable-inl.h"

@@ -30,7 +30,6 @@ LightMaterial::~LightMaterial() = default;
 
 void LightMaterial::InitializeInternal()
 {
-	// clang-format off
 	m_inputElementDescriptions =
 	{
 		{
@@ -61,7 +60,6 @@ void LightMaterial::InitializeInternal()
 			0
 		},
 	};
-	// clang-format on
 
 	Material::InitializeInternal();
 }
@@ -87,9 +85,10 @@ VertexBufferData LightMaterial::CreateVertexBufferData(ID3D11Device* const devic
 		const auto& normal = normals[i];
 
 		vertices.emplace_back(
-			DirectX::XMFLOAT4(position.x, position.y, position.z, 1.0f),
-			DirectX::XMFLOAT2(uv.x, uv.y),
-			normal);
+			math::Vector4(position, 1.0f),
+			uv.xy,
+			normal
+		);
 	}
 
 	return VertexBufferData(device, vertices);

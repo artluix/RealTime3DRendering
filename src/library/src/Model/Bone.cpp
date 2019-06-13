@@ -1,8 +1,6 @@
 #include "StdAfx.h"
 #include "library/Model/Bone.h"
 
-#include "library/Exception.h"
-
 namespace library
 {
 Bone::VertexWeights::VertexWeights()
@@ -14,7 +12,7 @@ void Bone::VertexWeights::Push(const VertexWeight& vw)
 {
 	if (GetCount() == MaxPerVertex)
 	{
-		throw Exception("Maximum number of bone weights per vertex exceeded.");
+		assert("Maximum number of bone weights per vertex exceeded." && false);
 	}
 
 	m_weights.push_back(vw);

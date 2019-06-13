@@ -2,7 +2,6 @@
 #include "library/Components/InputComponent.h"
 
 #include "library/Application.h"
-#include "library/Exception.h"
 
 namespace library
 {
@@ -31,22 +30,13 @@ InputComponent::~InputComponent()
 void InputComponent::InitializeInternal()
 {
 	auto hr = m_directInput.CreateDevice(m_guid, &m_directInputDevice, nullptr);
-	if (FAILED(hr))
-	{
-		throw Exception("IDirectInput8::CreateDevice() failed.", hr);
-	}
+	assert("IDirectInput8::CreateDevice() failed." && SUCCEEDED(hr));
 
 	hr = m_directInputDevice->SetDataFormat(&m_dataFormat);
-	if (FAILED(hr))
-	{
-		throw Exception("IDirectInputDevice::SetDataFormat() failed.", hr);
-	}
+	assert("IDirectInputDevice::SetDataFormat() failed." && SUCCEEDED(hr));
 
 	hr = m_directInputDevice->SetCooperativeLevel(GetApp().GetWindowHandle(), m_cooperativeLevel);
-	if (FAILED(hr))
-	{
-		throw Exception("IDirectInputDevice::SetCooperativeLevel() failed.", hr);
-	}
+	assert("IDirectInputDevice::SetCooperativeLevel() failed." && SUCCEEDED(hr));
 
 	// try to acquire the device
 	hr = m_directInputDevice->Acquire();
@@ -62,9 +52,7 @@ void InputComponent::GetState(const std::size_t bufferSize, void* buffer)
 		// try to reacquire the device
 		hr = m_directInputDevice->Acquire();
 		if (SUCCEEDED(hr))
-		{
 			m_directInputDevice->GetDeviceState(DWORD(bufferSize), buffer);
-		}
 	}
 }
 } // namespace library

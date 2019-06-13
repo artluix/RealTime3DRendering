@@ -2,7 +2,6 @@
 #include "library/RasterizerStates.h"
 
 #include "library/Utils.h"
-#include "library/Exception.h"
 
 #include <cassert>
 #include <d3d11_1.h>
@@ -18,10 +17,7 @@ void CreateRasterizerState(
 	ID3D11RasterizerState*& rasterizerState)
 {
 	auto hr = device->CreateRasterizerState(&rasterizerStateDesc, &rasterizerState);
-	if (FAILED(hr))
-	{
-		throw Exception("ID3D11Device::CreateRasterizerState() failed.", hr);
-	}
+	assert("ID3D11Device::CreateRasterizerState() failed." && SUCCEEDED(hr));
 }
 } // namespace
 

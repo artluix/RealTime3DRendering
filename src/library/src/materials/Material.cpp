@@ -9,8 +9,6 @@
 #include "library/Model/Model.h"
 #include "library/Model/Mesh.h"
 
-#include "library/Exception.h"
-
 namespace library
 {
 Material::Material(std::shared_ptr<Effect> effect, const std::string& defaultTechniqueName /* = "" */)

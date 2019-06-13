@@ -21,7 +21,7 @@
 
 #include "ColorFilterDemo.h"
 #include "GaussianBlurDemo.h"
-// #include "BloomDemo.h"
+#include "BloomDemo.h"
 // #include "DistortionMappingDemo.h"
 
 // #include "ProjectiveTextureMappingDemo.h"
@@ -52,11 +52,8 @@
 #include <library/Effect/EffectPass.h>
 #include <library/Effect/EffectTechnique.h>
 
-#include <library/Color.h>
-
 #include <library/Path.h>
 #include <library/Utils.h>
-#include <library/Exception.h>
 
 //-------------------------------------------------------------------------
 
@@ -67,7 +64,7 @@ using namespace library;
 
 namespace
 {
-const auto k_backgroundColor = Color::CornFlower;
+constexpr auto k_backgroundColor = colors::CornFlower;
 } // namespace
 
 DemoApplication::DemoApplication(
@@ -101,11 +98,9 @@ void DemoApplication::Initialize()
 		DIRECTINPUT_VERSION,
 		IID_IDirectInput8,
 		reinterpret_cast<LPVOID*>(&m_directInput),
-		nullptr);
-	if (FAILED(hr))
-	{
-		throw Exception("DirectInput8Create() failed", hr);
-	}
+		nullptr
+	);
+	assert("DirectInput8Create() failed" && SUCCEEDED(hr));
 
 	// create needed components
 	// don't initialize them before Application::Initialize
@@ -370,8 +365,7 @@ void DemoApplication::Draw(const Time& time)
 	}
 
 	HRESULT hr = m_swapChain->Present(0, 0);
-	if (FAILED(hr))
-		throw Exception("IDXGISwapChain::Present() failed.", hr);
+	assert("IDXGISwapChain::Present() failed." && SUCCEEDED(hr));
 }
 
 void DemoApplication::Shutdown()

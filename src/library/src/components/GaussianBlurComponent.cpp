@@ -9,7 +9,7 @@
 #include "library/Application.h"
 #include "library/Utils.h"
 #include "library/Path.h"
-#include "library/Color.h"
+#include "library/math/Color.h"
 #include "library/Application.h"
 
 #include "library/RenderTargets/FullScreenRenderTarget.h"
@@ -22,12 +22,13 @@ namespace
 constexpr float k_defaultBlurAmount = 1.f;
 constexpr float k_blurModulationRate = 1.0f;
 
-const auto k_backgroundColor = Color::Black;
+constexpr auto k_backgroundColor = colors::Black;
 } // namespace
 
 //-------------------------------------------------------------------------
 
-GaussianBlurComponent::GaussianBlurComponent() : m_blurAmount(k_defaultBlurAmount)
+GaussianBlurComponent::GaussianBlurComponent()
+	: m_blurAmount(k_defaultBlurAmount)
 {}
 
 GaussianBlurComponent::~GaussianBlurComponent() = default;
@@ -110,7 +111,6 @@ void GaussianBlurComponent::Draw(const Time& time)
 
 	auto deviceContext = GetApp().GetDeviceContext();
 
-	// clang-format off
 	// Horizontal Blur
 	m_horizontalBlurTarget->Begin();
 	deviceContext->ClearRenderTargetView(m_horizontalBlurTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
@@ -123,14 +123,12 @@ void GaussianBlurComponent::Draw(const Time& time)
 	// Vertical Blur for final image
 	m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&GaussianBlurComponent::UpdateVerticalOffsets, this, std::ref(*m_material)));
 	m_fullScreenQuad->Draw(time);
-	// clang-format on
 }
 
 void GaussianBlurComponent::DrawToTexture(const Time& time)
 {
 	auto deviceContext = GetApp().GetDeviceContext();
 
-	// clang-format off
 	// Horizontal Blur
 	m_horizontalBlurTarget->Begin();
 	deviceContext->ClearRenderTargetView(m_horizontalBlurTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
@@ -152,7 +150,6 @@ void GaussianBlurComponent::DrawToTexture(const Time& time)
 	GetApp().UnbindPixelShaderResources(0, 1);
 
 	m_outputTexture = m_verticalBlurTarget->GetOutputTexture();
-	// clang-format on
 }
 
 //-------------------------------------------------------------------------
@@ -168,18 +165,18 @@ void GaussianBlurComponent::SetBlurAmount(const float blurAmount)
 
 //-------------------------------------------------------------------------
 
-void GaussianBlurComponent::UpdateHorizontalOffsets(Material& material) const
+void GaussianBlurComponent::UpdateHorizontalOffsets(Material& material)
 {
 	material.GetSceneTexture() << GetSceneTexture();
 	material.GetSampleWeights() << m_sample.weights;
-	material.GetSampleOffsets() << math::ToArray<math::XMVector>(m_sample.offsets.horizontal);
+	material.GetSampleOffsets() << m_sample.offsets.horizontal;
 }
 
-void GaussianBlurComponent::UpdateVerticalOffsets(Material& material) const
+void GaussianBlurComponent::UpdateVerticalOffsets(Material& material)
 {
 	material.GetSceneTexture() << m_horizontalBlurTarget->GetOutputTexture();
 	material.GetSampleWeights() << m_sample.weights;
-	material.GetSampleOffsets() << math::ToArray<math::XMVector>(m_sample.offsets.vertical);
+	material.GetSampleOffsets() << m_sample.offsets.vertical;
 }
 
 //-------------------------------------------------------------------------

@@ -3,7 +3,6 @@
 
 #include "library/Path.h"
 #include "library/Utils.h"
-#include "library/Exception.h"
 
 #include "library/Components/Component.h"
 
@@ -159,10 +158,7 @@ ComPtr<ID3D11ShaderResourceView> Application::LoadTexture(const std::string& tex
 
 	std::vector<std::byte> textureData;
 	utils::LoadBinaryFile(texturePath, textureData);
-	if (textureData.empty())
-	{
-		throw Exception("Load texture failed.");
-	}
+	assert("Load texture failed." && !textureData.empty());
 
 	auto hr = DirectX::CreateDDSTextureFromMemory(
 		m_device.Get(),
@@ -170,11 +166,9 @@ ComPtr<ID3D11ShaderResourceView> Application::LoadTexture(const std::string& tex
 		reinterpret_cast<const std::uint8_t*>(textureData.data()),
 		textureData.size(),
 		nullptr,
-		&texture);
-	if (FAILED(hr))
-	{
-		throw Exception("CreateDDSTextureFromMemory() failed.", hr);
-	}
+		&texture
+	);
+	assert("CreateDDSTextureFromMemory() failed." && SUCCEEDED(hr));
 
 	return texture;
 }
@@ -278,33 +272,23 @@ void Application::InitializeDirectX()
 			D3D11_SDK_VERSION,
 			&device,
 			&m_featureLevel,
-			&deviceContext);
-		if (FAILED(hr))
-		{
-			throw Exception("D3D11CreateDevice() failed.", hr);
-		}
+			&deviceContext
+		);
+		assert("D3D11CreateDevice() failed." && SUCCEEDED(hr));
 
 		hr = device.As(m_device);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11Device As ID3D11Device1 failed.", hr);
-		}
+		assert("ID3D11Device As ID3D11Device1 failed." && SUCCEEDED(hr));
 
 		hr = deviceContext.As(m_deviceContext);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11DeviceContext As ID3D11DeviceContext1 failed.", hr);
-		}
+		assert("ID3D11DeviceContext As ID3D11DeviceContext1 failed." && SUCCEEDED(hr));
 	}
 
 	m_device->CheckMultisampleQualityLevels(
 		DXGI_FORMAT_R8G8B8A8_UNORM,
 		m_multiSamplingCount,
-		&m_multiSamplingQualityLevels);
-	if (!m_multiSamplingQualityLevels)
-	{
-		throw Exception("Unsupported multi-sampling quality.");
-	}
+		&m_multiSamplingQualityLevels
+	);
+	assert("Unsupported multi-sampling quality." && m_multiSamplingQualityLevels);
 
 	DXGI_SWAP_CHAIN_DESC1 swapChainDesc{};
 	swapChainDesc.Width = m_screenWidth;
@@ -330,24 +314,15 @@ void Application::InitializeDirectX()
 	{
 		ComPtr<IDXGIDevice> dxgiDevice;
 		hr = m_device.As(dxgiDevice);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11Device as IDXGIDevice failed.", hr);
-		}
+		assert("ID3D11Device as IDXGIDevice failed." && SUCCEEDED(hr));
 
 		ComPtr<IDXGIAdapter> dxgiAdapter;
 		hr = dxgiDevice->GetAdapter(&dxgiAdapter);
-		if (FAILED(hr))
-		{
-			throw Exception("IDXGIDevice::GetAdapter() failed retrieving adapter.", hr);
-		}
+		assert("IDXGIDevice::GetAdapter() failed retrieving adapter." && SUCCEEDED(hr));
 
 		ComPtr<IDXGIFactory2> dxgiFactory;
 		hr = dxgiAdapter->GetParent(__uuidof(IDXGIFactory2), reinterpret_cast<void**>(&dxgiFactory));
-		if (FAILED(hr))
-		{
-			throw Exception("IDXGIAdapter::GetParent() failed retrieving factory.", hr);
-		}
+		assert("IDXGIAdapter::GetParent() failed retrieving factory." && SUCCEEDED(hr));
 
 		DXGI_SWAP_CHAIN_FULLSCREEN_DESC fullScreenDesc{};
 		fullScreenDesc.RefreshRate.Numerator = m_frameRate;
@@ -360,29 +335,21 @@ void Application::InitializeDirectX()
 			&swapChainDesc,
 			&fullScreenDesc,
 			nullptr,
-			&m_swapChain);
-		if (FAILED(hr))
-		{
-			throw Exception("IDXGIDevice::CreateSwapChainForHwnd() failed.", hr);
-		}
+			&m_swapChain
+		);
+		assert("IDXGIDevice::CreateSwapChainForHwnd() failed." && SUCCEEDED(hr));
 	}
 
 	// create back buffer
 	{
 		ComPtr<ID3D11Texture2D> backBuffer;
 		hr = m_swapChain->GetBuffer(0, __uuidof(ID3D11Texture2D), reinterpret_cast<void**>(&backBuffer));
-		if (FAILED(hr))
-		{
-			throw Exception("IDXGISwapChain::GetBuffer() failed.", hr);
-		}
+		assert("IDXGISwapChain::GetBuffer() failed." && SUCCEEDED(hr));
 
 		backBuffer->GetDesc(&m_backBufferDesc);
 
 		hr = m_device->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_renderTargetView);
-		if (FAILED(hr))
-		{
-			throw Exception("IDXGI::CreateRenderTargetView() failed.", hr);
-		}
+		assert("IDXGI::CreateRenderTargetView() failed." && SUCCEEDED(hr));
 
 		if (m_depthStencilBufferEnabled)
 		{
@@ -407,16 +374,10 @@ void Application::InitializeDirectX()
 			}
 
 			hr = m_device->CreateTexture2D(&depthStencilDesc, nullptr, &m_depthStencilBuffer);
-			if (FAILED(hr))
-			{
-				throw Exception("IDXGIDevice::CreateTexture2D() failed.", hr);
-			}
+			assert("IDXGIDevice::CreateTexture2D() failed." && SUCCEEDED(hr));
 
 			hr = m_device->CreateDepthStencilView(m_depthStencilBuffer.Get(), nullptr, &m_depthStencilView);
-			if (FAILED(hr))
-			{
-				throw Exception("IDXGIDevice::CreateDepthStencilView() failed.", hr);
-			}
+			assert("IDXGIDevice::CreateDepthStencilView() failed." && SUCCEEDED(hr));
 		}
 
 		m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView.Get());
