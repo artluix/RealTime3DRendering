@@ -200,7 +200,6 @@ void NormalMappingDemo::UpdateSpecularLight(const Time& time)
 			specularLightIntensity = math::Min(specularLightIntensity, k_byteMax);
 
 			m_specularPower = specularLightIntensity;
-			;
 		}
 
 		if (m_keyboard->IsKeyDown(Key::Delete) && specularLightIntensity > 0)

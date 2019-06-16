@@ -22,9 +22,9 @@
 #include "ColorFilterDemo.h"
 #include "GaussianBlurDemo.h"
 #include "BloomDemo.h"
-// #include "DistortionMappingDemo.h"
+#include "DistortionMappingDemo.h"
 
-// #include "ProjectiveTextureMappingDemo.h"
+#include "ProjectiveTextureMappingDemo.h"
 // #include "ProjectiveTextureMappingDepthMapDemo.h"
 // #include "ShadowMappingDemo.h"
 // #include "DirectionalShadowMappingDemo.h"
@@ -239,9 +239,9 @@ void DemoApplication::Initialize()
 	postProcessingText->SetPosition(math::Vector2(0.f, 45.f));
 
 	// projection
-	// auto projectiveTextureMapping = std::make_shared<ProjectiveTextureMappingDemo>();
-	// projectiveTextureMapping->SetCamera(*camera);
-	// projectiveTextureMapping->SetKeyboard(*m_keyboard);
+	auto projectiveTextureMapping = std::make_shared<ProjectiveTextureMappingDemo>();
+	projectiveTextureMapping->SetCamera(*camera);
+	projectiveTextureMapping->SetKeyboard(*m_keyboard);
 
 	// auto projectiveTextureDepthMapMapping = std::make_shared<ProjectiveTextureMappingDepthMapDemo>();
 	// projectiveTextureDepthMapMapping->SetCamera(*camera);
@@ -276,17 +276,18 @@ void DemoApplication::Initialize()
 	// m_components.push_back(cube);
 	// m_components.push_back(model);
 	// m_components.push_back(textureModel);
-	m_components.push_back(skybox);
+	// m_components.push_back(skybox);
 	// m_components.push_back(basic);
 	// m_components.push_back(textureMapping);
 	// m_components.push_back(diffuseLighting);
-	m_components.push_back(pointLight);
+	// m_components.push_back(pointLight);
 	// m_components.push_back(spotlight);
 	// m_components.push_back(normalMapping);
 	// m_components.push_back(environmentMapping);
-	// 	m_components.push_back(transparencyMapping);
+	// m_components.push_back(transparencyMapping);
 	// m_components.push_back(displacementMapping);
 	// m_components.push_back(fog);
+	m_components.push_back(projectiveTextureMapping);
 	// m_components.push_back(shadowMapping);
 	// m_components.push_back(directionalShadowMapping);
 	m_components.push_back(postProcessingText);

@@ -4,7 +4,7 @@
 #include "library/Components/CameraComponent.h"
 
 #include "library/Application.h"
-#include "library/Frustum.h"
+#include "library/Math/Frustum.h"
 
 #include "library/Effect/EffectVariable.h"
 
@@ -51,46 +51,34 @@ void RenderableFrustumComponent::Draw_SetData(const PrimitiveData& primitiveData
 
 	GetMaterial()->GetWorldViewProjection() << wvp;
 
-	PrimitiveComponent::Draw_SetData(primitiveData);
+	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }
 
-void RenderableFrustumComponent::InitializeGeometry(const Frustum& frustum)
+void RenderableFrustumComponent::InitializeGeometry(const math::Frustum& frustum)
 {
 	InitializeVertexBuffer(frustum);
 }
 
 //-------------------------------------------------------------------------
 
-void RenderableFrustumComponent::InitializeVertexBuffer(const Frustum& frustum)
+void RenderableFrustumComponent::InitializeVertexBuffer(const math::Frustum& frustum)
 {
 	using Vertex = Material::Vertex;
 
 	auto& pd = m_primitivesData.front();
 
-	pd.vertexBuffer.buffer.Reset();
+	pd.stride = sizeof(Vertex);
 
 	std::vector<Vertex> vertices;
 	vertices.reserve(k_verticesCount);
 
-	for (const auto& corner : frustum.GetCorners())
+	const auto& corners = frustum.GetCorners();
+	for (const auto& corner : corners)
 	{
 		vertices.emplace_back(math::Vector4(corner, 1.f), m_color);
 	}
 
-	D3D11_BUFFER_DESC vertexBufferDesc{};
-	vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-	vertexBufferDesc.ByteWidth = sizeof(Vertex) * k_verticesCount;
-	vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-	D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
-	vertexSubResourceData.pSysMem = vertices.data();
-
-	auto hr = GetApp().GetDevice()->CreateBuffer(
-		&vertexBufferDesc,
-		&vertexSubResourceData,
-		&pd.vertexBuffer.buffer
-	);
-	assert("ID3D11Device::CreateBuffer() failed." && SUCCEEDED(hr));
+	pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
 }
 
 void RenderableFrustumComponent::InitializeIndexBuffer()
@@ -120,22 +108,6 @@ void RenderableFrustumComponent::InitializeIndexBuffer()
 		7, 4
 	};
 
-	pd.indexBuffer = std::make_optional<IndexBufferData>();
-	pd.indexBuffer->elementsCount = k_indicesCount;
-
-	D3D11_BUFFER_DESC indexBufferDesc{};
-	indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-	indexBufferDesc.ByteWidth = sizeof(unsigned) * k_indicesCount;
-	indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-
-	D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
-	vertexSubResourceData.pSysMem = k_indices.data();
-
-	auto hr = GetApp().GetDevice()->CreateBuffer(
-		&indexBufferDesc,
-		&vertexSubResourceData,
-		&pd.indexBuffer->buffer
-	);
-	assert("ID3D11Device::CreateBuffer() failed." && SUCCEEDED(hr));
+	pd.indexBuffer = IndexBufferData(GetApp().GetDevice(), k_indices);
 }
 } // namespace library

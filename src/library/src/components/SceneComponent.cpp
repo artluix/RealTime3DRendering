@@ -10,8 +10,6 @@ namespace library
 {
 SceneComponent::SceneComponent()
 	: m_transform{}
-	, m_worldMatrix(math::Matrix4::Identity)
-	, m_initialTransformMatrix(math::Matrix4::Identity)
 	, m_direction(math::Direction::Forward)
 	, m_up(math::Direction::Up)
 	, m_right(math::Direction::Right)

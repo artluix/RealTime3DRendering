@@ -24,7 +24,23 @@ ProjectorComponent::ProjectorComponent(const ProjectionType projectionType /*= P
 	: m_projectionType(projectionType)
 	, m_nearPlaneDistance(k_defaultNearPlaneDistance)
 	, m_farPlaneDistance(k_defaultFarPlaneDistance)
-{}
+{
+	switch (projectionType)
+	{
+		case ProjectionType::Perspective:
+			m_fieldOfView = k_defaultFieldOfView;
+			m_aspectRatio = k_defaultAspectRatio;
+			break;
+
+		case ProjectionType::Orthographic:
+			m_width = k_defaultWidth;
+			m_height = k_defaultHeight;
+			break;
+
+		default:
+			break;
+	}
+}
 
 ProjectorComponent::ProjectorComponent(
 	const float nearPlaneDistance,

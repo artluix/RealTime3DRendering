@@ -4,7 +4,7 @@
 #include <library/Components/KeyboardComponent.h>
 
 #include <library/Components/TextComponent.h>
-#include <library/Components/PerspectiveProjectorComponent.h>
+#include <library/Components/ProjectorComponent.h>
 #include <library/Components/ProxyModelComponent.h>
 #include <library/Components/RenderableFrustumComponent.h>
 #include <library/Components/PointLightComponent.h>
@@ -20,10 +20,10 @@ using namespace library;
 
 namespace
 {
-	constexpr float k_byteMax = static_cast<float>(0xFF);
-	constexpr float k_lightModulationRate = 10.f;
-	constexpr float k_lightMovementRate = 10.f;
-	constexpr auto k_lightRotationRate = math::Vector2(math::Pi_2);
+constexpr float k_byteMax = static_cast<float>(0xFF);
+constexpr float k_lightModulationRate = 10.f;
+constexpr float k_lightMovementRate = 10.f;
+constexpr auto k_lightRotationRate = math::Vector2(math::Pi_2);
 }
 
 //-------------------------------------------------------------------------
@@ -36,49 +36,47 @@ ProjectiveTextureMappingDemo::ProjectiveTextureMappingDemo()
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
 	, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 {
-	SetTextureName("Checkerboard");
 }
 
 ProjectiveTextureMappingDemo::~ProjectiveTextureMappingDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void ProjectiveTextureMappingDemo::Initialize()
+void ProjectiveTextureMappingDemo::InitializeInternal()
 {
 	const auto camera = GetCamera();
+	assert(!!camera);
 
-	assert(camera);
+	InitializeMaterial("ProjectiveTextureMapping");
 
 	// build plane vertices manually
 	{
 		using Vertex = Material::Vertex;
+		using namespace library::math;
 
-		const auto backward = DirectX::XMFLOAT3(math::Vector3::Backward);
-
-		const std::array<Vertex, 6> vertices =
+		constexpr std::array<Vertex, 6> vertices =
 		{
-			Vertex(DirectX::XMFLOAT4(-0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), backward),
-			Vertex(DirectX::XMFLOAT4(-0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f), backward),
-			Vertex(DirectX::XMFLOAT4(0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f), backward),
+			Vertex(Vector4(-0.5f, -0.5f, 0.0f, 1.0f), Vector2(0.0f, 1.0f), Direction::Backward),
+			Vertex(Vector4(-0.5f, 0.5f, 0.0f, 1.0f), Vector2(0.0f, 0.0f), Direction::Backward),
+			Vertex(Vector4(0.5f, 0.5f, 0.0f, 1.0f), Vector2(1.0f, 0.0f), Direction::Backward),
 
-			Vertex(DirectX::XMFLOAT4(-0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), backward),
-			Vertex(DirectX::XMFLOAT4(0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f), backward),
-			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward),
+			Vertex(Vector4(-0.5f, -0.5f, 0.0f, 1.0f), Vector2(0.0f, 1.0f), Direction::Backward),
+			Vertex(Vector4(0.5f, 0.5f, 0.0f, 1.0f), Vector2(1.0f, 0.0f), Direction::Backward),
+			Vertex(Vector4(0.5f, -0.5f, 0.0f, 1.0f), Vector2(1.0f, 1.0f), Direction::Backward),
 		};
 
-		m_primitivesData = { PrimitiveData() };
-		auto& md = m_primitivesData.front();
+		m_primitivesData.clear();
+		auto& pd = m_primitivesData.emplace_back(PrimitiveData{});
 
-		md.vertexBuffer.elementsCount = vertices.size();
-		md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
-			app.GetDevice(),
-			vertices
-		);
+		pd.stride = sizeof(Vertex);
+
+		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
 	}
 
-	InitializeMaterial("ProjectiveTextureMapping");
 	
-	m_projectedTexture = app.LoadTexture("ProjectedTexture");
+	m_textures.resize(Texture::Count);
+	m_textures[Texture::Default] = GetApp().LoadTexture("Checkerboard");
+	m_textures[Texture::Projected] = GetApp().LoadTexture("ProjectedTexture");
 
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetRadius(500.f);
@@ -87,7 +85,7 @@ void ProjectiveTextureMappingDemo::Initialize()
 	m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.5f);
 	m_proxyModel->SetCamera(*camera);
 	m_proxyModel->SetPosition(m_pointLight->GetPosition());
-	m_proxyModel->Initialize();
+	m_proxyModel->Initialize(GetApp());
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -105,37 +103,31 @@ void ProjectiveTextureMappingDemo::Initialize()
 			return woss.str();
 		}
 	);
-	m_text->Initialize();
+	m_text->Initialize(GetApp());
 
 	// specific
 	SetScaling(math::Vector3(10.f));
 
-	m_projector = std::make_unique<PerspectiveProjectorComponent>();
+	m_projector = std::make_unique<ProjectorComponent>();
 	m_projector->SetPosition(m_pointLight->GetPosition());
-	m_projector->Initialize();
+	m_projector->Initialize(GetApp());
 
 	m_projectorFrustum.SetProjectionMatrix(m_projector->GetProjectionMatrix());
 
 	m_renderableProjectorFrustum = std::make_unique<RenderableFrustumComponent>();
 	m_renderableProjectorFrustum->SetCamera(*camera);
 	m_renderableProjectorFrustum->SetPosition(m_pointLight->GetPosition());
-	m_renderableProjectorFrustum->Initialize();
+	m_renderableProjectorFrustum->Initialize(GetApp());
 	m_renderableProjectorFrustum->InitializeGeometry(m_projectorFrustum);
 
 	// texture scaling matrix
 	{
 		ComPtr<ID3D11Resource> projectedTextureResource;
-		m_projectedTexture->GetResource(&projectedTextureResource);
+		m_textures[Texture::Projected]->GetResource(&projectedTextureResource);
 
 		ComPtr<ID3D11Texture2D> projectedTexture;
-		auto hr = projectedTextureResource->QueryInterface(
-			IID_ID3D11Texture2D,
-			reinterpret_cast<void**>(&projectedTexture)
-		);
-		if (FAILED(hr))
-		{
-			throw Exception("ID3D11Resource::QueryInterface (ID3D11Texture2D) failed.", hr);
-		}
+		auto hr = projectedTextureResource.As(projectedTexture);
+		assert("ID3D11Resource::QueryInterface (ID3D11Texture2D) failed." && SUCCEEDED(hr));
 
 		D3D11_TEXTURE2D_DESC projectedTextureDesc;
 		projectedTexture->GetDesc(&projectedTextureDesc);
@@ -146,14 +138,14 @@ void ProjectiveTextureMappingDemo::Initialize()
 
 void ProjectiveTextureMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
-	const auto world = GetWorldMatrix();
+	const auto& world = GetWorldMatrix();
 
 	auto wvp = world;
-	if (!!m_camera)
+	if (auto camera = GetCamera())
 	{
-		wvp *= m_camera->GetViewProjectionMatrix();
+		wvp *= camera->GetViewProjectionMatrix();
 
-		m_material->GetCameraPosition() << m_camera->GetPosition();
+		m_material->GetCameraPosition() << camera->GetPosition();
 	}
 
 	const auto projectiveTextureMatrix =
@@ -163,18 +155,18 @@ void ProjectiveTextureMappingDemo::Draw_SetData(const PrimitiveData& primitiveDa
 	m_material->GetWorld() << world;
 
 	m_material->GetSpecularPower() << m_specularPower;
-	m_material->GetSpecularColor() << m_specularColor;
-	m_material->GetAmbientColor() << m_ambientColor;
-	m_material->GetLightColor() << m_pointLight->GetColor();
+	m_material->GetSpecularColor() << m_specularColor.ToVector4();
+	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
+	m_material->GetLightColor() << m_pointLight->GetColor().ToVector4();
 	m_material->GetLightPosition() << m_pointLight->GetPosition();
 	m_material->GetLightRadius() << m_pointLight->GetRadius();
 	
-	m_material->GetColorTexture() << primitiveData.texture.Get();
-	m_material->GetProjectedTexture() << m_projectedTexture.Get();
+	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
+	m_material->GetProjectedTexture() << m_textures[Texture::Projected].Get();
 
 	m_material->GetProjectiveTextureMatrix() << projectiveTextureMatrix;
 
-	SceneComponent::Draw_SetData(primitiveData);
+	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }
 
 //-------------------------------------------------------------------------
@@ -190,7 +182,7 @@ void ProjectiveTextureMappingDemo::Update(const Time& time)
 	m_projector->Update(time);
 	m_renderableProjectorFrustum->Update(time);
 
-	SceneComponent::Update(time);
+	PrimitiveComponent::Update(time);
 }
 
 void ProjectiveTextureMappingDemo::UpdateAmbientLight(const Time& time)
@@ -242,22 +234,22 @@ void ProjectiveTextureMappingDemo::UpdatePointLightAndProjector(const Time& time
 
 		// move
 		{
-			math::Vector3 movementAmount;
+			math::Vector3i movementAmount;
 
 			if (m_keyboard->IsKeyDown(Key::Num_4))
-				movementAmount.x = -1.0f;
+				movementAmount.x--;
 			if (m_keyboard->IsKeyDown(Key::Num_6))
-				movementAmount.x = 1.0f;
+				movementAmount.x++;
 
 			if (m_keyboard->IsKeyDown(Key::Num_9))
-				movementAmount.y = 1.0f;
+				movementAmount.y++;
 			if (m_keyboard->IsKeyDown(Key::Num_3))
-				movementAmount.y = -1.0f;
+				movementAmount.y--;
 
 			if (m_keyboard->IsKeyDown(Key::Num_8))
-				movementAmount.z = -1.0f;
+				movementAmount.z--;
 			if (m_keyboard->IsKeyDown(Key::Num_2))
-				movementAmount.z = 1.0f;
+				movementAmount.z++;
 
 			if (movementAmount)
 			{
@@ -288,12 +280,13 @@ void ProjectiveTextureMappingDemo::UpdatePointLightAndProjector(const Time& time
 
 			if (rotationAmount)
 			{
-				const auto pitchMatrix = math::Matrix4::RotationAxis(GetRight(), rotationAmount.y);
-				const auto yawMatrix = math::Matrix4::RotationY(rotationAmount.x);
+				const auto rotationQuat = math::Quaternion::RotationPitchYawRoll(
+					math::Vector3(rotationAmount.y, rotationAmount.x, 0.f)
+				);
 
-				m_proxyModel->Rotate(math::Vector3(rotationAmount.y, rotationAmount.x, 0.f));
-				m_renderableProjectorFrustum->Rotate(math::Vector3(rotationAmount.y, rotationAmount.x, 0.f));
-				m_projector->ApplyRotation(pitchMatrix * yawMatrix);
+				m_proxyModel->Rotate(rotationQuat);
+				m_renderableProjectorFrustum->Rotate(rotationQuat);
+				m_projector->Rotate(rotationQuat);
 			}
 		}
 	}
@@ -312,7 +305,7 @@ void ProjectiveTextureMappingDemo::UpdateSpecularLight(const Time& time)
 			specularLightIntensity += k_lightModulationRate * elapsedTime;
 			specularLightIntensity = math::Min(specularLightIntensity, k_byteMax);
 
-			m_specularPower = specularLightIntensity;;
+			m_specularPower = specularLightIntensity;
 		}
 
 		if (m_keyboard->IsKeyDown(Key::Delete) && specularLightIntensity > 0)

@@ -49,8 +49,8 @@ if(APPLICATION)
             src/DisplacementMappingDemo.h
             src/DisplacementMappingDemo.cpp
 
-            # src/DistortionMappingDemo.h
-            # src/DistortionMappingDemo.cpp
+            src/DistortionMappingDemo.h
+            src/DistortionMappingDemo.cpp
 
             src/EnvironmentMappingDemo.h
             src/EnvironmentMappingDemo.cpp
@@ -70,8 +70,8 @@ if(APPLICATION)
             src/PointLightDemo.h
             src/PointLightDemo.cpp
 
-            # src/ProjectiveTextureMappingDemo.h
-            # src/ProjectiveTextureMappingDemo.cpp
+            src/ProjectiveTextureMappingDemo.h
+            src/ProjectiveTextureMappingDemo.cpp
 
             # src/ProjectiveTextureMappingDepthMapDemo.h
             # src/ProjectiveTextureMappingDepthMapDemo.cpp

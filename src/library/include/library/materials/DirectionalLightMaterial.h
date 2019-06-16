@@ -9,7 +9,9 @@ class DirectionalLightMaterial : public LightMaterial
 
 public:
 	explicit DirectionalLightMaterial(
-		std::shared_ptr<Effect> effect, const std::string& defaultTechniqueName = "main11");
+		std::shared_ptr<Effect> effect,
+		const std::string& defaultTechniqueName = "main11"
+	);
 	~DirectionalLightMaterial();
 
 	EffectVariable& GetLightDirection() { return m_lightDirection; }

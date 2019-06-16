@@ -38,8 +38,11 @@ void EnvironmentMappingDemo::InitializeInternal()
 {
 	InitializeMaterial("EnvironmentMapping");
 
-	Model model(GetApp(), "Sphere", true);
-	m_primitivesData = GetMaterial()->CreatePrimitivesData(GetApp().GetDevice(), model);
+	// load model
+	{
+		Model model(GetApp(), "Sphere", true);
+		m_primitivesData = GetMaterial()->CreatePrimitivesData(GetApp().GetDevice(), model);
+	}
 
 	m_textures.resize(Texture::Count);
 	m_textures[Texture::Default] = GetApp().LoadTexture("Checkerboard");

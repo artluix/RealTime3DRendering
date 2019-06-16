@@ -14,7 +14,7 @@ class BloomDemo
 	RTTI_CLASS(BloomDemo, library::InputReceivableComponent)
 
 public:
-	explicit BloomDemo();
+	BloomDemo();
 	~BloomDemo();
 
 	void Update(const library::Time& time) override;

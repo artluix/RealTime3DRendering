@@ -20,15 +20,6 @@ const VectorType<T, 2> VectorType<T, 2>::One{ 1 };
 // -----------------------------------------------------------------------------
 
 template<typename T>
-template<typename U>
-constexpr VectorType<T, 2>::VectorType(const VectorType2<U>& other)
-	: VectorType(
-		static_cast<T>(other.x),
-		static_cast<T>(other.y)
-	)
-{}
-
-template<typename T>
 VectorType<T, 2>::VectorType(const dx::VECTOR& dxVEC)
 {
 	dx::StaticVector2<T>::Store(dxVEC, _dxVec);
@@ -63,27 +54,6 @@ VectorType2<float> VectorType<T, 2>::Normalize() const
 }
 
 template<typename T>
-template<typename U, typename>
-float VectorType<T, 2>::Length() const
-{
-	return dx::VectorLength<2>(dx::VECTOR(*this));
-}
-
-template<typename T>
-template<typename U, typename C>
-C VectorType<T, 2>::Dot(const VectorType2<U>& other) const
-{
-	return static_cast<C>(dx::VectorDot<2>(dx::VECTOR(*this), dx::VECTOR(other)));
-}
-
-template<typename T>
-template<typename U, typename C>
-VectorType2<C> VectorType<T, 2>::Cross(const VectorType2<U>& other) const
-{
-	return VectorType2<C>(dx::VectorCross<2>(dx::VECTOR(*this), dx::VECTOR(other)));
-}
-
-template<typename T>
 VectorType2<float> VectorType<T, 2>::Transform(const Matrix4& mat) const
 {
 	return VectorType2<float>(dx::VectorTransform<2>(dx::VECTOR(*this), dx::MATRIX(mat)));
@@ -113,16 +83,6 @@ const VectorType<T, 3> VectorType<T, 3>::One{ 1 };
 template<typename T>
 constexpr VectorType<T, 3>::VectorType(const VectorType<T, 2>& xy, const T z /* = T(0) */)
 	: VectorType(xy.x, xy.y, z)
-{}
-
-template<typename T>
-template<typename U>
-constexpr VectorType<T, 3>::VectorType(const VectorType3<U>& other)
-	: VectorType(
-		static_cast<T>(other.x),
-		static_cast<T>(other.y),
-		static_cast<T>(other.z)
-	)
 {}
 
 template<typename T>
@@ -160,27 +120,6 @@ VectorType3<float> VectorType<T, 3>::Normalize() const
 }
 
 template<typename T>
-template<typename U, typename>
-float VectorType<T, 3>::Length() const
-{
-	return dx::VectorLength<3>(dx::VECTOR(*this));
-}
-
-template<typename T>
-template<typename U, typename C>
-C VectorType<T, 3>::Dot(const VectorType3<U>& other) const
-{
-	return static_cast<C>(dx::VectorDot<2>(dx::VECTOR(*this), dx::VECTOR(other)));
-}
-
-template<typename T>
-template<typename U, typename C>
-VectorType3<C> VectorType<T, 3>::Cross(const VectorType3<U>& other) const
-{
-	return VectorType3<C>(dx::VectorCross<3>(dx::VECTOR(*this), dx::VECTOR(other)));
-}
-
-template<typename T>
 VectorType3<float> VectorType<T, 3>::Transform(const Matrix4& mat) const
 {
 	return VectorType3<float>(dx::VectorTransform<3>(dx::VECTOR(*this), dx::MATRIX(mat)));
@@ -210,17 +149,6 @@ const VectorType<T, 4> VectorType<T, 4>::One{ 1 };
 template<typename T>
 constexpr VectorType<T, 4>::VectorType(const VectorType<T, 3>& xyz, const T w /* = T(0) */)
 	: VectorType(xyz.x, xyz.y, xyz.z, w)
-{}
-
-template<typename T>
-template<typename U>
-constexpr VectorType<T, 4>::VectorType(const VectorType4<U>& other)
-	: VectorType(
-		static_cast<T>(other.x),
-		static_cast<T>(other.y),
-		static_cast<T>(other.z),
-		static_cast<T>(other.w)
-	)
 {}
 
 template<typename T>
@@ -255,20 +183,6 @@ template<typename T>
 VectorType4<float> VectorType<T, 4>::Normalize() const
 {
 	return VectorType4<float>(dx::VectorNormalize<4>(dx::VECTOR(*this)));
-}
-
-template<typename T>
-template<typename U, typename>
-float VectorType<T, 4>::Length() const
-{
-	return dx::VectorLength<4>(dx::VECTOR(*this));
-}
-
-template<typename T>
-template<typename U, typename C>
-C VectorType<T, 4>::Dot(const VectorType4<U>& other) const
-{
-	return static_cast<C>(dx::VectorDot<2>(dx::VECTOR(*this), dx::VECTOR(other)));
 }
 
 template<typename T>

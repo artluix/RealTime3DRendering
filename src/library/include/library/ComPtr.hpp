@@ -47,7 +47,7 @@ public:
 	//-------------------------------------------------------------------------
 
 	template <typename U>
-	HRESULT As(ComPtr<U>& other) const noexcept(false)
+	HRESULT As(ComPtr<U>& other) const
 	{
 		return m_ptr->QueryInterface(__uuidof(U), reinterpret_cast<void**>(&other));
 	}

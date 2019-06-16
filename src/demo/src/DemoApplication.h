@@ -19,11 +19,12 @@ class PostProcessingComponent;
 class DemoApplication : public library::Application
 {
 public:
-	explicit DemoApplication(
+	DemoApplication(
 		const HINSTANCE instanceHandle,
 		const std::wstring& windowClass,
 		const std::wstring& windowTitle,
-		const int showCmd);
+		const int showCmd
+	);
 	~DemoApplication();
 
 	void Initialize() override;

@@ -28,9 +28,9 @@ using namespace library;
 
 namespace
 {
-	const auto k_backgroundColor = Color::Black;
-	constexpr auto k_emptyColor = Color();
-}
+constexpr auto k_backgroundColor = colors::Black;
+constexpr auto k_emptyColor = math::Color();
+} // namespace
 
 DistortionMappingDemo::DistortionMappingDemo()
 	: m_displacementScale(1.f)
@@ -42,15 +42,20 @@ DistortionMappingDemo::~DistortionMappingDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void DistortionMappingDemo::Initialize()
+void DistortionMappingDemo::InitializeInternal()
 {
-	PostProcessingComponent::Initialize();
-
 	InitializeMaterial("DistortionMapping");
-	InitializeQuad(app, "distortion");
+	InitializeQuad("distortion");
 
-	m_distortionMapTexture = app.LoadTexture("DistortionGlass");
-	//m_distortionMapTexture = app.LoadTexture("TextDistortionMap");
+	// Load model
+	{
+		Model model(GetApp(), "Sphere", true);
+		m_primitiveData = GetMaterial()->CreatePrimitiveData(GetApp().GetDevice(), model.GetMesh(0));
+	}
+
+	m_textures.resize(Texture::Count);
+	m_textures[Texture::DistortionMap] = GetApp().LoadTexture("DistortionGlass");
+	//m_textures[Texture::DistortionMap] = GetApp().LoadTexture("TextDistortionMap");
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetTextUpdateFunction(
@@ -64,23 +69,10 @@ void DistortionMappingDemo::Initialize()
 		}
 	);
 	m_text->SetPosition(math::Vector2(0.f, 200.f));
-	m_text->Initialize();
+	m_text->Initialize(GetApp());
 
-	// Load model
-	Model model(app, "Sphere", true);
-	const auto& mesh = model.GetMesh(0);
-	m_vertexBuffer.buffer = m_material->CreateVertexBuffer(app.GetDevice(), mesh);
-	m_vertexBuffer.elementsCount = mesh.GetVerticesCount();
-
-	if (mesh.HasIndices())
-	{
-		m_indices = std::make_optional(
-			BufferData{ mesh.CreateIndexBuffer(), mesh.GetIndicesCount() }
-		);
-	}
-
-	m_cutoutPass = &m_effect->GetTechnique("distortion_cutout").GetPass("p0");
-	m_cutoutRenderTarget = std::make_unique<FullScreenRenderTarget>(app);
+	m_cutoutPass = &GetMaterial()->GetEffect().GetTechnique("distortion_cutout").GetPass("p0");
+	m_cutoutRenderTarget = std::make_unique<FullScreenRenderTarget>(GetApp());
 }
 
 void DistortionMappingDemo::Update(const Time& time)
@@ -154,6 +146,9 @@ void DistortionMappingDemo::DrawMeshForDistortionCutout()
 {
 	auto deviceContext = GetApp().GetDeviceContext();
 
+	const auto& vertexBuffer = m_primitiveData.vertexBuffer;
+	const auto& indexBuffer = m_primitiveData.indexBuffer;
+
 	// Set IA
 	{
 		auto inputLayout = m_material->GetInputLayout(*m_cutoutPass);
@@ -161,11 +156,11 @@ void DistortionMappingDemo::DrawMeshForDistortionCutout()
 
 		const auto stride = m_material->GetVertexSize();
 		unsigned offset = 0;
-		deviceContext->IASetVertexBuffers(0, 1, &m_vertexBuffer.buffer, &stride, &offset);
+		deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer.buffer, &stride, &offset);
 
-		if (m_indices)
+		if (indexBuffer)
 		{
-			deviceContext->IASetIndexBuffer(m_indices->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+			deviceContext->IASetIndexBuffer(indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 		}
 	}
 
@@ -179,16 +174,16 @@ void DistortionMappingDemo::DrawMeshForDistortionCutout()
 		}
 
 		m_material->GetWVP() << wvp;
-		m_material->GetDistortionMapTexture() << m_distortionMapTexture.Get();
+		m_material->GetDistortionMapTexture() << m_textures[Texture::DistortionMap].Get();
 
 		m_cutoutPass->Apply(0, deviceContext);
 	}
 
 	// Render
-	if (m_indices)
-		deviceContext->DrawIndexed(m_indices->elementsCount, 0, 0);
+	if (indexBuffer)
+		deviceContext->DrawIndexed(indexBuffer->elementsCount, 0, 0);
 	else
-		deviceContext->Draw(m_vertexBuffer.elementsCount, 0);
+		deviceContext->Draw(vertexBuffer.elementsCount, 0);
 }
 
 //-------------------------------------------------------------------------
@@ -216,7 +211,7 @@ void DistortionMappingDemo::UpdateDisplacementScale(const Time& time)
 void DistortionMappingDemo::UpdateDistortion()
 {
 	if (m_mode == Mode::Fullscreen)
-		m_material->GetDistortionMapTexture() << m_distortionMapTexture.Get();
+		m_material->GetDistortionMapTexture() << m_textures[Texture::DistortionMap].Get();
 	else if (m_mode == Mode::Masking)
 		m_material->GetDistortionMapTexture() << m_cutoutRenderTarget->GetOutputTexture();
 

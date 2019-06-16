@@ -82,6 +82,7 @@ if(APPLICATION)
                 include/library/Math/Color.h
                 include/library/Math/Direction.h
                 include/library/Math/DxMath.h
+                include/library/Math/Frustum.h
                 include/library/Math/Matrix.h
                 include/library/Math/Matrix-inl.h
                 include/library/Math/Plane.h
@@ -117,7 +118,6 @@ if(APPLICATION)
             include/library/Common.h
             include/library/ComPtr.hpp
             include/library/DirectXForwardDeclarations.h
-            include/library/Frustum.h
             include/library/Key.h
             include/library/Logger.h
             include/library/NonCopyable.hpp
@@ -201,6 +201,7 @@ if(APPLICATION)
 
             # Math
                 src/Math/Color.cpp
+                src/Math/Frustum.cpp
                 src/Math/Matrix.cpp
                 src/Math/Plane.cpp
                 src/Math/Quaternion.cpp
@@ -225,7 +226,6 @@ if(APPLICATION)
 
             src/Application.cpp
             src/BlendStates.cpp
-            src/Frustum.cpp
             src/Logger.cpp
             src/Path.cpp
             src/RasterizerStates.cpp

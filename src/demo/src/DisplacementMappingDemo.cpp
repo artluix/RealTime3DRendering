@@ -48,8 +48,11 @@ void DisplacementMappingDemo::InitializeInternal()
 
 	InitializeMaterial("DisplacementMapping");
 
-	Model model(GetApp(), "Plane", true);
-	m_primitivesData = GetMaterial()->CreatePrimitivesData(GetApp().GetDevice(), model);
+	// load model
+	{
+		Model model(GetApp(), "Plane", true);
+		m_primitivesData = GetMaterial()->CreatePrimitivesData(GetApp().GetDevice(), model);
+	}
 
 	m_textures.resize(Texture::Count);
 	m_textures[Texture::Default] = GetApp().LoadTexture("Blocks_COLOR_RGB");
