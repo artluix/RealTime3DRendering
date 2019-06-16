@@ -41,6 +41,7 @@ public:
 
 	const EffectTechnique& GetCurrentTechnique() const { return m_currentTechnique; }
 	EffectTechnique& GetCurrentTechnique() { return m_currentTechnique; }
+	void SetCurrentTechnique(const std::string& techniqueName);
 	void SetCurrentTechnique(EffectTechnique& technique);
 
 	ID3D11InputLayout* GetInputLayout(const EffectPass& pass) const;

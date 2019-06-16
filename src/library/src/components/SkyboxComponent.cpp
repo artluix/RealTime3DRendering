@@ -23,7 +23,7 @@ void SkyboxComponent::InitializeInternal()
 	InitializeMaterial("Skybox");
 
 	Model model(GetApp(), "Sphere", true);
-	m_primitivesData = GetMaterial()->CreatePrimitivesData(GetApp().GetDevice(), model);
+	m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);
 
 	m_textures.resize(Texture::Count);
 	m_textures[Texture::Skybox] = GetApp().LoadTexture(m_cubeMapName);

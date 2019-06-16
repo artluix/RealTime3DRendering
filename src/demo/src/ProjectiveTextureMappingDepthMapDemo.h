@@ -4,8 +4,6 @@
 #include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
 
-#include <library/Frustum.h>
-#include <library/math/Color.h>
 #include <library/Math/Math.h>
 
 #include <memory>
@@ -14,7 +12,7 @@
 namespace library
 {
 	class PointLightComponent;
-	class PerspectiveProjectorComponent;
+	class ProjectorComponent;
 	class ProxyModelComponent;
 	class RenderableFrustumComponent;
 	class UIComponent;
@@ -28,20 +26,47 @@ class ProjectiveTextureMappingDepthMapDemo
 	: public library::ConcreteMaterialPrimitiveComponent<library::ProjectiveTextureMappingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(ProjectiveTextureMappingDepthMapDemo, library::SceneComponent, library::InputReceivableComponent)
+	RTTI_CLASS(ProjectiveTextureMappingDepthMapDemo, library::PrimitiveComponent, library::InputReceivableComponent)
 
 public:
-	explicit ProjectiveTextureMappingDepthMapDemo();
+	ProjectiveTextureMappingDepthMapDemo();
 	~ProjectiveTextureMappingDepthMapDemo();
 
-	void Initialize() override;
 	void Update(const library::Time& time) override;
 	void Draw(const library::Time& time) override;
 
 protected:
-	void Draw_SetData(const library::PrimitiveData& primitiveData) override;
+	void InitializeInternal() override;
 
 private:
+	struct Texture
+	{
+		enum Type : unsigned
+		{
+			Default = 0,
+			Projected,
+
+			//# Count
+			Count
+		};
+	};
+
+	struct Primitive
+	{
+		enum Type : unsigned
+		{
+			Plane = 0,
+			Model,
+
+			//# Count
+			Count
+		};
+	};
+
+	//-------------------------------------------------------------------------
+
+	void Draw_SetData(const library::math::Matrix4& worldMatrix, const library::PrimitiveData& primitiveData);
+
 	void UpdateDepthBias(const library::Time& time);
 	void UpdateAmbientLight(const library::Time& time);
 	void UpdatePointLightAndProjector(const library::Time& time);
@@ -55,32 +80,21 @@ private:
 	std::unique_ptr<library::PointLightComponent> m_pointLight;
 	std::unique_ptr<library::ProxyModelComponent> m_proxyModel;
 
-	std::unique_ptr<library::PerspectiveProjectorComponent> m_projector;
+	std::unique_ptr<library::ProjectorComponent> m_projector;
 	std::unique_ptr<library::RenderableFrustumComponent> m_renderableProjectorFrustum;
-	library::Frustum m_projectorFrustum;
+	library::math::Frustum m_projectorFrustum;
 	library::math::Matrix4 m_projectedTextureScalingMatrix;
 
-	// plane appendix to m_input data
-	library::BufferData m_positionVertices; // for depth map
-
 	// model data
-	struct
-	{
-		library::BufferData vertexBuffer;
-		std::optional<library::BufferData> indexBuffer;
-		library::BufferData positionVertexBuffer; // for depth map
-		library::math::Matrix4 worldMatrix;
-	} m_model;
+	library::VertexBufferData m_modelPositionVertexBuffer;
+	library::math::Matrix4 m_modelWorldMatrix = library::math::Matrix4::Identity;
 
 	bool m_drawDepthMap;
 	float m_depthBias;
-	std::shared_ptr<library::Effect> m_depthMapEffect;
 	std::unique_ptr<library::DepthMapMaterial> m_depthMapMaterial;
 	std::unique_ptr<library::DepthMapRenderTarget> m_depthMapRenderTarget;
 
 	float m_specularPower;
-	library::Color m_specularColor;
-	library::Color m_ambientColor;
-
-	library::ComPtr<ID3D11ShaderResourceView> m_projectedTexture;
+	library::math::Color m_specularColor;
+	library::math::Color m_ambientColor;
 };

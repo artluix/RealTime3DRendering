@@ -50,7 +50,7 @@ void DistortionMappingDemo::InitializeInternal()
 	// Load model
 	{
 		Model model(GetApp(), "Sphere", true);
-		m_primitiveData = GetMaterial()->CreatePrimitiveData(GetApp().GetDevice(), model.GetMesh(0));
+		m_primitiveData = m_material->CreatePrimitiveData(GetApp().GetDevice(), model.GetMesh(0));
 	}
 
 	m_textures.resize(Texture::Count);
@@ -71,7 +71,7 @@ void DistortionMappingDemo::InitializeInternal()
 	m_text->SetPosition(math::Vector2(0.f, 200.f));
 	m_text->Initialize(GetApp());
 
-	m_cutoutPass = &GetMaterial()->GetEffect().GetTechnique("distortion_cutout").GetPass("p0");
+	m_cutoutPass = &m_material->GetEffect().GetTechnique("distortion_cutout").GetPass("p0");
 	m_cutoutRenderTarget = std::make_unique<FullScreenRenderTarget>(GetApp());
 }
 

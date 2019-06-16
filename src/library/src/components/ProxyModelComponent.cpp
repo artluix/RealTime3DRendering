@@ -28,7 +28,7 @@ void ProxyModelComponent::InitializeInternal()
 	InitializeMaterial("Basic");
 
 	Model model(GetApp(), m_modelName, true);
-	m_primitivesData = GetMaterial()->CreatePrimitivesData(GetApp().GetDevice(), model);
+	m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);
 }
 
 void ProxyModelComponent::Draw_SetData(const PrimitiveData& primitiveData)

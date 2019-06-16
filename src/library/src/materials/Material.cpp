@@ -15,8 +15,8 @@ Material::Material(std::shared_ptr<Effect> effect, const std::string& defaultTec
 	: m_effect(effect)
 	, m_defaultTechniqueName(defaultTechniqueName)
 	, m_currentTechnique(
-		  !defaultTechniqueName.empty() ? effect->GetTechnique(defaultTechniqueName)
-										: effect->GetTechnique(0))
+		!defaultTechniqueName.empty() ? effect->GetTechnique(defaultTechniqueName)
+									  : effect->GetTechnique(0))
 {
 	assert(effect->IsInitialized());
 }
@@ -26,6 +26,14 @@ Material::Material(std::shared_ptr<Effect> effect, const std::string& defaultTec
 EffectVariable& Material::operator[](const std::string& variableName)
 {
 	return m_effect->GetVariable(variableName);
+}
+
+//-------------------------------------------------------------------------
+
+void Material::SetCurrentTechnique(const std::string& techniqueName)
+{
+	auto& technique = m_effect->GetTechnique(techniqueName);
+	SetCurrentTechnique(technique);
 }
 
 void Material::SetCurrentTechnique(EffectTechnique& technique)

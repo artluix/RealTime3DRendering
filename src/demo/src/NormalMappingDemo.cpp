@@ -55,7 +55,7 @@ void NormalMappingDemo::InitializeInternal()
 	// build vertices manually
 	{
 		using Vertex = NormalMappingMaterial::Vertex;
-		using namespace library::math;;
+		using namespace library::math;
 
 		constexpr std::array<Vertex, 6> vertices = {
 			Vertex(Vector4(-0.5f, -0.5f, 0.0f, 1.0f), Vector2(0.0f, 1.0f), Direction::Backward, Direction::Right),

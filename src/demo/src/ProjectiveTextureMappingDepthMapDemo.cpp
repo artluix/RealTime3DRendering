@@ -5,7 +5,7 @@
 
 #include <library/Components/UIComponent.h>
 #include <library/Components/TextComponent.h>
-#include <library/Components/PerspectiveProjectorComponent.h>
+#include <library/Components/ProjectorComponent.h>
 #include <library/Components/ProxyModelComponent.h>
 #include <library/Components/RenderableFrustumComponent.h>
 #include <library/Components/PointLightComponent.h>
@@ -34,16 +34,16 @@ using namespace library;
 
 namespace
 {
-	constexpr float k_byteMax = static_cast<float>(0xFF);
+constexpr float k_byteMax = static_cast<float>(0xFF);
 
-	constexpr float k_depthBiasModulationRate = 0.1f;
-	constexpr unsigned k_depthMapWidth = 1024U;
-	constexpr unsigned k_depthMapHeight = 1024U;
-	const RECT k_depthMapDestinationRect = { 0, 512, 256, 768 };
+constexpr float k_depthBiasModulationRate = 1.f;
+constexpr unsigned k_depthMapWidth = 1024U;
+constexpr unsigned k_depthMapHeight = 1024U;
+const RECT k_depthMapDestinationRect = { 0, 512, 256, 768 };
 
-	constexpr float k_lightModulationRate = 10.f;
-	constexpr float k_lightMovementRate = 10.f;
-	constexpr auto k_lightRotationRate = math::Vector2(math::Pi_2);
+constexpr float k_lightModulationRate = 10.f;
+constexpr float k_lightMovementRate = 10.f;
+constexpr auto k_lightRotationRate = math::Vector2(math::Pi_2);
 }
 
 //-------------------------------------------------------------------------
@@ -59,75 +59,55 @@ ProjectiveTextureMappingDepthMapDemo::ProjectiveTextureMappingDepthMapDemo()
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
 	, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 {
-	m_model.worldMatrix = math::Matrix4::Identity;
-
-	SetTextureName("Checkerboard");
 }
 
 ProjectiveTextureMappingDepthMapDemo::~ProjectiveTextureMappingDepthMapDemo() = default;
 
 //-------------------------------------------------------------------------
 
-void ProjectiveTextureMappingDepthMapDemo::Initialize()
+void ProjectiveTextureMappingDepthMapDemo::InitializeInternal()
 {
 	const auto camera = GetCamera();
 
 	assert(camera);
 
-	// build plane vertices manually
+	// build plane manually
 	{
 		using Vertex = Material::Vertex;
+		using namespace library::math;
 
-		m_primitivesData = { PrimitiveData() };
-		auto& md = m_primitivesData.front();
-
-		const auto backward = DirectX::XMFLOAT3(math::Vector3::Backward);
-
-		const std::array<Vertex, 6> vertices =
+		constexpr std::array<Vertex, 6> vertices =
 		{
-			Vertex(DirectX::XMFLOAT4(-0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), backward),
-			Vertex(DirectX::XMFLOAT4(-0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 0.0f), backward),
-			Vertex(DirectX::XMFLOAT4(0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f), backward),
+			Vertex(Vector4(-0.5f, -0.5f, 0.0f, 1.0f), Vector2(0.0f, 1.0f), Direction::Backward),
+			Vertex(Vector4(-0.5f, 0.5f, 0.0f, 1.0f), Vector2(0.0f, 0.0f), Direction::Backward),
+			Vertex(Vector4(0.5f, 0.5f, 0.0f, 1.0f), Vector2(1.0f, 0.0f), Direction::Backward),
 
-			Vertex(DirectX::XMFLOAT4(-0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(0.0f, 1.0f), backward),
-			Vertex(DirectX::XMFLOAT4(0.5f, 0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 0.0f), backward),
-			Vertex(DirectX::XMFLOAT4(0.5f, -0.5f, 0.0f, 1.0f), DirectX::XMFLOAT2(1.0f, 1.0f), backward),
+			Vertex(Vector4(-0.5f, -0.5f, 0.0f, 1.0f), Vector2(0.0f, 1.0f), Direction::Backward),
+			Vertex(Vector4(0.5f, 0.5f, 0.0f, 1.0f), Vector2(1.0f, 0.0f), Direction::Backward),
+			Vertex(Vector4(0.5f, -0.5f, 0.0f, 1.0f), Vector2(1.0f, 1.0f), Direction::Backward),
 		};
 
-		md.vertexBuffer.elementsCount = vertices.size();
-		md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
-			app.GetDevice(),
-			vertices
-		);
+		m_primitivesData.clear();
+		auto& pd = m_primitivesData.emplace_back(PrimitiveData{});
 
-		//-------------------------------------------------------------------------
+		pd.stride = sizeof(Vertex);
 
-		const std::array<VertexPosition, 6> positionVertices =
-		{
-			VertexPosition(vertices[0].position),
-			VertexPosition(vertices[1].position),
-			VertexPosition(vertices[2].position),
-			VertexPosition(vertices[3].position),
-			VertexPosition(vertices[4].position),
-			VertexPosition(vertices[5].position)
-		};
-
-		m_positionVertices.elementsCount = vertices.size();
-		m_positionVertices.buffer = library::Material::CreateVertexBuffer(
-			app.GetDevice(),
-			positionVertices
-		);
+		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
 	}
 
 	InitializeMaterial("ProjectiveTextureMapping");
-	m_material->SetCurrentTechnique(m_effect->GetTechnique("project_texture_depth_map"));
+	// set needed technique
+	m_material->SetCurrentTechnique("project_texture_depth_map");
+	m_pass = &m_material->GetCurrentTechnique().GetPass(0);
+	m_inputLayout = m_material->GetInputLayout(*m_pass);
 
 	// manually create depth map effect & material
-	m_depthMapEffect = Effect::Create(app, "DepthMap");
-	m_depthMapMaterial = std::make_unique<DepthMapMaterial>(*m_depthMapEffect);
+	m_depthMapMaterial = std::make_unique<DepthMapMaterial>(Effect::Create(GetApp(), "DepthMap"));
 	m_depthMapMaterial->Initialize();
 
-	m_projectedTexture = app.LoadTexture("ProjectedTexture");
+	m_textures.resize(Texture::Count);
+	m_textures[Texture::Default] = GetApp().LoadTexture("Checkerboard");
+	m_textures[Texture::Projected] = GetApp().LoadTexture("ProjectedTexture");
 
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetRadius(500.f);
@@ -136,56 +116,49 @@ void ProjectiveTextureMappingDepthMapDemo::Initialize()
 	m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.5f);
 	m_proxyModel->SetCamera(*camera);
 	m_proxyModel->SetPosition(m_pointLight->GetPosition());
-	m_proxyModel->Initialize();
+	m_proxyModel->Initialize(GetApp());
 
 	// specific
 	SetScaling(math::Vector3(10.f));
 
-	m_projector = std::make_unique<PerspectiveProjectorComponent>();
+	m_projector = std::make_unique<ProjectorComponent>();
 	m_projector->SetPosition(m_pointLight->GetPosition());
-	m_projector->Initialize();
+	m_projector->Initialize(GetApp());
 
 	m_projectorFrustum.SetProjectionMatrix(m_projector->GetProjectionMatrix());
 
 	m_renderableProjectorFrustum = std::make_unique<RenderableFrustumComponent>();
 	m_renderableProjectorFrustum->SetCamera(*camera);
 	m_renderableProjectorFrustum->SetPosition(m_pointLight->GetPosition());
-	m_renderableProjectorFrustum->Initialize();
+	m_renderableProjectorFrustum->Initialize(GetApp());
 	m_renderableProjectorFrustum->InitializeGeometry(m_projectorFrustum);
 
 	InitializeProjectedTextureScalingMatrix();
 
 	// second model
 	{
-		Model model(app, "Teapot", true);
+		using namespace library::math;
+
+		Model model(GetApp(), "Teapot", true);
 		const auto& mesh = model.GetMesh(0);
 
-		m_model.vertexBuffer.buffer = m_material->CreateVertexBuffer(app.GetDevice(), mesh);
-		m_model.positionVertexBuffer.buffer = m_depthMapMaterial->CreateVertexBuffer(app.GetDevice(), mesh);
+		// depth map vertex buffer
+		m_modelPositionVertexBuffer = m_depthMapMaterial->CreateVertexBufferData(GetApp().GetDevice(), mesh);
 
-		m_model.vertexBuffer.elementsCount = m_model.positionVertexBuffer.elementsCount = mesh.GetVerticesCount();
+		auto& pd = m_primitivesData.emplace_back(PrimitiveData{});
+		pd = m_material->CreatePrimitiveData(GetApp().GetDevice(), mesh);
 
-		if (mesh.HasIndices())
-		{
-			m_model.indexBuffer = std::make_optional(
-				BufferData{ mesh.CreateIndexBuffer(), mesh.GetIndicesCount() }
-			);
-		}
-
-		m_model.worldMatrix =
-			math::Matrix4::Scaling(math::Vector3(0.1f)) * 
-			math::Matrix4::Translation(math::Vector3(0.f, 0.f, 5.f));
-
+		m_modelWorldMatrix = Matrix4::Scaling(Vector3(0.1f)) * Matrix4::Translation(Vector3(0.f, 0.f, 5.f));
 	}
 	
 	m_depthMapRenderTarget = std::make_unique<DepthMapRenderTarget>(
-		app, k_depthMapWidth, k_depthMapHeight
+		GetApp(), k_depthMapWidth, k_depthMapHeight
 	);
 
 	m_uiDepthMap = std::make_unique<UIComponent>();
 	m_uiDepthMap->SetDestinationRect(k_depthMapDestinationRect);
 	m_uiDepthMap->SetTexture(m_depthMapRenderTarget->GetOutputTexture());
-	m_uiDepthMap->Initialize();
+	m_uiDepthMap->Initialize(GetApp());
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -204,25 +177,26 @@ void ProjectiveTextureMappingDepthMapDemo::Initialize()
 			return woss.str();
 		}
 	);
-	m_text->Initialize();
+	m_text->Initialize(GetApp());
 }
 
 //-------------------------------------------------------------------------
 
-void ProjectiveTextureMappingDepthMapDemo::Draw(const library::Time& time)
+void ProjectiveTextureMappingDepthMapDemo::Draw(const Time& time)
 {
 	auto deviceContext = GetApp().GetDeviceContext();
 
-	const auto& md = m_primitivesData.front();
+	const auto& planeData = m_primitivesData[Primitive::Plane];
+	const auto& modelData = m_primitivesData[Primitive::Model];
 
 	//-------------------------------------------------------------------------
-	// depth map pass (render the teapot model only)
+	// depth map pass (render the model(teapot) only)
 	//-------------------------------------------------------------------------
 	{
 		GetApp().GetRenderer()->SaveRenderState(RenderState::Rasterizer);
 		m_depthMapRenderTarget->Begin();
 
-		deviceContext->IASetPrimitiveTopology(md.primitiveTopology);
+		deviceContext->IASetPrimitiveTopology(modelData.primitiveTopology);
 		deviceContext->ClearDepthStencilView(
 			m_depthMapRenderTarget->GetDepthStencilView(),
 			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
@@ -237,20 +211,20 @@ void ProjectiveTextureMappingDepthMapDemo::Draw(const library::Time& time)
 		const auto stride = m_depthMapMaterial->GetVertexSize();
 		const unsigned offset = 0;
 		deviceContext->IASetVertexBuffers(
-			0, 1, &m_model.positionVertexBuffer.buffer, &stride, &offset
+			0, 1, &m_modelPositionVertexBuffer.buffer, &stride, &offset
 		);
-		if (m_model.indexBuffer)
-			deviceContext->IASetIndexBuffer(m_model.indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
+		if (modelData.indexBuffer)
+			deviceContext->IASetIndexBuffer(
+				modelData.indexBuffer->buffer.Get(),DXGI_FORMAT_R32_UINT, 0);
 
-		m_depthMapMaterial->GetWorldLightViewProjection() << 
-			m_model.worldMatrix * m_projector->GetViewProjectionMatrix();
+		m_depthMapMaterial->GetWorldLightViewProjection() <<  m_modelWorldMatrix * m_projector->GetViewProjectionMatrix();
 
 		pass.Apply(0, deviceContext);
 
-		if (m_model.indexBuffer)
-			deviceContext->DrawIndexed(m_model.indexBuffer->elementsCount, 0, 0);
+		if (modelData.indexBuffer)
+			deviceContext->DrawIndexed(modelData.indexBuffer->elementsCount, 0, 0);
 		else
-			deviceContext->Draw(m_model.positionVertexBuffer.elementsCount, 0);
+			deviceContext->Draw(m_modelPositionVertexBuffer.elementsCount, 0);
 
 		m_depthMapRenderTarget->End();
 		GetApp().GetRenderer()->RestoreRenderState(RenderState::Rasterizer);
@@ -261,88 +235,54 @@ void ProjectiveTextureMappingDepthMapDemo::Draw(const library::Time& time)
 	//-------------------------------------------------------------------------
 	{
 		// Draw plane
-		SceneComponent::Draw(time);
+		Draw_SetIA(planeData);
+		Draw_SetData(GetWorldMatrix(), planeData);
+		Draw_Render(planeData);
 		GetApp().UnbindPixelShaderResources(0, 3);
 
 		// Draw teapot model
-		const auto stride = m_material->GetVertexSize();
-		const unsigned offset{ 0 };
-		deviceContext->IASetVertexBuffers(0, 1, &m_model.vertexBuffer.buffer, &stride, &offset);
-		if (m_model.indexBuffer)
-			deviceContext->IASetIndexBuffer(m_model.indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
-
-		auto modelWvp = m_model.worldMatrix;
-		if (!!m_camera)
-		{
-			modelWvp *= m_camera->GetViewProjectionMatrix();
-		}
-
-		const auto modelProjectiveTextureMatrix =
-			m_model.worldMatrix * m_projector->GetViewProjectionMatrix() * m_projectedTextureScalingMatrix;
-
-		m_material->GetWVP() << modelWvp;
-		m_material->GetWorld() << m_model.worldMatrix;
-
-		m_material->GetSpecularPower() << m_specularPower;
-		m_material->GetSpecularColor() << m_specularColor;
-		m_material->GetAmbientColor() << m_ambientColor;
-		m_material->GetLightColor() << m_pointLight->GetColor();
-		m_material->GetLightPosition() << m_pointLight->GetPosition();
-		m_material->GetLightRadius() << m_pointLight->GetRadius();
-
-		m_material->GetColorTexture() << md.texture.Get();
-		m_material->GetProjectedTexture() << m_projectedTexture.Get();
-
-		m_material->GetProjectiveTextureMatrix() << modelProjectiveTextureMatrix;
-
-		m_material->GetDepthMapTexture() << m_depthMapRenderTarget->GetOutputTexture();
-		m_material->GetDepthBias() << m_depthBias;
-
-		m_currentPass->Apply(0, deviceContext);
-
-		if (m_model.indexBuffer)
-			deviceContext->DrawIndexed(m_model.indexBuffer->elementsCount, 0, 0);
-		else
-			deviceContext->Draw(m_model.vertexBuffer.elementsCount, 0);
-
+		Draw_SetIA(modelData);
+		Draw_SetData(m_modelWorldMatrix, modelData);
+		Draw_Render(modelData);
 		GetApp().UnbindPixelShaderResources(0, 3);
 	}
 }
 
-void ProjectiveTextureMappingDepthMapDemo::Draw_SetData(const PrimitiveData& primitiveData)
+void ProjectiveTextureMappingDepthMapDemo::Draw_SetData(
+	const math::Matrix4& worldMatrix,
+	const PrimitiveData& primitiveData
+)
 {
-	const auto world = GetWorldMatrix();
-
-	auto wvp = world;
-	if (!!m_camera)
+	auto wvp = worldMatrix;
+	if (auto camera = GetCamera())
 	{
-		wvp *= m_camera->GetViewProjectionMatrix();
+		wvp *= camera->GetViewProjectionMatrix();
 
-		m_material->GetCameraPosition() << m_camera->GetPosition();
+		m_material->GetCameraPosition() << camera->GetPosition();
 	}
 
 	const auto projectiveTextureMatrix =
-		world * m_projector->GetViewProjectionMatrix() * m_projectedTextureScalingMatrix;
+		worldMatrix * m_projector->GetViewProjectionMatrix() * m_projectedTextureScalingMatrix;
 
 	m_material->GetWVP() << wvp;
-	m_material->GetWorld() << world;
+	m_material->GetWorld() << worldMatrix;
 
 	m_material->GetSpecularPower() << m_specularPower;
-	m_material->GetSpecularColor() << m_specularColor;
-	m_material->GetAmbientColor() << m_ambientColor;
-	m_material->GetLightColor() << m_pointLight->GetColor();
+	m_material->GetSpecularColor() << m_specularColor.ToVector4();
+	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
+	m_material->GetLightColor() << m_pointLight->GetColor().ToVector4();
 	m_material->GetLightPosition() << m_pointLight->GetPosition();
 	m_material->GetLightRadius() << m_pointLight->GetRadius();
 
-	m_material->GetColorTexture() << primitiveData.texture.Get();
-	m_material->GetProjectedTexture() << m_projectedTexture.Get();
+	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
+	m_material->GetProjectedTexture() << m_textures[Texture::Projected].Get();
 
 	m_material->GetProjectiveTextureMatrix() << projectiveTextureMatrix;
 
 	m_material->GetDepthMapTexture() << m_depthMapRenderTarget->GetOutputTexture();
 	m_material->GetDepthBias() << m_depthBias;
 
-	SceneComponent::Draw_SetData(primitiveData);
+	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }
 
 //-------------------------------------------------------------------------
@@ -368,7 +308,7 @@ void ProjectiveTextureMappingDepthMapDemo::Update(const Time& time)
 	m_projector->Update(time);
 	m_renderableProjectorFrustum->Update(time);
 
-	SceneComponent::Update(time);
+	PrimitiveComponent::Update(time);
 }
 
 void ProjectiveTextureMappingDepthMapDemo::UpdateDepthBias(const Time& time)
@@ -440,22 +380,22 @@ void ProjectiveTextureMappingDepthMapDemo::UpdatePointLightAndProjector(const Ti
 
 		// move
 		{
-			math::Vector3 movementAmount;
+			math::Vector3i movementAmount;
 
 			if (m_keyboard->IsKeyDown(Key::Num_4))
-				movementAmount.x = -1.0f;
+				movementAmount.x--;
 			if (m_keyboard->IsKeyDown(Key::Num_6))
-				movementAmount.x = 1.0f;
+				movementAmount.x++;
 
 			if (m_keyboard->IsKeyDown(Key::Num_9))
-				movementAmount.y = 1.0f;
+				movementAmount.y++;
 			if (m_keyboard->IsKeyDown(Key::Num_3))
-				movementAmount.y = -1.0f;
+				movementAmount.y--;
 
 			if (m_keyboard->IsKeyDown(Key::Num_8))
-				movementAmount.z = -1.0f;
+				movementAmount.z--;
 			if (m_keyboard->IsKeyDown(Key::Num_2))
-				movementAmount.z = 1.0f;
+				movementAmount.z++;
 
 			if (movementAmount)
 			{
@@ -486,12 +426,13 @@ void ProjectiveTextureMappingDepthMapDemo::UpdatePointLightAndProjector(const Ti
 
 			if (rotationAmount)
 			{
-				const auto pitchMatrix = math::Matrix4::RotationAxis(GetRight(), rotationAmount.y);
-				const auto yawMatrix = math::Matrix4::RotationY(rotationAmount.x);
+				const auto rotationQuat = math::Quaternion::RotationPitchYawRoll(
+					rotationAmount.y, rotationAmount.x, 0.f
+				);
 
-				m_proxyModel->Rotate(math::Vector3(rotationAmount.y, rotationAmount.x, 0.f));
-				m_renderableProjectorFrustum->Rotate(math::Vector3(rotationAmount.y, rotationAmount.x, 0.f));
-				m_projector->ApplyRotation(pitchMatrix * yawMatrix);
+				m_proxyModel->Rotate(rotationQuat);
+				m_renderableProjectorFrustum->Rotate(rotationQuat);
+				m_projector->Rotate(rotationQuat);
 			}
 		}
 	}
@@ -510,7 +451,7 @@ void ProjectiveTextureMappingDepthMapDemo::UpdateSpecularLight(const Time& time)
 			specularLightIntensity += k_lightModulationRate * elapsedTime;
 			specularLightIntensity = math::Min(specularLightIntensity, k_byteMax);
 
-			m_specularPower = specularLightIntensity;;
+			m_specularPower = specularLightIntensity;
 		}
 
 		if (m_keyboard->IsKeyDown(Key::Delete) && specularLightIntensity > 0)

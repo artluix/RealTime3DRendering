@@ -73,8 +73,8 @@ if(APPLICATION)
             src/ProjectiveTextureMappingDemo.h
             src/ProjectiveTextureMappingDemo.cpp
 
-            # src/ProjectiveTextureMappingDepthMapDemo.h
-            # src/ProjectiveTextureMappingDepthMapDemo.cpp
+            src/ProjectiveTextureMappingDepthMapDemo.h
+            src/ProjectiveTextureMappingDepthMapDemo.cpp
 
             # src/ShadowMappingDemo.h
             # src/ShadowMappingDemo.cpp

@@ -4,6 +4,7 @@
 #include "library/Math/Color.h"
 #include "library/Math/Quaternion.h"
 #include "library/Math/Plane.h"
+#include "library/Math/Frustum.h"
 #include "library/Math/Ray.h"
 #include "library/Math/Direction.h"
 #include "library/Math/Transform.h"

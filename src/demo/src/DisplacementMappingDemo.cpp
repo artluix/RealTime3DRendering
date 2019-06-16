@@ -51,7 +51,7 @@ void DisplacementMappingDemo::InitializeInternal()
 	// load model
 	{
 		Model model(GetApp(), "Plane", true);
-		m_primitivesData = GetMaterial()->CreatePrimitivesData(GetApp().GetDevice(), model);
+		m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);
 	}
 
 	m_textures.resize(Texture::Count);
