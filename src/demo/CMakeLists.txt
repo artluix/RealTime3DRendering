@@ -43,8 +43,8 @@ if(APPLICATION)
             src/DiffuseLightingDemo.h
             src/DiffuseLightingDemo.cpp
 
-            # src/DirectionalShadowMappingDemo.h
-            # src/DirectionalShadowMappingDemo.cpp
+            src/DirectionalShadowMappingDemo.h
+            src/DirectionalShadowMappingDemo.cpp
 
             src/DisplacementMappingDemo.h
             src/DisplacementMappingDemo.cpp

@@ -27,10 +27,10 @@ class ShadowMappingDemo
 	: public library::ConcreteMaterialPrimitiveComponent<library::ShadowMappingMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(ShadowMappingDemo, library::SceneComponent, library::InputReceivableComponent)
+	RTTI_CLASS(ShadowMappingDemo, library::PrimitiveComponent, library::InputReceivableComponent)
 
 public:
-	explicit ShadowMappingDemo();
+	ShadowMappingDemo();
 	~ShadowMappingDemo();
 
 	void Update(const library::Time& time) override;

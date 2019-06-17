@@ -12,7 +12,7 @@ Ray ComputeIntersectionLine(const Plane& plane1, const Plane& plane2)
 {
 	const auto direction = plane1.normal.Cross(plane2.normal);
 	const auto position =
-		-direction.Cross(plane1.normal * plane2.d - plane2.normal * plane1.d) / direction.LengthSq();
+		direction.Cross(plane1.normal * plane2.d - plane2.normal * plane1.d) / direction.LengthSq();
 
 	return Ray(position, direction);
 }

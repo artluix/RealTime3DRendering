@@ -128,6 +128,7 @@ void ShadowMappingDemo::InitializeInternal()
 	m_renderableProjectorFrustum = std::make_unique<RenderableFrustumComponent>();
 	m_renderableProjectorFrustum->SetCamera(*camera);
 	m_renderableProjectorFrustum->SetPosition(m_pointLight->GetPosition());
+	m_renderableProjectorFrustum->SetInitialTransform(math::Matrix4::RotationY(math::Pi));
 	m_renderableProjectorFrustum->Initialize(GetApp());
 	m_renderableProjectorFrustum->InitializeGeometry(m_projectorFrustum);
 
@@ -147,9 +148,8 @@ void ShadowMappingDemo::InitializeInternal()
 		pd = m_material->CreatePrimitiveData(GetApp().GetDevice(), mesh);
 
 		m_modelWorldMatrix = Matrix4::Scaling(Vector3(0.1f)) * Matrix4::Translation(Vector3(0.f, 0.f, 5.f));
-
 	}
-	
+
 	m_depthMapRenderTarget = std::make_unique<DepthMapRenderTarget>(
 		GetApp(), k_depthMapWidth, k_depthMapHeight
 	);
@@ -384,10 +384,8 @@ void ShadowMappingDemo::UpdateDepthBiasState()
 	rasterizerStateDesc.DepthBias = static_cast<int>(m_depthBias);
 	rasterizerStateDesc.SlopeScaledDepthBias = m_slopeScaledDepthBias;
 
-	const auto hr = GetApp().GetDevice()->CreateRasterizerState(
-		&rasterizerStateDesc, &m_depthBiasState
-	);
-	assert("ID3D11Device::CreateReasterizerState() failed." && SUCCEEDED(hr));
+	const auto hr = GetApp().GetDevice()->CreateRasterizerState(&rasterizerStateDesc, &m_depthBiasState);
+	assert("ID3D11Device::CreateRasterizerState() failed." && SUCCEEDED(hr));
 }
 
 void ShadowMappingDemo::UpdateAmbientLight(const Time& time)

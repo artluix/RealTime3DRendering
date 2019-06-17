@@ -27,7 +27,7 @@
 #include "ProjectiveTextureMappingDemo.h"
 #include "ProjectiveTextureMappingDepthMapDemo.h"
 #include "ShadowMappingDemo.h"
-// #include "DirectionalShadowMappingDemo.h"
+#include "DirectionalShadowMappingDemo.h"
 
 // #include "AnimationDemo.h"
 
@@ -251,9 +251,9 @@ void DemoApplication::Initialize()
 	shadowMapping->SetCamera(*camera);
 	shadowMapping->SetKeyboard(*m_keyboard);
 
-	// auto directionalShadowMapping = std::make_shared<DirectionalShadowMappingDemo>();
-	// directionalShadowMapping->SetCamera(*camera);
-	// directionalShadowMapping->SetKeyboard(*m_keyboard);
+	auto directionalShadowMapping = std::make_shared<DirectionalShadowMappingDemo>();
+	directionalShadowMapping->SetCamera(*camera);
+	directionalShadowMapping->SetKeyboard(*m_keyboard);
 
 	// animation
 	// auto animation = std::make_shared<AnimationDemo>();
@@ -289,8 +289,8 @@ void DemoApplication::Initialize()
 	// m_components.push_back(fog);
 	// m_components.push_back(projectiveTextureMapping);
 	// m_components.push_back(projectiveTextureDepthMapMapping);
-	m_components.push_back(shadowMapping);
-	// m_components.push_back(directionalShadowMapping);
+	// m_components.push_back(shadowMapping);
+	m_components.push_back(directionalShadowMapping);
 	m_components.push_back(postProcessingText);
 	// m_components.push_back(animation);
 	// m_components.push_back(geometryShader);

@@ -16,7 +16,8 @@ constexpr auto k_defaultFarPlaneDistance = 1000.f;
 
 //-------------------------------------------------------------------------
 
-CameraComponent::CameraComponent() : ProjectorComponent(ProjectionType::Perspective)
+CameraComponent::CameraComponent()
+	: ProjectorComponent(ProjectionType::Perspective)
 {
 	m_fieldOfView = k_defaultFieldOfView;
 	m_nearPlaneDistance = k_defaultNearPlaneDistance;
@@ -27,7 +28,8 @@ CameraComponent::CameraComponent(
 	const float nearPlaneDistance,
 	const float farPlaneDistance,
 	const float fieldOfView,
-	const float aspectRatio)
+	const float aspectRatio
+)
 	: ProjectorComponent(nearPlaneDistance, farPlaneDistance, fieldOfView, aspectRatio)
 {}
 

@@ -231,7 +231,8 @@ void ProjectorComponent::UpdateProjectionMatrix()
 				static_cast<float>(m_width),
 				static_cast<float>(m_height),
 				m_nearPlaneDistance,
-				m_farPlaneDistance);
+				m_farPlaneDistance
+			);
 			break;
 
 		case ProjectionType::Perspective:
@@ -239,7 +240,8 @@ void ProjectorComponent::UpdateProjectionMatrix()
 				m_fieldOfView,
 				m_aspectRatio,
 				m_nearPlaneDistance,
-				m_farPlaneDistance);
+				m_farPlaneDistance
+			);
 			break;
 
 		default: break;

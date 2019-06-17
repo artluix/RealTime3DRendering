@@ -13,7 +13,8 @@ public:
 		const float nearPlaneDistance,
 		const float farPlaneDistance,
 		const float fieldOfView,
-		const float aspectRatio);
+		const float aspectRatio
+	);
 
 protected:
 	void InitializeInternal() override;
