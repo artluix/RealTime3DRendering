@@ -38,7 +38,7 @@ RenderableFrustumComponent::RenderableFrustumComponent(const math::Color& color)
 
 void RenderableFrustumComponent::InitializeInternal()
 {
-	InitializeMaterial("Basic");
+	CreateMaterialWithEffect("Basic");
 
 	InitializeIndexBuffer();
 }

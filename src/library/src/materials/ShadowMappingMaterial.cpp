@@ -5,12 +5,12 @@
 
 namespace library
 {
-ShadowMappingMaterial::ShadowMappingMaterial(std::shared_ptr<Effect> effect)
+ShadowMappingMaterial::ShadowMappingMaterial(Effect& effect)
 	: PointLightMaterial(effect, "shadow_mapping")
 
-	, m_projectiveTextureMatrix(effect->GetVariable("projectiveTextureMatrix"))
-	, m_shadowMapTexture(effect->GetVariable("ShadowMapTexture"))
-	, m_shadowMapSize(effect->GetVariable("shadowMapSize"))
+	, m_projectiveTextureMatrix(effect.GetVariable("projectiveTextureMatrix"))
+	, m_shadowMapTexture(effect.GetVariable("ShadowMapTexture"))
+	, m_shadowMapSize(effect.GetVariable("shadowMapSize"))
 {}
 
 //-------------------------------------------------------------------------

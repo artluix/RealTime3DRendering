@@ -11,7 +11,7 @@ class BasicMaterial : public Material
 public:
 	using Vertex = VertexPositionColor;
 
-	explicit BasicMaterial(std::shared_ptr<Effect> effect);
+	explicit BasicMaterial(Effect& effect);
 	~BasicMaterial();
 
 	EffectVariable& GetWorldViewProjection() { return m_worldViewProjection; }

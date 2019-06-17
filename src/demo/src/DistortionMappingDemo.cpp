@@ -44,7 +44,7 @@ DistortionMappingDemo::~DistortionMappingDemo() = default;
 
 void DistortionMappingDemo::InitializeInternal()
 {
-	InitializeMaterial("DistortionMapping");
+	CreateMaterialWithEffect("DistortionMapping");
 	InitializeQuad("distortion");
 
 	// Load model

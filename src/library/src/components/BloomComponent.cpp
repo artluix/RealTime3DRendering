@@ -71,7 +71,7 @@ void BloomComponent::SetDrawMode(const BloomDrawMode drawMode)
 
 void BloomComponent::InitializeInternal()
 {
-	InitializeMaterial("Bloom");
+	CreateMaterialWithEffect("Bloom");
 	InitializeQuad();
 
 	m_renderTarget = std::make_unique<FullScreenRenderTarget>(GetApp());

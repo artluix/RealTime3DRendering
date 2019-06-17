@@ -8,10 +8,7 @@ class DirectionalLightMaterial : public LightMaterial
 	RTTI_CLASS(DirectionalLightMaterial, Material)
 
 public:
-	explicit DirectionalLightMaterial(
-		std::shared_ptr<Effect> effect,
-		const std::string& defaultTechniqueName = "main11"
-	);
+	explicit DirectionalLightMaterial(Effect& effect, const std::string& defaultTechniqueName = "main11");
 	~DirectionalLightMaterial();
 
 	EffectVariable& GetLightDirection() { return m_lightDirection; }

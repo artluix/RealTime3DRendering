@@ -20,7 +20,7 @@ SkyboxComponent::SkyboxComponent(const std::string& cubeMapName, const float sca
 
 void SkyboxComponent::InitializeInternal()
 {
-	InitializeMaterial("Skybox");
+	CreateMaterialWithEffect("Skybox");
 
 	Model model(GetApp(), "Sphere", true);
 	m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);

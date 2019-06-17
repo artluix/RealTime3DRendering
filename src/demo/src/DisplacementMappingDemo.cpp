@@ -46,7 +46,7 @@ void DisplacementMappingDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
-	InitializeMaterial("DisplacementMapping");
+	CreateMaterialWithEffect("DisplacementMapping");
 
 	// load model
 	{

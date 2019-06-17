@@ -11,7 +11,7 @@ class NormalMappingMaterial : public DirectionalLightMaterial
 public:
 	using Vertex = VertexPositionTextureNormalTangent;
 
-	explicit NormalMappingMaterial(std::shared_ptr<Effect> effect);
+	explicit NormalMappingMaterial(Effect& effect);
 	~NormalMappingMaterial();
 
 	EffectVariable& GetNormalMap() { return m_normalMap; }

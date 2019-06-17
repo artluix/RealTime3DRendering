@@ -8,7 +8,7 @@ class PointLightMaterial : public LightMaterial
 	RTTI_CLASS(PointLightMaterial, LightMaterial)
 
 public:
-	explicit PointLightMaterial(std::shared_ptr<Effect> effect, const std::string& defaultTechniqueName = "main11");
+	explicit PointLightMaterial(Effect& effect, const std::string& defaultTechniqueName = "main11");
 	~PointLightMaterial();
 
 	EffectVariable& GetLightPosition() { return m_lightPosition; }

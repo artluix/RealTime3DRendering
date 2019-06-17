@@ -41,7 +41,7 @@ void FullScreenQuadComponent::SetActiveTechnique(
 	const std::string& techniqueName,
 	const std::string& passName /* = "p0"*/
 )
-{
+{ 
 	assert(!!m_material);
 
 	auto& technique = m_material->GetEffect().GetTechnique(techniqueName);
@@ -64,7 +64,7 @@ void FullScreenQuadComponent::InitializeInternal()
 	{
 		using Vertex = VertexPositionTexture;
 
-		const std::array<Vertex, 4> vertices = {
+		constexpr std::array<Vertex, 4> vertices = {
 			Vertex(math::Vector4(-1.0f, -1.0f, 0.0f, 1.0f), math::Vector2(0.0f, 1.0f)),
 			Vertex(math::Vector4(-1.0f, 1.0f, 0.0f, 1.0f), math::Vector2(0.0f, 0.0f)),
 			Vertex(math::Vector4(1.0f, 1.0f, 0.0f, 1.0f), math::Vector2(1.0f, 0.0f)),

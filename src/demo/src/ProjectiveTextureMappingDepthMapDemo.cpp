@@ -95,19 +95,18 @@ void ProjectiveTextureMappingDepthMapDemo::InitializeInternal()
 		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
 	}
 
-	InitializeMaterial("ProjectiveTextureMapping");
-	// set needed technique
-	m_material->SetCurrentTechnique("project_texture_depth_map");
-	m_pass = &m_material->GetCurrentTechnique().GetPass(0);
-	m_inputLayout = m_material->GetInputLayout(*m_pass);
-
-	// manually create depth map effect & material
-	m_depthMapMaterial = std::make_unique<DepthMapMaterial>(Effect::Create(GetApp(), "DepthMap"));
-	m_depthMapMaterial->Initialize();
-
+	// textures
 	m_textures.resize(Texture::Count);
 	m_textures[Texture::Default] = GetApp().LoadTexture("Checkerboard");
 	m_textures[Texture::Projected] = GetApp().LoadTexture("ProjectedTexture");
+
+	CreateMaterialWithEffect("ProjectiveTextureMapping");
+	m_material->SetCurrentTechnique("project_texture_depth_map");
+
+	// manually create depth map effect & material
+	m_depthMapEffect = Effect::Create(GetApp(), "DepthMap");
+	m_depthMapMaterial = std::make_unique<DepthMapMaterial>(*m_depthMapEffect);
+	m_depthMapMaterial->Initialize();
 
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetRadius(500.f);
@@ -204,8 +203,7 @@ void ProjectiveTextureMappingDepthMapDemo::Draw(const Time& time)
 			0
 		);
 
-		auto& pass = m_depthMapMaterial->GetCurrentTechnique().GetPass(0);
-		auto inputLayout = m_depthMapMaterial->GetInputLayout(pass);
+		auto inputLayout = m_depthMapMaterial->GetCurrentInputLayout();
 		deviceContext->IASetInputLayout(inputLayout);
 
 		const auto stride = m_depthMapMaterial->GetVertexSize();
@@ -219,6 +217,7 @@ void ProjectiveTextureMappingDepthMapDemo::Draw(const Time& time)
 
 		m_depthMapMaterial->GetWorldLightViewProjection() <<  m_modelWorldMatrix * m_projector->GetViewProjectionMatrix();
 
+		auto& pass = m_depthMapMaterial->GetCurrentPass();
 		pass.Apply(0, deviceContext);
 
 		if (modelData.indexBuffer)

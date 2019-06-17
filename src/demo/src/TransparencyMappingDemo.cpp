@@ -47,7 +47,7 @@ void TransparencyMappingDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
-	InitializeMaterial("TransparencyMapping");
+	CreateMaterialWithEffect("TransparencyMapping");
 
 	// build vertexBuffer manually
 	{

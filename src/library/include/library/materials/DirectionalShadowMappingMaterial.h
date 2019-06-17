@@ -9,7 +9,7 @@ class DirectionalShadowMappingMaterial : public DirectionalLightMaterial
 	RTTI_CLASS(DirectionalShadowMappingMaterial, DirectionalLightMaterial)
 
 public:
-	explicit DirectionalShadowMappingMaterial(std::shared_ptr<Effect> effect);
+	explicit DirectionalShadowMappingMaterial(Effect& effect);
 
 	EffectVariable& GetProjectiveTextureMatrix() { return m_projectiveTextureMatrix; }
 	EffectVariable& GetShadowMapTexture() { return m_shadowMapTexture; }

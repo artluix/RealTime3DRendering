@@ -13,11 +13,11 @@
 
 namespace library
 {
-	class PointLightComponent;
-	class ProjectorComponent;
-	class ProxyModelComponent;
-	class RenderableFrustumComponent;
-	class TextComponent;
+class PointLightComponent;
+class ProjectorComponent;
+class ProxyModelComponent;
+class RenderableFrustumComponent;
+class TextComponent;
 } // namespace library
 
 class ProjectiveTextureMappingDemo

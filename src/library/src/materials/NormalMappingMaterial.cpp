@@ -6,10 +6,10 @@
 
 namespace library
 {
-NormalMappingMaterial::NormalMappingMaterial(std::shared_ptr<Effect> effect)
+NormalMappingMaterial::NormalMappingMaterial(Effect& effect)
 	: DirectionalLightMaterial(effect, "main10")
 
-	, m_normalMap(effect->GetVariable("NormalMap"))
+	, m_normalMap(effect.GetVariable("NormalMap"))
 {}
 
 NormalMappingMaterial::~NormalMappingMaterial() = default;

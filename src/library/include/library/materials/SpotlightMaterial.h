@@ -8,7 +8,7 @@ class SpotlightMaterial : public PointLightMaterial
 	RTTI_CLASS(SpotlightMaterial, PointLightMaterial)
 
 public:
-	explicit SpotlightMaterial(std::shared_ptr<Effect> effect);
+	explicit SpotlightMaterial(Effect& effect);
 	~SpotlightMaterial();
 
 	EffectVariable& GetLightLookAt() { return m_lightLookAt; }

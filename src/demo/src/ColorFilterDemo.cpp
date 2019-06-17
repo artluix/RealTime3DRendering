@@ -66,7 +66,7 @@ ColorFilterDemo::~ColorFilterDemo() = default;
 
 void ColorFilterDemo::InitializeInternal()
 {
-	InitializeMaterial("ColorFilter");
+	CreateMaterialWithEffect("ColorFilter");
 	InitializeQuad("grayscale_filter");
 
 	m_fullScreenQuad->SetMaterialUpdateFunction([this]() {

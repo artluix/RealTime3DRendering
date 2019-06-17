@@ -6,17 +6,17 @@
 
 namespace library
 {
-DiffuseLightingMaterial::DiffuseLightingMaterial(std::shared_ptr<Effect> effect)
+DiffuseLightingMaterial::DiffuseLightingMaterial(Effect& effect)
 	: Material(effect, "main10")
 
-	, m_ambientColor(effect->GetVariable("ambientColor"))
-	, m_lightColor(effect->GetVariable("lightColor"))
-	, m_lightDirection(effect->GetVariable("lightDirection"))
+	, m_ambientColor(effect.GetVariable("ambientColor"))
+	, m_lightColor(effect.GetVariable("lightColor"))
+	, m_lightDirection(effect.GetVariable("lightDirection"))
 
-	, m_wvp(effect->GetVariable("wvp"))
-	, m_world(effect->GetVariable("world"))
+	, m_wvp(effect.GetVariable("wvp"))
+	, m_world(effect.GetVariable("world"))
 
-	, m_colorTexture(effect->GetVariable("ColorTexture"))
+	, m_colorTexture(effect.GetVariable("ColorTexture"))
 {}
 
 DiffuseLightingMaterial::~DiffuseLightingMaterial() = default;

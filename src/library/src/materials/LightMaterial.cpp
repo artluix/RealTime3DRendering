@@ -6,22 +6,19 @@
 
 namespace library
 {
-LightMaterial::LightMaterial(
-	std::shared_ptr<Effect> effect,
-	const std::string& defaultTechniqueName /*= "main11"*/
-	)
+LightMaterial::LightMaterial(Effect& effect, const std::string& defaultTechniqueName /*= "main11"*/)
 	: Material(effect, defaultTechniqueName)
 
-	, m_ambientColor(effect->GetVariable("ambientColor"))
-	, m_lightColor(effect->GetVariable("lightColor"))
-	, m_cameraPosition(effect->GetVariable("cameraPosition"))
+	, m_ambientColor(effect.GetVariable("ambientColor"))
+	, m_lightColor(effect.GetVariable("lightColor"))
+	, m_cameraPosition(effect.GetVariable("cameraPosition"))
 
-	, m_wvp(effect->GetVariable("wvp"))
-	, m_world(effect->GetVariable("world"))
-	, m_specularPower(effect->GetVariable("specularPower"))
-	, m_specularColor(effect->GetVariable("specularColor"))
+	, m_wvp(effect.GetVariable("wvp"))
+	, m_world(effect.GetVariable("world"))
+	, m_specularPower(effect.GetVariable("specularPower"))
+	, m_specularColor(effect.GetVariable("specularColor"))
 
-	, m_colorTexture(effect->GetVariable("ColorTexture"))
+	, m_colorTexture(effect.GetVariable("ColorTexture"))
 {}
 
 LightMaterial::~LightMaterial() = default;

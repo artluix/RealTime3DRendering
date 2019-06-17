@@ -5,12 +5,12 @@
 
 namespace library
 {
-DirectionalShadowMappingMaterial::DirectionalShadowMappingMaterial(std::shared_ptr<Effect> effect)
+DirectionalShadowMappingMaterial::DirectionalShadowMappingMaterial(Effect& effect)
 	: DirectionalLightMaterial(effect, "directional_shadow_mapping")
 
-	, m_projectiveTextureMatrix(effect->GetVariable("projectiveTextureMatrix"))
-	, m_shadowMapTexture(effect->GetVariable("ShadowMapTexture"))
-	, m_shadowMapSize(effect->GetVariable("shadowMapSize"))
+	, m_projectiveTextureMatrix(effect.GetVariable("projectiveTextureMatrix"))
+	, m_shadowMapTexture(effect.GetVariable("ShadowMapTexture"))
+	, m_shadowMapSize(effect.GetVariable("shadowMapSize"))
 {}
 
 //-------------------------------------------------------------------------

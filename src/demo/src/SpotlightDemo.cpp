@@ -50,7 +50,7 @@ void SpotlightDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
-	InitializeMaterial("Spotlight");
+	CreateMaterialWithEffect("Spotlight");
 
 	// load model
 	{

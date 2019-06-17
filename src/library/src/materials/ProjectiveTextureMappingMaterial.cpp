@@ -5,13 +5,13 @@
 
 namespace library
 {
-ProjectiveTextureMappingMaterial::ProjectiveTextureMappingMaterial(std::shared_ptr<Effect> effect)
+ProjectiveTextureMappingMaterial::ProjectiveTextureMappingMaterial(Effect& effect)
 	: PointLightMaterial(effect, "project_texture")
 
-	, m_projectedTexture(effect->GetVariable("ProjectedTexture"))
-	, m_projectiveTextureMatrix(effect->GetVariable("projectiveTextureMatrix"))
-	, m_depthMapTextureMatrix(effect->GetVariable("DepthMapTexture"))
-	, m_depthBias(effect->GetVariable("depthBias"))
+	, m_projectedTexture(effect.GetVariable("ProjectedTexture"))
+	, m_projectiveTextureMatrix(effect.GetVariable("projectiveTextureMatrix"))
+	, m_depthMapTextureMatrix(effect.GetVariable("DepthMapTexture"))
+	, m_depthBias(effect.GetVariable("depthBias"))
 {}
 
 //-------------------------------------------------------------------------

@@ -11,15 +11,15 @@
 
 namespace library
 {
-	class PointLightComponent;
-	class ProjectorComponent;
-	class ProxyModelComponent;
-	class RenderableFrustumComponent;
-	class UIComponent;
-	class TextComponent;
+class PointLightComponent;
+class ProjectorComponent;
+class ProxyModelComponent;
+class RenderableFrustumComponent;
+class UIComponent;
+class TextComponent;
 
-	class DepthMapMaterial;
-	class DepthMapRenderTarget;
+class DepthMapMaterial;
+class DepthMapRenderTarget;
 } // namespace library
 
 class ProjectiveTextureMappingDepthMapDemo
@@ -91,6 +91,7 @@ private:
 
 	bool m_drawDepthMap;
 	float m_depthBias;
+	std::shared_ptr<library::Effect> m_depthMapEffect;
 	std::unique_ptr<library::DepthMapMaterial> m_depthMapMaterial;
 	std::unique_ptr<library::DepthMapRenderTarget> m_depthMapRenderTarget;
 

@@ -46,7 +46,7 @@ void DiffuseLightingDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
-	InitializeMaterial("DiffuseLighting");
+	CreateMaterialWithEffect("DiffuseLighting");
 
 	// load model
 	{

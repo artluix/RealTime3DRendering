@@ -8,7 +8,7 @@ class DisplacementMappingMaterial : public PointLightMaterial
 	RTTI_CLASS(DisplacementMappingMaterial, PointLightMaterial)
 
 public:
-	explicit DisplacementMappingMaterial(std::shared_ptr<Effect> effect);
+	explicit DisplacementMappingMaterial(Effect& effect);
 	~DisplacementMappingMaterial();
 
 	EffectVariable& GetDisplacementScale() { return m_displacementScale; }

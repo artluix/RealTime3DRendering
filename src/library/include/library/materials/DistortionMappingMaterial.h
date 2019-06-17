@@ -8,7 +8,7 @@ class DistortionMappingMaterial : public PostProcessingMaterial
 	RTTI_CLASS(DistortionMappingMaterial, PostProcessingMaterial)
 
 public:
-	explicit DistortionMappingMaterial(std::shared_ptr<Effect> effect);
+	explicit DistortionMappingMaterial(Effect& effect);
 	~DistortionMappingMaterial();
 
 	EffectVariable& GetWVP() { return m_wvp; }

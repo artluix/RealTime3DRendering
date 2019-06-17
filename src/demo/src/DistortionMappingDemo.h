@@ -7,10 +7,10 @@
 
 namespace library
 {
-	class TextComponent;
-	class CameraComponent;
+class TextComponent;
+class CameraComponent;
 
-	class EffectPass;
+class EffectPass;
 } // namespace library
 
 class DistortionMappingDemo

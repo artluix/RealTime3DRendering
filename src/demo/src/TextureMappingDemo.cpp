@@ -24,7 +24,7 @@ constexpr float k_movementRate = 0.01f;
 
 void TextureMappingDemo::InitializeInternal()
 {
-	InitializeMaterial("TextureMapping");
+	CreateMaterialWithEffect("TextureMapping");
 
 	Model model(GetApp(), "Sphere", true);
 	m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);

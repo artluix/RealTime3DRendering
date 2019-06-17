@@ -52,7 +52,7 @@ void FogDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
-	InitializeMaterial("Fog");
+	CreateMaterialWithEffect("Fog");
 
 	// load model
 	{
@@ -184,9 +184,7 @@ void FogDemo::SetActiveTechnique()
 	static const std::array<std::string, 2> techniques = {"fogDisabled", "fogEnabled"};
 	const auto& techniqueName = techniques[unsigned(m_fogEnabled)];
 
-	m_technique = &m_material->GetEffect().GetTechnique(techniqueName);
-	m_pass = &m_technique->GetPass("p0");
-	m_inputLayout = m_material->GetInputLayout(*m_pass);
+	m_material->SetCurrentTechnique(techniqueName);
 }
 
 void FogDemo::Draw_SetData(const PrimitiveData& primitiveData)

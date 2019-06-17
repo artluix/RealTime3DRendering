@@ -11,7 +11,7 @@ class SkyboxMaterial : public Material
 public:
 	using Vertex = VertexPosition;
 
-	explicit SkyboxMaterial(std::shared_ptr<Effect> effect);
+	explicit SkyboxMaterial(Effect& effect);
 	~SkyboxMaterial();
 
 	EffectVariable& GetWorldViewProjection() { return m_worldViewProjection; }

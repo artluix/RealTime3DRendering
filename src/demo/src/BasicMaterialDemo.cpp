@@ -22,7 +22,7 @@ constexpr float k_movementRate = 0.01f;
 
 void BasicMaterialDemo::InitializeInternal()
 {
-	InitializeMaterial("Basic");
+	CreateMaterialWithEffect("Basic");
 
 	Model model(GetApp(), "Sphere", true);
 	m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);

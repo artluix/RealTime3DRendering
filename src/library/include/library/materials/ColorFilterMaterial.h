@@ -8,7 +8,7 @@ class ColorFilterMaterial : public PostProcessingMaterial
 	RTTI_CLASS(ColorFilterMaterial, PostProcessingMaterial)
 
 public:
-	explicit ColorFilterMaterial(std::shared_ptr<Effect> effect);
+	explicit ColorFilterMaterial(Effect& effect);
 	~ColorFilterMaterial();
 
 	EffectVariable& GetColorFilter() { return m_colorFilter; }

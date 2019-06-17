@@ -11,7 +11,7 @@ class PointSpriteMaterial : public Material
 public:
 	using Vertex = VertexPositionSize;
 
-	explicit PointSpriteMaterial(std::shared_ptr<Effect> effect);
+	explicit PointSpriteMaterial(Effect& effect);
 
 	EffectVariable& GetCameraPosition() { return m_cameraPosition; }
 	EffectVariable& GetCameraUp() { return m_cameraUp; }

@@ -8,7 +8,7 @@ class GaussianBlurMaterial : public PostProcessingMaterial
 	RTTI_CLASS(GaussianBlurMaterial, PostProcessingMaterial)
 
 public:
-	explicit GaussianBlurMaterial(std::shared_ptr<Effect> effect);
+	explicit GaussianBlurMaterial(Effect& effect);
 	~GaussianBlurMaterial();
 
 	EffectVariable& GetSampleOffsets() { return m_sampleOffsets; }

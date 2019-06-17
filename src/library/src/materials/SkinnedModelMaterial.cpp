@@ -6,10 +6,10 @@
 
 namespace library
 {
-SkinnedModelMaterial::SkinnedModelMaterial(std::shared_ptr<Effect> effect)
+SkinnedModelMaterial::SkinnedModelMaterial(Effect& effect)
 	: PointLightMaterial(effect)
 
-	, m_boneTransforms(effect->GetVariable("boneTransforms"))
+	, m_boneTransforms(effect.GetVariable("boneTransforms"))
 {}
 
 SkinnedModelMaterial::~SkinnedModelMaterial() = default;

@@ -47,7 +47,7 @@ void ProjectiveTextureMappingDemo::InitializeInternal()
 	const auto camera = GetCamera();
 	assert(!!camera);
 
-	InitializeMaterial("ProjectiveTextureMapping");
+	CreateMaterialWithEffect("ProjectiveTextureMapping");
 
 	// build plane vertices manually
 	{

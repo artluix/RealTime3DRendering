@@ -5,14 +5,14 @@
 
 namespace library
 {
-TransparencyMappingMaterial::TransparencyMappingMaterial(std::shared_ptr<Effect> effect)
+TransparencyMappingMaterial::TransparencyMappingMaterial(Effect& effect)
 	: PointLightMaterial(effect, "alphaBlendingWithoutFog")
 
-	, m_fogColor(effect->GetVariable("fogColor"))
-	, m_fogStart(effect->GetVariable("fogStart"))
-	, m_fogRange(effect->GetVariable("fogRange"))
+	, m_fogColor(effect.GetVariable("fogColor"))
+	, m_fogStart(effect.GetVariable("fogStart"))
+	, m_fogRange(effect.GetVariable("fogRange"))
 
-	, m_transparencyMap(effect->GetVariable("TransparencyMap"))
+	, m_transparencyMap(effect.GetVariable("TransparencyMap"))
 {}
 
 TransparencyMappingMaterial::~TransparencyMappingMaterial() = default;

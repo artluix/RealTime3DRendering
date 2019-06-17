@@ -6,19 +6,19 @@
 
 namespace library
 {
-EnvironmentMappingMaterial::EnvironmentMappingMaterial(std::shared_ptr<Effect> effect)
+EnvironmentMappingMaterial::EnvironmentMappingMaterial(Effect& effect)
 	: Material(effect, "main10")
 
-	, m_ambientColor(effect->GetVariable("ambientColor"))
-	, m_environmentColor(effect->GetVariable("envColor"))
-	, m_cameraPosition(effect->GetVariable("cameraPosition"))
+	, m_ambientColor(effect.GetVariable("ambientColor"))
+	, m_environmentColor(effect.GetVariable("envColor"))
+	, m_cameraPosition(effect.GetVariable("cameraPosition"))
 
-	, m_wvp(effect->GetVariable("wvp"))
-	, m_world(effect->GetVariable("world"))
-	, m_reflectionAmount(effect->GetVariable("reflectionAmount"))
+	, m_wvp(effect.GetVariable("wvp"))
+	, m_world(effect.GetVariable("world"))
+	, m_reflectionAmount(effect.GetVariable("reflectionAmount"))
 
-	, m_colorTexture(effect->GetVariable("ColorTexture"))
-	, m_environmentMap(effect->GetVariable("EnvironmentMap"))
+	, m_colorTexture(effect.GetVariable("ColorTexture"))
+	, m_environmentMap(effect.GetVariable("EnvironmentMap"))
 {}
 
 EnvironmentMappingMaterial::~EnvironmentMappingMaterial() = default;

@@ -19,10 +19,7 @@ public:
 	VertexBufferData CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh) const override;
 
 protected:
-	explicit TessellationMaterial(
-		std::shared_ptr<Effect> effect,
-		const std::string& defaultTechniqueName = "main11"
-	);
+	explicit TessellationMaterial(Effect& effect, const std::string& defaultTechniqueName = "main11");
 
 	void InitializeInternal() override;
 

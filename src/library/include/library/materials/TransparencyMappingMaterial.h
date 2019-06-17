@@ -8,7 +8,7 @@ class TransparencyMappingMaterial : public PointLightMaterial
 	RTTI_CLASS(TransparencyMappingMaterial, PointLightMaterial)
 
 public:
-	explicit TransparencyMappingMaterial(std::shared_ptr<Effect> effect);
+	explicit TransparencyMappingMaterial(Effect& effect);
 	~TransparencyMappingMaterial();
 
 	EffectVariable& GetFogColor() { return m_fogColor; }

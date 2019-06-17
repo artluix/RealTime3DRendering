@@ -36,7 +36,7 @@ EnvironmentMappingDemo::~EnvironmentMappingDemo() = default;
 
 void EnvironmentMappingDemo::InitializeInternal()
 {
-	InitializeMaterial("EnvironmentMapping");
+	CreateMaterialWithEffect("EnvironmentMapping");
 
 	// load model
 	{

@@ -28,7 +28,7 @@ public:
 	unsigned GetVertexSize() const override { return sizeof(Vertex); }
 
 protected:
-	explicit LightMaterial(std::shared_ptr<Effect> effect, const std::string& defaultTechniqueName = "main11");
+	explicit LightMaterial(Effect& effect, const std::string& defaultTechniqueName = "main11");
 
 	void InitializeInternal() override;
 

@@ -11,7 +11,7 @@ class PostProcessingMaterial : public Material
 public:
 	using Vertex = VertexPositionTexture;
 
-	explicit PostProcessingMaterial(std::shared_ptr<Effect> effect);
+	explicit PostProcessingMaterial(Effect& effect);
 	~PostProcessingMaterial();
 
 	EffectVariable& GetSceneTexture() { return m_sceneTexture; }

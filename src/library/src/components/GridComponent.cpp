@@ -66,7 +66,7 @@ void GridComponent::SetColor(const math::Color& color)
 
 void GridComponent::InitializeInternal()
 {
-	InitializeMaterial("Basic");
+	CreateMaterialWithEffect("Basic");
 	Build();
 }
 

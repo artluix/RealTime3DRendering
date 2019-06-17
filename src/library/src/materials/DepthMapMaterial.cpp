@@ -8,9 +8,9 @@
 
 namespace library
 {
-DepthMapMaterial::DepthMapMaterial(std::shared_ptr<Effect> effect)
+DepthMapMaterial::DepthMapMaterial(Effect& effect)
 	: Material(effect, "create_depth_map")
-	, m_worldLightViewProjection(effect->GetVariable("worldLightViewProjection"))
+	, m_worldLightViewProjection(effect.GetVariable("worldLightViewProjection"))
 {}
 
 DepthMapMaterial::~DepthMapMaterial() = default;

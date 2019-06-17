@@ -8,7 +8,7 @@ class ProjectiveTextureMappingMaterial : public PointLightMaterial
 	RTTI_CLASS(ProjectiveTextureMappingMaterial, PointLightMaterial)
 
 public:
-	explicit ProjectiveTextureMappingMaterial(std::shared_ptr<Effect> effect);
+	explicit ProjectiveTextureMappingMaterial(Effect& effect);
 
 	EffectVariable& GetProjectedTexture() { return m_projectedTexture; }
 	EffectVariable& GetProjectiveTextureMatrix() { return m_projectiveTextureMatrix; }

@@ -7,9 +7,9 @@
 
 namespace library
 {
-BasicMaterial::BasicMaterial(std::shared_ptr<Effect> effect)
+BasicMaterial::BasicMaterial(Effect& effect)
 	: Material(effect, "main11")
-	, m_worldViewProjection(effect->GetVariable("WorldViewProjection"))
+	, m_worldViewProjection(effect.GetVariable("WorldViewProjection"))
 {}
 
 BasicMaterial::~BasicMaterial() = default;

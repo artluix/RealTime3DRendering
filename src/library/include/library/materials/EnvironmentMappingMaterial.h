@@ -11,7 +11,7 @@ class EnvironmentMappingMaterial : public Material
 public:
 	using Vertex = VertexPositionTextureNormal;
 
-	explicit EnvironmentMappingMaterial(std::shared_ptr<Effect> effect);
+	explicit EnvironmentMappingMaterial(Effect& effect);
 	~EnvironmentMappingMaterial();
 
 	EffectVariable& GetAmbientColor() { return m_ambientColor; }

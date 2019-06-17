@@ -6,12 +6,12 @@
 namespace library
 {
 DirectionalLightMaterial::DirectionalLightMaterial(
-	std::shared_ptr<Effect> effect,
+	Effect& effect,
 	const std::string& defaultTechniqueName /*= "main11"*/
-	)
+)
 	: LightMaterial(effect, defaultTechniqueName)
 
-	, m_lightDirection(effect->GetVariable("lightDirection"))
+	, m_lightDirection(effect.GetVariable("lightDirection"))
 {}
 
 DirectionalLightMaterial::~DirectionalLightMaterial() = default;

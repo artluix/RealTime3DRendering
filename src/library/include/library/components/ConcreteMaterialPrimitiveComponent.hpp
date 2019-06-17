@@ -3,7 +3,6 @@
 #include "library/Components/PrimitiveComponent.h"
 
 #include "library/Effect/Effect.h"
-#include "library/Effect/EffectTechnique.h"
 #include "library/Effect/EffectPass.h"
 
 #include <memory>
@@ -17,34 +16,31 @@ class ConcreteMaterialPrimitiveComponent : public PrimitiveComponent
 public:
 	using Material = MaterialType;
 
+	const Effect& GetEffect() const { return m_effect; }
+
 	const Material* GetMaterial() const override { return m_material.get(); }
-	ID3D11InputLayout* GetInputLayout() const override { return m_inputLayout; }
+	ID3D11InputLayout* GetInputLayout() const override { return m_material->GetCurrentInputLayout(); }
 
 protected:
 	ConcreteMaterialPrimitiveComponent() = default;
 
-	void InitializeMaterial(const std::string& effectName, const bool compile = false)
+	void CreateMaterialWithEffect(const std::string& effectName, const bool compile = false)
 	{
-		m_material = std::make_unique<Material>(Effect::Create(GetApp(), effectName, compile));
-		m_material->Initialize();
+		m_effect = Effect::Create(GetApp(), effectName, compile);
 
-		// set default pass and input layout from material
-		m_technique = &m_material->GetCurrentTechnique();
-		m_pass = &m_technique->GetPass(0);
-		m_inputLayout = m_material->GetInputLayout(*m_pass);
+		m_material = std::make_unique<Material>(*m_effect);
+		m_material->Initialize();
 	}
 
 	void Draw_SetData(const PrimitiveData& primitiveData) override
 	{
-		m_pass->Apply(0, GetApp().GetDeviceContext());
+		auto& pass = m_material->GetCurrentPass();
+		pass.Apply(0, GetApp().GetDeviceContext());
 	}
 
 	Material* GetMaterial() override { return m_material.get(); }
 
+	std::shared_ptr<Effect> m_effect;
 	std::unique_ptr<Material> m_material;
-
-	EffectPass* m_pass = nullptr;
-	EffectTechnique* m_technique = nullptr;
-	ID3D11InputLayout* m_inputLayout = nullptr;
 };
 } // namespace library

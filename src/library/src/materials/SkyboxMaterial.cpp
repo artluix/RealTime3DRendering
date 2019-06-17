@@ -7,10 +7,10 @@
 
 namespace library
 {
-SkyboxMaterial::SkyboxMaterial(std::shared_ptr<Effect> effect)
+SkyboxMaterial::SkyboxMaterial(Effect& effect)
 	: Material(effect, "main11")
-	, m_worldViewProjection(effect->GetVariable("WorldViewProjection"))
-	, m_skyboxTexture(effect->GetVariable("SkyboxTexture"))
+	, m_worldViewProjection(effect.GetVariable("WorldViewProjection"))
+	, m_skyboxTexture(effect.GetVariable("SkyboxTexture"))
 {}
 
 SkyboxMaterial::~SkyboxMaterial() = default;

@@ -8,7 +8,7 @@ class BloomMaterial : public PostProcessingMaterial
 	RTTI_CLASS(BloomMaterial, PostProcessingMaterial)
 
 public:
-	explicit BloomMaterial(std::shared_ptr<Effect> effect);
+	explicit BloomMaterial(Effect& effect);
 	~BloomMaterial();
 
 	EffectVariable& GetBloomTexture() { return m_bloomTexture; }

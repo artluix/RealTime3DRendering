@@ -11,7 +11,7 @@ class TextureMappingMaterial : public Material
 public:
 	using Vertex = VertexPositionTexture;
 
-	explicit TextureMappingMaterial(std::shared_ptr<Effect> effect);
+	explicit TextureMappingMaterial(Effect& effect);
 	~TextureMappingMaterial();
 
 	EffectVariable& GetWVP() { return m_wvp; }

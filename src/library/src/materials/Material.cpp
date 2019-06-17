@@ -11,34 +11,38 @@
 
 namespace library
 {
-Material::Material(std::shared_ptr<Effect> effect, const std::string& defaultTechniqueName /* = "" */)
+Material::Material(Effect& effect, const std::string& defaultTechniqueName /* = "" */)
 	: m_effect(effect)
 	, m_defaultTechniqueName(defaultTechniqueName)
 	, m_currentTechnique(
-		!defaultTechniqueName.empty() ? effect->GetTechnique(defaultTechniqueName)
-									  : effect->GetTechnique(0))
+		!defaultTechniqueName.empty() ? effect.GetTechnique(defaultTechniqueName)
+									  : effect.GetTechnique(0)
+	)
+	, m_currentPass(m_currentTechnique.get().GetPass(0))
 {
-	assert(effect->IsInitialized());
+	assert(effect.IsInitialized());
+}
+
+//-------------------------------------------------------------------------
+
+
+void Material::SetCurrentTechnique(const std::string& techniqueName, const std::string& passName /*= "p0"*/)
+{
+	m_currentTechnique = m_effect.GetTechnique(techniqueName);
+	SetCurrentPass(passName);
+}
+
+void Material::SetCurrentPass(const std::string& passName)
+{
+	m_currentPass = m_currentTechnique.get().GetPass(passName);
+	m_currentInputLayout = GetInputLayout(m_currentPass);
 }
 
 //-------------------------------------------------------------------------
 
 EffectVariable& Material::operator[](const std::string& variableName)
 {
-	return m_effect->GetVariable(variableName);
-}
-
-//-------------------------------------------------------------------------
-
-void Material::SetCurrentTechnique(const std::string& techniqueName)
-{
-	auto& technique = m_effect->GetTechnique(techniqueName);
-	SetCurrentTechnique(technique);
-}
-
-void Material::SetCurrentTechnique(EffectTechnique& technique)
-{
-	m_currentTechnique = technique;
+	return m_effect.GetVariable(variableName);
 }
 
 //-------------------------------------------------------------------------
@@ -61,17 +65,16 @@ void Material::Initialize()
 
 	InitializeInternal();
 
+	m_currentInputLayout = GetInputLayout(m_currentPass); // we must set it here
+
 	m_initialized = true;
 }
 
 //-------------------------------------------------------------------------
 
-void Material::CreateInputLayout(
-	const std::string& techniqueName,
-	const std::string& passName /* = "p0" */
-)
+void Material::CreateInputLayout(const std::string& techniqueName, const std::string& passName /*= "p0"*/)
 {
-	const auto& technique = m_effect->GetTechnique(techniqueName);
+	const auto& technique = m_effect.GetTechnique(techniqueName);
 	const auto& pass = technique.GetPass(passName);
 	auto inputLayout = pass.CreateInputLayout(m_inputElementDescriptions);
 
@@ -107,7 +110,8 @@ PrimitiveData Material::CreatePrimitiveData(ID3D11Device* const device, const Me
 		GetVertexSize(),
 		mesh.GetPrimitiveTopology(),
 		CreateVertexBufferData(device, mesh),
-		mesh.CreateIndexBufferData());
+		mesh.CreateIndexBufferData()
+	);
 }
 
 std::vector<PrimitiveData> Material::CreatePrimitivesData(ID3D11Device* const device, const Model& model) const

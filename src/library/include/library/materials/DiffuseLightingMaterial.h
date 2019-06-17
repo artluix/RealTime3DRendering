@@ -11,7 +11,7 @@ class DiffuseLightingMaterial : public Material
 public:
 	using Vertex = VertexPositionTextureNormal;
 
-	explicit DiffuseLightingMaterial(std::shared_ptr<Effect> effect);
+	explicit DiffuseLightingMaterial(Effect& effect);
 	~DiffuseLightingMaterial();
 
 	EffectVariable& GetAmbientColor() { return m_ambientColor; }

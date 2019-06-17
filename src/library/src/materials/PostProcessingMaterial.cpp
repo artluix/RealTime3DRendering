@@ -9,9 +9,9 @@
 
 namespace library
 {
-PostProcessingMaterial::PostProcessingMaterial(std::shared_ptr<Effect> effect)
+PostProcessingMaterial::PostProcessingMaterial(Effect& effect)
 	: Material(effect)
-	, m_sceneTexture(effect->GetVariable("SceneTexture"))
+	, m_sceneTexture(effect.GetVariable("SceneTexture"))
 {}
 
 PostProcessingMaterial::~PostProcessingMaterial() = default;

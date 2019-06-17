@@ -10,7 +10,7 @@ class SkinnedModelMaterial : public PointLightMaterial
 public:
 	using Vertex = VertexPositionTextureNormalSkinned;
 
-	explicit SkinnedModelMaterial(std::shared_ptr<Effect> effect);
+	explicit SkinnedModelMaterial(Effect& effect);
 	~SkinnedModelMaterial();
 
 	EffectVariable& GetBoneTransforms() { return m_boneTransforms; }

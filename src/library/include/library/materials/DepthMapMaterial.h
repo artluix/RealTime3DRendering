@@ -11,7 +11,7 @@ class DepthMapMaterial : public Material
 public:
 	using Vertex = VertexPosition;
 
-	explicit DepthMapMaterial(std::shared_ptr<Effect> effect);
+	explicit DepthMapMaterial(Effect& effect);
 	~DepthMapMaterial();
 
 	EffectVariable& GetWorldLightViewProjection() { return m_worldLightViewProjection; }

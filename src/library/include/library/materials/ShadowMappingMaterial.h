@@ -9,7 +9,7 @@ class ShadowMappingMaterial : public PointLightMaterial
 	RTTI_CLASS(ShadowMappingMaterial, PointLightMaterial)
 
 public:
-	explicit ShadowMappingMaterial(std::shared_ptr<Effect> effect);
+	explicit ShadowMappingMaterial(Effect& effect);
 
 	EffectVariable& GetProjectiveTextureMatrix() { return m_projectiveTextureMatrix; }
 	EffectVariable& GetShadowMapTexture() { return m_shadowMapTexture; }

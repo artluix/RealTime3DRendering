@@ -8,13 +8,13 @@
 namespace library
 {
 TessellationMaterial::TessellationMaterial(
-	std::shared_ptr<Effect> effect,
+	Effect& effect,
 	const std::string& defaultTechniqueName /* = "main11" */
-	)
+)
 	: Material(effect, defaultTechniqueName)
 
-	, m_wvp(effect->GetVariable("k_wvp"))
-	, m_tessellationEdgeFactors(effect->GetVariable("k_tessellationEdgeFactors"))
+	, m_wvp(effect.GetVariable("k_wvp"))
+	, m_tessellationEdgeFactors(effect.GetVariable("k_tessellationEdgeFactors"))
 {}
 
 //-------------------------------------------------------------------------

@@ -25,7 +25,7 @@ ProxyModelComponent::~ProxyModelComponent() = default;
 
 void ProxyModelComponent::InitializeInternal()
 {
-	InitializeMaterial("Basic");
+	CreateMaterialWithEffect("Basic");
 
 	Model model(GetApp(), m_modelName, true);
 	m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);

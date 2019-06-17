@@ -44,7 +44,7 @@ void PointLightDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
-	InitializeMaterial("PointLight");
+	CreateMaterialWithEffect("PointLight");
 
 	// load model
 	{

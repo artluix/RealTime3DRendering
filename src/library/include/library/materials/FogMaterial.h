@@ -8,7 +8,7 @@ class FogMaterial : public DirectionalLightMaterial
 	RTTI_CLASS(FogMaterial, DirectionalLightMaterial)
 
 public:
-	explicit FogMaterial(std::shared_ptr<Effect> effect);
+	explicit FogMaterial(Effect& effect);
 	~FogMaterial();
 
 	EffectVariable& GetFogColor() { return m_fogColor; }

@@ -37,7 +37,7 @@ GaussianBlurComponent::~GaussianBlurComponent() = default;
 
 void GaussianBlurComponent::InitializeInternal()
 {
-	InitializeMaterial("GaussianBlur");
+	CreateMaterialWithEffect("GaussianBlur");
 	InitializeQuad("blur");
 
 	m_horizontalBlurTarget = std::make_unique<FullScreenRenderTarget>(GetApp());
