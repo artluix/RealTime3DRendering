@@ -29,7 +29,7 @@
 #include "ShadowMappingDemo.h"
 #include "DirectionalShadowMappingDemo.h"
 
-// #include "AnimationDemo.h"
+#include "AnimationDemo.h"
 
 // #include "GeometryShaderDemo.h"
 
@@ -256,9 +256,9 @@ void DemoApplication::Initialize()
 	directionalShadowMapping->SetKeyboard(*m_keyboard);
 
 	// animation
-	// auto animation = std::make_shared<AnimationDemo>();
-	// animation->SetCamera(*camera);
-	// animation->SetKeyboard(*m_keyboard);
+	auto animation = std::make_shared<AnimationDemo>();
+	animation->SetCamera(*camera);
+	animation->SetKeyboard(*m_keyboard);
 
 	// geometry shader
 	// auto geometryShader = std::make_shared<GeometryShaderDemo>();
@@ -290,9 +290,9 @@ void DemoApplication::Initialize()
 	// m_components.push_back(projectiveTextureMapping);
 	// m_components.push_back(projectiveTextureDepthMapMapping);
 	// m_components.push_back(shadowMapping);
-	m_components.push_back(directionalShadowMapping);
+	// m_components.push_back(directionalShadowMapping);
 	m_components.push_back(postProcessingText);
-	// m_components.push_back(animation);
+	m_components.push_back(animation);
 	// m_components.push_back(geometryShader);
 
 	Application::Initialize();

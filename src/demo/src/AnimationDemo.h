@@ -5,7 +5,6 @@
 #include <library/Components/InputReceivableComponent.h>
 
 #include <library/math/Color.h>
-#include <library/CommonTypes.h>
 #include <library/DirectXForwardDeclarations.h>
 
 #include <memory>
@@ -13,30 +12,42 @@
 
 namespace library
 {
-	class PointLightComponent;
-	class ProxyModelComponent;
-	class TextComponent;
-	class AnimationPlayerComponent;
+class PointLightComponent;
+class ProxyModelComponent;
+class TextComponent;
+class AnimationPlayerComponent;
 
-	class Model;
+class Model;
 } // namespace library
 
 class AnimationDemo
 	: public library::ConcreteMaterialPrimitiveComponent<library::SkinnedModelMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(AnimationDemo, library::SceneComponent, library::InputReceivableComponent)
+	RTTI_CLASS(AnimationDemo, library::PrimitiveComponent, library::InputReceivableComponent)
 
 public:
-	explicit AnimationDemo();
+	AnimationDemo();
+	~AnimationDemo();
 
-	void Initialize() override;
 	void Update(const library::Time& time) override;
 
 protected:
+	void InitializeInternal() override;
 	void Draw_SetData(const library::PrimitiveData& primitiveData) override;
 
 private:
+	struct Texture
+	{
+		enum Type : unsigned
+		{
+			Default = 0,
+
+			//# Count
+			Count
+		};
+	};
+
 	void UpdateOptions();
 
 	void UpdateAmbientLight(const library::Time& time);
@@ -48,11 +59,11 @@ private:
 	std::unique_ptr<library::ProxyModelComponent> m_proxyModel;
 	std::unique_ptr<library::AnimationPlayerComponent> m_animationPlayer;
 
-	std::unique_ptr<Model> m_model;
+	std::unique_ptr<library::Model> m_model;
 
 	bool m_manualAdvanceMode;
 
 	float m_specularPower;
-	library::Color m_specularColor;
-	library::Color m_ambientColor;
+	library::math::Color m_specularColor;
+	library::math::Color m_ambientColor;
 };

@@ -19,6 +19,7 @@
 
 #include <library/Model/Model.h>
 #include <library/Model/Mesh.h>
+#include <library/Model/ModelMaterial.h>
 
 #include <library/RasterizerStates.h>
 
@@ -29,11 +30,11 @@ using namespace library;
 
 namespace
 {
-	constexpr float k_byteMax = static_cast<float>(0xFF);
+constexpr float k_byteMax = static_cast<float>(0xFF);
 
-	constexpr float k_lightModulationRate = 10.f;
-	constexpr float k_lightMovementRate = 10.f;
-	constexpr auto k_lightRotationRate = math::Vector2(math::Pi_2);
+constexpr float k_lightModulationRate = 10.f;
+constexpr float k_lightMovementRate = 10.f;
+constexpr auto k_lightRotationRate = math::Vector2(math::Pi_2);
 }
 
 AnimationDemo::AnimationDemo()
@@ -45,16 +46,34 @@ AnimationDemo::AnimationDemo()
 {
 }
 
+AnimationDemo::~AnimationDemo() = default;
+
 //-------------------------------------------------------------------------
 
-void AnimationDemo::Initialize()
+void AnimationDemo::InitializeInternal()
 {
 	const auto camera = GetCamera();
 	assert(!!camera);
 
-	InitializeMaterial("SkinnedModel");
+	CreateMaterialWithEffect("SkinnedModel");
 
 	m_model = std::make_unique<Model>(GetApp(), "RunningSoldier.dae", true);
+	m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), *m_model);
+
+	m_textures.resize(Texture::Count);
+	// extract diffuse texture name from ModelMaterial
+	{
+		const auto& mesh = m_model->GetMesh(0);
+		const auto& modelMaterial = mesh.GetMaterial();
+		if (modelMaterial.HasTextureNames(TextureType::Diffuse))
+		{
+			const auto& diffuseTexturePath = Path(
+				modelMaterial.GetTextureNames(TextureType::Diffuse).front()
+			);
+			const auto textureName = diffuseTexturePath.GetBaseName().SplitExt().first.GetString();
+			m_textures[Texture::Default] = GetApp().LoadTexture(textureName);
+		}
+	}
 
 	SetScaling(math::Vector3(0.05f));
 
@@ -65,7 +84,7 @@ void AnimationDemo::Initialize()
 	m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.5f);
 	m_proxyModel->SetCamera(*camera);
 	m_proxyModel->SetPosition(m_pointLight->GetPosition());
-	m_proxyModel->Initialize();
+	m_proxyModel->Initialize(GetApp());
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -91,10 +110,10 @@ void AnimationDemo::Initialize()
 			return woss.str();
 		}
 	);
-	m_text->Initialize();
+	m_text->Initialize(GetApp());
 
 	m_animationPlayer = std::make_unique<AnimationPlayerComponent>(*m_model, false);
-	m_animationPlayer->Initialize();
+	m_animationPlayer->Initialize(GetApp());
 	m_animationPlayer->Play(m_model->GetAnimation(0));
 }
 
@@ -112,14 +131,14 @@ void AnimationDemo::Update(const Time& time)
 	if (!m_manualAdvanceMode)
 		m_animationPlayer->Update(time);
 
-	SceneComponent::Update(time);
+	PrimitiveComponent::Update(time);
 }
 
 //-------------------------------------------------------------------------
 
 void AnimationDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
-	auto world = GetWorldMatrix();
+	const auto& world = GetWorldMatrix();
 
 	auto wvp = world;
 	if (auto camera = GetCamera())
@@ -133,17 +152,17 @@ void AnimationDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetWorld() << world;
 
 	m_material->GetSpecularPower() << m_specularPower;
-	m_material->GetSpecularColor() << m_specularColor;
-	m_material->GetAmbientColor() << m_ambientColor;
-	m_material->GetLightColor() << m_pointLight->GetColor();
+	m_material->GetSpecularColor() << m_specularColor.ToVector4();
+	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
+	m_material->GetLightColor() << m_pointLight->GetColor().ToVector4();
 	m_material->GetLightPosition() << m_pointLight->GetPosition();
 	m_material->GetLightRadius() << m_pointLight->GetRadius();
 
-	m_material->GetColorTexture() << primitiveData.texture.Get();
+	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 
 	m_material->GetBoneTransforms() << m_animationPlayer->GetBoneTransforms();
 
-	SceneComponent::Draw_SetData(primitiveData);
+	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }
 
 //-------------------------------------------------------------------------
@@ -240,22 +259,22 @@ void AnimationDemo::UpdatePointLight(const Time& time)
 
 		// move
 		{
-			math::Vector3 movementAmount;
+			math::Vector3i movementAmount;
 
 			if (m_keyboard->IsKeyDown(Key::Num_4))
-				movementAmount.x = -1.0f;
+				movementAmount.x--;
 			if (m_keyboard->IsKeyDown(Key::Num_6))
-				movementAmount.x = 1.0f;
+				movementAmount.x++;
 
 			if (m_keyboard->IsKeyDown(Key::Num_9))
-				movementAmount.y = 1.0f;
+				movementAmount.y++;
 			if (m_keyboard->IsKeyDown(Key::Num_3))
-				movementAmount.y = -1.0f;
+				movementAmount.y--;
 
 			if (m_keyboard->IsKeyDown(Key::Num_8))
-				movementAmount.z = -1.0f;
+				movementAmount.z--;
 			if (m_keyboard->IsKeyDown(Key::Num_2))
-				movementAmount.z = 1.0f;
+				movementAmount.z++;
 
 			if (movementAmount)
 			{

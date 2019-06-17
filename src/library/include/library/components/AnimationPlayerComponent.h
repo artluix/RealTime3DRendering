@@ -45,6 +45,9 @@ public:
 
 	void Update(const Time& time) override;
 
+protected:
+	void InitializeInternal() override {}
+
 private:
 	struct SceneNodeLess {
 		bool operator()(const SceneNode& lhs, const SceneNode& rhs) const { return &lhs < &rhs; }
