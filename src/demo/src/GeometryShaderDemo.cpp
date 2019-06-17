@@ -20,17 +20,21 @@ using namespace library;
 GeometryShaderDemo::GeometryShaderDemo()
 	: m_showRandomPoints(true)
 {
-	SetTextureName("BookCover");
 }
 
 //-------------------------------------------------------------------------
 
-void GeometryShaderDemo::Initialize()
+void GeometryShaderDemo::InitializeInternal()
 {
-	m_primitivesData = { PrimitiveData() };
-	m_primitivesData.front().primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
+	m_primitivesData.clear();
+	auto& pd = m_primitivesData.emplace_back(PrimitiveData{});
+	pd.primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
+	pd.stride = sizeof(VertexPositionSize);
 
-	InitializeMaterial("PointSprite");
+	CreateMaterialWithEffect("PointSprite");
+
+	m_textures.resize(Texture::Count);
+	m_textures[Texture::Default] = GetApp().LoadTexture("BookCover");
 
 	InitializeRandomPoints();
 
@@ -44,7 +48,7 @@ void GeometryShaderDemo::Initialize()
 			return woss.str();
 		}
 	);
-	m_text->Initialize();
+	m_text->Initialize(GetApp());
 }
 
 void GeometryShaderDemo::Update(const Time& time)
@@ -68,37 +72,34 @@ void GeometryShaderDemo::Update(const Time& time)
 				techniqueName = "main11_strip";
 			}
 
-			const auto& technique = m_effect->GetTechnique(techniqueName);
-			m_material->SetCurrentTechnique(technique);
-			m_currentPass = &technique.GetPass(0);
-			m_currentInputLayout = m_material->GetInputLayout(*m_currentPass);
+			m_material->SetCurrentTechnique(techniqueName);
 		}
 	}
 
 	m_text->Update(time);
 
-	SceneComponent::Update(time);
+	PrimitiveComponent::Update(time);
 }
 
 //-------------------------------------------------------------------------
 
 void GeometryShaderDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
-	if (!!m_camera)
+	if (auto camera = GetCamera())
 	{
-		m_material->GetCameraPosition() << m_camera->GetPosition();
-		m_material->GetCameraUp() << m_camera->GetUp();
-		m_material->GetViewProjection() << m_camera->GetViewProjectionMatrix();
+		m_material->GetCameraPosition() << camera->GetPosition();
+		m_material->GetCameraUp() << camera->GetUp();
+		m_material->GetViewProjection() << camera->GetViewProjectionMatrix();
 	}
 
-	m_material->GetColorTexture() << primitiveData.texture.Get();
+	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 
-	SceneComponent::Draw_SetData(primitiveData);
+	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }
 
 void GeometryShaderDemo::Draw_Render(const library::PrimitiveData& primitiveData)
 {
-	SceneComponent::Draw_Render(primitiveData);
+	PrimitiveComponent::Draw_Render(primitiveData);
 
 	GetApp().GetDeviceContext()->GSSetShader(nullptr, nullptr, 0);
 }
@@ -129,16 +130,11 @@ void GeometryShaderDemo::InitializeRandomPoints()
 
 		const float size = sizeDistribution(randomGenerator);
 
-		vertices.emplace_back(DirectX::XMFLOAT4(x, y, z, 1.f), DirectX::XMFLOAT2(size, size));
+		vertices.emplace_back(math::Vector4(x, y, z, 1.f), math::Vector2(size, size));
 	}
 
-	auto& md = m_primitivesData.front();
-
-	md.vertexBuffer.elementsCount = vertices.size();
-	md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
-		GetApp().GetDevice(),
-		vertices
-	);
+	auto& pd = m_primitivesData.front();
+	pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
 }
 
 void GeometryShaderDemo::InitializeFixedPoints()
@@ -152,16 +148,11 @@ void GeometryShaderDemo::InitializeFixedPoints()
 	for (unsigned i = 0; i < k_maxPointsCount; i++)
 	{
 		vertices.emplace_back(
-			DirectX::XMFLOAT4(i * k_horizontalOffset, 0.f, 0.f, 1.f),
-			DirectX::XMFLOAT2(math::Vector2::Zero)
+			math::Vector4(i * k_horizontalOffset, 0.f, 0.f, 1.f),
+			math::Vector2::Zero
 		);
 	}
 
-	auto& md = m_primitivesData.front();
-
-	md.vertexBuffer.elementsCount = vertices.size();
-	md.vertexBuffer.buffer = library::Material::CreateVertexBuffer(
-		GetApp().GetDevice(),
-		vertices
-	);
+	auto& pd = m_primitivesData.front();
+	pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
 }
