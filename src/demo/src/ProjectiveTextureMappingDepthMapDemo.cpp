@@ -129,6 +129,7 @@ void ProjectiveTextureMappingDepthMapDemo::InitializeInternal()
 	m_renderableProjectorFrustum = std::make_unique<RenderableFrustumComponent>();
 	m_renderableProjectorFrustum->SetCamera(*camera);
 	m_renderableProjectorFrustum->SetPosition(m_pointLight->GetPosition());
+	m_renderableProjectorFrustum->SetInitialTransform(math::Matrix4::RotationY(math::Pi));
 	m_renderableProjectorFrustum->Initialize(GetApp());
 	m_renderableProjectorFrustum->InitializeGeometry(m_projectorFrustum);
 
