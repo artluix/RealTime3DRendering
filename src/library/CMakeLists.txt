@@ -67,6 +67,7 @@ if(APPLICATION)
                 include/library/Materials/PointSpriteMaterial.h
                 include/library/Materials/PostProcessingMaterial.h
                 include/library/Materials/ProjectiveTextureMappingMaterial.h
+                include/library/Materials/QuadHeightMapTessellationMaterial.h
                 include/library/Materials/ShadowMappingMaterial.h
                 include/library/Materials/SkinnedModelMaterial.h
                 include/library/Materials/SkyboxMaterial.h
@@ -191,6 +192,7 @@ if(APPLICATION)
                 src/Materials/PointSpriteMaterial.cpp
                 src/Materials/PostProcessingMaterial.cpp
                 src/Materials/ProjectiveTextureMappingMaterial.cpp
+                src/Materials/QuadHeightMapTessellationMaterial.cpp
                 src/Materials/ShadowMappingMaterial.cpp
                 src/Materials/SkinnedModelMaterial.cpp
                 src/Materials/SkyboxMaterial.cpp

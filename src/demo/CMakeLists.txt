@@ -76,6 +76,9 @@ if(APPLICATION)
             src/ProjectiveTextureMappingDepthMapDemo.h
             src/ProjectiveTextureMappingDepthMapDemo.cpp
 
+            src/QuadHeightMapTessellationDemo.h
+            src/QuadHeightMapTessellationDemo.cpp
+
             src/ShadowMappingDemo.h
             src/ShadowMappingDemo.cpp
 
