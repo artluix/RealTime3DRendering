@@ -19,7 +19,7 @@ public:
 	const Effect& GetEffect() const { return m_effect; }
 
 	const Material* GetMaterial() const override { return m_material.get(); }
-	ID3D11InputLayout* GetInputLayout() const override { return m_material->GetCurrentInputLayout(); }
+	ID3D11InputLayout* GetInputLayout() const override { return GetMaterial()->GetCurrentInputLayout(); }
 
 protected:
 	ConcreteMaterialPrimitiveComponent() = default;
@@ -34,7 +34,7 @@ protected:
 
 	void Draw_SetData(const PrimitiveData& primitiveData) override
 	{
-		auto& pass = m_material->GetCurrentPass();
+		auto& pass = GetMaterial()->GetCurrentPass();
 		pass.Apply(0, GetApp().GetDeviceContext());
 	}
 

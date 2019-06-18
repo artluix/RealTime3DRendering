@@ -4,36 +4,76 @@
 
 #include <library/Components/InputReceivableComponent.h>
 
+#include <memory>
+
 namespace library
 {
-	class TextComponent;
+class TextComponent;
 } // namespace library
 
 class BasicTessellationDemo
 	: public library::ConcreteMaterialPrimitiveComponent<library::TessellationMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(BasicTessellationDemo, library::SceneComponent, library::InputReceivableComponent)
+	RTTI_CLASS(BasicTessellationDemo, library::PrimitiveComponent, library::InputReceivableComponent)
 
 public:
-	explicit BasicTessellationDemo();
+	BasicTessellationDemo();
 
-	void Initialize() override;
 	void Update(const library::Time& time) override;
+	void Draw(const library::Time& time) override;
+
+	const library::TessellationMaterial* GetMaterial() const override;
 
 protected:
+	library::TessellationMaterial* GetMaterial() override;
+
+	void InitializeInternal() override;
+
 	void Draw_SetData(const library::PrimitiveData& primitiveData) override;
 	void Draw_Render(const library::PrimitiveData& primitiveData) override;
 
 private:
-	// ConcreteMaterialPrimitiveComponent<T>::m_effect - triangle effect
+	struct Topology
+	{
+		enum Type : unsigned
+		{
+			Triangle = 0,
+			Quad,
+
+			//# Count
+			Count
+		};
+	};
+	using TopologyType = Topology::Type;
+
+	std::wstring DumpEdgeFactors() const;
+	std::wstring DumpInsideFactors() const;
+
 	std::shared_ptr<library::Effect> m_quadEffect;
+	std::unique_ptr<library::TessellationMaterial> m_quadMaterial;
 
 	std::unique_ptr<library::TextComponent> m_text;
 
-	std::vector<float> m_tessellationEdgeFactors;
-	std::vector<float> m_tessellationInsideFactors;
+	// tessellation factors stored as for quad topology
+	struct
+	{
+		union
+		{
+			std::array<float, 3> triangle;
+			std::array<float, 4> quad;
+		};
+	} m_tessEdgeFactors;
+
+	struct
+	{
+		union
+		{
+			float triangle;
+			std::array<float, 2> quad;
+		};
+	} m_tessInsideFactors;
 
 	bool m_isUniformTessellation;
-	bool m_showQuadTopology;
+	TopologyType m_topology;
 };

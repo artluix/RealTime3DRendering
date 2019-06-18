@@ -2,13 +2,13 @@
 
 cbuffer CBufferPerFrame
 {
-    float k_tessellationEdgeFactors[3];
-    float k_tessellationInsideFactor;
+    float tessellationEdgeFactors[3];
+    float tessellationInsideFactor;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 k_wvp;
+    float4x4 wvp;
 }
 
 /************* Data Structures *************/
@@ -73,10 +73,10 @@ HS_CONSTANT_OUTPUT constant_hull_shader(InputPatch<VS_OUTPUT, 3> patch)
     [unroll]
     for (int i = 0; i < 3; i++)
     {
-        OUT.edgeFactors[i] = k_tessellationEdgeFactors[i];
+        OUT.edgeFactors[i] = tessellationEdgeFactors[i];
     }
 
-    OUT.insideFactor = k_tessellationInsideFactor;
+    OUT.insideFactor = tessellationInsideFactor;
 
     return OUT;
 }
@@ -93,18 +93,18 @@ DS_OUTPUT domain_shader(HS_CONSTANT_OUTPUT IN, float3 uvw : SV_DomainLocation, c
         uvw.y * patch[1].objectPosition.xyz +
         uvw.z * patch[2].objectPosition.xyz;
 
-    OUT.position = mul(float4(objectPosition, 1.f), k_wvp);
+    OUT.position = mul(float4(objectPosition, 1.f), wvp);
 
     return OUT;
 }
 
 /************* Pixel Shader *************/
 
-static const float4 k_whiteColor = { 0.961f, 0.871f, 0.702f, 1.f };
+static const float4 k_wheatColor = { 0.961f, 0.871f, 0.702f, 1.f };
 
 float4 pixel_shader(DS_OUTPUT IN) : SV_Target
 {
-    return k_whiteColor;
+    return k_wheatColor;
 }
 
 /************* Techniques *************/

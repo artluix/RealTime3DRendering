@@ -31,8 +31,8 @@ if(APPLICATION)
             src/BasicMaterialDemo.h
             src/BasicMaterialDemo.cpp
 
-            # src/BasicTessellationDemo.h
-            # src/BasicTessellationDemo.cpp
+            src/BasicTessellationDemo.h
+            src/BasicTessellationDemo.cpp
 
             src/BloomDemo.h
             src/BloomDemo.cpp

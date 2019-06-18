@@ -58,8 +58,13 @@ void PrimitiveComponent::Draw_SetIA(const PrimitiveData& primitiveData)
 	// set vertex buffer
 	{
 		unsigned offset = 0;
-		deviceContext
-			->IASetVertexBuffers(0, 1, &primitiveData.vertexBuffer.buffer, &primitiveData.stride, &offset);
+		deviceContext->IASetVertexBuffers(
+			0,
+			1,
+			&primitiveData.vertexBuffer.buffer,
+			&primitiveData.stride,
+			&offset
+		);
 	}
 
 	// set index buffer (if needed)

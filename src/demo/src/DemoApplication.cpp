@@ -32,6 +32,7 @@
 #include "AnimationDemo.h"
 
 #include "GeometryShaderDemo.h"
+#include "BasicTessellationDemo.h"
 
 //-------------------------------------------------------------------------
 
@@ -265,6 +266,11 @@ void DemoApplication::Initialize()
 	geometryShader->SetCamera(*camera);
 	geometryShader->SetKeyboard(*m_keyboard);
 
+	// basic tessellation
+	auto basicTessellation = std::make_shared<BasicTessellationDemo>();
+	basicTessellation->SetCamera(*camera);
+	basicTessellation->SetKeyboard(*m_keyboard);
+
 	// push needed components
 	m_components.push_back(m_keyboard);
 	m_components.push_back(m_mouse);
@@ -293,7 +299,8 @@ void DemoApplication::Initialize()
 	// m_components.push_back(directionalShadowMapping);
 	m_components.push_back(postProcessingText);
 	// m_components.push_back(animation);
-	m_components.push_back(geometryShader);
+	// m_components.push_back(geometryShader);
+	m_components.push_back(basicTessellation);
 
 	Application::Initialize();
 
