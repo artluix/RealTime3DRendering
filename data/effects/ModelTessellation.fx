@@ -161,6 +161,8 @@ DS_OUTPUT domain_shader(HS_CONSTANT_OUTPUT IN, float3 uvw : SV_DomainLocation, c
         uvw.y * patch[1].objectPosition.xyz +
         uvw.z * patch[2].objectPosition.xyz;
 
+    objectPosition = normalize(objectPosition); // for icosahedron demo
+
     float2 textureCoordinate =
         uvw.x * patch[0].textureCoordinate + 
         uvw.y * patch[1].textureCoordinate +

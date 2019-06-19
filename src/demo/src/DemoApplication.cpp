@@ -310,10 +310,10 @@ void DemoApplication::Initialize()
 	// m_components.push_back(directionalShadowMapping);
 	m_components.push_back(postProcessingText);
 	// m_components.push_back(animation);
-	m_components.push_back(geometryShader);
+	// m_components.push_back(geometryShader);
 	// m_components.push_back(basicTessellation);
 	// m_components.push_back(quadHeightMapTessellation);
-	// m_components.push_back(modelTessellation);
+	m_components.push_back(modelTessellation);
 
 	// hide grid by default
 	m_grid->SetVisible(false);

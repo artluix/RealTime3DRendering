@@ -40,7 +40,8 @@ void ModelTessellationDemo::InitializeInternal()
 
 	// load model
 	{
-		Model model(GetApp(), "Sphere", true);
+		Model model(GetApp(), "Icosahedron", true);
+		//Model model(GetApp(), "Sphere", true);
 		m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);
 
 		m_primitivesData.front().primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST;
@@ -103,19 +104,19 @@ void ModelTessellationDemo::Update(const Time& time)
 
 		if (m_isDistanceModeEnabled)
 		{
-			if (m_keyboard->IsKeyDown(Key::I))
+			if (m_keyboard->WasKeyPressed(Key::I))
 				m_maxTessFactor = math::Min(m_maxTessFactor + 1.f, k_maxTessFactor);
-			if (m_keyboard->IsKeyDown(Key::J))
+			if (m_keyboard->WasKeyPressed(Key::J))
 				m_maxTessFactor = math::Max(m_maxTessFactor - 1.f, k_minTessFactor);
 
-			if (m_keyboard->IsKeyDown(Key::O))
+			if (m_keyboard->WasKeyPressed(Key::O))
 				m_minTessDistance = math::Min(m_minTessDistance + 1.f, m_maxTessDistance);
-			if (m_keyboard->IsKeyDown(Key::K))
+			if (m_keyboard->WasKeyPressed(Key::K))
 				m_minTessDistance = math::Max(m_minTessDistance - 1.f, k_minTessDistance);
 
-			if (m_keyboard->IsKeyDown(Key::P))
+			if (m_keyboard->WasKeyPressed(Key::P))
 				m_maxTessDistance += 1.f;
-			if (m_keyboard->IsKeyDown(Key::L))
+			if (m_keyboard->WasKeyPressed(Key::L))
 				m_maxTessDistance = math::Max(m_maxTessDistance - 1.f, m_minTessDistance);
 		}
 		else
