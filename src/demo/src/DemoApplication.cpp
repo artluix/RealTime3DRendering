@@ -74,7 +74,8 @@ DemoApplication::DemoApplication(
 	const HINSTANCE instanceHandle,
 	const std::wstring& windowClass,
 	const std::wstring& windowTitle,
-	const int showCmd)
+	const int showCmd
+)
 	: Application(instanceHandle, windowClass, windowTitle, showCmd)
 	, m_postProcessingEnabled(false)
 {
@@ -309,10 +310,10 @@ void DemoApplication::Initialize()
 	// m_components.push_back(directionalShadowMapping);
 	m_components.push_back(postProcessingText);
 	// m_components.push_back(animation);
-	// m_components.push_back(geometryShader);
+	m_components.push_back(geometryShader);
 	// m_components.push_back(basicTessellation);
 	// m_components.push_back(quadHeightMapTessellation);
-	m_components.push_back(modelTessellation);
+	// m_components.push_back(modelTessellation);
 
 	// hide grid by default
 	m_grid->SetVisible(false);

@@ -152,6 +152,35 @@ void geometry_shader_strip(point VS_OUTPUT IN[1], inout TriangleStream<GS_OUTPUT
     }
 }
 
+[maxvertexcount(5)]
+void geometry_shader_linestrip(point VS_OUTPUT IN[1], inout LineStream<GS_OUTPUT> lineStream)
+{
+    GS_OUTPUT OUT = (GS_OUTPUT)0;
+
+    float2 halfSize = IN[0].size / 2.f;
+
+    float3 direction = k_cameraPosition - IN[0].position.xyz;
+    float3 right = cross(normalize(direction), k_cameraUp);
+
+    float3 offsetX = halfSize.x * right;
+    float3 offsetY = halfSize.y * k_cameraUp;
+
+    float4 vertices[5] = {
+        float4(IN[0].position.xyz - offsetX, 1.f), // left
+        float4(IN[0].position.xyz + offsetY, 1.f), // upper
+        float4(IN[0].position.xyz + offsetX, 1.f), // right
+        float4(IN[0].position.xyz - offsetY, 1.f), // bottom
+        float4(IN[0].position.xyz - offsetX, 1.f), // left
+    };
+
+    [unroll]
+    for (int i = 0; i < 5; i++)
+    {
+        OUT.position = mul(vertices[i], k_viewProjection);
+        lineStream.Append(OUT);
+    }
+}
+
 [maxvertexcount(4)]
 void geometry_shader_nosize(
     point VS_NOSIZE_OUTPUT IN[1],
@@ -201,6 +230,11 @@ float4 pixel_shader(GS_OUTPUT IN) : SV_Target
     return k_colorTexture.Sample(k_colorSampler, IN.textureCoordinate);
 }
 
+float4 pixel_shader_linestrip(GS_OUTPUT IN) : SV_Target
+{
+    return float4(1.f, 1.f, 1.f, 1.f);
+}
+
 /************* Techniques *************/
 
 technique11 main11
@@ -220,6 +254,16 @@ technique11 main11_strip
         SetVertexShader(CompileShader(vs_5_0, vertex_shader()));
         SetGeometryShader(CompileShader(gs_5_0, geometry_shader_strip()));
         SetPixelShader(CompileShader(ps_5_0, pixel_shader()));
+    }
+}
+
+technique11 main11_linestrip
+{
+    pass p0
+    {
+        SetVertexShader(CompileShader(vs_5_0, vertex_shader()));
+        SetGeometryShader(CompileShader(gs_5_0, geometry_shader_linestrip()));
+        SetPixelShader(CompileShader(ps_5_0, pixel_shader_linestrip()));
     }
 }
 

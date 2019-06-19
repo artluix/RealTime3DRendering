@@ -69,7 +69,8 @@ void GeometryShaderDemo::Update(const Time& time)
 			{
 				m_showRandomPoints = true;
 				InitializeRandomPoints();
-				techniqueName = "main11_strip";
+				//techniqueName = "main11_strip";
+				techniqueName = "main11_linestrip";
 			}
 
 			m_material->SetCurrentTechnique(techniqueName);
