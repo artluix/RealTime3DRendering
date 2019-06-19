@@ -34,6 +34,7 @@
 #include "GeometryShaderDemo.h"
 #include "BasicTessellationDemo.h"
 #include "QuadHeightMapTessellationDemo.h"
+#include "ModelTessellationDemo.h"
 
 //-------------------------------------------------------------------------
 
@@ -276,6 +277,10 @@ void DemoApplication::Initialize()
 	quadHeightMapTessellation->SetCamera(*camera);
 	quadHeightMapTessellation->SetKeyboard(*m_keyboard);
 
+	auto modelTessellation = std::make_shared<ModelTessellationDemo>();
+	modelTessellation->SetCamera(*camera);
+	modelTessellation->SetKeyboard(*m_keyboard);
+
 	// push needed components
 	m_components.push_back(m_keyboard);
 	m_components.push_back(m_mouse);
@@ -306,7 +311,8 @@ void DemoApplication::Initialize()
 	// m_components.push_back(animation);
 	// m_components.push_back(geometryShader);
 	// m_components.push_back(basicTessellation);
-	m_components.push_back(quadHeightMapTessellation);
+	// m_components.push_back(quadHeightMapTessellation);
+	m_components.push_back(modelTessellation);
 
 	// hide grid by default
 	m_grid->SetVisible(false);

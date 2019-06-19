@@ -64,6 +64,9 @@ if(APPLICATION)
             src/GeometryShaderDemo.h
             src/GeometryShaderDemo.cpp
 
+            src/ModelTessellationDemo.h
+            src/ModelTessellationDemo.cpp
+
             src/NormalMappingDemo.h
             src/NormalMappingDemo.cpp
 

@@ -62,6 +62,7 @@ if(APPLICATION)
                 include/library/Materials/FogMaterial.h
                 include/library/Materials/GaussianBlurMaterial.h
                 include/library/Materials/LightMaterial.h
+                include/library/Materials/ModelTessellationMaterial.h
                 include/library/Materials/NormalMappingMaterial.h
                 include/library/Materials/PointLightMaterial.h
                 include/library/Materials/PointSpriteMaterial.h
@@ -187,6 +188,7 @@ if(APPLICATION)
                 src/Materials/FogMaterial.cpp
                 src/Materials/GaussianBlurMaterial.cpp
                 src/Materials/LightMaterial.cpp
+                src/Materials/ModelTessellationMaterial.cpp
                 src/Materials/NormalMappingMaterial.cpp
                 src/Materials/PointLightMaterial.cpp
                 src/Materials/PointSpriteMaterial.cpp

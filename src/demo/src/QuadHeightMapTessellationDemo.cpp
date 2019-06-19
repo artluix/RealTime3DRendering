@@ -51,9 +51,9 @@ void QuadHeightMapTessellationDemo::InitializeInternal()
 		constexpr std::array<Vertex, 4> vertices =
 		{
 			Vertex(math::Vector4(-10.f, 1.f, -10.f, 1.f), math::Vector2(0.f, 0.f)), // upper left
-			Vertex(math::Vector4(10.f, 1.f, -10.f, 1.f), math::Vector2(1.f, 0.f)), // upper right
-			Vertex(math::Vector4(-10.f, 1.f, 10.f, 1.f), math::Vector2(0.f, 1.f)), // bottom left
-			Vertex(math::Vector4(10.f, 1.f, 10.f, 1.f), math::Vector2(1.f, 1.f)), // bottom right
+			Vertex(math::Vector4(10.f, 1.f, -10.f, 1.f), math::Vector2(1.f, 0.f)),  // upper right
+			Vertex(math::Vector4(-10.f, 1.f, 10.f, 1.f), math::Vector2(0.f, 1.f)),  // bottom left
+			Vertex(math::Vector4(10.f, 1.f, 10.f, 1.f), math::Vector2(1.f, 1.f)),   // bottom right
 		};
 
 		m_primitivesData.clear();
