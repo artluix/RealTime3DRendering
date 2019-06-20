@@ -34,7 +34,7 @@ cbuffer CBufferPerFrame
         float UIStep = 1.0;
     > = { 10.0f };
 
-    float spotLightInnerAngle <
+    float spotlightInnerAngle <
         string UIName = "Spotlight Inner Angle";
         string UIWIdget = "slider";
         float UIMin = 0.5;
@@ -42,7 +42,7 @@ cbuffer CBufferPerFrame
         float UIStep = 0.01;
     > = { 0.75f };
 
-    float spotLightOuterAngle <
+    float spotlightOuterAngle <
         string UIName = "Spotlight Outer Angle";
         string UIWIdget = "slider";
         float UIMin = 0.0;
@@ -90,7 +90,7 @@ SamplerState ColorSampler
     AddressV = WRAP;
 };
 
-// Data Structures 
+// Data Structures
 struct VS_INPUT
 {
     float4 objectPosition : POSITION;
@@ -108,7 +108,7 @@ struct VS_OUTPUT
     float3 lightLookAt : TEXCOORD3;
 };
 
-// Vertex Shader 
+// Vertex Shader
 VS_OUTPUT vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
@@ -117,7 +117,7 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
     OUT.worldPosition = mul(IN.objectPosition, world).xyz;
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
     OUT.normal = normalize(mul(float4(IN.normal, 0), world).xyz);
-    
+
     float3 lightDirection = lightPosition - OUT.worldPosition;
     OUT.attenuation = saturate(1.0f - (length(lightDirection) / lightRadius));
 
@@ -151,7 +151,7 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     float lightAngle = dot(lightLookAt, lightDirection);
     if (lightAngle > 0.0f)
     {
-        spotFactor = smoothstep(spotLightOuterAngle, spotLightInnerAngle, lightAngle);
+        spotFactor = smoothstep(spotlightOuterAngle, spotlightInnerAngle, lightAngle);
     }
 
     OUT.rgb = ambient + (spotFactor * (diffuse + specular));

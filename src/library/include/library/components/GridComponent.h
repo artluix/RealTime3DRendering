@@ -1,7 +1,7 @@
 #pragma once
 #include "library/Materials/BasicMaterial.h"
 #include "library/Components/ConcreteMaterialPrimitiveComponent.hpp"
-#include "library/math/Color.h"
+#include "library/Math/Color.h"
 #include "library/DirectXForwardDeclarations.h"
 
 namespace library

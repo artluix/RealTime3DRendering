@@ -2,6 +2,7 @@
 #include "library/Common.h"
 #include "library/VertexTypes.h"
 #include "library/DirectXForwardDeclarations.h"
+#include "library/InstanceData.h"
 
 namespace library
 {
@@ -38,6 +39,8 @@ namespace library
 	BufferData<BT>::BufferData(ID3D11Device* const device, const ContainerType& elements)
 		: elementsCount(static_cast<unsigned>(elements.size()))
 	{
+		using ElementType = typename ContainerType::value_type;
+
 		static_assert(
 			is_std_vector<ContainerType> || is_std_array<ContainerType>,
 			"BufferData can be created from std::array or std::vector only.");
@@ -45,40 +48,21 @@ namespace library
 		if constexpr (BT == BufferType::Vertex)
 		{
 			static_assert(
-				std::is_base_of_v<Vertex, ContainerType::value_type>,
-				"VertexBuffer type must be derived from Vertex");
+				std::is_base_of_v<Vertex, ElementType> ||
+				std::is_same_v<InstanceData, ElementType>,
+				"VertexBuffer type must be derived from Vertex"
+			);
 		}
 		else if constexpr (BT == BufferType::Index)
 		{
-			static_assert(
-				std::is_integral_v<ContainerType::value_type>,
-				"IndexBuffer type must be integral");
+			static_assert(std::is_integral_v<ElementType>, "IndexBuffer type must be integral");
 		}
 		else
 		{
 			static_assert(false, "Wrong buffer type");
 		}
 
-		/*switch (BT)
-		{
-			case BufferType::Vertex:
-				static_assert(
-					std::is_base_of_v<Vertex, ContainerType::value_type>,
-					"VertexBuffer type must be derived from Vertex");
-				break;
-
-			case BufferType::Index:
-				static_assert(
-					std::is_integral_v<ContainerType::value_type>,
-					"IndexBuffer type must be integral");
-				break;
-
-			default:
-				static_assert(false, "Wrong buffer type");
-				break;
-		};*/
-
-		CreateBuffer(device, elements.data(), sizeof(typename ContainerType::value_type) * elements.size());
+		CreateBuffer(device, elements.data(), sizeof(ElementType) * elements.size());
 	}
 
 	//-------------------------------------------------------------------------

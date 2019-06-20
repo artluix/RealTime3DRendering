@@ -3,7 +3,7 @@
 
 #include "library/Effect/Effect.h"
 #include "library/Model/Mesh.h"
-#include "library/math/Color.h"
+#include "library/Math/Color.h"
 
 namespace library
 {

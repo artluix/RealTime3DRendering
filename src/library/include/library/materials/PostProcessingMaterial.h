@@ -1,6 +1,5 @@
 #pragma once
 #include "library/Materials/Material.h"
-#include "library/VertexTypes.h"
 
 namespace library
 {

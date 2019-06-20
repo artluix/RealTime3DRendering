@@ -1,40 +1,40 @@
 #include "DemoApplication.h"
 
-#include "TriangleDemo.h"
-#include "CubeDemo.h"
-#include "ModelDemo.h"
-#include "TextureModelDemo.h"
+#include "Components/TriangleDemo.h"
+#include "Components/CubeDemo.h"
+#include "Components/ModelDemo.h"
+#include "Components/TextureModelDemo.h"
 
-#include "BasicMaterialDemo.h"
-#include "TextureMappingDemo.h"
+#include "Components/BasicMaterialDemo.h"
+#include "Components/TextureMappingDemo.h"
 
-#include "DiffuseLightingDemo.h"
-#include "PointLightDemo.h"
-#include "SpotlightDemo.h"
+#include "Components/DiffuseLightingDemo.h"
+#include "Components/PointLightDemo.h"
+#include "Components/SpotlightDemo.h"
 
-#include "NormalMappingDemo.h"
-#include "EnvironmentMappingDemo.h"
-#include "TransparencyMappingDemo.h"
-#include "DisplacementMappingDemo.h"
+#include "Components/NormalMappingDemo.h"
+#include "Components/EnvironmentMappingDemo.h"
+#include "Components/TransparencyMappingDemo.h"
+#include "Components/DisplacementMappingDemo.h"
 
-#include "FogDemo.h"
+#include "Components/FogDemo.h"
 
-#include "ColorFilterDemo.h"
-#include "GaussianBlurDemo.h"
-#include "BloomDemo.h"
-#include "DistortionMappingDemo.h"
+#include "Components/ColorFilterDemo.h"
+#include "Components/GaussianBlurDemo.h"
+#include "Components/BloomDemo.h"
+#include "Components/DistortionMappingDemo.h"
 
-#include "ProjectiveTextureMappingDemo.h"
-#include "ProjectiveTextureMappingDepthMapDemo.h"
-#include "ShadowMappingDemo.h"
-#include "DirectionalShadowMappingDemo.h"
+#include "Components/ProjectiveTextureMappingDemo.h"
+#include "Components/ProjectiveTextureMappingDepthMapDemo.h"
+#include "Components/ShadowMappingDemo.h"
+#include "Components/DirectionalShadowMappingDemo.h"
 
-#include "AnimationDemo.h"
+#include "Components/AnimationDemo.h"
 
-#include "GeometryShaderDemo.h"
-#include "BasicTessellationDemo.h"
-#include "QuadHeightMapTessellationDemo.h"
-#include "ModelTessellationDemo.h"
+#include "Components/GeometryShaderDemo.h"
+#include "Components/BasicTessellationDemo.h"
+#include "Components/QuadHeightMapTessellationDemo.h"
+#include "Components/ModelTessellationDemo.h"
 
 //-------------------------------------------------------------------------
 

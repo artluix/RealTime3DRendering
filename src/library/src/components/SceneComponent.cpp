@@ -2,7 +2,7 @@
 #include "library/Components/SceneComponent.h"
 
 #include "library/Application.h"
-#include "library/math/Math.h"
+#include "library/Math/Math.h"
 
 #include <cassert>
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "library/Components/DrawableComponent.h"
-#include "library/math/Color.h"
+#include "library/Math/Color.h"
 #include "library/Common.h"
 
 #include <memory>

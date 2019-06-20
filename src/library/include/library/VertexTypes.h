@@ -1,5 +1,5 @@
 #pragma once
-#include "library/math/Color.h"
+#include "library/Math/Color.h"
 
 // layout will be passed to shader directly
 // so use DirectX types only!

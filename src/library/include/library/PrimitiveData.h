@@ -8,8 +8,8 @@ namespace library
 {
 struct PrimitiveData
 {
-	unsigned stride;				// mandatory
-	VertexBufferData vertexBuffer;	// mandatory
+	unsigned stride;							// mandatory
+	VertexBufferData vertexBuffer;				// mandatory
 
 	std::optional<IndexBufferData> indexBuffer; // optional
 	D3D_PRIMITIVE_TOPOLOGY primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST;

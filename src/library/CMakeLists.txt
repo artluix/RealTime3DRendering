@@ -51,31 +51,9 @@ if(APPLICATION)
 
                 include/library/Materials/BasicMaterial.h
                 include/library/Materials/BloomMaterial.h
-                include/library/Materials/ColorFilterMaterial.h
-                include/library/Materials/DepthMapMaterial.h
-                include/library/Materials/DiffuseLightingMaterial.h
-                include/library/Materials/DirectionalLightMaterial.h
-                include/library/Materials/DirectionalShadowMappingMaterial.h
-                include/library/Materials/DisplacementMappingMaterial.h
-                include/library/Materials/DistortionMappingMaterial.h
-                include/library/Materials/EnvironmentMappingMaterial.h
-                include/library/Materials/FogMaterial.h
                 include/library/Materials/GaussianBlurMaterial.h
-                include/library/Materials/LightMaterial.h
-                include/library/Materials/ModelTessellationMaterial.h
-                include/library/Materials/NormalMappingMaterial.h
-                include/library/Materials/PointLightMaterial.h
-                include/library/Materials/PointSpriteMaterial.h
                 include/library/Materials/PostProcessingMaterial.h
-                include/library/Materials/ProjectiveTextureMappingMaterial.h
-                include/library/Materials/QuadHeightMapTessellationMaterial.h
-                include/library/Materials/ShadowMappingMaterial.h
-                include/library/Materials/SkinnedModelMaterial.h
                 include/library/Materials/SkyboxMaterial.h
-                include/library/Materials/SpotlightMaterial.h
-                include/library/Materials/TessellationMaterial.h
-                include/library/Materials/TextureMappingMaterial.h
-                include/library/Materials/TransparencyMappingMaterial.h
 
             # Math
                 include/library/Math/Math.h
@@ -177,31 +155,9 @@ if(APPLICATION)
 
                 src/Materials/BasicMaterial.cpp
                 src/Materials/BloomMaterial.cpp
-                src/Materials/ColorFilterMaterial.cpp
-                src/Materials/DepthMapMaterial.cpp
-                src/Materials/DiffuseLightingMaterial.cpp
-                src/Materials/DirectionalLightMaterial.cpp
-                src/Materials/DirectionalShadowMappingMaterial.cpp
-                src/Materials/DisplacementMappingMaterial.cpp
-                src/Materials/DistortionMappingMaterial.cpp
-                src/Materials/EnvironmentMappingMaterial.cpp
-                src/Materials/FogMaterial.cpp
                 src/Materials/GaussianBlurMaterial.cpp
-                src/Materials/LightMaterial.cpp
-                src/Materials/ModelTessellationMaterial.cpp
-                src/Materials/NormalMappingMaterial.cpp
-                src/Materials/PointLightMaterial.cpp
-                src/Materials/PointSpriteMaterial.cpp
                 src/Materials/PostProcessingMaterial.cpp
-                src/Materials/ProjectiveTextureMappingMaterial.cpp
-                src/Materials/QuadHeightMapTessellationMaterial.cpp
-                src/Materials/ShadowMappingMaterial.cpp
-                src/Materials/SkinnedModelMaterial.cpp
                 src/Materials/SkyboxMaterial.cpp
-                src/Materials/SpotlightMaterial.cpp
-                src/Materials/TextureMappingMaterial.cpp
-                src/Materials/TessellationMaterial.cpp
-                src/Materials/TransparencyMappingMaterial.cpp
 
             # Math
                 src/Math/Color.cpp

@@ -3,6 +3,7 @@
 #include "library/NonCopyable.hpp"
 #include "library/Common.h"
 #include "library/PrimitiveData.h"
+#include "library/VertexTypes.h"
 #include "library/DirectXForwardDeclarations.h"
 
 #include <string>

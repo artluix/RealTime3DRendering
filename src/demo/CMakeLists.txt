@@ -9,90 +9,157 @@ if(APPLICATION)
             src/DemoApplication.cpp
             src/Program.cpp
 
-        # demo components
+        # components
 
         # without materials
-            src/CubeDemo.h
-            src/CubeDemo.cpp
+            src/Components/CubeDemo.h
+            src/Components/CubeDemo.cpp
 
-            src/TriangleDemo.h
-            src/TriangleDemo.cpp
+            src/Components/TriangleDemo.h
+            src/Components/TriangleDemo.cpp
 
-            src/ModelDemo.h
-            src/ModelDemo.cpp
+            src/Components/ModelDemo.h
+            src/Components/ModelDemo.cpp
 
-            src/TextureModelDemo.h
-            src/TextureModelDemo.cpp
+            src/Components/TextureModelDemo.h
+            src/Components/TextureModelDemo.cpp
 
         # with materials
-            src/AnimationDemo.h
-            src/AnimationDemo.cpp
+            src/Components/AnimationDemo.h
+            src/Components/AnimationDemo.cpp
 
-            src/BasicMaterialDemo.h
-            src/BasicMaterialDemo.cpp
+            src/Components/BasicMaterialDemo.h
+            src/Components/BasicMaterialDemo.cpp
 
-            src/BasicTessellationDemo.h
-            src/BasicTessellationDemo.cpp
+            src/Components/BasicTessellationDemo.h
+            src/Components/BasicTessellationDemo.cpp
 
-            src/BloomDemo.h
-            src/BloomDemo.cpp
+            src/Components/BloomDemo.h
+            src/Components/BloomDemo.cpp
 
-            src/ColorFilterDemo.h
-            src/ColorFilterDemo.cpp
+            src/Components/ColorFilterDemo.h
+            src/Components/ColorFilterDemo.cpp
 
-            src/DiffuseLightingDemo.h
-            src/DiffuseLightingDemo.cpp
+            src/Components/DiffuseLightingDemo.h
+            src/Components/DiffuseLightingDemo.cpp
 
-            src/DirectionalShadowMappingDemo.h
-            src/DirectionalShadowMappingDemo.cpp
+            src/Components/DirectionalShadowMappingDemo.h
+            src/Components/DirectionalShadowMappingDemo.cpp
 
-            src/DisplacementMappingDemo.h
-            src/DisplacementMappingDemo.cpp
+            src/Components/DisplacementMappingDemo.h
+            src/Components/DisplacementMappingDemo.cpp
 
-            src/DistortionMappingDemo.h
-            src/DistortionMappingDemo.cpp
+            src/Components/DistortionMappingDemo.h
+            src/Components/DistortionMappingDemo.cpp
 
-            src/EnvironmentMappingDemo.h
-            src/EnvironmentMappingDemo.cpp
+            src/Components/EnvironmentMappingDemo.h
+            src/Components/EnvironmentMappingDemo.cpp
 
-            src/FogDemo.h
-            src/FogDemo.cpp
+            src/Components/FogDemo.h
+            src/Components/FogDemo.cpp
 
-            src/GaussianBlurDemo.h
-            src/GaussianBlurDemo.cpp
+            src/Components/GaussianBlurDemo.h
+            src/Components/GaussianBlurDemo.cpp
 
-            src/GeometryShaderDemo.h
-            src/GeometryShaderDemo.cpp
+            src/Components/GeometryShaderDemo.h
+            src/Components/GeometryShaderDemo.cpp
 
-            src/ModelTessellationDemo.h
-            src/ModelTessellationDemo.cpp
+            src/Components/ModelTessellationDemo.h
+            src/Components/ModelTessellationDemo.cpp
 
-            src/NormalMappingDemo.h
-            src/NormalMappingDemo.cpp
+            src/Components/NormalMappingDemo.h
+            src/Components/NormalMappingDemo.cpp
 
-            src/PointLightDemo.h
-            src/PointLightDemo.cpp
+            src/Components/PointLightDemo.h
+            src/Components/PointLightDemo.cpp
 
-            src/ProjectiveTextureMappingDemo.h
-            src/ProjectiveTextureMappingDemo.cpp
+            src/Components/ProjectiveTextureMappingDemo.h
+            src/Components/ProjectiveTextureMappingDemo.cpp
 
-            src/ProjectiveTextureMappingDepthMapDemo.h
-            src/ProjectiveTextureMappingDepthMapDemo.cpp
+            src/Components/ProjectiveTextureMappingDepthMapDemo.h
+            src/Components/ProjectiveTextureMappingDepthMapDemo.cpp
 
-            src/QuadHeightMapTessellationDemo.h
-            src/QuadHeightMapTessellationDemo.cpp
+            src/Components/QuadHeightMapTessellationDemo.h
+            src/Components/QuadHeightMapTessellationDemo.cpp
 
-            src/ShadowMappingDemo.h
-            src/ShadowMappingDemo.cpp
+            src/Components/ShadowMappingDemo.h
+            src/Components/ShadowMappingDemo.cpp
 
-            src/SpotlightDemo.h
-            src/SpotlightDemo.cpp
+            src/Components/SpotlightDemo.h
+            src/Components/SpotlightDemo.cpp
 
-            src/TextureMappingDemo.h
-            src/TextureMappingDemo.cpp
+            src/Components/TextureMappingDemo.h
+            src/Components/TextureMappingDemo.cpp
 
-            src/TransparencyMappingDemo.h
-            src/TransparencyMappingDemo.cpp
+            src/Components/TransparencyMappingDemo.h
+            src/Components/TransparencyMappingDemo.cpp
+
+        # materials
+            src/Materials/ColorFilterMaterial.h
+            src/Materials/ColorFilterMaterial.cpp
+
+            src/Materials/DepthMapMaterial.h
+            src/Materials/DepthMapMaterial.cpp
+
+            src/Materials/DiffuseLightingMaterial.h
+            src/Materials/DiffuseLightingMaterial.cpp
+
+            src/Materials/DirectionalLightMaterial.h
+            src/Materials/DirectionalLightMaterial.cpp
+
+            src/Materials/DirectionalShadowMappingMaterial.h
+            src/Materials/DirectionalShadowMappingMaterial.cpp
+
+            src/Materials/DisplacementMappingMaterial.h
+            src/Materials/DisplacementMappingMaterial.cpp
+
+            src/Materials/DistortionMappingMaterial.h
+            src/Materials/DistortionMappingMaterial.cpp
+
+            src/Materials/EnvironmentMappingMaterial.h
+            src/Materials/EnvironmentMappingMaterial.cpp
+
+            src/Materials/FogMaterial.h
+            src/Materials/FogMaterial.cpp
+
+            src/Materials/LightMaterial.h
+            src/Materials/LightMaterial.cpp
+
+            src/Materials/ModelTessellationMaterial.h
+            src/Materials/ModelTessellationMaterial.cpp
+
+            src/Materials/NormalMappingMaterial.h
+            src/Materials/NormalMappingMaterial.cpp
+
+            src/Materials/PointLightMaterial.h
+            src/Materials/PointLightMaterial.cpp
+
+            src/Materials/PointSpriteMaterial.h
+            src/Materials/PointSpriteMaterial.cpp
+
+            src/Materials/ProjectiveTextureMappingMaterial.h
+            src/Materials/ProjectiveTextureMappingMaterial.cpp
+
+            src/Materials/QuadHeightMapTessellationMaterial.h
+            src/Materials/QuadHeightMapTessellationMaterial.cpp
+
+            src/Materials/ShadowMappingMaterial.h
+            src/Materials/ShadowMappingMaterial.cpp
+
+            src/Materials/SkinnedModelMaterial.h
+            src/Materials/SkinnedModelMaterial.cpp
+
+            src/Materials/SpotlightMaterial.h
+            src/Materials/SpotlightMaterial.cpp
+
+            src/Materials/TessellationMaterial.h
+            src/Materials/TextureMappingMaterial.cpp
+
+            src/Materials/TextureMappingMaterial.h
+            src/Materials/TessellationMaterial.cpp
+
+            src/Materials/TransparencyMappingMaterial.h
+            src/Materials/TransparencyMappingMaterial.cpp
     )
 
     add_executable(demo WIN32 ${DEMO_SOURCES})

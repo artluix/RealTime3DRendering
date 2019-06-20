@@ -8,7 +8,7 @@
 
 #include "library/Application.h"
 #include "library/RenderTargets/FullScreenRenderTarget.h"
-#include "library/math/Color.h"
+#include "library/Math/Color.h"
 
 namespace library
 {

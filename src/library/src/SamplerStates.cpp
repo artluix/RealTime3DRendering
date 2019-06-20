@@ -2,7 +2,7 @@
 #include "library/SamplerStates.h"
 
 #include "library/Utils.h"
-#include "library/math/Color.h"
+#include "library/Math/Color.h"
 
 #include <d3d11_1.h>
 #include <cassert>

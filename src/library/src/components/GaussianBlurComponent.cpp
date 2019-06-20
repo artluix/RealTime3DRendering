@@ -9,7 +9,7 @@
 #include "library/Application.h"
 #include "library/Utils.h"
 #include "library/Path.h"
-#include "library/math/Color.h"
+#include "library/Math/Color.h"
 #include "library/Application.h"
 
 #include "library/RenderTargets/FullScreenRenderTarget.h"
