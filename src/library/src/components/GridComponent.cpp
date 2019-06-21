@@ -91,7 +91,6 @@ void GridComponent::Build()
 	auto& pd = m_primitivesData.emplace_back(PrimitiveData());
 
 	pd.primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
-	pd.stride = m_material->GetVertexSize();
 
 	const float adjustedScale = m_scale * 0.1f;
 	const float maxPosition = m_size * adjustedScale / 2;

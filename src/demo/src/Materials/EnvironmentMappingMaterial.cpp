@@ -81,8 +81,9 @@ VertexBufferData EnvironmentMappingMaterial::CreateVertexBufferData(
 
 		vertices.emplace_back(
 			math::Vector4(position, 1.0f),
-			math::Vector2(uv.x, uv.y),
-			normal);
+			uv.xy,
+			normal
+		);
 	}
 
 	return VertexBufferData(device, vertices);

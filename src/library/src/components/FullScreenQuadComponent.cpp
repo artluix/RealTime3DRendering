@@ -72,7 +72,6 @@ void FullScreenQuadComponent::InitializeInternal()
 		};
 
 		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
-		pd.stride = sizeof(Vertex);
 	}
 
 	// index buffer

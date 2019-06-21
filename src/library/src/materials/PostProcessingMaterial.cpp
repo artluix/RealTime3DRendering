@@ -76,7 +76,7 @@ VertexBufferData PostProcessingMaterial::CreateVertexBufferData(
 		const auto& uv = textureCoordinates[i];
 
 		vertices.emplace_back(
-			math::Vector4(position.x, position.y, position.z, 1.0f),
+			math::Vector4(position, 1.0f),
 			uv.xy
 		);
 	}

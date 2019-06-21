@@ -67,8 +67,6 @@ void TransparencyMappingDemo::InitializeInternal()
 		m_primitivesData.clear();
 		auto& pd = m_primitivesData.emplace_back(PrimitiveData{});
 
-		pd.stride = sizeof(Vertex);
-
 		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
 	}
 

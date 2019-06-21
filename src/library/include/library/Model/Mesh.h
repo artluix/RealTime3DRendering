@@ -4,7 +4,7 @@
 #include "library/Model/TextureType.h"
 #include "library/Common.h"
 #include "library/BufferData.h"
-#include "library/DirectXForwardDeclarations.h"
+#include "library/DxForward.h"
 
 #include <d3dcommon.h>
 

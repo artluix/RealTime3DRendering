@@ -4,7 +4,7 @@
 #include "library/Common.h"
 #include "library/PrimitiveData.h"
 #include "library/VertexTypes.h"
-#include "library/DirectXForwardDeclarations.h"
+#include "library/DxForward.h"
 
 #include <string>
 #include <map>
@@ -29,6 +29,8 @@ class Material : public NonCopyable<Material>
 	RTTI_CLASS_BASE(Material)
 
 public:
+	using Vertex = Vertex;
+
 	explicit Material(Effect& effect, const std::string& defaultTechniqueName = "");
 	virtual ~Material() = default;
 
@@ -61,8 +63,6 @@ public:
 
 	PrimitiveData CreatePrimitiveData(ID3D11Device* const device, const Mesh& mesh) const;
 	std::vector<PrimitiveData> CreatePrimitivesData(ID3D11Device* const device, const Model& model) const;
-
-	virtual unsigned GetVertexSize() const = 0;
 
 protected:
 	virtual void InitializeInternal();

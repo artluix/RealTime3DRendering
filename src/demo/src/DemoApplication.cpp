@@ -36,6 +36,8 @@
 #include "Components/QuadHeightMapTessellationDemo.h"
 #include "Components/ModelTessellationDemo.h"
 
+#include "Components/InstancingPointLightDemo.h"
+
 //-------------------------------------------------------------------------
 
 #include <library/Components/FpsComponent.h>
@@ -282,6 +284,10 @@ void DemoApplication::Initialize()
 	modelTessellation->SetCamera(*camera);
 	modelTessellation->SetKeyboard(*m_keyboard);
 
+	auto instancing = std::make_shared<InstancingPointLightDemo>();
+	instancing->SetCamera(*camera);
+	instancing->SetKeyboard(*m_keyboard);
+
 	// push needed components
 	m_components.push_back(m_keyboard);
 	m_components.push_back(m_mouse);
@@ -313,7 +319,8 @@ void DemoApplication::Initialize()
 	// m_components.push_back(geometryShader);
 	// m_components.push_back(basicTessellation);
 	// m_components.push_back(quadHeightMapTessellation);
-	m_components.push_back(modelTessellation);
+	// m_components.push_back(modelTessellation);
+	m_components.push_back(instancing);
 
 	// hide grid by default
 	m_grid->SetVisible(false);

@@ -29,7 +29,6 @@ void GeometryShaderDemo::InitializeInternal()
 	m_primitivesData.clear();
 	auto& pd = m_primitivesData.emplace_back(PrimitiveData{});
 	pd.primitiveTopology = D3D_PRIMITIVE_TOPOLOGY_POINTLIST;
-	pd.stride = sizeof(VertexPositionSize);
 
 	CreateMaterialWithEffect("PointSprite");
 
@@ -131,7 +130,7 @@ void GeometryShaderDemo::InitializeRandomPoints()
 
 		const float size = sizeDistribution(randomGenerator);
 
-		vertices.emplace_back(math::Vector4(x, y, z, 1.f), math::Vector2(size, size));
+		vertices.emplace_back(math::Vector4(x, y, z, 1.f), math::Vector2(size));
 	}
 
 	auto& pd = m_primitivesData.front();

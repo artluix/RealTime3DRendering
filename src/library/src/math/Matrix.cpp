@@ -50,7 +50,7 @@ std::string Matrix<3>::ToString() const
 
 Matrix<3> Matrix<3>::Transpose() const
 {
-	return Matrix(DirectX::XMMatrixTranspose(dx::MATRIX(*this)));
+	return Matrix(dx::XMMatrixTranspose(dx::MATRIX(*this)));
 }
 
 //-------------------------------------------------------------------------
@@ -115,34 +115,34 @@ std::string Matrix<4>::ToString() const
 
 Matrix<4> Matrix<4>::LookAtLH(const Vector3& eyePos, const Vector3& focusPos, const Vector3& upDir)
 {
-	return Matrix(DirectX::XMMatrixLookAtLH(dx::VECTOR(eyePos), dx::VECTOR(focusPos), dx::VECTOR(upDir)));
+	return Matrix(dx::XMMatrixLookAtLH(dx::VECTOR(eyePos), dx::VECTOR(focusPos), dx::VECTOR(upDir)));
 }
 
 Matrix<4> Matrix<4>::LookAtRH(const Vector3& eyePos, const Vector3& focusPos, const Vector3& upDir)
 {
-	return Matrix(DirectX::XMMatrixLookAtRH(dx::VECTOR(eyePos), dx::VECTOR(focusPos), dx::VECTOR(upDir)));
+	return Matrix(dx::XMMatrixLookAtRH(dx::VECTOR(eyePos), dx::VECTOR(focusPos), dx::VECTOR(upDir)));
 }
 
 Matrix<4> Matrix<4>::LookToLH(const Vector3& eyePos, const Vector3& eyeDir, const Vector3& upDir)
 {
-	return Matrix(DirectX::XMMatrixLookToLH(dx::VECTOR(eyePos), dx::VECTOR(eyeDir), dx::VECTOR(upDir)));
+	return Matrix(dx::XMMatrixLookToLH(dx::VECTOR(eyePos), dx::VECTOR(eyeDir), dx::VECTOR(upDir)));
 }
 
 Matrix<4> Matrix<4>::LookToRH(const Vector3& eyePos, const Vector3& eyeDir, const Vector3& upDir)
 {
-	return Matrix(DirectX::XMMatrixLookToRH(dx::VECTOR(eyePos), dx::VECTOR(eyeDir), dx::VECTOR(upDir)));
+	return Matrix(dx::XMMatrixLookToRH(dx::VECTOR(eyePos), dx::VECTOR(eyeDir), dx::VECTOR(upDir)));
 }
 
 //-------------------------------------------------------------------------
 
 Matrix<4> Matrix<4>::Translation(const Vector3& vector)
 {
-	return Matrix(DirectX::XMMatrixTranslationFromVector(dx::VECTOR(vector)));
+	return Matrix(dx::XMMatrixTranslationFromVector(dx::VECTOR(vector)));
 }
 
 Matrix<4> Matrix<4>::Translation(const float x, const float y, const float z)
 {
-	return Matrix(DirectX::XMMatrixTranslation(x, y, z));
+	return Matrix(dx::XMMatrixTranslation(x, y, z));
 }
 
 //-------------------------------------------------------------------------
@@ -153,7 +153,7 @@ Matrix<4> Matrix<4>::PerspectiveFovLH(
 	const float nearZ,
 	const float farZ)
 {
-	return Matrix(DirectX::XMMatrixPerspectiveFovLH(fovAngleY, aspectRatio, nearZ, farZ));
+	return Matrix(dx::XMMatrixPerspectiveFovLH(fovAngleY, aspectRatio, nearZ, farZ));
 }
 
 Matrix<4> Matrix<4>::PerspectiveFovRH(
@@ -162,7 +162,7 @@ Matrix<4> Matrix<4>::PerspectiveFovRH(
 	const float nearZ,
 	const float farZ)
 {
-	return Matrix(DirectX::XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, nearZ, farZ));
+	return Matrix(dx::XMMatrixPerspectiveFovRH(fovAngleY, aspectRatio, nearZ, farZ));
 }
 
 //-------------------------------------------------------------------------
@@ -173,7 +173,7 @@ Matrix<4> Matrix<4>::OrthographicLH(
 	const float nearZ,
 	const float farZ)
 {
-	return Matrix(DirectX::XMMatrixOrthographicLH(viewWidth, viewHeight, nearZ, farZ));
+	return Matrix(dx::XMMatrixOrthographicLH(viewWidth, viewHeight, nearZ, farZ));
 }
 
 Matrix<4> Matrix<4>::OrthographicRH(
@@ -182,44 +182,44 @@ Matrix<4> Matrix<4>::OrthographicRH(
 	const float nearZ,
 	const float farZ)
 {
-	return Matrix(DirectX::XMMatrixOrthographicRH(viewWidth, viewHeight, nearZ, farZ));
+	return Matrix(dx::XMMatrixOrthographicRH(viewWidth, viewHeight, nearZ, farZ));
 }
 
 //-------------------------------------------------------------------------
 
 Matrix<4> Matrix<4>::RotationAxis(const Vector3& axis, const float angle)
 {
-	return Matrix(DirectX::XMMatrixRotationAxis(dx::VECTOR(axis), angle));
+	return Matrix(dx::XMMatrixRotationAxis(dx::VECTOR(axis), angle));
 }
 
 Matrix<4> Matrix<4>::RotationPitchYawRoll(const float roll, const float pitch, const float yaw)
 {
-	return Matrix(DirectX::XMMatrixRotationRollPitchYaw(pitch, yaw, roll));
+	return Matrix(dx::XMMatrixRotationRollPitchYaw(pitch, yaw, roll));
 }
 
 Matrix<4> Matrix<4>::RotationPitchYawRoll(const Vector3& vector)
 {
-	return Matrix(DirectX::XMMatrixRotationRollPitchYawFromVector(dx::VECTOR(vector)));
+	return Matrix(dx::XMMatrixRotationRollPitchYawFromVector(dx::VECTOR(vector)));
 }
 
 Matrix<4> Matrix<4>::RotationQuaternion(const Quaternion& quaternion)
 {
-	return Matrix(DirectX::XMMatrixRotationQuaternion(dx::VECTOR(quaternion)));
+	return Matrix(dx::XMMatrixRotationQuaternion(dx::VECTOR(quaternion)));
 }
 
 Matrix<4> Matrix<4>::RotationX(const float angle)
 {
-	return Matrix(DirectX::XMMatrixRotationX(angle));
+	return Matrix(dx::XMMatrixRotationX(angle));
 }
 
 Matrix<4> Matrix<4>::RotationY(const float angle)
 {
-	return Matrix(DirectX::XMMatrixRotationY(angle));
+	return Matrix(dx::XMMatrixRotationY(angle));
 }
 
 Matrix<4> Matrix<4>::RotationZ(const float angle)
 {
-	return Matrix(DirectX::XMMatrixRotationZ(angle));
+	return Matrix(dx::XMMatrixRotationZ(angle));
 }
 
 Matrix<4> Matrix<4>::AffineTransformation(
@@ -228,7 +228,7 @@ Matrix<4> Matrix<4>::AffineTransformation(
 	const Quaternion& rotationQuat,
 	const Vector3& translation)
 {
-	return Matrix(DirectX::XMMatrixAffineTransformation(
+	return Matrix(dx::XMMatrixAffineTransformation(
 		dx::VECTOR(scale),
 		dx::VECTOR(rotationOrigin),
 		dx::VECTOR(rotationQuat),
@@ -239,17 +239,17 @@ Matrix<4> Matrix<4>::AffineTransformation(
 
 float Matrix<4>::GetDeterminant() const
 {
-	return DirectX::XMVectorGetX(DirectX::XMMatrixDeterminant(dx::MATRIX(*this)));
+	return dx::XMVectorGetX(dx::XMMatrixDeterminant(dx::MATRIX(*this)));
 }
 
 Matrix<4> Matrix<4>::Inverse() const
 {
-	return Matrix(DirectX::XMMatrixInverse(nullptr, dx::MATRIX(*this)));
+	return Matrix(dx::XMMatrixInverse(nullptr, dx::MATRIX(*this)));
 }
 
 Matrix<4> Matrix<4>::Transpose() const
 {
-	return Matrix(DirectX::XMMatrixTranspose(dx::MATRIX(*this)));
+	return Matrix(dx::XMMatrixTranspose(dx::MATRIX(*this)));
 }
 
 //-------------------------------------------------------------------------

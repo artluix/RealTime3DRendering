@@ -172,25 +172,12 @@ void ModelDemo::CreatePrimitivesData(ID3D11Device* const device, const Mesh& mes
 			}
 		}
 
-		D3D11_BUFFER_DESC vertexBufferDesc{};
-		vertexBufferDesc.ByteWidth = sizeof(VertexType) * verticesCount;
-		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
-		vertexSubResourceData.pSysMem = vertices.data();
-
 		m_primitivesData.clear();
 		auto& pd = m_primitivesData.emplace_back(PrimitiveData());
 
-		pd.stride = sizeof(VertexType);
+		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
 
 		if (mesh.HasIndices())
 			pd.indexBuffer = mesh.CreateIndexBufferData();
-
-		pd.vertexBuffer.elementsCount = verticesCount;
-
-		auto hr = device->CreateBuffer(&vertexBufferDesc, &vertexSubResourceData, &pd.vertexBuffer.buffer);
-		assert("ID3D11Device::CreateBuffer() failed." && SUCCEEDED(hr));
 	}
 }

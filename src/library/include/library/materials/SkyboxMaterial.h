@@ -17,7 +17,6 @@ public:
 	EffectVariable& GetSkyboxTexture() { return m_skyboxTexture; }
 
 	VertexBufferData CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh) const override;
-	unsigned GetVertexSize() const override { return sizeof(Vertex); }
 
 protected:
 	void InitializeInternal() override;

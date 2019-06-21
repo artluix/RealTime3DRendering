@@ -1,6 +1,6 @@
 #pragma once
 #include "library/NonConstructible.hpp"
-#include "library/DirectXForwardDeclarations.h"
+#include "library/DxForward.h"
 
 namespace library
 {

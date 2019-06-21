@@ -64,6 +64,9 @@ if(APPLICATION)
             src/Components/GeometryShaderDemo.h
             src/Components/GeometryShaderDemo.cpp
 
+            src/Components/InstancingPointLightDemo.h
+            src/Components/InstancingPointLightDemo.cpp
+
             src/Components/ModelTessellationDemo.h
             src/Components/ModelTessellationDemo.cpp
 
@@ -121,6 +124,9 @@ if(APPLICATION)
 
             src/Materials/FogMaterial.h
             src/Materials/FogMaterial.cpp
+
+            src/Materials/InstancingPointLightMaterial.h
+            src/Materials/InstancingPointLightMaterial.cpp
 
             src/Materials/LightMaterial.h
             src/Materials/LightMaterial.cpp

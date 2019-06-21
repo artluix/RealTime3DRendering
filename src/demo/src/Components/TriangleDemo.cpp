@@ -76,39 +76,23 @@ void TriangleDemo::InitializeInternal()
 
 	// vertex buffer
 	{
+		using Vertex = VertexPositionColor;
+
 		constexpr float l = 1.73205080757f / 2; // sqrt(3) / 2
 
-		constexpr std::array<VertexPositionColor, 3> vertices = {
+		constexpr std::array<Vertex, 3> vertices = {
 			// left red
-			VertexPositionColor(math::Vector4(-l, -0.5f, 0.0f, 1.0f), math::Color(1.0f, 0.0f, 0.0f, 1.0f)),
+			Vertex(math::Vector4(-l, -0.5f, 0.0f, 1.0f), math::Color(1.0f, 0.0f, 0.0f, 1.0f)),
 			// up green
-			VertexPositionColor(math::Vector4(0.0f, 1.0f, 0.0f, 1.0f), math::Color(0.0f, 1.0f, 0.0f, 1.0f)),
+			Vertex(math::Vector4(0.0f, 1.0f, 0.0f, 1.0f), math::Color(0.0f, 1.0f, 0.0f, 1.0f)),
 			// right blue
-			VertexPositionColor(math::Vector4(l, -0.5f, 0.0f, 1.0f), math::Color(0.0f, 0.0f, 1.0f, 1.0f)),
+			Vertex(math::Vector4(l, -0.5f, 0.0f, 1.0f), math::Color(0.0f, 0.0f, 1.0f, 1.0f)),
 		};
 
 		m_primitivesData.clear();
 		auto& pd = m_primitivesData.emplace_back(PrimitiveData());
 
-		pd.stride = sizeof(VertexPositionColor);
-
-		pd.vertexBuffer.elementsCount = vertices.size();
-
-		D3D11_BUFFER_DESC vertexBufferDesc{};
-		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-		vertexBufferDesc.ByteWidth = sizeof(VertexPositionColor) * vertices.size();
-		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
-		vertexSubResourceData.pSysMem = vertices.data();
-
-		auto hr = GetApp().GetDevice()->CreateBuffer(
-			&vertexBufferDesc,
-			&vertexSubResourceData,
-			&pd.vertexBuffer.buffer
-		);
-		assert("ID3D11Device::CreateBuffer() failed." && SUCCEEDED(hr));
-
+		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
 	}
 }
 

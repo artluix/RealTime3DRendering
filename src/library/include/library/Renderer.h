@@ -1,7 +1,7 @@
 #pragma once
 #include "library/Common.h"
 #include "library/NonCopyable.hpp"
-#include "library/DirectXForwardDeclarations.h"
+#include "library/DxForward.h"
 
 #include <vector>
 #include <functional>

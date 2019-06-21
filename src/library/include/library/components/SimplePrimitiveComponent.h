@@ -1,5 +1,6 @@
 #pragma once
 #include "library/Components/PrimitiveComponent.h"
+#include "library/FxForward.h"
 
 namespace library
 {

@@ -57,13 +57,12 @@ void PrimitiveComponent::Draw_SetIA(const PrimitiveData& primitiveData)
 
 	// set vertex buffer
 	{
-		unsigned offset = 0;
 		deviceContext->IASetVertexBuffers(
 			0,
 			1,
 			&primitiveData.vertexBuffer.buffer,
-			&primitiveData.stride,
-			&offset
+			&primitiveData.vertexBuffer.stride,
+			&primitiveData.vertexBuffer.offset
 		);
 	}
 
@@ -79,8 +78,8 @@ void PrimitiveComponent::Draw_Render(const PrimitiveData& primitiveData)
 	auto deviceContext = GetApp().GetDeviceContext();
 
 	if (!!primitiveData.indexBuffer)
-		deviceContext->DrawIndexed(static_cast<UINT>(primitiveData.indexBuffer->elementsCount), 0, 0);
+		deviceContext->DrawIndexed(primitiveData.indexBuffer->elementsCount, 0, 0);
 	else
-		deviceContext->Draw(static_cast<UINT>(primitiveData.vertexBuffer.elementsCount), 0);
+		deviceContext->Draw(primitiveData.vertexBuffer.elementsCount, 0);
 }
 } // namespace library

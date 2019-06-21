@@ -83,11 +83,9 @@ void CubeDemo::InitializeInternal()
 	m_primitivesData.clear();
 	auto& pd = m_primitivesData.emplace_back(PrimitiveData());
 
-	pd.stride = sizeof(VertexPositionColor);
-
 	// index buffer
 	{
-		constexpr std::array<unsigned, 2 * 3 * 6> k_indices =
+		constexpr std::array<unsigned, 2 * 3 * 6> indices =
 		{
 			0, 1, 2,
 			0, 2, 3,
@@ -108,23 +106,7 @@ void CubeDemo::InitializeInternal()
 			1, 6, 2
 		};
 
-		pd.indexBuffer = std::make_optional(IndexBufferData());
-		pd.indexBuffer->elementsCount = k_indices.size();
-
-		D3D11_BUFFER_DESC indexBufferDesc{};
-		indexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-		indexBufferDesc.ByteWidth = sizeof(unsigned) * k_indices.size();
-		indexBufferDesc.BindFlags = D3D11_BIND_INDEX_BUFFER;
-
-		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
-		vertexSubResourceData.pSysMem = k_indices.data();
-
-		auto hr = GetApp().GetDevice()->CreateBuffer(
-			&indexBufferDesc,
-			&vertexSubResourceData,
-			&pd.indexBuffer->buffer
-		);
-		assert("ID3D11Device::CreateBuffer() failed." && SUCCEEDED(hr));
+		pd.indexBuffer = IndexBufferData(GetApp().GetDevice(), indices);
 	}
 
 	// vertex buffer
@@ -146,22 +128,7 @@ void CubeDemo::InitializeInternal()
 			VertexPositionColor(Vector4(1.0f, -1.0f, 1.0f, 1.0f), Color(1.0f, 0.5f, 1.0f, 1.0f)),
 		};
 
-		pd.vertexBuffer.elementsCount = vertices.size();
-
-		D3D11_BUFFER_DESC vertexBufferDesc{};
-		vertexBufferDesc.Usage = D3D11_USAGE_IMMUTABLE;
-		vertexBufferDesc.ByteWidth = sizeof(VertexPositionColor) * vertices.size();
-		vertexBufferDesc.BindFlags = D3D11_BIND_VERTEX_BUFFER;
-
-		D3D11_SUBRESOURCE_DATA vertexSubResourceData{};
-		vertexSubResourceData.pSysMem = vertices.data();
-
-		auto hr = GetApp().GetDevice()->CreateBuffer(
-			&vertexBufferDesc,
-			&vertexSubResourceData,
-			&pd.vertexBuffer.buffer
-		);
-		assert("ID3D11Device::CreateBuffer() failed." && SUCCEEDED(hr));
+		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
 	}
 }
 

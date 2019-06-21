@@ -97,7 +97,6 @@ void BasicTessellationDemo::InitializeInternal()
 			};
 
 			trianglePrimitive.vertexBuffer = VertexBufferData(GetApp().GetDevice(), triangleVertices);
-			trianglePrimitive.stride = sizeof(Vertex);
 			trianglePrimitive.primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST;
 		}
 
@@ -114,7 +113,6 @@ void BasicTessellationDemo::InitializeInternal()
 			};
 
 			quadPrimitive.vertexBuffer = VertexBufferData(GetApp().GetDevice(), quadVertices);
-			quadPrimitive.stride = sizeof(Vertex);
 			quadPrimitive.primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST;
 		}
 	}

@@ -1,7 +1,7 @@
 #pragma once
 #include "library/Materials/BasicMaterial.h"
 #include "library/Components/ConcreteMaterialPrimitiveComponent.hpp"
-#include "library/DirectXForwardDeclarations.h"
+#include "library/DxForward.h"
 
 #include <string>
 

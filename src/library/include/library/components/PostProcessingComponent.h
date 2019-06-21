@@ -1,6 +1,6 @@
 #pragma once
 #include "library/Components/DrawableComponent.h"
-#include "library/DirectXForwardDeclarations.h"
+#include "library/DxForward.h"
 
 #include <memory>
 

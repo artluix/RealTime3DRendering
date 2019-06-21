@@ -25,7 +25,6 @@ public:
 		ID3D11Device* const device,
 		const library::Mesh& mesh
 	) const override;
-	unsigned GetVertexSize() const override { return sizeof(Vertex); }
 
 protected:
 	explicit LightMaterial(library::Effect& effect, const std::string& defaultTechniqueName = "main11");

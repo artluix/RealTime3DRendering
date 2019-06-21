@@ -97,7 +97,8 @@ if(APPLICATION)
             include/library/BufferData.h
             include/library/Common.h
             include/library/ComPtr.hpp
-            include/library/DirectXForwardDeclarations.h
+            include/library/DxForward.h
+            include/library/FxForward.h
             include/library/Key.h
             include/library/Logger.h
             include/library/NonCopyable.hpp
@@ -186,6 +187,7 @@ if(APPLICATION)
 
             src/Application.cpp
             src/BlendStates.cpp
+            src/BufferData.cpp
             src/Logger.cpp
             src/Path.cpp
             src/RasterizerStates.cpp

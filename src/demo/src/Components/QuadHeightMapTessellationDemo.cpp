@@ -59,8 +59,6 @@ void QuadHeightMapTessellationDemo::InitializeInternal()
 		m_primitivesData.clear();
 		auto& pd = m_primitivesData.emplace_back(PrimitiveData{});
 
-		pd.stride = sizeof(Vertex);
-
 		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
 		pd.primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST;
 	}

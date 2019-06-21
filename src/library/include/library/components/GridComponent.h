@@ -2,7 +2,7 @@
 #include "library/Materials/BasicMaterial.h"
 #include "library/Components/ConcreteMaterialPrimitiveComponent.hpp"
 #include "library/Math/Color.h"
-#include "library/DirectXForwardDeclarations.h"
+#include "library/DxForward.h"
 
 namespace library
 {

@@ -107,7 +107,6 @@ void Material::InitializeInternal()
 PrimitiveData Material::CreatePrimitiveData(ID3D11Device* const device, const Mesh& mesh) const
 {
 	return PrimitiveData(
-		GetVertexSize(),
 		mesh.GetPrimitiveTopology(),
 		CreateVertexBufferData(device, mesh),
 		mesh.CreateIndexBufferData()

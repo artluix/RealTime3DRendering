@@ -78,7 +78,7 @@ VertexBufferData DiffuseLightingMaterial::CreateVertexBufferData(ID3D11Device* c
 
 		vertices.emplace_back(
 			math::Vector4(position, 1.0f),
-			math::Vector2(uv.x, uv.y),
+			uv.xy,
 			normal
 		);
 	}

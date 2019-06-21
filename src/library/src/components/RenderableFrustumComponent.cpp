@@ -67,8 +67,6 @@ void RenderableFrustumComponent::InitializeVertexBuffer(const math::Frustum& fru
 
 	auto& pd = m_primitivesData.front();
 
-	pd.stride = sizeof(Vertex);
-
 	std::vector<Vertex> vertices;
 	vertices.reserve(k_verticesCount);
 

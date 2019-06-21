@@ -154,9 +154,13 @@ void DistortionMappingDemo::DrawMeshForDistortionCutout()
 		auto inputLayout = m_material->GetInputLayout(*m_cutoutPass);
 		deviceContext->IASetInputLayout(inputLayout);
 
-		const auto stride = m_material->GetVertexSize();
-		unsigned offset = 0;
-		deviceContext->IASetVertexBuffers(0, 1, &vertexBuffer.buffer, &stride, &offset);
+		deviceContext->IASetVertexBuffers(
+			0,
+			1,
+			&vertexBuffer.buffer,
+			&vertexBuffer.stride,
+			&vertexBuffer.offset
+		);
 
 		if (indexBuffer)
 		{

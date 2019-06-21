@@ -91,8 +91,6 @@ void ShadowMappingDemo::InitializeInternal()
 		m_primitivesData.clear();
 		auto& pd = m_primitivesData.emplace_back(PrimitiveData{});
 
-		pd.stride = sizeof(Vertex);
-
 		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
 	}
 
@@ -217,11 +215,14 @@ void ShadowMappingDemo::Draw(const library::Time& time)
 
 		deviceContext->RSSetState(m_depthBiasState.Get());
 
-		const auto stride = m_depthMapMaterial->GetVertexSize();
-		const unsigned offset = 0;
 		deviceContext->IASetVertexBuffers(
-			0, 1, &m_modelPositionVertexBuffer.buffer, &stride, &offset
+			0,
+			1,
+			&m_modelPositionVertexBuffer.buffer,
+			&m_modelPositionVertexBuffer.stride,
+			&m_modelPositionVertexBuffer.offset
 		);
+
 		if (modelData.indexBuffer)
 			deviceContext->IASetIndexBuffer(modelData.indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
