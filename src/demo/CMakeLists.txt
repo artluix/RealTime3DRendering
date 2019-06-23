@@ -40,6 +40,9 @@ if(APPLICATION)
             src/Components/ColorFilterDemo.h
             src/Components/ColorFilterDemo.cpp
 
+            src/Components/ComputeShaderDemo.h
+            src/Components/ComputeShaderDemo.cpp
+
             src/Components/DiffuseLightingDemo.h
             src/Components/DiffuseLightingDemo.cpp
 
@@ -100,6 +103,9 @@ if(APPLICATION)
         # materials
             src/Materials/ColorFilterMaterial.h
             src/Materials/ColorFilterMaterial.cpp
+
+            src/Materials/ComputeShaderMaterial.h
+            src/Materials/ComputeShaderMaterial.cpp
 
             src/Materials/DepthMapMaterial.h
             src/Materials/DepthMapMaterial.cpp

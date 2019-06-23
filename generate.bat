@@ -12,10 +12,10 @@ if /i "%1" == "tools" (
     set TARGET=TOOLS
 
     if /i "%2" == "x64" (
-        set PLATFORM=Win64
+        set "PLATFORM= Win64"
     )
 ) else if /i "%1" == "x64" (
-    set PLATFORM=Win64
+    set "PLATFORM= Win64"
 
     if /i "%2" == "tools" (
         set TARGET=TOOLS
@@ -27,7 +27,7 @@ if not exist %BUILD_FOLDER% (
 )
 
 pushd %BUILD_FOLDER%
-cmake -G "%GENERATOR%" %PLATFORM% %SOURCE_FOLDER% -D%TARGET%=TRUE -T v141
+cmake -G "%GENERATOR%%PLATFORM%" %SOURCE_FOLDER% -D%TARGET%=TRUE -T v141
 popd
 
 echo.

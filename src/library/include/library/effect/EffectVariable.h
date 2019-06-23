@@ -8,6 +8,7 @@
 #include <string>
 
 interface ID3D11ShaderResourceView;
+interface ID3D11UnorderedAccessView;
 
 namespace library
 {
@@ -53,14 +54,16 @@ public:
 	template <unsigned Size, std::size_t Count>
 	EffectVariable& operator<<(const math::MatrixFixedArray<Size, Count>& value);
 
-	// texture
+	// textures
 	EffectVariable& operator<<(ID3D11ShaderResourceView* const value);
+	EffectVariable& operator<<(ID3D11UnorderedAccessView* const value);
 
 private:
 	ID3DX11EffectScalarVariable* ToScalarVariable();
 	ID3DX11EffectVectorVariable* ToVectorVariable();
 	ID3DX11EffectMatrixVariable* ToMatrixVariable();
 	ID3DX11EffectShaderResourceVariable* ToShaderResourceVariable();
+	ID3DX11EffectUnorderedAccessViewVariable* ToUAVVariable();
 
 	//-------------------------------------------------------------------------
 

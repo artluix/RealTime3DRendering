@@ -17,7 +17,8 @@ void PostProcessingComponent::SetSceneTexture(ID3D11ShaderResourceView& sceneTex
 //-------------------------------------------------------------------------
 
 void PostProcessingComponent::Update(const Time& time)
-{}
+{
+}
 
 void PostProcessingComponent::InitializeQuad()
 {

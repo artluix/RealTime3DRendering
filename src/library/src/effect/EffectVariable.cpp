@@ -57,12 +57,30 @@ ID3DX11EffectShaderResourceVariable* EffectVariable::ToShaderResourceVariable()
 	return nullptr;
 }
 
+ID3DX11EffectUnorderedAccessViewVariable* EffectVariable::ToUAVVariable()
+{
+	auto variable = m_variable->AsUnorderedAccessView();
+	if (variable->IsValid())
+		return variable;
+
+	assert("Invalid effect variable cast to unordered access view." && false);
+	return nullptr;
+}
+
 //-------------------------------------------------------------------------
 
 EffectVariable& EffectVariable::operator<<(ID3D11ShaderResourceView* const value)
 {
 	if (auto shaderResourceVariable = ToShaderResourceVariable())
 		shaderResourceVariable->SetResource(value);
+
+	return *this;
+}
+
+EffectVariable& EffectVariable::operator<<(ID3D11UnorderedAccessView* const value)
+{
+	if (auto uavVariable = ToUAVVariable())
+		uavVariable->SetUnorderedAccessView(value);
 
 	return *this;
 }

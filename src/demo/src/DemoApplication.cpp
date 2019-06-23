@@ -38,6 +38,8 @@
 
 #include "Components/InstancingPointLightDemo.h"
 
+#include "Components/ComputeShaderDemo.h"
+
 //-------------------------------------------------------------------------
 
 #include <library/Components/FpsComponent.h>
@@ -288,6 +290,9 @@ void DemoApplication::Initialize()
 	instancing->SetCamera(*camera);
 	instancing->SetKeyboard(*m_keyboard);
 
+	auto computeShader = std::make_shared<ComputeShaderDemo>();
+	computeShader->SetCamera(*camera);
+
 	// push needed components
 	m_components.push_back(m_keyboard);
 	m_components.push_back(m_mouse);
@@ -320,7 +325,8 @@ void DemoApplication::Initialize()
 	// m_components.push_back(basicTessellation);
 	// m_components.push_back(quadHeightMapTessellation);
 	// m_components.push_back(modelTessellation);
-	m_components.push_back(instancing);
+	// m_components.push_back(instancing);
+	m_components.push_back(computeShader);
 
 	// hide grid by default
 	m_grid->SetVisible(false);
