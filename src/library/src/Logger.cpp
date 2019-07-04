@@ -13,7 +13,7 @@ void Logger::Log(const Level level, const char* fmt, ...)
 
 void Logger::Log(const Level level, const char* fmt, const va_list ap)
 {
-	constexpr unsigned k_bufferSize = 256;
+	constexpr unsigned k_bufferSize = 2048;
 
 	char buffer[k_bufferSize];
 	vsprintf_s(buffer, k_bufferSize, fmt, ap);

@@ -1,37 +1,31 @@
 #include "include/Common.fxh"
 
-// Resources
-#define LIGHTS_COUNT 4
+/************* Resources *************/
+
+struct POINT_LIGHT
+{
+    float3 position;
+    float lightRadius;
+    float4 color;
+};
+
+#define MAX_LIGHTS_COUNT 4
 
 cbuffer CBufferPerFrame
 {
-    POINT_LIGHT pointLights[LIGHTS_COUNT];
-
-    float4 ambientColor : AMBIENT <
-        string UIName = "Ambient Light";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 0.0f };
-
-    float3 cameraPosition : CAMERAPOSITION <string UIWIdget="None";>;
+    POINT_LIGHT pointLights[MAX_LIGHTS_COUNT];
+    uint lightsCount;
+    float4 ambientColor : AMBIENT;
+    float3 cameraPosition : CAMERAPOSITION;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION <string UIWIdget="None";>;
-    float4x4 world : WORLD <string UIWIdget="None";>;
+    float4x4 wvp : WORLDVIEWPROJECTION;
+    float4x4 world : WORLD;
 
-    float4 specularColor : SPECULAR <
-        string UIName = "Specular Color";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-    float specularPower : SPECULARPOWER <
-        string UIName = "Specular Power";
-        string UIWidget = "slider";
-        float UIMin = 1.0;
-        float UIMax = 255.0;
-        float UIStep = 1.0;
-    > = { 25.0f };
+    float4 specularColor : SPECULAR;
+    float specularPower : SPECULARPOWER = 25.0f;
 }
 
 RasterizerState DisableCulling
@@ -39,11 +33,7 @@ RasterizerState DisableCulling
     CullMode = None;
 };
 
-Texture2D ColorTexture <
-    string ResourceName="default_color.dds";
-    string UIName="Color Texture";
-    string ResourceType="2D";
->;
+Texture2D ColorTexture;
 
 SamplerState ColorSampler
 {
@@ -52,7 +42,8 @@ SamplerState ColorSampler
     AddressV = WRAP;
 };
 
-// Data Structures
+/************* Data Structures *************/
+
 struct VS_INPUT
 {
     float4 objectPosition : POSITION;
@@ -68,7 +59,8 @@ struct VS_OUTPUT
     float2 textureCoordinate : TEXCOORD0;
 };
 
-// Vertex Shader
+/************* Vertex Shader *************/
+
 VS_OUTPUT vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
@@ -81,8 +73,9 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
     return OUT;
 }
 
-// Pixel Shader
-float4 pixel_shader(VS_OUTPUT IN, uniform int lightCount) : SV_Target
+/************* Pixel Shader *************/
+
+float4 pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 OUT = (float4)0;
 
@@ -100,8 +93,8 @@ float4 pixel_shader(VS_OUTPUT IN, uniform int lightCount) : SV_Target
 
     float3 totalLightContribution = (float3)0;
 
-    [unroll]
-    for (int i = 0; i < lightCount; i++)
+    [loop]
+    for (uint i = 0; i < lightsCount; i++)
     {
         lightContributionData.lightDirection = get_light_data(pointLights[i].position, IN.worldPosition, pointLights[i].lightRadius);
         lightContributionData.lightColor = pointLights[i].color;
@@ -114,50 +107,15 @@ float4 pixel_shader(VS_OUTPUT IN, uniform int lightCount) : SV_Target
     return OUT;
 }
 
-// Techniques
-technique10 Lights1
+/************* Techniques *************/
+
+technique10 main11
 {
     pass p0
     {
         SetVertexShader(CompileShader(vs_4_0, vertex_shader()));
         SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_4_0, pixel_shader(1)));
-
-        SetRasterizerState(DisableCulling);
-    }
-}
-
-technique10 Lights2
-{
-    pass p0
-    {
-        SetVertexShader(CompileShader(vs_4_0, vertex_shader()));
-        SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_4_0, pixel_shader(2)));
-
-        SetRasterizerState(DisableCulling);
-    }
-}
-
-technique10 Lights3
-{
-    pass p0
-    {
-        SetVertexShader(CompileShader(vs_4_0, vertex_shader()));
-        SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_4_0, pixel_shader(3)));
-
-        SetRasterizerState(DisableCulling);
-    }
-}
-
-technique10 Lights4
-{
-    pass p0
-    {
-        SetVertexShader(CompileShader(vs_4_0, vertex_shader()));
-        SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_4_0, pixel_shader(4)));
+        SetPixelShader(CompileShader(ps_4_0, pixel_shader()));
 
         SetRasterizerState(DisableCulling);
     }

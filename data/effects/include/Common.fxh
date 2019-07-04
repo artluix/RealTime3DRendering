@@ -6,13 +6,6 @@
 
 // Data Structures
 
-struct POINT_LIGHT
-{
-    float3 position;
-    float lightRadius;
-    float4 color;
-};
-
 struct LIGHT_CONTRIBUTION_DATA
 {
     float4 color;
@@ -24,13 +17,13 @@ struct LIGHT_CONTRIBUTION_DATA
     float specularPower;
 };
 
-// Utilities 
+// Utilities
 float2 get_corrected_texture_coordinate(float2 textureCoordinate)
 {
 #if FLIP_TEXTURE_Y
     return float2(textureCoordinate.x, 1.0 - textureCoordinate.y);
 #else
-    return textureCoordinate; 
+    return textureCoordinate;
 #endif
 }
 

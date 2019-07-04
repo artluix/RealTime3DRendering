@@ -1,4 +1,4 @@
-#include "TransparencyMappingDemo.h"
+#include "Components/MultiplePointLightsDemo.h"
 
 #include <library/Components/CameraComponent.h>
 #include <library/Components/KeyboardComponent.h>
@@ -9,19 +9,16 @@
 #include <library/Application.h>
 #include <library/Utils.h>
 #include <library/Path.h>
-#include <library/Renderer.h>
 
 #include <library/Math/Math.h>
+#include <library/Model/Model.h>
 
 #include <library/Effect/Effect.h>
 #include <library/Effect/EffectPass.h>
 #include <library/Effect/EffectTechnique.h>
 #include <library/Effect/EffectVariable.h>
 
-#include <library/BlendStates.h>
-
 #include <sstream>
-#include <array>
 
 using namespace library;
 
@@ -30,84 +27,99 @@ namespace
 constexpr float k_byteMax = static_cast<float>(0xFF);
 constexpr float k_lightModulationRate = 10.f;
 constexpr float k_lightMovementRate = 10.f;
+
+constexpr unsigned k_minLightsCount = 1;
+constexpr unsigned k_maxLightsCount = 4;
 } // namespace
 
-TransparencyMappingDemo::TransparencyMappingDemo()
-	: m_specularPower(25.f)
+MultiplePointLightsDemo::MultiplePointLightsDemo()
+	: m_lightsCount(1)
+
+	, m_specularPower(25.f)
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
 	, m_ambientColor(1.f, 1.f, 1.f, 0.f)
-{}
+{
+}
 
-TransparencyMappingDemo::~TransparencyMappingDemo() = default;
-
-//-------------------------------------------------------------------------
-
-void TransparencyMappingDemo::InitializeInternal()
+void MultiplePointLightsDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
-	CreateMaterialWithEffect("TransparencyMapping");
+	CreateMaterialWithEffect("MultiplePointLights");
 
-	// build vertexBuffer manually
+	// load model
 	{
-		using Vertex = Material::Vertex;
-		using namespace library::math;
-
-		constexpr std::array<Vertex, 6> vertices = {
-			Vertex(Vector4(-0.5f, -0.5f, 0.0f, 1.0f), Vector2(0.0f, 1.0f), Direction::Backward),
-			Vertex(Vector4(-0.5f, 0.5f, 0.0f, 1.0f), Vector2(0.0f, 0.0f), Direction::Backward),
-			Vertex(Vector4(0.5f, 0.5f, 0.0f, 1.0f), Vector2(1.0f, 0.0f), Direction::Backward),
-
-			Vertex(Vector4(-0.5f, -0.5f, 0.0f, 1.0f), Vector2(0.0f, 1.0f), Direction::Backward),
-			Vertex(Vector4(0.5f, 0.5f, 0.0f, 1.0f), Vector2(1.0f, 0.0f), Direction::Backward),
-			Vertex(Vector4(0.5f, -0.5f, 0.0f, 1.0f), Vector2(1.0f, 1.0f), Direction::Backward),
-		};
-
-		m_primitivesData.clear();
-		auto& pd = m_primitivesData.emplace_back(PrimitiveData{});
-
-		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
+		Model model(GetApp(), "Sphere", true);
+		m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);
 	}
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture("Checkerboard");
-	m_textures[Texture::TransparencyMap] = GetApp().LoadTexture("AlphaMask_32bpp");
+	m_textures[Texture::Default] = GetApp().LoadTexture("EarthAtDay");
 
-	m_pointLight = std::make_unique<PointLightComponent>();
-	m_pointLight->SetRadius(50.f);
-	m_pointLight->SetPosition(math::Vector3(0.f, 0.f, 10.f));
+	m_lightGlues.resize(k_maxLightsCount);
+	for (auto& lightGlue : m_lightGlues)
+	{
+		lightGlue.light = std::make_unique<PointLightComponent>();
+		lightGlue.light->SetRadius(500.f);
 
-	m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.2f);
-	m_proxyModel->SetPosition(m_pointLight->GetPosition());
-	m_proxyModel->SetCamera(*GetCamera());
-	m_proxyModel->Initialize(GetApp());
+		lightGlue.model = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.5f);
+		lightGlue.model->SetCamera(*GetCamera());
+	}
+
+	// set position for lights
+	m_lightGlues[0].light->SetPosition(math::Vector3(0.f, -10.f, 10.f));
+	m_lightGlues[1].light->SetPosition(math::Vector3(0.f, 10.f, 10.f));
+	m_lightGlues[2].light->SetPosition(math::Vector3(-10.f, 0.f, 0.f));
+	m_lightGlues[3].light->SetPosition(math::Vector3(10.f, 0.f, 0.f));
+
+	// initialize light models
+	for (auto& lightGlue : m_lightGlues)
+	{
+		lightGlue.model->SetPosition(lightGlue.light->GetPosition());
+		lightGlue.model->Initialize(GetApp());
+	}
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
 	m_text->SetTextUpdateFunction([this]() -> std::wstring {
 		std::wostringstream woss;
 		woss << L"Ambient Intensity (+PageUp/-PageDown): " << m_ambientColor.a << "\n"
-			 << L"Point Light Intensity (+Home/-End): " << m_pointLight->GetColor().a << "\n"
+			 << L"Point Light Intensity (+Home/-End): " << m_lightColor.a << "\n"
 			 << L"Specular Power (+Insert/-Delete): " << m_specularPower << "\n"
+			 << L"Lights Count (+Right Alt/-Left Alt): " << m_lightsCount << "\n"
 			 << L"Move Point Light (Numpad: 8/2, 4/6, 3/9)\n";
 		return woss.str();
 	});
 	m_text->Initialize(GetApp());
 }
 
-void TransparencyMappingDemo::Update(const Time& time)
+//-------------------------------------------------------------------------
+
+void MultiplePointLightsDemo::Update(const Time& time)
 {
+	if (!!m_keyboard)
+	{
+		if (m_keyboard->WasKeyPressed(Key::Alt_Left) && m_lightsCount > k_minLightsCount)
+			m_lightsCount--;
+		if (m_keyboard->WasKeyPressed(Key::Alt_Right) && m_lightsCount < k_maxLightsCount)
+			m_lightsCount++;
+	}
+
 	UpdateAmbientLight(time);
 	UpdatePointLight(time);
 	UpdateSpecularLight(time);
 
 	m_text->Update(time);
-	m_proxyModel->Update(time);
+
+	for (unsigned i = 0; i < m_lightsCount; i++)
+	{
+		m_lightGlues[i].model->Update(time);
+	}
 
 	PrimitiveComponent::Update(time);
 }
 
-void TransparencyMappingDemo::UpdateAmbientLight(const Time& time)
+void MultiplePointLightsDemo::UpdateAmbientLight(const Time& time)
 {
 	static float ambientLightIntensity = m_ambientColor.a;
 
@@ -127,31 +139,37 @@ void TransparencyMappingDemo::UpdateAmbientLight(const Time& time)
 	}
 }
 
-void TransparencyMappingDemo::UpdatePointLight(const Time& time)
+void MultiplePointLightsDemo::UpdatePointLight(const Time& time)
 {
-	static float pointLightIntensity = m_pointLight->GetColor().a;
+	static float pointLightIntensity = m_lightColor.a;
 
 	if (!!m_keyboard)
 	{
 		const auto elapsedTime = time.elapsed.GetSeconds();
 
-		// update directional light intensity
+		// update light intensity
 		if (m_keyboard->IsKeyDown(Key::Home) && pointLightIntensity < k_byteMax)
 		{
 			pointLightIntensity += k_lightModulationRate * elapsedTime;
 
-			auto pointLightColor = m_pointLight->GetColor();
-			pointLightColor.a = math::Min(pointLightIntensity, k_byteMax);
-			m_pointLight->SetColor(pointLightColor);
+			m_lightColor.a = math::Min(pointLightIntensity, k_byteMax);
+
+			for (unsigned i = 0; i < m_lightsCount; i++)
+			{
+				m_lightGlues[i].light->SetColor(m_lightColor);
+			}
 		}
 
 		if (m_keyboard->IsKeyDown(Key::End) && pointLightIntensity > 0)
 		{
 			pointLightIntensity -= k_lightModulationRate * elapsedTime;
 
-			auto pointLightColor = m_pointLight->GetColor();
-			pointLightColor.a = math::Max(pointLightIntensity, 0.f);
-			m_pointLight->SetColor(pointLightColor);
+			m_lightColor.a = math::Max(pointLightIntensity, 0.f);
+
+			for (unsigned i = 0; i < m_lightsCount; i++)
+			{
+				m_lightGlues[i].light->SetColor(m_lightColor);
+			}
 		}
 
 		math::Vector3i movementAmount;
@@ -173,15 +191,21 @@ void TransparencyMappingDemo::UpdatePointLight(const Time& time)
 
 		if (movementAmount)
 		{
-			auto movement = movementAmount * k_lightMovementRate * elapsedTime;
+			const auto movement = movementAmount * k_lightMovementRate * elapsedTime;
 
-			m_pointLight->SetPosition(m_pointLight->GetPosition() + movement);
-			m_proxyModel->Translate(movement);
+			for (unsigned i = 0; i < m_lightsCount; i++)
+			{
+				auto& lightGlue = m_lightGlues[i];
+				const auto position = lightGlue.light->GetPosition() + movement;
+
+				lightGlue.light->SetPosition(position);
+				lightGlue.model->SetPosition(position);
+			}
 		}
 	}
 }
 
-void TransparencyMappingDemo::UpdateSpecularLight(const Time& time)
+void MultiplePointLightsDemo::UpdateSpecularLight(const Time& time)
 {
 	static float specularLightIntensity = m_specularPower;
 
@@ -207,7 +231,9 @@ void TransparencyMappingDemo::UpdateSpecularLight(const Time& time)
 	}
 }
 
-void TransparencyMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
+//-------------------------------------------------------------------------
+
+void MultiplePointLightsDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	const auto& world = GetWorldMatrix();
 	auto wvp = world;
@@ -219,29 +245,25 @@ void TransparencyMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 		m_material->GetCameraPosition() << camera->GetPosition();
 	}
 
-	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
-	m_material->GetLightColor() << m_pointLight->GetColor().ToVector4();
-	m_material->GetLightPosition() << m_pointLight->GetPosition();
-	m_material->GetLightRadius() << m_pointLight->GetRadius();
-
 	m_material->GetWVP() << wvp;
 	m_material->GetWorld() << world;
 	m_material->GetSpecularPower() << m_specularPower;
 	m_material->GetSpecularColor() << m_specularColor.ToVector4();
-
+	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
-	m_material->GetTransparencyMap() << m_textures[Texture::TransparencyMap].Get();
+
+	std::vector<PointLight> pointLights;
+	pointLights.resize(m_lightsCount);
+
+	for (unsigned i = 0; i < m_lightsCount; i++)
+	{
+		pointLights[i].position = m_lightGlues[i].light->GetPosition();
+		pointLights[i].lightRadius = m_lightGlues[i].light->GetRadius();
+		pointLights[i].color = m_lightGlues[i].light->GetColor();
+	}
+
+	m_material->GetLightsCount() << m_lightsCount;
+	m_material->GetPointLights() << pointLights;
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
-}
-
-void TransparencyMappingDemo::Draw_Render(const PrimitiveData& primitiveData)
-{
-	auto deviceContext = GetApp().GetDeviceContext();
-	auto renderer = GetApp().GetRenderer();
-
-	renderer->SaveRenderState(RenderState::Blend);
-	deviceContext->OMSetBlendState(BlendStates::Alpha, nullptr, 0xFFFFFFFF);
-	PrimitiveComponent::Draw_Render(primitiveData);
-	renderer->RestoreRenderState(RenderState::Blend);
 }

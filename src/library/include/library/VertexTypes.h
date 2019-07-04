@@ -65,7 +65,8 @@ struct VertexPositionTextureNormal : public VertexPositionTexture
 	constexpr VertexPositionTextureNormal(
 		const math::Vector4& position,
 		const math::Vector2& textureCoordinates,
-		const math::Vector3& normal)
+		const math::Vector3& normal
+	)
 		: VertexPositionTexture(position, textureCoordinates)
 		, normal(normal)
 	{}
@@ -81,7 +82,8 @@ struct VertexPositionTextureNormalTangent : public VertexPositionTextureNormal
 		const math::Vector4& position,
 		const math::Vector2& textureCoordinates,
 		const math::Vector3& normal,
-		const math::Vector3& tangent)
+		const math::Vector3& tangent
+	)
 		: VertexPositionTextureNormal(position, textureCoordinates, normal)
 		, tangent(tangent)
 	{}
@@ -99,7 +101,8 @@ struct VertexPositionTextureNormalSkinned : public VertexPositionTextureNormal
 		const math::Vector2& textureCoordinates,
 		const math::Vector3& normal,
 		const math::Vector4u& boneIndices,
-		const math::Vector4& boneWeights)
+		const math::Vector4& boneWeights
+	)
 		: VertexPositionTextureNormal(position, textureCoordinates, normal)
 		, boneIndices(boneIndices)
 		, boneWeights(boneWeights)

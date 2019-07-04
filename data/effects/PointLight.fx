@@ -3,51 +3,21 @@
 // Resources
 cbuffer CBufferPerFrame
 {
-    float4 ambientColor : AMBIENT <
-        string UIName = "Ambient Light";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 0.0f };
+    float4 ambientColor : AMBIENT;
+    float4 lightColor : COLOR;
+    float3 lightPosition : POSITION;
+    float lightRadius = 10.0f;
 
-    float4 lightColor : COLOR <
-        string Object = "LightColor0";
-        string UIName = "Light Color";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-    float3 lightPosition : POSITION <
-        string Object = "PointLight0";
-        string UIName = "Light Position";
-        string Space = "World";
-    > = { 0.0f, 0.0f, 0.0f };
-
-    float lightRadius <
-        string UIName = "Light Radius";
-        string UIWidget = "slider";
-        float UIMin = 0.0;
-        float UIMax = 100.0;
-        float UIStep = 1.0;
-    > = { 10.0f };
-
-    float3 cameraPosition : CAMERAPOSITION <string UIWIdget="None";>;
+    float3 cameraPosition : CAMERAPOSITION;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION <string UIWIdget="None";>;
-    float4x4 world : WORLD <string UIWIdget="None";>;
+    float4x4 wvp : WORLDVIEWPROJECTION;
+    float4x4 world : WORLD;
 
-    float4 specularColor : SPECULAR <
-        string UIName = "Specular Color";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-    float specularPower : SPECULARPOWER <
-        string UIName = "Specular Power";
-        string UIWidget = "slider";
-        float UIMin = 1.0;
-        float UIMax = 255.0;
-        float UIStep = 1.0;
-    > = { 25.0f };
+    float4 specularColor : SPECULAR;
+    float specularPower : SPECULARPOWER = 25.0f;
 }
 
 RasterizerState DisableCulling
@@ -68,7 +38,7 @@ SamplerState ColorSampler
     AddressV = WRAP;
 };
 
-// Data Structures 
+// Data Structures
 struct VS_INPUT
 {
     float4 objectPosition : POSITION;
@@ -85,7 +55,7 @@ struct VS_OUTPUT
     float attenuation : TEXCOORD2;
 };
 
-// Vertex Shader 
+// Vertex Shader
 VS_OUTPUT vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
@@ -94,7 +64,7 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
     OUT.worldPosition = mul(IN.objectPosition, world).xyz;
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
     OUT.normal = normalize(mul(float4(IN.normal, 0), world).xyz);
-    
+
     float3 lightDirection = lightPosition - OUT.worldPosition;
     OUT.attenuation = saturate(1.0f - (length(lightDirection) / lightRadius));
 

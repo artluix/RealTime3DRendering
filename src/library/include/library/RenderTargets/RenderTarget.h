@@ -22,7 +22,9 @@ protected:
 	struct Data
 	{
 		Data(ID3D11RenderTargetView* rtv, ID3D11DepthStencilView* dsv, const D3D11_VIEWPORT& vp)
-			: renderTargetView(rtv), depthStencilView(dsv), viewport(vp)
+			: renderTargetView(rtv)
+			, depthStencilView(dsv)
+			, viewport(vp)
 		{}
 
 		ID3D11RenderTargetView* renderTargetView;

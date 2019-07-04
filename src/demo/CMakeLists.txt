@@ -73,6 +73,9 @@ if(APPLICATION)
             src/Components/ModelTessellationDemo.h
             src/Components/ModelTessellationDemo.cpp
 
+            src/Components/MultiplePointLightsDemo.h
+            src/Components/MultiplePointLightsDemo.cpp
+
             src/Components/NormalMappingDemo.h
             src/Components/NormalMappingDemo.cpp
 
@@ -139,6 +142,9 @@ if(APPLICATION)
 
             src/Materials/ModelTessellationMaterial.h
             src/Materials/ModelTessellationMaterial.cpp
+
+            src/Materials/MultiplePointLightsMaterial.h
+            src/Materials/MultiplePointLightsMaterial.cpp
 
             src/Materials/NormalMappingMaterial.h
             src/Materials/NormalMappingMaterial.cpp

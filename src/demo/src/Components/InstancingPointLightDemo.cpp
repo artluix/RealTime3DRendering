@@ -24,7 +24,6 @@ namespace
 constexpr float k_byteMax = static_cast<float>(0xFF);
 constexpr float k_lightModulationRate = 10.f;
 constexpr float k_lightMovementRate = 10.f;
-constexpr auto k_proxyModelRotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
 
 constexpr unsigned k_axisInstanceCount = 5;
 constexpr unsigned k_instancesCount = k_axisInstanceCount * k_axisInstanceCount * 2;
@@ -59,7 +58,6 @@ void InstancingPointLightDemo::InitializeInternal()
 
 	m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.5f);
 	m_proxyModel->SetPosition(m_pointLight->GetPosition());
-	m_proxyModel->SetInitialTransform(math::Matrix4::RotationPitchYawRoll(k_proxyModelRotationOffset));
 	m_proxyModel->SetCamera(*GetCamera());
 	m_proxyModel->Initialize(GetApp());
 

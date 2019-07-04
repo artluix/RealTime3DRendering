@@ -54,21 +54,19 @@ void Effect::Compile()
 	m_path = m_app.GetEffectsPath() + Path(m_name + ".fx");
 
 	ComPtr<ID3DBlob> errorBlob;
-	ComPtr<ID3DBlob> shaderBlob;
 
-	auto hr = D3DCompileFromFile(
+	auto hr = D3DX11CompileEffectFromFile(
 		m_path.GetWideCString(),
 		nullptr,
-		nullptr,
-		nullptr,
-		"fx_5_0",
+		D3D_COMPILE_STANDARD_FILE_INCLUDE,
 #if defined(DEBUG) || defined(DEBUG)
 		D3DCOMPILE_DEBUG | D3DCOMPILE_SKIP_OPTIMIZATION,
 #else
 		0,
 #endif
 		0,
-		&shaderBlob,
+		m_app.GetDevice(),
+		&m_effect,
 		&errorBlob
 	);
 	if (FAILED(hr))
@@ -76,15 +74,6 @@ void Effect::Compile()
 		Logger::Log(Logger::Level::Error, static_cast<const char*>(errorBlob->GetBufferPointer()));
 		assert("D3DX11CompileEffectFromFile() failed" && false);
 	}
-
-	hr = D3DX11CreateEffectFromMemory(
-		shaderBlob->GetBufferPointer(),
-		shaderBlob->GetBufferSize(),
-		0,
-		m_app.GetDevice(),
-		&m_effect
-	);
-	assert("D3DX11CreateEffectFromMemory() failed." && SUCCEEDED(hr));
 
 	Initialize();
 }

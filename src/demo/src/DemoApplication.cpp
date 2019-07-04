@@ -10,6 +10,7 @@
 
 #include "Components/DiffuseLightingDemo.h"
 #include "Components/PointLightDemo.h"
+#include "Components/MultiplePointLightsDemo.h"
 #include "Components/SpotlightDemo.h"
 
 #include "Components/NormalMappingDemo.h"
@@ -191,6 +192,11 @@ void DemoApplication::Initialize()
 	pointLight->SetCamera(*camera);
 	pointLight->SetKeyboard(*m_keyboard);
 
+	// multiple point lights
+	auto multiplePointLights = std::make_shared<MultiplePointLightsDemo>();
+	multiplePointLights->SetCamera(*camera);
+	multiplePointLights->SetKeyboard(*m_keyboard);
+
 	// spotlight
 	auto spotlight = std::make_shared<SpotlightDemo>();
 	spotlight->SetCamera(*camera);
@@ -309,6 +315,7 @@ void DemoApplication::Initialize()
 	// m_components.push_back(textureMapping);
 	// m_components.push_back(diffuseLighting);
 	// m_components.push_back(pointLight);
+	m_components.push_back(multiplePointLights);
 	// m_components.push_back(spotlight);
 	// m_components.push_back(normalMapping);
 	// m_components.push_back(environmentMapping);
@@ -326,7 +333,7 @@ void DemoApplication::Initialize()
 	// m_components.push_back(quadHeightMapTessellation);
 	// m_components.push_back(modelTessellation);
 	// m_components.push_back(instancing);
-	m_components.push_back(computeShader);
+	// m_components.push_back(computeShader);
 
 	// hide grid by default
 	m_grid->SetVisible(false);

@@ -13,6 +13,16 @@ interface ID3D11UnorderedAccessView;
 namespace library
 {
 
+template<typename T>
+inline constexpr bool is_hlsl_scalar =
+	std::is_same_v<T, int> ||
+	std::is_same_v<T, unsigned> ||
+	std::is_same_v<T, bool> ||
+	std::is_same_v<T, float> ||
+	std::is_same_v<T, double>;
+
+//-------------------------------------------------------------------------
+
 class Effect;
 
 class EffectVariable : public NonCopyable<EffectVariable>
@@ -30,13 +40,31 @@ public:
 	ID3DX11EffectType* GetType() const { return m_type.Get(); }
 	const D3DX11_EFFECT_TYPE_DESC& GetTypeDesc() const { return m_typeDesc; }
 
+	// raw
+	template<typename T>
+	std::enable_if_t<!is_hlsl_scalar<T>, EffectVariable&>
+	operator<<(const T& value);
+
+	template<typename T>
+	std::enable_if_t<!is_hlsl_scalar<T>, EffectVariable&>
+	operator<<(const std::vector<T>& value);
+	
+	template <typename T, std::size_t Count>
+	std::enable_if_t<!is_hlsl_scalar<T>, EffectVariable&>
+	operator<<(const std::array<T, Count>& value);
+
 	// scalar
 	template<typename T>
-	EffectVariable& operator<<(const T value);
+	std::enable_if_t<is_hlsl_scalar<T>, EffectVariable&>
+	operator<<(const T value);
+
 	template<typename T>
-	EffectVariable& operator<<(const std::vector<T>& value);
+	std::enable_if_t<is_hlsl_scalar<T>, EffectVariable&>
+	operator<<(const std::vector<T>& value);
+
 	template <typename T, std::size_t Count>
-	EffectVariable& operator<<(const std::array<T, Count>& value);
+	std::enable_if_t<is_hlsl_scalar<T>, EffectVariable&>
+	operator<<(const std::array<T, Count>& value);
 
 	// vector
 	template<typename T, unsigned Size>
@@ -66,6 +94,12 @@ private:
 	ID3DX11EffectUnorderedAccessViewVariable* ToUAVVariable();
 
 	//-------------------------------------------------------------------------
+
+	template<typename T>
+	void SetRaw(ID3DX11EffectVariable* const variable, const T& value);
+
+	template<typename T>
+	void SetRawArray(ID3DX11EffectVariable* const variable, const T* data, const std::size_t count);
 
 	template<typename T>
 	void SetScalar(ID3DX11EffectScalarVariable* const scalarVariable, const T value);
