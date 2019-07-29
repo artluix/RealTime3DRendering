@@ -16,7 +16,7 @@ public:
 
 protected:
 	explicit LightComponent(const math::Color& color = colors::White);
-	
+
 	void InitializeInternal() override {}
 
 	math::Color m_color;

@@ -5,6 +5,23 @@ namespace library
 {
 std::stack<library::RenderTarget::Data> RenderTarget::s_renderTargetsData;
 
+//-------------------------------------------------------------------------
+
+RenderTarget::Data::Data(ID3D11RenderTargetView** rtvs, const unsigned rtvsCount, ID3D11DepthStencilView* dsv, const D3D11_VIEWPORT& vp)
+	: renderTargetViews(rtvs)
+	, renderTargetViewsCount(rtvsCount)
+	, depthStencilView(dsv)
+	, viewport(vp)
+{
+}
+
+RenderTarget::Data::Data(ID3D11RenderTargetView* rtv, ID3D11DepthStencilView* dsv, const D3D11_VIEWPORT& vp)
+	: Data(&rtv, 1, dsv, vp)
+{
+}
+
+//-------------------------------------------------------------------------
+
 void RenderTarget::Begin(ID3D11DeviceContext* const deviceContext, const Data& data)
 {
 	s_renderTargetsData.push(data);
@@ -25,7 +42,11 @@ void RenderTarget::End(ID3D11DeviceContext* const deviceContext)
 
 void RenderTarget::SetRenderTargetData(ID3D11DeviceContext* const deviceContext, const Data& data)
 {
-	deviceContext->OMSetRenderTargets(1, &data.renderTargetView, data.depthStencilView);
+	deviceContext->OMSetRenderTargets(
+		data.renderTargetViewsCount,
+		data.renderTargetViews,
+		data.depthStencilView
+	);
 	deviceContext->RSSetViewports(1, &data.viewport);
 }
 } // namespace library

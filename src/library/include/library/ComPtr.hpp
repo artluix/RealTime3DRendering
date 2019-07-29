@@ -1,12 +1,10 @@
 #pragma once
 #include "library/NonCopyable.hpp"
 
- #include <Unknwn.h>
-// #include <type_traits>
+#include <Unknwn.h>
 
 namespace library
 {
-// template <typename T, typename = std::enable_if_t<std::is_base_of_v<IUnknown, T>>>
 template <typename T>
 class ComPtr : public NonCopyable<ComPtr<T>>
 {

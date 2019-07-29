@@ -56,7 +56,7 @@ void SceneComponent::SetRotation(const math::Quaternion& rotation)
 {
 	if (m_transform.rotation == rotation)
 		return;
-	
+
 	const auto rotationDelta = m_transform.rotation.Inverse() * rotation;
 	m_transform.rotation = rotation;
 

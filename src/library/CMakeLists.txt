@@ -91,6 +91,7 @@ if(APPLICATION)
 
                 include/library/RenderTargets/DepthMapRenderTarget.h
                 include/library/RenderTargets/FullScreenRenderTarget.h
+                include/library/RenderTargets/MultipleRenderTarget.h
 
             include/library/Application.h
             include/library/BlendStates.h
@@ -184,6 +185,7 @@ if(APPLICATION)
 
                 src/RenderTargets/DepthMapRenderTarget.cpp
                 src/RenderTargets/FullScreenRenderTarget.cpp
+                src/RenderTargets/MultipleRenderTarget.cpp
 
             src/Application.cpp
             src/BlendStates.cpp

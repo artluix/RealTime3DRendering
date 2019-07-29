@@ -41,7 +41,7 @@ void FullScreenQuadComponent::SetActiveTechnique(
 	const std::string& techniqueName,
 	const std::string& passName /* = "p0"*/
 )
-{ 
+{
 	assert(!!m_material);
 
 	auto& technique = m_material->GetEffect().GetTechnique(techniqueName);
