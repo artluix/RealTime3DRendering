@@ -17,7 +17,7 @@ SkinnedModelMaterial::~SkinnedModelMaterial() = default;
 
 void SkinnedModelMaterial::InitializeInternal()
 {
-	m_inputElementDescriptions =
+	EffectPass::InputElementDescArray inputElementDescriptions =
 	{
 		{
 			"POSITION",
@@ -66,7 +66,7 @@ void SkinnedModelMaterial::InitializeInternal()
 		}
 	};
 
-	Material::InitializeInternal();
+	CreateInputLayout(inputElementDescriptions, GetDefaultTechniqueName());
 }
 
 VertexBufferData SkinnedModelMaterial::CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh)
@@ -94,7 +94,7 @@ VertexBufferData SkinnedModelMaterial::CreateVertexBufferData(ID3D11Device* cons
 
 		math::Vector4 weights;
 		math::Vector4u indices;
-		
+
 		for (unsigned j = 0, count = vertexWeights.GetCount(); j < count; j++)
 		{
 			weights[j] = vertexWeights[j].weight;

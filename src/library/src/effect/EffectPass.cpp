@@ -17,9 +17,10 @@ EffectPass::EffectPass(const Application& app, const EffectTechnique& technique,
 
 EffectPass::~EffectPass() = default;
 
-ComPtr<ID3D11InputLayout> EffectPass::CreateInputLayout(
-	const std::vector<D3D11_INPUT_ELEMENT_DESC>& inputElementDescriptions) const
+ComPtr<ID3D11InputLayout> EffectPass::CreateInputLayout(const InputElementDescArray& inputElementDescriptions)
 {
+	m_inputElementDescriptions = inputElementDescriptions;
+
 	ComPtr<ID3D11InputLayout> inputLayout;
 
 	auto hr = m_app.GetDevice()->CreateInputLayout(
@@ -31,12 +32,6 @@ ComPtr<ID3D11InputLayout> EffectPass::CreateInputLayout(
 	);
 	assert("ID3D11Device::CreateInputLayout() failed." && SUCCEEDED(hr));
 
-	return inputLayout;
-}
-
-std::unique_ptr<ID3D11InputLayout> EffectPass::GetInputLayout() const
-{
-	std::unique_ptr<ID3D11InputLayout> inputLayout;
 	return inputLayout;
 }
 

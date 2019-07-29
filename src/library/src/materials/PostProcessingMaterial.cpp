@@ -20,7 +20,7 @@ PostProcessingMaterial::~PostProcessingMaterial() = default;
 
 void PostProcessingMaterial::InitializeInternal()
 {
-	m_inputElementDescriptions =
+	EffectPass::InputElementDescArray inputElementDescriptions =
 	{
 		{
 			"POSITION",
@@ -44,12 +44,12 @@ void PostProcessingMaterial::InitializeInternal()
 
 	for (unsigned i = 0, techniquesCount = GetEffect().GetTechniquesCount(); i < techniquesCount; i++)
 	{
-		const auto& technique = GetEffect().GetTechnique(i);
+		auto& technique = GetEffect().GetTechnique(i);
 
 		for (unsigned j = 0, passesCount = technique.GetPassesCount(); j < passesCount; j++)
 		{
-			const auto& pass = technique.GetPass(j);
-			CreateInputLayout(pass);
+			auto& pass = technique.GetPass(j);
+			CreateInputLayout(inputElementDescriptions, pass);
 		}
 	}
 }

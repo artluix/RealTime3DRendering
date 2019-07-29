@@ -20,7 +20,7 @@ TessellationMaterial::TessellationMaterial(
 
 void TessellationMaterial::InitializeInternal()
 {
-	m_inputElementDescriptions =
+	EffectPass::InputElementDescArray inputElementDescriptions =
 	{
 		{
 			"POSITION",
@@ -33,7 +33,7 @@ void TessellationMaterial::InitializeInternal()
 		}
 	};
 
-	Material::InitializeInternal();
+	CreateInputLayout(inputElementDescriptions, GetDefaultTechniqueName());
 }
 
 VertexBufferData TessellationMaterial::CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh)

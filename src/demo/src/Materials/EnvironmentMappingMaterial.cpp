@@ -24,7 +24,7 @@ EnvironmentMappingMaterial::~EnvironmentMappingMaterial() = default;
 
 void EnvironmentMappingMaterial::InitializeInternal()
 {
-	m_inputElementDescriptions =
+	EffectPass::InputElementDescArray inputElementDescriptions =
 	{
 		{
 			"POSITION",
@@ -55,7 +55,7 @@ void EnvironmentMappingMaterial::InitializeInternal()
 		},
 	};
 
-	Material::InitializeInternal();
+	CreateInputLayout(inputElementDescriptions, GetDefaultTechniqueName());
 }
 
 VertexBufferData EnvironmentMappingMaterial::CreateVertexBufferData(

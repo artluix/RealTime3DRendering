@@ -22,5 +22,7 @@ void TransparencyMappingMaterial::InitializeInternal()
 {
 	PointLightMaterial::InitializeInternal();
 
-	CreateInputLayout("alphaBlendingWithFog");
+	const auto& inputElementDescriptions = GetCurrentPass().GetInputElementDescriptions();
+
+	CreateInputLayout(inputElementDescriptions, "alphaBlendingWithFog");
 }

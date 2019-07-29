@@ -72,34 +72,26 @@ void Material::Initialize()
 
 //-------------------------------------------------------------------------
 
-void Material::CreateInputLayout(const std::string& techniqueName, const std::string& passName /*= "p0"*/)
+void Material::CreateInputLayout(
+	const EffectPass::InputElementDescArray& inputElementDescriptions,
+	const std::string& techniqueName,
+	const std::string& passName /*= "p0"*/
+)
 {
-	const auto& technique = m_effect.GetTechnique(techniqueName);
-	const auto& pass = technique.GetPass(passName);
-	auto inputLayout = pass.CreateInputLayout(m_inputElementDescriptions);
+	auto& technique = m_effect.GetTechnique(techniqueName);
+	auto& pass = technique.GetPass(passName);
+	auto inputLayout = pass.CreateInputLayout(inputElementDescriptions);
 
 	m_inputLayouts.emplace(&pass, std::move(inputLayout));
 }
 
-void Material::CreateInputLayout(const EffectPass& pass)
+void Material::CreateInputLayout(
+	const EffectPass::InputElementDescArray& inputElementDescriptions,
+	EffectPass& pass
+)
 {
-	auto inputLayout = pass.CreateInputLayout(m_inputElementDescriptions);
+	auto inputLayout = pass.CreateInputLayout(inputElementDescriptions);
 	m_inputLayouts.emplace(&pass, std::move(inputLayout));
-}
-
-void Material::CreateInputLayout()
-{
-	CreateInputLayout(m_defaultTechniqueName);
-}
-
-//-------------------------------------------------------------------------
-
-void Material::InitializeInternal()
-{
-	assert(!m_defaultTechniqueName.empty());
-	assert(!m_inputElementDescriptions.empty());
-
-	CreateInputLayout();
 }
 
 //-------------------------------------------------------------------------

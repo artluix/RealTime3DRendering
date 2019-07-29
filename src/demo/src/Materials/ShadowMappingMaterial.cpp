@@ -18,6 +18,8 @@ void ShadowMappingMaterial::InitializeInternal()
 {
 	PointLightMaterial::InitializeInternal();
 
-	CreateInputLayout("shadow_mapping_manual_pcf");
-	CreateInputLayout("shadow_mapping_pcf");
+	const auto& inputElementDescriptions = GetCurrentPass().GetInputElementDescriptions();
+
+	CreateInputLayout(inputElementDescriptions, "shadow_mapping_manual_pcf");
+	CreateInputLayout(inputElementDescriptions, "shadow_mapping_pcf");
 }

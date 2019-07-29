@@ -30,7 +30,10 @@ public:
 	library::EffectVariable& GetSpecularPower() { return m_specularPower; }
 	library::EffectVariable& GetSpecularColor() { return m_specularColor; }
 
+	library::EffectVariable& GetModelTexture() { return m_modelTexture; }
+
 	library::EffectVariable& GetColorTexture() { return m_colorTexture; }
+	library::EffectVariable& GetNormalTexture() { return m_normalTexture; }
 
 	library::VertexBufferData CreateVertexBufferData(
 		ID3D11Device* const device,
@@ -52,5 +55,9 @@ private:
 	library::EffectVariable& m_specularPower;
 	library::EffectVariable& m_specularColor;
 
+	library::EffectVariable& m_modelTexture;
+
+	// for deferred shading
 	library::EffectVariable& m_colorTexture;
+	library::EffectVariable& m_normalTexture;
 };

@@ -26,7 +26,7 @@ LightMaterial::~LightMaterial() = default;
 
 void LightMaterial::InitializeInternal()
 {
-	m_inputElementDescriptions =
+	EffectPass::InputElementDescArray inputElementDescriptions =
 	{
 		{
 			"POSITION",
@@ -57,7 +57,7 @@ void LightMaterial::InitializeInternal()
 		},
 	};
 
-	Material::InitializeInternal();
+	CreateInputLayout(inputElementDescriptions, GetDefaultTechniqueName());
 }
 
 VertexBufferData LightMaterial::CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh) const

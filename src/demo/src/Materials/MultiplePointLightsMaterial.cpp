@@ -6,7 +6,7 @@
 using namespace library;
 
 MultiplePointLightsMaterial::MultiplePointLightsMaterial(Effect& effect)
-	: Material(effect, "main11")
+	: Material(effect, "forward")
 
 	, m_pointLights(effect.GetVariable("pointLights"))
 
@@ -19,44 +19,89 @@ MultiplePointLightsMaterial::MultiplePointLightsMaterial(Effect& effect)
 	, m_specularPower(effect.GetVariable("specularPower"))
 	, m_specularColor(effect.GetVariable("specularColor"))
 
+	, m_modelTexture(effect.GetVariable("ModelTexture"))
+
 	, m_colorTexture(effect.GetVariable("ColorTexture"))
+	, m_normalTexture(effect.GetVariable("NormalTexture"))
 {
 }
 
 void MultiplePointLightsMaterial::InitializeInternal()
 {
-	m_inputElementDescriptions =
+	// vertex buffer input
 	{
+		EffectPass::InputElementDescArray inputElementDescriptions =
 		{
-			"POSITION",
-			0,
-			DXGI_FORMAT_R32G32B32A32_FLOAT,
-			0,
-			0,
-			D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		},
-		{
-			"TEXCOORD",
-			0,
-			DXGI_FORMAT_R32G32_FLOAT,
-			0,
-			D3D11_APPEND_ALIGNED_ELEMENT,
-			D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		},
-		{
-			"NORMAL",
-			0,
-			DXGI_FORMAT_R32G32B32_FLOAT,
-			0,
-			D3D11_APPEND_ALIGNED_ELEMENT,
-			D3D11_INPUT_PER_VERTEX_DATA,
-			0
-		},
-	};
+			{
+				"POSITION",
+				0,
+				DXGI_FORMAT_R32G32B32A32_FLOAT,
+				0,
+				0,
+				D3D11_INPUT_PER_VERTEX_DATA,
+				0
+			},
+			{
+				"TEXCOORD",
+				0,
+				DXGI_FORMAT_R32G32_FLOAT,
+				0,
+				D3D11_APPEND_ALIGNED_ELEMENT,
+				D3D11_INPUT_PER_VERTEX_DATA,
+				0
+			},
+			{
+				"NORMAL",
+				0,
+				DXGI_FORMAT_R32G32B32_FLOAT,
+				0,
+				D3D11_APPEND_ALIGNED_ELEMENT,
+				D3D11_INPUT_PER_VERTEX_DATA,
+				0
+			},
+		};
 
-	Material::InitializeInternal();
+		CreateInputLayout(inputElementDescriptions, "forward");
+		CreateInputLayout(inputElementDescriptions, "deferred");
+	}
+
+	//-------------------------------------------------------------------------
+
+	// vertex buffer for 2nd pass of deferred
+	{
+		EffectPass::InputElementDescArray inputElementDescriptions =
+		{
+			//{
+			//	"POSITION",
+			//	0,
+			//	DXGI_FORMAT_R32G32B32A32_FLOAT,
+			//	0,
+			//	0,
+			//	D3D11_INPUT_PER_VERTEX_DATA,
+			//	0
+			//},
+			{
+				"TEXCOORD",
+				0,
+				DXGI_FORMAT_R32G32_FLOAT,
+				0,
+				D3D11_APPEND_ALIGNED_ELEMENT,
+				D3D11_INPUT_PER_VERTEX_DATA,
+				0
+			},
+			{
+				"TEXCOORD",
+				1,
+				DXGI_FORMAT_R32G32_FLOAT,
+				0,
+				D3D11_APPEND_ALIGNED_ELEMENT,
+				D3D11_INPUT_PER_VERTEX_DATA,
+				0
+			},
+		};
+
+		CreateInputLayout(inputElementDescriptions, "deferred", "p1");
+	}
 }
 
 VertexBufferData MultiplePointLightsMaterial::CreateVertexBufferData(

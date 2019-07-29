@@ -17,7 +17,7 @@ NormalMappingMaterial::~NormalMappingMaterial() = default;
 
 void NormalMappingMaterial::InitializeInternal()
 {
-	m_inputElementDescriptions =
+	EffectPass::InputElementDescArray inputElementDescriptions =
 	{
 		{
 			"POSITION",
@@ -57,7 +57,7 @@ void NormalMappingMaterial::InitializeInternal()
 		},
 	};
 
-	Material::InitializeInternal();
+	CreateInputLayout(inputElementDescriptions, GetDefaultTechniqueName());
 }
 
 VertexBufferData NormalMappingMaterial::CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh)

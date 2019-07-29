@@ -6,13 +6,13 @@
 #include "library/VertexTypes.h"
 #include "library/DxForward.h"
 
+#include "library/Effect/EffectPass.h" // due to EffectPass::InputElementsDescArray
+
 #include <string>
 #include <map>
 #include <vector>
 #include <array>
 #include <functional>
-
-struct D3D11_INPUT_ELEMENT_DESC;
 
 namespace library
 {
@@ -22,7 +22,6 @@ class Mesh;
 class Effect;
 class EffectVariable;
 class EffectTechnique;
-class EffectPass;
 
 class Material : public NonCopyable<Material>
 {
@@ -35,6 +34,8 @@ public:
 	virtual ~Material() = default;
 
 	//-------------------------------------------------------------------------
+
+	const std::string& GetDefaultTechniqueName() const { return m_defaultTechniqueName; }
 
 	const Effect& GetEffect() const { return m_effect; }
 	Effect& GetEffect() { return m_effect; }
@@ -65,16 +66,21 @@ public:
 	std::vector<PrimitiveData> CreatePrimitivesData(ID3D11Device* const device, const Model& model) const;
 
 protected:
-	virtual void InitializeInternal();
-	virtual void CreateInputLayout(const std::string& techniqueName, const std::string& passName = "p0");
-	virtual void CreateInputLayout(const EffectPass& pass);
+	virtual void InitializeInternal() = 0;
 
-	std::vector<D3D11_INPUT_ELEMENT_DESC> m_inputElementDescriptions;
+	void CreateInputLayout(
+		const EffectPass::InputElementDescArray& inputElementDescriptions,
+		const std::string& techniqueName,
+		const std::string& passName = "p0"
+	);
+	void CreateInputLayout(
+		const EffectPass::InputElementDescArray& inputElementDescriptions,
+		EffectPass& pass
+	);
+
 	std::map<const EffectPass*, ComPtr<ID3D11InputLayout>> m_inputLayouts;
 
 private:
-	void CreateInputLayout();
-
 	Effect& m_effect;
 	std::reference_wrapper<EffectTechnique> m_currentTechnique;
 	std::reference_wrapper<EffectPass> m_currentPass;

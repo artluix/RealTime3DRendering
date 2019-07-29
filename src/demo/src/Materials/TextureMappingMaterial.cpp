@@ -15,7 +15,7 @@ TextureMappingMaterial::~TextureMappingMaterial() = default;
 
 void TextureMappingMaterial::InitializeInternal()
 {
-	m_inputElementDescriptions =
+	EffectPass::InputElementDescArray inputElementDescriptions =
 	{
 		{
 			"POSITION",
@@ -37,7 +37,7 @@ void TextureMappingMaterial::InitializeInternal()
 		},
 	};
 
-	Material::InitializeInternal();
+	CreateInputLayout(inputElementDescriptions, GetDefaultTechniqueName());
 }
 
 VertexBufferData TextureMappingMaterial::CreateVertexBufferData(

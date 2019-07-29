@@ -22,7 +22,7 @@ DiffuseLightingMaterial::~DiffuseLightingMaterial() = default;
 
 void DiffuseLightingMaterial::InitializeInternal()
 {
-	m_inputElementDescriptions = {
+	EffectPass::InputElementDescArray inputElementDescriptions = {
 		{
 			"POSITION",
 			0,
@@ -52,7 +52,7 @@ void DiffuseLightingMaterial::InitializeInternal()
 		},
 	};
 
-	Material::InitializeInternal();
+	CreateInputLayout(inputElementDescriptions, GetDefaultTechniqueName());
 }
 
 VertexBufferData DiffuseLightingMaterial::CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh)

@@ -24,7 +24,7 @@ struct TangentBinormal
 	math::Vector3 binormal;
 };
 
-using TangentBinormalVector = std::vector<TangentBinormal>;
+using TangentBinormalArray = std::vector<TangentBinormal>;
 
 //////////////////////////////////////////////////////////////////////////
 
@@ -57,7 +57,7 @@ public:
 	// tangents & binormals
 	bool HasTangentBinormals() const { return !m_tangentBinormals.empty(); }
 	std::size_t GetTangentBinormalsCount() const { return m_tangentBinormals.size(); }
-	const TangentBinormalVector& GetTangentBinormals() const { return m_tangentBinormals; }
+	const TangentBinormalArray& GetTangentBinormals() const { return m_tangentBinormals; }
 
 	// textures coordinates
 	bool HasTexturesCoordinates() const { return !m_texturesCoordinates.empty(); }
@@ -100,7 +100,7 @@ private:
 
 	std::vector<math::Vector3> m_vertices;
 	std::vector<math::Vector3> m_normals;
-	TangentBinormalVector m_tangentBinormals;
+	TangentBinormalArray m_tangentBinormals;
 	std::vector<std::vector<math::Vector3>> m_texturesCoordinates;
 	std::vector<std::vector<math::Color>> m_verticesColors;
 

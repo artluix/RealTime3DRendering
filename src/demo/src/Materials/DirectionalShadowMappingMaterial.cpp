@@ -18,6 +18,8 @@ void DirectionalShadowMappingMaterial::InitializeInternal()
 {
 	DirectionalLightMaterial::InitializeInternal();
 
-	CreateInputLayout("directional_shadow_mapping_manual_pcf");
-	CreateInputLayout("directional_shadow_mapping_pcf");
+	const auto& inputElementDescriptions = GetCurrentPass().GetInputElementDescriptions();
+
+	CreateInputLayout(inputElementDescriptions, "directional_shadow_mapping_manual_pcf");
+	CreateInputLayout(inputElementDescriptions, "directional_shadow_mapping_pcf");
 }

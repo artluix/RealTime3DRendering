@@ -17,7 +17,7 @@ QuadHeightMapTessellationMaterial::QuadHeightMapTessellationMaterial(Effect& eff
 
 void QuadHeightMapTessellationMaterial::InitializeInternal()
 {
-	m_inputElementDescriptions =
+	EffectPass::InputElementDescArray inputElementDescriptions =
 	{
 		{
 			"POSITION",
@@ -39,7 +39,7 @@ void QuadHeightMapTessellationMaterial::InitializeInternal()
 		}
 	};
 
-	Material::InitializeInternal();
+	CreateInputLayout(inputElementDescriptions, GetDefaultTechniqueName());
 }
 
 VertexBufferData QuadHeightMapTessellationMaterial::CreateVertexBufferData(

@@ -18,7 +18,7 @@ ComputeShaderMaterial::ComputeShaderMaterial(Effect& effect)
 
 void ComputeShaderMaterial::InitializeInternal()
 {
-	m_inputElementDescriptions =
+	EffectPass::InputElementDescArray inputElementDescriptions =
 	{
 		{
 			"POSITION",
@@ -40,8 +40,8 @@ void ComputeShaderMaterial::InitializeInternal()
 		},
 	};
 
-	CreateInputLayout("render");
-	//CreateInputLayout("compute");
+	CreateInputLayout(inputElementDescriptions, "render");
+	//CreateInputLayout(inputElementDescriptions, "compute");
 }
 
 VertexBufferData ComputeShaderMaterial::CreateVertexBufferData(

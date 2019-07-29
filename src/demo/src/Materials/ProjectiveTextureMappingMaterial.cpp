@@ -19,5 +19,7 @@ void ProjectiveTextureMappingMaterial::InitializeInternal()
 {
 	PointLightMaterial::InitializeInternal();
 
-	CreateInputLayout("project_texture_depth_map");
+	const auto& inputElementDescriptions = GetCurrentPass().GetInputElementDescriptions();
+
+	CreateInputLayout(inputElementDescriptions, "project_texture_depth_map");
 }

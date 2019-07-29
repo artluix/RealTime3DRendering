@@ -27,7 +27,7 @@ InstancingPointLightMaterial::~InstancingPointLightMaterial() = default;
 
 void InstancingPointLightMaterial::InitializeInternal()
 {
-	m_inputElementDescriptions =
+	EffectPass::InputElementDescArray inputElementDescriptions =
 	{
 		// vertex buffer data layout
 		{
@@ -114,7 +114,7 @@ void InstancingPointLightMaterial::InitializeInternal()
 		}
 	};
 
-	Material::InitializeInternal();
+	CreateInputLayout(inputElementDescriptions, GetDefaultTechniqueName());
 }
 
 //-------------------------------------------------------------------------

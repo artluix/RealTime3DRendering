@@ -17,7 +17,7 @@ DepthMapMaterial::~DepthMapMaterial() = default;
 
 void DepthMapMaterial::InitializeInternal()
 {
-	m_inputElementDescriptions = {
+	EffectPass::InputElementDescArray inputElementDescriptions = {
 		{
 			"POSITION",
 			0,
@@ -28,10 +28,8 @@ void DepthMapMaterial::InitializeInternal()
 		}
 	};
 
-	Material::InitializeInternal();
-
-	// CreateInputLayout("depth_map_render_target");
-	CreateInputLayout("depth_map_bias");
+	CreateInputLayout(inputElementDescriptions, GetDefaultTechniqueName());
+	CreateInputLayout(inputElementDescriptions, "depth_map_bias");
 }
 
 VertexBufferData DepthMapMaterial::CreateVertexBufferData(

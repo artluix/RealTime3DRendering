@@ -20,5 +20,7 @@ void FogMaterial::InitializeInternal()
 {
 	DirectionalLightMaterial::InitializeInternal();
 
-	CreateInputLayout("fogDisabled");
+	const auto& inputElementDescriptions = GetCurrentPass().GetInputElementDescriptions();
+
+	CreateInputLayout(inputElementDescriptions, "fogDisabled");
 }
