@@ -65,7 +65,7 @@ void FullScreenRenderTarget::Begin()
 {
 	RenderTarget::Begin(
 		m_app.GetDeviceContext(),
-		Data(m_renderTargetView.Get(), m_depthStencilView.Get(), m_app.GetViewport())
+		Data(&m_renderTargetView, 1, m_depthStencilView.Get(), m_app.GetViewport())
 	);
 }
 

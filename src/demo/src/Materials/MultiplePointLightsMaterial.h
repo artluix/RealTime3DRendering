@@ -34,6 +34,7 @@ public:
 
 	library::EffectVariable& GetColorTexture() { return m_colorTexture; }
 	library::EffectVariable& GetNormalTexture() { return m_normalTexture; }
+	library::EffectVariable& GetWorldPositionTexture() { return m_worldPositionTexture; }
 
 	library::VertexBufferData CreateVertexBufferData(
 		ID3D11Device* const device,
@@ -60,4 +61,5 @@ private:
 	// for deferred shading
 	library::EffectVariable& m_colorTexture;
 	library::EffectVariable& m_normalTexture;
+	library::EffectVariable& m_worldPositionTexture;
 };

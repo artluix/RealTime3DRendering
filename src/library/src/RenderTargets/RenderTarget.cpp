@@ -7,16 +7,11 @@ std::stack<library::RenderTarget::Data> RenderTarget::s_renderTargetsData;
 
 //-------------------------------------------------------------------------
 
-RenderTarget::Data::Data(ID3D11RenderTargetView** rtvs, const unsigned rtvsCount, ID3D11DepthStencilView* dsv, const D3D11_VIEWPORT& vp)
+RenderTarget::Data::Data(ID3D11RenderTargetView* const *rtvs, const unsigned rtvsCount, ID3D11DepthStencilView* dsv, const D3D11_VIEWPORT& vp)
 	: renderTargetViews(rtvs)
 	, renderTargetViewsCount(rtvsCount)
 	, depthStencilView(dsv)
 	, viewport(vp)
-{
-}
-
-RenderTarget::Data::Data(ID3D11RenderTargetView* rtv, ID3D11DepthStencilView* dsv, const D3D11_VIEWPORT& vp)
-	: Data(&rtv, 1, dsv, vp)
 {
 }
 

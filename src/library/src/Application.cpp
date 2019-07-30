@@ -436,7 +436,7 @@ void Application::Shutdown()
 void Application::Begin()
 {
 	RenderTarget::
-		Begin(m_deviceContext.Get(), Data(m_renderTargetView.Get(), m_depthStencilView.Get(), m_viewport));
+		Begin(m_deviceContext.Get(), Data(&m_renderTargetView, 1, m_depthStencilView.Get(), m_viewport));
 }
 
 void Application::End()

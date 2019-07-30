@@ -23,6 +23,7 @@ MultiplePointLightsMaterial::MultiplePointLightsMaterial(Effect& effect)
 
 	, m_colorTexture(effect.GetVariable("ColorTexture"))
 	, m_normalTexture(effect.GetVariable("NormalTexture"))
+	, m_worldPositionTexture(effect.GetVariable("WorldPositionTexture"))
 {
 }
 
@@ -62,7 +63,7 @@ void MultiplePointLightsMaterial::InitializeInternal()
 		};
 
 		CreateInputLayout(inputElementDescriptions, "forward");
-		CreateInputLayout(inputElementDescriptions, "deferred");
+		CreateInputLayout(inputElementDescriptions, "deferred", "geometry");
 	}
 
 	//-------------------------------------------------------------------------
@@ -71,27 +72,18 @@ void MultiplePointLightsMaterial::InitializeInternal()
 	{
 		EffectPass::InputElementDescArray inputElementDescriptions =
 		{
-			//{
-			//	"POSITION",
-			//	0,
-			//	DXGI_FORMAT_R32G32B32A32_FLOAT,
-			//	0,
-			//	0,
-			//	D3D11_INPUT_PER_VERTEX_DATA,
-			//	0
-			//},
 			{
-				"TEXCOORD",
+				"POSITION",
 				0,
-				DXGI_FORMAT_R32G32_FLOAT,
+				DXGI_FORMAT_R32G32B32A32_FLOAT,
 				0,
-				D3D11_APPEND_ALIGNED_ELEMENT,
+				0,
 				D3D11_INPUT_PER_VERTEX_DATA,
 				0
 			},
 			{
 				"TEXCOORD",
-				1,
+				0,
 				DXGI_FORMAT_R32G32_FLOAT,
 				0,
 				D3D11_APPEND_ALIGNED_ELEMENT,
@@ -100,7 +92,7 @@ void MultiplePointLightsMaterial::InitializeInternal()
 			},
 		};
 
-		CreateInputLayout(inputElementDescriptions, "deferred", "p1");
+		CreateInputLayout(inputElementDescriptions, "deferred", "light");
 	}
 }
 

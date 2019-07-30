@@ -21,10 +21,9 @@ public:
 protected:
 	struct Data
 	{
-		Data(ID3D11RenderTargetView** rtvs, const unsigned rtvsCount, ID3D11DepthStencilView* dsv, const D3D11_VIEWPORT& vp);
-		Data(ID3D11RenderTargetView* rtv, ID3D11DepthStencilView* dsv, const D3D11_VIEWPORT& vp);
+		Data(ID3D11RenderTargetView* const *rtvs, const unsigned rtvsCount, ID3D11DepthStencilView* dsv, const D3D11_VIEWPORT& vp);
 
-		ID3D11RenderTargetView** renderTargetViews = nullptr;
+		ID3D11RenderTargetView* const *renderTargetViews = nullptr;
 		unsigned renderTargetViewsCount;
 		ID3D11DepthStencilView* depthStencilView = nullptr;
 		D3D11_VIEWPORT viewport;

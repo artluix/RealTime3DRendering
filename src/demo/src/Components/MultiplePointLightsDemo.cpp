@@ -5,6 +5,9 @@
 #include <library/Components/PointLightComponent.h>
 #include <library/Components/ProxyModelComponent.h>
 #include <library/Components/TextComponent.h>
+#include <library/Components/FullScreenQuadComponent.h>
+
+#include <library/RenderTargets/MultipleRenderTarget.h>
 
 #include <library/Application.h>
 #include <library/Utils.h>
@@ -38,6 +41,8 @@ MultiplePointLightsDemo::MultiplePointLightsDemo()
 	, m_specularPower(25.f)
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
 	, m_ambientColor(1.f, 1.f, 1.f, 0.f)
+
+	, m_isDeferred(false)
 {
 }
 
@@ -87,10 +92,25 @@ void MultiplePointLightsDemo::InitializeInternal()
 			 << L"Point Light Intensity (+Home/-End): " << m_lightColor.a << "\n"
 			 << L"Specular Power (+Insert/-Delete): " << m_specularPower << "\n"
 			 << L"Lights Count (+Right Alt/-Left Alt): " << m_lightsCount << "\n"
+			 << L"Lighting type (Space): " << (m_isDeferred ? "Deferred" : "Forward") << "\n"
 			 << L"Move Point Light (Numpad: 8/2, 4/6, 3/9)\n";
 		return woss.str();
 	});
 	m_text->Initialize(GetApp());
+
+	// deferred
+	m_renderTarget = std::make_unique<MultipleRenderTarget>(GetApp(), 3); // Color + Normal + WorldPosition = 3
+
+	m_fullScreenQuad = std::make_unique<FullScreenQuadComponent>();
+	m_fullScreenQuad->SetMaterialUpdateFunction(
+		[this]()
+		{
+			m_material->GetColorTexture() << m_renderTarget->GetOutputTexture(Target::Color);
+			m_material->GetNormalTexture() << m_renderTarget->GetOutputTexture(Target::Normal);
+			m_material->GetWorldPositionTexture() << m_renderTarget->GetOutputTexture(Target::WorldPosition);
+		}
+	);
+	m_fullScreenQuad->Initialize(GetApp());
 }
 
 //-------------------------------------------------------------------------
@@ -103,6 +123,9 @@ void MultiplePointLightsDemo::Update(const Time& time)
 			m_lightsCount--;
 		if (m_keyboard->WasKeyPressed(Key::Alt_Right) && m_lightsCount < k_maxLightsCount)
 			m_lightsCount++;
+
+		if (m_keyboard->WasKeyPressed(Key::Space))
+			m_isDeferred = !m_isDeferred;
 	}
 
 	UpdateAmbientLight(time);
@@ -110,6 +133,9 @@ void MultiplePointLightsDemo::Update(const Time& time)
 	UpdateSpecularLight(time);
 
 	m_text->Update(time);
+
+	if (m_isDeferred)
+		m_fullScreenQuad->Update(time);
 
 	for (unsigned i = 0; i < m_lightsCount; i++)
 	{
@@ -235,35 +261,42 @@ void MultiplePointLightsDemo::UpdateSpecularLight(const Time& time)
 
 void MultiplePointLightsDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
-	const auto& world = GetWorldMatrix();
-	auto wvp = world;
-
-	if (auto camera = GetCamera())
+	if (m_isDeferred)
 	{
-		wvp *= camera->GetViewProjectionMatrix();
 
-		m_material->GetCameraPosition() << camera->GetPosition();
 	}
-
-	m_material->GetWVP() << wvp;
-	m_material->GetWorld() << world;
-	m_material->GetSpecularPower() << m_specularPower;
-	m_material->GetSpecularColor() << m_specularColor.ToVector4();
-	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
-	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
-
-	std::vector<PointLight> pointLights;
-	pointLights.resize(m_lightsCount);
-
-	for (unsigned i = 0; i < m_lightsCount; i++)
+	else
 	{
-		pointLights[i].position = m_lightGlues[i].light->GetPosition();
-		pointLights[i].lightRadius = m_lightGlues[i].light->GetRadius();
-		pointLights[i].color = m_lightGlues[i].light->GetColor();
+		const auto& world = GetWorldMatrix();
+		auto wvp = world;
+
+		if (auto camera = GetCamera())
+		{
+			wvp *= camera->GetViewProjectionMatrix();
+
+			m_material->GetCameraPosition() << camera->GetPosition();
+		}
+
+		m_material->GetWVP() << wvp;
+		m_material->GetWorld() << world;
+		m_material->GetSpecularPower() << m_specularPower;
+		m_material->GetSpecularColor() << m_specularColor.ToVector4();
+		m_material->GetAmbientColor() << m_ambientColor.ToVector4();
+		m_material->GetModelTexture() << m_textures[Texture::Default].Get();
+
+		std::vector<PointLight> pointLights;
+		pointLights.resize(m_lightsCount);
+
+		for (unsigned i = 0; i < m_lightsCount; i++)
+		{
+			pointLights[i].position = m_lightGlues[i].light->GetPosition();
+			pointLights[i].lightRadius = m_lightGlues[i].light->GetRadius();
+			pointLights[i].color = m_lightGlues[i].light->GetColor();
+		}
+
+		m_material->GetLightsCount() << m_lightsCount;
+		m_material->GetPointLights() << pointLights;
+
+		ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 	}
-
-	m_material->GetLightsCount() << m_lightsCount;
-	m_material->GetPointLights() << pointLights;
-
-	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }

@@ -66,7 +66,7 @@ void DepthMapRenderTarget::Begin()
 	static ID3D11RenderTargetView* nullRenderTargetView = nullptr;
 
 	RenderTarget::
-		Begin(m_app.GetDeviceContext(), Data(nullRenderTargetView, m_depthStencilView.Get(), m_viewport));
+		Begin(m_app.GetDeviceContext(), Data(&nullRenderTargetView, 1, m_depthStencilView.Get(), m_viewport));
 }
 
 void DepthMapRenderTarget::End()

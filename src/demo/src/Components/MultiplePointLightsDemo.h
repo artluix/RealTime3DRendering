@@ -9,6 +9,9 @@ namespace library
 class TextComponent;
 class ProxyModelComponent;
 class PointLightComponent;
+class FullScreenQuadComponent;
+
+class MultipleRenderTarget;
 } // namespace library
 
 class MultiplePointLightsDemo
@@ -39,6 +42,21 @@ private:
 		};
 	};
 
+	struct Target
+	{
+		enum Type : unsigned
+		{
+			Color = 0,
+			Normal,
+			WorldPosition,
+
+			//# Count
+			Count
+		};
+	};
+
+	//-------------------------------------------------------------------------
+
 	void UpdateAmbientLight(const library::Time& time);
 	void UpdatePointLight(const library::Time& time);
 	void UpdateSpecularLight(const library::Time& time);
@@ -59,4 +77,9 @@ private:
 	library::math::Color m_lightColor; // use common color
 
 	unsigned m_lightsCount;
+
+	// deferred only
+	bool m_isDeferred;
+	std::unique_ptr<library::MultipleRenderTarget> m_renderTarget;
+	std::unique_ptr<library::FullScreenQuadComponent> m_fullScreenQuad;
 };
