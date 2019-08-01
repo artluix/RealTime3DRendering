@@ -14,7 +14,12 @@ class GridComponent;
 
 class FullScreenRenderTarget;
 class PostProcessingComponent;
+
+class MultipleRenderTarget;
+class FullScreenQuadComponent;
 } // namespace library
+
+class MultiplePointLightsDemo;
 
 class DemoApplication : public library::Application
 {
@@ -41,11 +46,15 @@ private:
 	std::shared_ptr<library::MouseComponent> m_mouse;
 
 	std::shared_ptr<library::GridComponent> m_grid;
+	std::shared_ptr<MultiplePointLightsDemo> m_multiplePointLights;
 
 	std::unique_ptr<library::FullScreenRenderTarget> m_sceneRenderTarget;
 	std::unique_ptr<library::PostProcessingComponent> m_postProcessing;
-
 	bool m_postProcessingEnabled;
+
+	std::unique_ptr<library::MultipleRenderTarget> m_multipleRenderTarget;
+	std::unique_ptr<library::FullScreenQuadComponent> m_fullScreenQuad;
+	bool m_deferredLightingEnabled;
 
 	library::ComPtr<IDirectInput8> m_directInput;
 };

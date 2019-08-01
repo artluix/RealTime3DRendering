@@ -69,7 +69,7 @@ struct VS_OUTPUT
 
 struct PSD_OUTPUT
 {
-    float4 color : SV_Target0;
+    float4 color : SV_Target;
     float4 normal : SV_Target1;
     float4 worldPosition : SV_Target2;
 };

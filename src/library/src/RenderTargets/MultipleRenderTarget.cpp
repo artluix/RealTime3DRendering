@@ -40,25 +40,34 @@ MultipleRenderTarget::MultipleRenderTarget(const Application& app, const unsigne
 		}
 	}
 
+	ComPtr<ID3D11Texture2D> depthStencilBuffer;
+
+	// depth stencil buffer
+	{
+
+		D3D11_TEXTURE2D_DESC depthStencilBufferDesc{};
+		depthStencilBufferDesc.Width = app.GetScreenWidth();
+		depthStencilBufferDesc.Height = app.GetScreenHeight();
+		depthStencilBufferDesc.MipLevels = 1;
+		depthStencilBufferDesc.ArraySize = 1;
+		depthStencilBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthStencilBufferDesc.SampleDesc.Count = 1;
+		depthStencilBufferDesc.SampleDesc.Quality = 0;
+		depthStencilBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depthStencilBufferDesc.Usage = D3D11_USAGE_DEFAULT;
+
+		auto hr = device->CreateTexture2D(&depthStencilBufferDesc, nullptr, &depthStencilBuffer);
+		assert("ID3D11::CreateTexture2D() failed." && SUCCEEDED(hr));
+	}
+
 	// depth stencil view
 	{
-		ComPtr<ID3D11Texture2D> depthStencilBuffer;
+		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc{};
+		depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthStencilViewDesc.ViewDimension = D3D11_DSV_DIMENSION_TEXTURE2D;
+		depthStencilViewDesc.Texture2D.MipSlice = 0;
 
-		D3D11_TEXTURE2D_DESC depthStencilDesc{};
-		depthStencilDesc.Width = app.GetScreenWidth();
-		depthStencilDesc.Height = app.GetScreenHeight();
-		depthStencilDesc.MipLevels = 1;
-		depthStencilDesc.ArraySize = 1;
-		depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-		depthStencilDesc.SampleDesc.Count = 1;
-		depthStencilDesc.SampleDesc.Quality = 0;
-		depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-		depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
-
-		auto hr = device->CreateTexture2D(&depthStencilDesc, nullptr, &depthStencilBuffer);
-		assert("ID3D11::CreateTexture2D() failed." && SUCCEEDED(hr));
-
-		hr = device->CreateDepthStencilView(depthStencilBuffer.Get(), nullptr, &m_depthStencilView);
+		auto hr = device->CreateDepthStencilView(depthStencilBuffer.Get(), &depthStencilViewDesc, &m_depthStencilView);
 		assert("ID3D11::CreateDepthStencilView() failed." && SUCCEEDED(hr));
 	}
 }

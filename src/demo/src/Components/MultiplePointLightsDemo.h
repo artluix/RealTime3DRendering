@@ -9,9 +9,6 @@ namespace library
 class TextComponent;
 class ProxyModelComponent;
 class PointLightComponent;
-class FullScreenQuadComponent;
-
-class MultipleRenderTarget;
 } // namespace library
 
 class MultiplePointLightsDemo
@@ -24,11 +21,12 @@ public:
 	MultiplePointLightsDemo();
 
 	void Update(const library::Time& time) override;
-	void Draw(const library::Time& time) override;
+
+	using ConcreteMaterialPrimitiveComponent::GetMaterial;
 
 protected:
 	void InitializeInternal() override;
-	void Draw_SetData(const library::PrimitiveData& primitiveData);
+	void Draw_SetData(const library::PrimitiveData& primitiveData) override;
 
 private:
 	// part from PointLightDemo
@@ -37,19 +35,6 @@ private:
 		enum Type : unsigned
 		{
 			Default = 0,
-
-			//# Count
-			Count
-		};
-	};
-
-	struct Target
-	{
-		enum Type : unsigned
-		{
-			Color = 0,
-			Normal,
-			WorldPosition,
 
 			//# Count
 			Count
@@ -78,9 +63,4 @@ private:
 	library::math::Color m_lightColor; // use common color
 
 	unsigned m_lightsCount;
-
-	// deferred only
-	bool m_isDeferred;
-	std::unique_ptr<library::MultipleRenderTarget> m_renderTarget;
-	std::unique_ptr<library::FullScreenQuadComponent> m_fullScreenQuad;
 };

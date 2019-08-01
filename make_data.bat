@@ -95,7 +95,7 @@ if not exist %FX_COMPILED_PATH_DEBUG% set NEED_COMPILE_FX_DEBUG=True
 if "%NEED_COPY_FX%"=="False" (
     if "%NEED_COMPILE_FX%"=="False" (
         if "%NEED_COMPILE_FX_DEBUG%"=="False" (
-            echo Skipped %FX_PATH%
+            :: echo Skipped %FX_PATH%
             exit /b 0
         )
     )
@@ -147,7 +147,7 @@ set NEED_EXPORT_TEX=%HASH_CHANGED%
 if not exist %TEX_DEST_PATH% set NEED_EXPORT_TEX=True
 
 if "%NEED_EXPORT_TEX%"=="False" (
-    echo Skipped %TEX_PATH%
+    :: echo Skipped %TEX_PATH%
     exit /b 0
 )
 

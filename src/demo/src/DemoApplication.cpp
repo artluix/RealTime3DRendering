@@ -52,6 +52,7 @@
 #include <library/Components/FullScreenQuadComponent.h>
 
 #include <library/RenderTargets/FullScreenRenderTarget.h>
+#include <library/RenderTargets/MultipleRenderTarget.h>
 
 //-------------------------------------------------------------------------
 
@@ -72,6 +73,7 @@ using namespace library;
 
 namespace
 {
+constexpr auto k_mrtBackgroundColor = colors::Color();
 constexpr auto k_backgroundColor = colors::CornFlower;
 } // namespace
 
@@ -83,6 +85,7 @@ DemoApplication::DemoApplication(
 )
 	: Application(instanceHandle, windowClass, windowTitle, showCmd)
 	, m_postProcessingEnabled(false)
+	, m_deferredLightingEnabled(false)
 {
 	m_depthStencilBufferEnabled = true;
 	m_multiSamplingEnabled = true;
@@ -193,9 +196,13 @@ void DemoApplication::Initialize()
 	pointLight->SetKeyboard(*m_keyboard);
 
 	// multiple point lights
-	auto multiplePointLights = std::make_shared<MultiplePointLightsDemo>();
-	multiplePointLights->SetCamera(*camera);
-	multiplePointLights->SetKeyboard(*m_keyboard);
+	//auto multiplePointLights = std::make_shared<MultiplePointLightsDemo>();
+	//multiplePointLights->SetCamera(*camera);
+	//multiplePointLights->SetKeyboard(*m_keyboard);
+
+	m_multiplePointLights = std::make_shared<MultiplePointLightsDemo>();
+	m_multiplePointLights->SetCamera(*camera);
+	m_multiplePointLights->SetKeyboard(*m_keyboard);
 
 	// spotlight
 	auto spotlight = std::make_shared<SpotlightDemo>();
@@ -227,11 +234,10 @@ void DemoApplication::Initialize()
 	fog->SetCamera(*camera);
 	fog->SetKeyboard(*m_keyboard);
 
-	// render target
-	m_sceneRenderTarget = std::make_unique<FullScreenRenderTarget>(*this);
-
 	// post-processing
 	{
+		m_sceneRenderTarget = std::make_unique<FullScreenRenderTarget>(*this);
+
 		// auto postProcessing = new ColorFilterDemo();
 		auto postProcessing = new GaussianBlurDemo();
 		// auto postProcessing = new BloomDemo();
@@ -241,16 +247,32 @@ void DemoApplication::Initialize()
 		postProcessing->SetSceneTexture(*(m_sceneRenderTarget->GetOutputTexture()));
 
 		m_postProcessing = std::unique_ptr<PostProcessingComponent>(postProcessing);
+
+		auto postProcessingText = std::make_shared<TextComponent>();
+		postProcessingText->SetTextUpdateFunction([this]() -> std::wstring {
+			std::wostringstream woss;
+			woss << L"Post-Processing: " << (m_postProcessingEnabled ? L"Enabled" : L"Disabled");
+			return woss.str();
+		});
+		postProcessingText->SetPosition(math::Vector2(0.f, 45.f));
+
+		m_components.push_back(postProcessingText);
 	}
 
-	// post-processing text component
-	auto postProcessingText = std::make_shared<TextComponent>();
-	postProcessingText->SetTextUpdateFunction([this]() -> std::wstring {
-		std::wostringstream woss;
-		woss << L"Post-Processing: " << (m_postProcessingEnabled ? L"Enabled" : L"Disabled");
-		return woss.str();
-	});
-	postProcessingText->SetPosition(math::Vector2(0.f, 45.f));
+	// deferred lighting
+	{
+		m_multipleRenderTarget = std::make_unique<MultipleRenderTarget>(*this, 3);
+
+		auto deferredLightingText = std::make_shared<TextComponent>();
+		deferredLightingText->SetTextUpdateFunction([this]() -> std::wstring {
+			std::wostringstream woss;
+			woss << L"Deferred lighting: " << (m_deferredLightingEnabled ? L"Enabled" : L"Disabled");
+			return woss.str();
+		});
+		deferredLightingText->SetPosition(math::Vector2(0.f, 210.f));
+
+		m_components.push_back(deferredLightingText);
+	}
 
 	// projection
 	auto projectiveTextureMapping = std::make_shared<ProjectiveTextureMappingDemo>();
@@ -315,7 +337,7 @@ void DemoApplication::Initialize()
 	// m_components.push_back(textureMapping);
 	// m_components.push_back(diffuseLighting);
 	// m_components.push_back(pointLight);
-	m_components.push_back(multiplePointLights);
+	// m_components.push_back(multiplePointLights);
 	// m_components.push_back(spotlight);
 	// m_components.push_back(normalMapping);
 	// m_components.push_back(environmentMapping);
@@ -326,7 +348,6 @@ void DemoApplication::Initialize()
 	// m_components.push_back(projectiveTextureDepthMapMapping);
 	// m_components.push_back(shadowMapping);
 	// m_components.push_back(directionalShadowMapping);
-	m_components.push_back(postProcessingText);
 	// m_components.push_back(animation);
 	// m_components.push_back(geometryShader);
 	// m_components.push_back(basicTessellation);
@@ -340,7 +361,25 @@ void DemoApplication::Initialize()
 
 	Application::Initialize();
 
+	m_multiplePointLights->Initialize(*this);
 	m_postProcessing->Initialize(*this);
+
+	// deferred shading for multiplePointLights only
+	{
+		auto material = m_multiplePointLights->GetMaterial();
+
+		m_fullScreenQuad = std::make_unique<FullScreenQuadComponent>();
+		m_fullScreenQuad->SetMaterial(*material, "deferred", "light");
+		m_fullScreenQuad->SetMaterialUpdateFunction(
+			[this, material]()
+			{
+				material->GetColorTexture() << m_multipleRenderTarget->GetOutputTexture(0);
+				material->GetNormalTexture() << m_multipleRenderTarget->GetOutputTexture(1);
+				material->GetWorldPositionTexture() << m_multipleRenderTarget->GetOutputTexture(2);
+			}
+		);
+		m_fullScreenQuad->Initialize(*this);
+	}
 }
 
 void DemoApplication::Update(const Time& time)
@@ -355,7 +394,24 @@ void DemoApplication::Update(const Time& time)
 
 		if (m_keyboard->WasKeyPressed(Key::Tab))
 			m_postProcessingEnabled = !m_postProcessingEnabled;
+
+		if (m_keyboard->WasKeyPressed(Key::Space))
+		{
+			m_deferredLightingEnabled = !m_deferredLightingEnabled;
+
+			auto material = m_multiplePointLights->GetMaterial();
+
+			if (m_deferredLightingEnabled)
+				material->SetCurrentTechnique("deferred", "geometry");
+			else
+				material->SetCurrentTechnique("forward");
+		}
 	}
+
+	m_multiplePointLights->Update(time);
+
+	if (m_deferredLightingEnabled)
+		m_fullScreenQuad->Update(time);
 
 	if (m_postProcessingEnabled)
 		m_postProcessing->Update(time);
@@ -365,38 +421,81 @@ void DemoApplication::Update(const Time& time)
 
 void DemoApplication::Draw(const Time& time)
 {
-	if (m_postProcessingEnabled)
+	if (m_deferredLightingEnabled)
 	{
 		// Render the scene to an off-screen texture
-		m_sceneRenderTarget->Begin();
+		m_multipleRenderTarget->Begin();
 
-		m_deviceContext->ClearRenderTargetView(
-			m_sceneRenderTarget->GetRenderTargetView(),
-			static_cast<const float*>(k_backgroundColor));
+		for (unsigned i = 0, count = m_multipleRenderTarget->GetCount(); i < count; i++)
+		{
+			m_deviceContext->ClearRenderTargetView(
+				m_multipleRenderTarget->GetRenderTargetView(i),
+				static_cast<const float*>(k_mrtBackgroundColor)
+			);
+		}
+
 		m_deviceContext->ClearDepthStencilView(
-			m_sceneRenderTarget->GetDepthStencilView(),
+			m_multipleRenderTarget->GetDepthStencilView(),
 			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 			1.0f,
-			0);
+			0
+		);
 
-		m_renderer->RenderScene(time);
+		m_multiplePointLights->Draw(time);
+		m_multipleRenderTarget->End();
 
-		m_sceneRenderTarget->End();
-
-		// Render a full-screen quad with a post-processing effect
-		m_deviceContext
-			->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
+		m_deviceContext->ClearRenderTargetView(
+			m_renderTargetView.Get(),
+			static_cast<const float*>(k_backgroundColor)
+		);
 		m_deviceContext->ClearDepthStencilView(
 			m_depthStencilView.Get(),
 			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 			1.0f,
-			0);
+			0
+		);
 
-		m_postProcessing->Draw(time);
+		m_fullScreenQuad->Draw(time);
+		UnbindPixelShaderResources(0, 3);
 
-		m_renderer->RenderUI(time);
+		m_renderer->RenderScene(time);
+		//m_renderer->RenderUI(time);
 	}
 	else
+	//if (m_postProcessingEnabled)
+	//{
+	//	// Render the scene to an off-screen texture
+	//	m_sceneRenderTarget->Begin();
+
+	//	m_deviceContext->ClearRenderTargetView(
+	//		m_sceneRenderTarget->GetRenderTargetView(),
+	//		static_cast<const float*>(k_backgroundColor));
+	//	m_deviceContext->ClearDepthStencilView(
+	//		m_sceneRenderTarget->GetDepthStencilView(),
+	//		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
+	//		1.0f,
+	//		0
+	//	);
+
+	//	m_renderer->RenderScene(time);
+
+	//	m_sceneRenderTarget->End();
+
+	//	// Render a full-screen quad with a post-processing effect
+	//	m_deviceContext
+	//		->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
+	//	m_deviceContext->ClearDepthStencilView(
+	//		m_depthStencilView.Get(),
+	//		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
+	//		1.0f,
+	//		0
+	//	);
+
+	//	m_postProcessing->Draw(time);
+
+	//	m_renderer->RenderUI(time);
+	//}
+	//else
 	{
 		m_deviceContext
 			->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
@@ -405,6 +504,8 @@ void DemoApplication::Draw(const Time& time)
 			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
 			1.0f,
 			0);
+
+		m_multiplePointLights->Draw(time);
 
 		Application::Draw(time);
 	}

@@ -5,9 +5,6 @@
 #include <library/Components/PointLightComponent.h>
 #include <library/Components/ProxyModelComponent.h>
 #include <library/Components/TextComponent.h>
-#include <library/Components/FullScreenQuadComponent.h>
-
-#include <library/RenderTargets/MultipleRenderTarget.h>
 
 #include <library/Application.h>
 #include <library/Utils.h>
@@ -34,7 +31,7 @@ constexpr float k_lightMovementRate = 10.f;
 constexpr unsigned k_minLightsCount = 1;
 constexpr unsigned k_maxLightsCount = 4;
 
-constexpr auto k_backgroundColor = colors::Black;
+constexpr auto k_backgroundColor = math::Color(0.f);
 } // namespace
 
 MultiplePointLightsDemo::MultiplePointLightsDemo()
@@ -43,8 +40,6 @@ MultiplePointLightsDemo::MultiplePointLightsDemo()
 	, m_specularPower(25.f)
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
 	, m_ambientColor(1.f, 1.f, 1.f, 0.f)
-
-	, m_isDeferred(false)
 {
 }
 
@@ -94,26 +89,10 @@ void MultiplePointLightsDemo::InitializeInternal()
 			 << L"Point Light Intensity (+Home/-End): " << m_lightColor.a << "\n"
 			 << L"Specular Power (+Insert/-Delete): " << m_specularPower << "\n"
 			 << L"Lights Count (+Right Alt/-Left Alt): " << m_lightsCount << "\n"
-			 << L"Lighting type (Space): " << (m_isDeferred ? "Deferred" : "Forward") << "\n"
 			 << L"Move Point Light (Numpad: 8/2, 4/6, 3/9)\n";
 		return woss.str();
 	});
 	m_text->Initialize(GetApp());
-
-	// deferred
-	m_renderTarget = std::make_unique<MultipleRenderTarget>(GetApp(), 3); // Color + Normal + WorldPosition = 3
-
-	m_fullScreenQuad = std::make_unique<FullScreenQuadComponent>();
-	m_fullScreenQuad->SetMaterial(*m_material, "deferred", "light");
-	m_fullScreenQuad->SetMaterialUpdateFunction(
-		[this]()
-		{
-			m_material->GetColorTexture() << m_renderTarget->GetOutputTexture(Target::Color);
-			m_material->GetNormalTexture() << m_renderTarget->GetOutputTexture(Target::Normal);
-			m_material->GetWorldPositionTexture() << m_renderTarget->GetOutputTexture(Target::WorldPosition);
-		}
-	);
-	m_fullScreenQuad->Initialize(GetApp());
 }
 
 //-------------------------------------------------------------------------
@@ -126,16 +105,6 @@ void MultiplePointLightsDemo::Update(const Time& time)
 			m_lightsCount--;
 		if (m_keyboard->WasKeyPressed(Key::Alt_Right) && m_lightsCount < k_maxLightsCount)
 			m_lightsCount++;
-
-		if (m_keyboard->WasKeyPressed(Key::Space))
-		{
-			m_isDeferred = !m_isDeferred;
-
-			if (m_isDeferred)
-				m_material->SetCurrentTechnique("deferred", "geometry");
-			else
-				m_material->SetCurrentTechnique("forward");
-		}
 	}
 
 	UpdateAmbientLight(time);
@@ -144,69 +113,13 @@ void MultiplePointLightsDemo::Update(const Time& time)
 
 	m_text->Update(time);
 
-	if (m_isDeferred)
-		m_fullScreenQuad->Update(time);
-
 	for (unsigned i = 0; i < m_lightsCount; i++)
 	{
 		m_lightGlues[i].model->Update(time);
 	}
 
-	PrimitiveComponent::Update(time);
-}
-
-
-void MultiplePointLightsDemo::Draw(const library::Time& time)
-{
-	if (m_isDeferred)
-	{
-		auto deviceContext = GetApp().GetDeviceContext();
-
-		m_renderTarget->Begin();
-
-		for (unsigned i = 0, count = m_renderTarget->GetCount(); i < count; i++)
-		{
-			deviceContext->ClearRenderTargetView(m_renderTarget->GetRenderTargetView(i), static_cast<const float*>(k_backgroundColor));
-		}
-
-		deviceContext->ClearDepthStencilView(m_renderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
-
-		for (const auto& pd : m_primitivesData)
-		{
-			Draw_SetIA(pd);
-			Draw_SetData(pd);
-			Draw_Render(pd);
-		}
-
-		m_renderTarget->End();
-
-		m_fullScreenQuad->Draw(time);
-
-		//m_material->SetCurrentTechnique("deferred", "light");
-
-		//for (const auto& pd : m_primitivesData)
-		//{
-		//	// Draw_SetIA(pd);
-
-		//	// Draw_SetData()
-		//	{
-		//		m_material->GetColorTexture() << m_renderTarget->GetOutputTexture(Target::Color);
-		//		m_material->GetNormalTexture() << m_renderTarget->GetOutputTexture(Target::Normal);
-		//		m_material->GetWorldPositionTexture() << m_renderTarget->GetOutputTexture(Target::WorldPosition);
-
-		//		ConcreteMaterialPrimitiveComponent::Draw_SetData(pd);
-		//	}
-
-		//	Draw_Render(pd);
-		//}
-
-		//GetApp().UnbindPixelShaderResources(0, 3);
-
-	}
-	else
-	{
-		ConcreteMaterialPrimitiveComponent::Draw(time);
-	}
+	SceneComponent::Update(time);
+	//PrimitiveComponent::Update(time);
 }
 
 void MultiplePointLightsDemo::UpdateAmbientLight(const Time& time)

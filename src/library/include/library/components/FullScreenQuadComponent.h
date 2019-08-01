@@ -26,13 +26,15 @@ public:
 	void Update(const Time& time) override;
 
 	const Material* GetMaterial() const override { return m_material; }
+	Material* GetMaterial() override { return m_material; }
+
 	ID3D11InputLayout* GetInputLayout() const override { return m_inputLayout; }
 
 protected:
 	void InitializeInternal() override;
 	void Draw_SetData(const PrimitiveData& primitiveData) override;
 
-	Material* GetMaterial() override { return m_material; }
+	//Material* GetMaterial() override { return m_material; }
 
 	MaterialUpdateFunction m_materialUpdateFunction;
 	Material* m_material = nullptr;
