@@ -33,6 +33,8 @@ constexpr float k_lightMovementRate = 10.f;
 
 constexpr unsigned k_minLightsCount = 1;
 constexpr unsigned k_maxLightsCount = 4;
+
+constexpr auto k_backgroundColor = colors::Black;
 } // namespace
 
 MultiplePointLightsDemo::MultiplePointLightsDemo()
@@ -102,6 +104,7 @@ void MultiplePointLightsDemo::InitializeInternal()
 	m_renderTarget = std::make_unique<MultipleRenderTarget>(GetApp(), 3); // Color + Normal + WorldPosition = 3
 
 	m_fullScreenQuad = std::make_unique<FullScreenQuadComponent>();
+	m_fullScreenQuad->SetMaterial(*m_material, "deferred", "light");
 	m_fullScreenQuad->SetMaterialUpdateFunction(
 		[this]()
 		{
@@ -125,7 +128,14 @@ void MultiplePointLightsDemo::Update(const Time& time)
 			m_lightsCount++;
 
 		if (m_keyboard->WasKeyPressed(Key::Space))
+		{
 			m_isDeferred = !m_isDeferred;
+
+			if (m_isDeferred)
+				m_material->SetCurrentTechnique("deferred", "geometry");
+			else
+				m_material->SetCurrentTechnique("forward");
+		}
 	}
 
 	UpdateAmbientLight(time);
@@ -143,6 +153,60 @@ void MultiplePointLightsDemo::Update(const Time& time)
 	}
 
 	PrimitiveComponent::Update(time);
+}
+
+
+void MultiplePointLightsDemo::Draw(const library::Time& time)
+{
+	if (m_isDeferred)
+	{
+		auto deviceContext = GetApp().GetDeviceContext();
+
+		m_renderTarget->Begin();
+
+		for (unsigned i = 0, count = m_renderTarget->GetCount(); i < count; i++)
+		{
+			deviceContext->ClearRenderTargetView(m_renderTarget->GetRenderTargetView(i), static_cast<const float*>(k_backgroundColor));
+		}
+
+		deviceContext->ClearDepthStencilView(m_renderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+
+		for (const auto& pd : m_primitivesData)
+		{
+			Draw_SetIA(pd);
+			Draw_SetData(pd);
+			Draw_Render(pd);
+		}
+
+		m_renderTarget->End();
+
+		m_fullScreenQuad->Draw(time);
+
+		//m_material->SetCurrentTechnique("deferred", "light");
+
+		//for (const auto& pd : m_primitivesData)
+		//{
+		//	// Draw_SetIA(pd);
+
+		//	// Draw_SetData()
+		//	{
+		//		m_material->GetColorTexture() << m_renderTarget->GetOutputTexture(Target::Color);
+		//		m_material->GetNormalTexture() << m_renderTarget->GetOutputTexture(Target::Normal);
+		//		m_material->GetWorldPositionTexture() << m_renderTarget->GetOutputTexture(Target::WorldPosition);
+
+		//		ConcreteMaterialPrimitiveComponent::Draw_SetData(pd);
+		//	}
+
+		//	Draw_Render(pd);
+		//}
+
+		//GetApp().UnbindPixelShaderResources(0, 3);
+
+	}
+	else
+	{
+		ConcreteMaterialPrimitiveComponent::Draw(time);
+	}
 }
 
 void MultiplePointLightsDemo::UpdateAmbientLight(const Time& time)
@@ -261,42 +325,35 @@ void MultiplePointLightsDemo::UpdateSpecularLight(const Time& time)
 
 void MultiplePointLightsDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
-	if (m_isDeferred)
+	const auto& world = GetWorldMatrix();
+	auto wvp = world;
+
+	if (auto camera = GetCamera())
 	{
+		wvp *= camera->GetViewProjectionMatrix();
 
+		m_material->GetCameraPosition() << camera->GetPosition();
 	}
-	else
+
+	m_material->GetWVP() << wvp;
+	m_material->GetWorld() << world;
+	m_material->GetSpecularPower() << m_specularPower;
+	m_material->GetSpecularColor() << m_specularColor.ToVector4();
+	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
+	m_material->GetModelTexture() << m_textures[Texture::Default].Get();
+
+	std::vector<PointLight> pointLights;
+	pointLights.resize(m_lightsCount);
+
+	for (unsigned i = 0; i < m_lightsCount; i++)
 	{
-		const auto& world = GetWorldMatrix();
-		auto wvp = world;
-
-		if (auto camera = GetCamera())
-		{
-			wvp *= camera->GetViewProjectionMatrix();
-
-			m_material->GetCameraPosition() << camera->GetPosition();
-		}
-
-		m_material->GetWVP() << wvp;
-		m_material->GetWorld() << world;
-		m_material->GetSpecularPower() << m_specularPower;
-		m_material->GetSpecularColor() << m_specularColor.ToVector4();
-		m_material->GetAmbientColor() << m_ambientColor.ToVector4();
-		m_material->GetModelTexture() << m_textures[Texture::Default].Get();
-
-		std::vector<PointLight> pointLights;
-		pointLights.resize(m_lightsCount);
-
-		for (unsigned i = 0; i < m_lightsCount; i++)
-		{
-			pointLights[i].position = m_lightGlues[i].light->GetPosition();
-			pointLights[i].lightRadius = m_lightGlues[i].light->GetRadius();
-			pointLights[i].color = m_lightGlues[i].light->GetColor();
-		}
-
-		m_material->GetLightsCount() << m_lightsCount;
-		m_material->GetPointLights() << pointLights;
-
-		ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
+		pointLights[i].position = m_lightGlues[i].light->GetPosition();
+		pointLights[i].lightRadius = m_lightGlues[i].light->GetRadius();
+		pointLights[i].color = m_lightGlues[i].light->GetColor();
 	}
+
+	m_material->GetLightsCount() << m_lightsCount;
+	m_material->GetPointLights() << pointLights;
+
+	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }

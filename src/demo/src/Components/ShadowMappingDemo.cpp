@@ -226,7 +226,7 @@ void ShadowMappingDemo::Draw(const library::Time& time)
 		if (modelData.indexBuffer)
 			deviceContext->IASetIndexBuffer(modelData.indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
-		m_depthMapMaterial->GetWorldLightViewProjection() << 
+		m_depthMapMaterial->GetWorldLightViewProjection() <<
 			m_modelWorldMatrix * m_projector->GetViewProjectionMatrix();
 
 		pass.Apply(0, deviceContext);

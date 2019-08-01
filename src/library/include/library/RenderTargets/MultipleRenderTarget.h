@@ -16,8 +16,12 @@ public:
 	explicit MultipleRenderTarget(const Application& app, const unsigned size);
 	~MultipleRenderTarget();
 
+
+	unsigned GetCount() const { return m_renderTargetViews.size(); }
+
 	ID3D11RenderTargetView* GetRenderTargetView(const unsigned idx) const;
 	ID3D11ShaderResourceView* GetOutputTexture(const unsigned idx) const;
+
 	ID3D11DepthStencilView* GetDepthStencilView() const { return m_depthStencilView.Get(); }
 
 	void Begin() override;

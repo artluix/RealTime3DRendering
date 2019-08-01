@@ -462,9 +462,12 @@ LRESULT WINAPI Application::WndProc(HWND windowHandle, UINT message, WPARAM wPar
 {
 	switch (message)
 	{
-		case WM_DESTROY: PostQuitMessage(0); return 0;
+		case WM_DESTROY:
+			PostQuitMessage(0);
+			return 0;
 
-		default: return DefWindowProc(windowHandle, message, wParam, lParam);
+		default:
+			return DefWindowProc(windowHandle, message, wParam, lParam);
 	}
 }
 } // namespace library

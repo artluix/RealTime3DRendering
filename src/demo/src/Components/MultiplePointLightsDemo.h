@@ -24,10 +24,11 @@ public:
 	MultiplePointLightsDemo();
 
 	void Update(const library::Time& time) override;
+	void Draw(const library::Time& time) override;
 
 protected:
 	void InitializeInternal() override;
-	void Draw_SetData(const library::PrimitiveData& primitiveData) override;
+	void Draw_SetData(const library::PrimitiveData& primitiveData);
 
 private:
 	// part from PointLightDemo
