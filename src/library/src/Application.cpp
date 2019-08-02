@@ -46,7 +46,7 @@ Application::Application(
 	, m_featureLevel(D3D_FEATURE_LEVEL_9_1)
 	, m_frameRate(k_defaultFrameRate)
 	, m_isFullScreen(k_defaultIsFullscreen)
-	, m_depthStencilBufferEnabled(false)
+	, m_depthStencilBufferEnabled(true)
 	, m_multiSamplingEnabled(false)
 	, m_multiSamplingCount(k_defaultMultiSamplingCount)
 	, m_multiSamplingQualityLevels(0)
@@ -353,27 +353,27 @@ void Application::InitializeDirectX()
 
 		if (m_depthStencilBufferEnabled)
 		{
-			D3D11_TEXTURE2D_DESC depthStencilDesc{};
-			depthStencilDesc.Width = m_screenWidth;
-			depthStencilDesc.Height = m_screenHeight;
-			depthStencilDesc.MipLevels = 1;
-			depthStencilDesc.ArraySize = 1;
-			depthStencilDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-			depthStencilDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-			depthStencilDesc.Usage = D3D11_USAGE_DEFAULT;
+			D3D11_TEXTURE2D_DESC depthStencilBufferDesc{};
+			depthStencilBufferDesc.Width = m_screenWidth;
+			depthStencilBufferDesc.Height = m_screenHeight;
+			depthStencilBufferDesc.MipLevels = 1;
+			depthStencilBufferDesc.ArraySize = 1;
+			depthStencilBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+			depthStencilBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+			depthStencilBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 
 			if (m_multiSamplingEnabled)
 			{
-				depthStencilDesc.SampleDesc.Count = m_multiSamplingCount;
-				depthStencilDesc.SampleDesc.Quality = m_multiSamplingQualityLevels - 1;
+				depthStencilBufferDesc.SampleDesc.Count = m_multiSamplingCount;
+				depthStencilBufferDesc.SampleDesc.Quality = m_multiSamplingQualityLevels - 1;
 			}
 			else
 			{
-				depthStencilDesc.SampleDesc.Count = 1;
-				depthStencilDesc.SampleDesc.Quality = 0;
+				depthStencilBufferDesc.SampleDesc.Count = 1;
+				depthStencilBufferDesc.SampleDesc.Quality = 0;
 			}
 
-			hr = m_device->CreateTexture2D(&depthStencilDesc, nullptr, &m_depthStencilBuffer);
+			hr = m_device->CreateTexture2D(&depthStencilBufferDesc, nullptr, &m_depthStencilBuffer);
 			assert("IDXGIDevice::CreateTexture2D() failed." && SUCCEEDED(hr));
 
 			hr = m_device->CreateDepthStencilView(m_depthStencilBuffer.Get(), nullptr, &m_depthStencilView);

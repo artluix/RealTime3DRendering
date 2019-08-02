@@ -44,20 +44,27 @@ MultipleRenderTarget::MultipleRenderTarget(const Application& app, const unsigne
 
 	// depth stencil buffer
 	{
-
 		D3D11_TEXTURE2D_DESC depthStencilBufferDesc{};
 		depthStencilBufferDesc.Width = app.GetScreenWidth();
 		depthStencilBufferDesc.Height = app.GetScreenHeight();
 		depthStencilBufferDesc.MipLevels = 1;
 		depthStencilBufferDesc.ArraySize = 1;
-		depthStencilBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		depthStencilBufferDesc.Format = DXGI_FORMAT_R24G8_TYPELESS;
 		depthStencilBufferDesc.SampleDesc.Count = 1;
 		depthStencilBufferDesc.SampleDesc.Quality = 0;
-		depthStencilBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		depthStencilBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL | D3D11_BIND_SHADER_RESOURCE;
 		depthStencilBufferDesc.Usage = D3D11_USAGE_DEFAULT;
 
 		auto hr = device->CreateTexture2D(&depthStencilBufferDesc, nullptr, &depthStencilBuffer);
 		assert("ID3D11::CreateTexture2D() failed." && SUCCEEDED(hr));
+
+		D3D11_SHADER_RESOURCE_VIEW_DESC resourceViewDesc{};
+		resourceViewDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+		resourceViewDesc.ViewDimension = D3D_SRV_DIMENSION_TEXTURE2D;
+		resourceViewDesc.Texture2D.MipLevels = 1;
+
+		hr = device->CreateShaderResourceView(depthStencilBuffer.Get(), &resourceViewDesc, &m_depthOutputTexture);
+		assert("ID3D11::CreateShaderResourceView() failed." && SUCCEEDED(hr));
 	}
 
 	// depth stencil view

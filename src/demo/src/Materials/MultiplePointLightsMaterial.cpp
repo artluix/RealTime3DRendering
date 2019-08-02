@@ -24,6 +24,7 @@ MultiplePointLightsMaterial::MultiplePointLightsMaterial(Effect& effect)
 	, m_colorTexture(effect.GetVariable("ColorTexture"))
 	, m_normalTexture(effect.GetVariable("NormalTexture"))
 	, m_worldPositionTexture(effect.GetVariable("WorldPositionTexture"))
+	, m_depthTexture(effect.GetVariable("DepthTexture"))
 {
 }
 

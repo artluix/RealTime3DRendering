@@ -44,6 +44,7 @@ SamplerState ColorSampler
 Texture2D ColorTexture;
 Texture2D NormalTexture;
 Texture2D WorldPositionTexture;
+Texture2D DepthTexture;
 SamplerState PointSampler
 {
     Filter = MIN_MAG_MIP_POINT;
@@ -83,6 +84,11 @@ struct VSL_OUTPUT
 {
     float4 position : SV_Position;
     float2 textureCoordinate : TEXCOORD;
+};
+struct PSL_OUTPUT
+{
+    float4 color : SV_Target;
+    float depth : SV_Depth;
 };
 
 /************* Shaders *************/
@@ -158,13 +164,15 @@ VSL_OUTPUT vertex_shader_light(VSL_INPUT IN)
     return OUT;
 }
 
-float4 pixel_shader_light(VSL_OUTPUT IN) : SV_Target
+PSL_OUTPUT pixel_shader_light(VSL_OUTPUT IN)
 {
-    float4 OUT = (float4)0;
+    PSL_OUTPUT OUT = (PSL_OUTPUT)0;
 
     float3 normal = NormalTexture.Sample(PointSampler, IN.textureCoordinate).xyz;
     float3 worldPosition = WorldPositionTexture.Sample(PointSampler, IN.textureCoordinate).xyz;
     float4 color = ColorTexture.Sample(PointSampler, IN.textureCoordinate);
+
+    OUT.depth = DepthTexture.Sample(PointSampler, IN.textureCoordinate).x;
 
     float3 viewDirection = normalize(cameraPosition - worldPosition);
     float3 ambient = get_color_contribution(ambientColor, color.rgb);
@@ -186,8 +194,8 @@ float4 pixel_shader_light(VSL_OUTPUT IN) : SV_Target
         totalLightContribution += get_light_contribution(lightContributionData);
     }
 
-    OUT.rgb = ambient + totalLightContribution;
-    OUT.a = 1.0f;
+    OUT.color.rgb = ambient + totalLightContribution;
+    OUT.color.a = 1.0f;
 
     return OUT;
 }

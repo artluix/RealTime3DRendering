@@ -35,6 +35,7 @@ public:
 	library::EffectVariable& GetColorTexture() { return m_colorTexture; }
 	library::EffectVariable& GetNormalTexture() { return m_normalTexture; }
 	library::EffectVariable& GetWorldPositionTexture() { return m_worldPositionTexture; }
+	library::EffectVariable& GetDepthTexture() { return m_depthTexture; }
 
 	library::VertexBufferData CreateVertexBufferData(
 		ID3D11Device* const device,
@@ -62,4 +63,5 @@ private:
 	library::EffectVariable& m_colorTexture;
 	library::EffectVariable& m_normalTexture;
 	library::EffectVariable& m_worldPositionTexture;
+	library::EffectVariable& m_depthTexture;
 };

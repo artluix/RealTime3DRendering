@@ -23,6 +23,7 @@ public:
 	ID3D11ShaderResourceView* GetOutputTexture(const unsigned idx) const;
 
 	ID3D11DepthStencilView* GetDepthStencilView() const { return m_depthStencilView.Get(); }
+	ID3D11ShaderResourceView* GetDepthOutputTexture() const { return m_depthOutputTexture.Get(); }
 
 	void Begin() override;
 	void End() override;
@@ -30,7 +31,9 @@ public:
 private:
 	std::vector<ComPtr<ID3D11RenderTargetView>> m_renderTargetViews;
 	std::vector<ComPtr<ID3D11ShaderResourceView>> m_outputTextures;
+
 	ComPtr<ID3D11DepthStencilView> m_depthStencilView;
+	ComPtr<ID3D11ShaderResourceView> m_depthOutputTexture;
 
 	const Application& m_app;
 };

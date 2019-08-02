@@ -376,6 +376,7 @@ void DemoApplication::Initialize()
 				material->GetColorTexture() << m_multipleRenderTarget->GetOutputTexture(0);
 				material->GetNormalTexture() << m_multipleRenderTarget->GetOutputTexture(1);
 				material->GetWorldPositionTexture() << m_multipleRenderTarget->GetOutputTexture(2);
+				material->GetDepthTexture() << m_multipleRenderTarget->GetDepthOutputTexture();
 			}
 		);
 		m_fullScreenQuad->Initialize(*this);
@@ -421,6 +422,36 @@ void DemoApplication::Update(const Time& time)
 
 void DemoApplication::Draw(const Time& time)
 {
+	// clear main RT
+	m_deviceContext->ClearRenderTargetView(
+		m_renderTargetView.Get(),
+		static_cast<const float*>(k_backgroundColor)
+	);
+	m_deviceContext->ClearDepthStencilView(
+		m_depthStencilView.Get(),
+		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
+		1.0f,
+		0
+	);
+
+	// push post-processing RT
+	if (m_postProcessingEnabled)
+	{
+		m_sceneRenderTarget->Begin();
+
+		m_deviceContext->ClearRenderTargetView(
+			m_sceneRenderTarget->GetRenderTargetView(),
+			static_cast<const float*>(k_backgroundColor)
+		);
+		m_deviceContext->ClearDepthStencilView(
+			m_sceneRenderTarget->GetDepthStencilView(),
+			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
+			1.0f,
+			0
+		);
+	}
+
+	// push deferred lighting RT
 	if (m_deferredLightingEnabled)
 	{
 		// Render the scene to an off-screen texture
@@ -440,75 +471,28 @@ void DemoApplication::Draw(const Time& time)
 			1.0f,
 			0
 		);
-
-		m_multiplePointLights->Draw(time);
-		m_multipleRenderTarget->End();
-
-		m_deviceContext->ClearRenderTargetView(
-			m_renderTargetView.Get(),
-			static_cast<const float*>(k_backgroundColor)
-		);
-		m_deviceContext->ClearDepthStencilView(
-			m_depthStencilView.Get(),
-			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-			1.0f,
-			0
-		);
-
-		m_fullScreenQuad->Draw(time);
-		UnbindPixelShaderResources(0, 3);
-
-		m_renderer->RenderScene(time);
-		//m_renderer->RenderUI(time);
 	}
-	else
-	//if (m_postProcessingEnabled)
-	//{
-	//	// Render the scene to an off-screen texture
-	//	m_sceneRenderTarget->Begin();
 
-	//	m_deviceContext->ClearRenderTargetView(
-	//		m_sceneRenderTarget->GetRenderTargetView(),
-	//		static_cast<const float*>(k_backgroundColor));
-	//	m_deviceContext->ClearDepthStencilView(
-	//		m_sceneRenderTarget->GetDepthStencilView(),
-	//		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-	//		1.0f,
-	//		0
-	//	);
+	m_multiplePointLights->Draw(time);
 
-	//	m_renderer->RenderScene(time);
-
-	//	m_sceneRenderTarget->End();
-
-	//	// Render a full-screen quad with a post-processing effect
-	//	m_deviceContext
-	//		->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
-	//	m_deviceContext->ClearDepthStencilView(
-	//		m_depthStencilView.Get(),
-	//		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-	//		1.0f,
-	//		0
-	//	);
-
-	//	m_postProcessing->Draw(time);
-
-	//	m_renderer->RenderUI(time);
-	//}
-	//else
+	// pop deferred lighting RT
+	if (m_deferredLightingEnabled)
 	{
-		m_deviceContext
-			->ClearRenderTargetView(m_renderTargetView.Get(), static_cast<const float*>(k_backgroundColor));
-		m_deviceContext->ClearDepthStencilView(
-			m_depthStencilView.Get(),
-			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-			1.0f,
-			0);
-
-		m_multiplePointLights->Draw(time);
-
-		Application::Draw(time);
+		m_multipleRenderTarget->End();
+		m_fullScreenQuad->Draw(time);
+		UnbindPixelShaderResources(0, 4);
 	}
+
+	m_renderer->RenderScene(time);
+
+	// pop post-processing RT
+	if (m_postProcessingEnabled)
+	{
+		m_sceneRenderTarget->End();
+		m_postProcessing->Draw(time);
+	}
+
+	m_renderer->RenderUI(time);
 
 	HRESULT hr = m_swapChain->Present(0, 0);
 	assert("IDXGISwapChain::Present() failed." && SUCCEEDED(hr));
