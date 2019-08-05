@@ -11,7 +11,6 @@ public:
 	~LightMaterial();
 
 	library::EffectVariable& GetAmbientColor() { return m_ambientColor; }
-	library::EffectVariable& GetLightColor() { return m_lightColor; }
 	library::EffectVariable& GetCameraPosition() { return m_cameraPosition; }
 
 	library::EffectVariable& GetWVP() { return m_wvp; }
@@ -33,7 +32,6 @@ protected:
 
 private:
 	library::EffectVariable& m_ambientColor;
-	library::EffectVariable& m_lightColor;
 	library::EffectVariable& m_cameraPosition;
 
 	library::EffectVariable& m_wvp;

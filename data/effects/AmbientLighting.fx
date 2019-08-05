@@ -4,15 +4,12 @@
 
 cbuffer CBufferPerFrame
 {
-    float4 ambientColor : AMBIENT <
-        string UIName = "Ambient Light";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 1.0f };
+    float4 ambientColor : AMBIENT;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION <string UIWIdget="None";>;
+    float4x4 wvp : WORLDVIEWPROJECTION;
 }
 
 RasterizerState DisableCulling
@@ -20,12 +17,7 @@ RasterizerState DisableCulling
     CullMode = None;
 };
 
-Texture2D ColorTexture <
-    string ResourceName="default_color.dds";
-    string UIName="Color Texture";
-    string ResourceType="2D";
->;
-
+Texture2D ColorTexture;
 SamplerState ColorSampler
 {
     Filter = MIN_MAG_MIP_LINEAR;

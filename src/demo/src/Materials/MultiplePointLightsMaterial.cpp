@@ -6,25 +6,15 @@
 using namespace library;
 
 MultiplePointLightsMaterial::MultiplePointLightsMaterial(Effect& effect)
-	: Material(effect, "forward")
+	: LightMaterial(effect, "forward")
 
-	, m_pointLights(effect.GetVariable("pointLights"))
-
+	, m_lightsData(effect.GetVariable("lightsData"))
 	, m_lightsCount(effect.GetVariable("lightsCount"))
-	, m_ambientColor(effect.GetVariable("ambientColor"))
-	, m_cameraPosition(effect.GetVariable("cameraPosition"))
 
-	, m_wvp(effect.GetVariable("wvp"))
-	, m_world(effect.GetVariable("world"))
-	, m_specularPower(effect.GetVariable("specularPower"))
-	, m_specularColor(effect.GetVariable("specularColor"))
-
-	, m_modelTexture(effect.GetVariable("ModelTexture"))
-
-	, m_colorTexture(effect.GetVariable("ColorTexture"))
-	, m_normalTexture(effect.GetVariable("NormalTexture"))
-	, m_worldPositionTexture(effect.GetVariable("WorldPositionTexture"))
-	, m_depthTexture(effect.GetVariable("DepthTexture"))
+	, m_colorBufferTexture(effect.GetVariable("ColorBufferTexture"))
+	, m_normalBufferTexture(effect.GetVariable("NormalBufferTexture"))
+	, m_worldPositionBufferTexture(effect.GetVariable("WorldPositionBufferTexture"))
+	, m_depthBufferTexture(effect.GetVariable("DepthBufferTexture"))
 {
 }
 

@@ -3,28 +3,16 @@
 // Resources
 cbuffer CBufferPerFrame
 {
-    float4 ambientColor : AMBIENT <
-        string UIName = "Ambient Light";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-    float4 lightColor : COLOR <
-        string Object = "LightColor0";
-        string UIName = "Light Color";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-    float3 lightDirection : DIRECTION <
-        string Object = "DirectionLight0";
-        string UIName = "Light Direction";
-        string Space = "World";
-    > = { 0.0f, 0.0f, -1.0f };
+    float4 ambientColor : AMBIENT;
+    DIRECTIONAL_LIGHT_DATA lightData;
+    // float4 lightColor : COLOR;
+    // float3 lightDirection : DIRECTION;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION <string UIWIdget="None";>;
-    float4x4 world : WORLD <string UIWIdget="None";>;
+    float4x4 wvp : WORLDVIEWPROJECTION;
+    float4x4 world : WORLD;
 }
 
 RasterizerState DisableCulling
@@ -32,12 +20,7 @@ RasterizerState DisableCulling
     CullMode = None;
 };
 
-Texture2D ColorTexture <
-    string ResourceName="default_color.dds";
-    string UIName="Color Texture";
-    string ResourceType="2D";
->;
-
+Texture2D ColorTexture;
 SamplerState ColorSampler
 {
     Filter = MIN_MAG_MIP_LINEAR;

@@ -9,8 +9,8 @@ public:
 	explicit DirectionalLightMaterial(library::Effect& effect, const std::string& defaultTechniqueName = "main11");
 	~DirectionalLightMaterial();
 
-	library::EffectVariable& GetLightDirection() { return m_lightDirection; }
+	library::EffectVariable& GetLightData() { return m_lightData; }
 
 private:
-	library::EffectVariable& m_lightDirection;
+	library::EffectVariable& m_lightData;
 };

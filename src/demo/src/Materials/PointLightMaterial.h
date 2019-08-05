@@ -9,10 +9,13 @@ public:
 	explicit PointLightMaterial(library::Effect& effect, const std::string& defaultTechniqueName = "main11");
 	~PointLightMaterial();
 
-	library::EffectVariable& GetLightPosition() { return m_lightPosition; }
-	library::EffectVariable& GetLightRadius() { return m_lightRadius; }
+	library::EffectVariable& GetLightData() { return m_lightData; }
+
+	bool IsDeferredSupported() const { return m_isDeferredSupported; }
+
+protected:
+	bool m_isDeferredSupported = false;
 
 private:
-	library::EffectVariable& m_lightPosition;
-	library::EffectVariable& m_lightRadius;
+	library::EffectVariable& m_lightData;
 };

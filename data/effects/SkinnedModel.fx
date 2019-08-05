@@ -7,10 +7,11 @@
 cbuffer CBufferPerFrame
 {
     float4 ambientColor = { 1.f, 1.f, 1.f, 0.f };
+    float3 cameraPosition;
+
     float4 lightColor = { 1.f, 1.f, 1.f, 1.f };
     float3 lightPosition = { 0.f, 0.f, 0.f };
     float lightRadius = 10.f;
-    float3 cameraPosition;
 }
 
 cbuffer CBufferPerObject

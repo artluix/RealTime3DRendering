@@ -160,7 +160,7 @@ void ProjectiveTextureMappingDemo::Draw_SetData(const PrimitiveData& primitiveDa
 	m_material->GetLightPosition() << m_pointLight->GetPosition();
 	m_material->GetLightRadius() << m_pointLight->GetRadius();
 	
-	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
+	m_material->GetModelTexture() << m_textures[Texture::Default].Get();
 	m_material->GetProjectedTexture() << m_textures[Texture::Projected].Get();
 
 	m_material->GetProjectiveTextureMatrix() << projectiveTextureMatrix;

@@ -211,7 +211,7 @@ void DisplacementMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetSpecularColor() << m_specularColor.ToVector4();
 	m_material->GetDisplacementScale() << m_displacementScale;
 
-	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
+	m_material->GetModelTexture() << m_textures[Texture::Default].Get();
 	m_material->GetDisplacementMap() << m_textures[Texture::DisplacementMap].Get();
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);

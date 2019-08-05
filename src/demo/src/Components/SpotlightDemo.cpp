@@ -305,7 +305,7 @@ void SpotlightDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetLightLookAt() << m_spotlight->GetDirection();
 	m_material->GetSpotlightInnerAngle() << m_spotlight->GetInnerAngle();
 	m_material->GetSpotlightOuterAngle() << m_spotlight->GetOuterAngle();
-	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
+	m_material->GetModelTexture() << m_textures[Texture::Default].Get();
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }

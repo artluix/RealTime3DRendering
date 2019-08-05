@@ -3,44 +3,21 @@
 // Resources
 cbuffer CBufferPerFrame
 {
-    float4 ambientColor : AMBIENT <
-        string UIName = "Ambient Light";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 0.0f };
-
-    float4 envColor : COLOR <
-        string UIName = "EnvironmentColor";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-    float3 cameraPosition : CAMERAPOSITION <string UIWidget="None";>;
+    float4 ambientColor : AMBIENT;
+    float3 cameraPosition : CAMERAPOSITION;
+    float4 envColor : COLOR;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION <string UIWIdget="None";>;
-    float4x4 world : WORLDVIEWPROJECTION <string UIWIdget="None";>;
+    float4x4 wvp : WORLDVIEWPROJECTION;
+    float4x4 world : WORLDVIEWPROJECTION;
 
-    float reflectionAmount <
-        string UIName = "Reflection Amount";
-        string UIWIdget = "slider";
-        float UIMin = 0.0;
-        float UIMax = 1.0;
-        float UIStep = 0.05;
-    > = {0.5f};
+    float reflectionAmount;
 }
 
-Texture2D ColorTexture <
-    string ResourceName="default_color.dds";
-    string UIName="Color Texture";
-    string ResourceType="2D";
->;
-
-TextureCube EnvironmentMap <
-    string UIName = "Environment Map";
-    string ResourceType = "3D";
->;
-
+Texture2D ColorTexture;
+TextureCube EnvironmentMap;
 SamplerState TrilinearSampler
 {
     Filter = MIN_MAG_MIP_LINEAR;

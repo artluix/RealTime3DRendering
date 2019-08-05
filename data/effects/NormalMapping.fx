@@ -3,57 +3,24 @@
 // Resources
 cbuffer CBufferPerFrame
 {
-    float4 ambientColor : AMBIENT <
-        string UIName = "Ambient Light";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 1.0f };
+    float4 ambientColor : AMBIENT;
+    float3 cameraPosition : CAMERAPOSITION;
 
-    float4 lightColor : COLOR <
-        string Object = "LightColor0";
-        string UIName = "Light Color";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-    float3 lightDirection : DIRECTION <
-        string Object = "DirectionalLight0";
-        string UIName = "Light Direction";
-        string Space = "World";
-    > = { 0.0f, 0.0f, -1.0f };
-
-    float3 cameraPosition : CAMERAPOSITION <string UIWIdget="None";>;
+    float4 lightColor : COLOR;
+    float3 lightDirection : DIRECTION;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION <string UIWIdget="None";>;
-    float4x4 world : WORLD <string UIWIdget="None";>;
+    float4x4 wvp : WORLDVIEWPROJECTION;
+    float4x4 world : WORLD;
 
-    float4 specularColor : SPECULAR <
-        string UIName = "Specular Color";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-    float specularPower : SPECULARPOWER <
-        string UIName = "Specular Power";
-        string UIWidget = "slider";
-        float UIMin = 1.0;
-        float UIMax = 255.0;
-        float UIStep = 1.0;
-    > = { 25.0f };
+    float4 specularColor : SPECULAR;
+    float specularPower : SPECULARPOWER;
 }
 
-Texture2D ColorTexture <
-    string ResourceName="default_color.dds";
-    string UIName="Color Texture";
-    string ResourceType="2D";
->;
-
-Texture2D NormalMap <
-    string ResourceName="default_bump_normal.dds";
-    string UIName = "Normal Map";
-    string ResourceType = "2D";
->;
-
+Texture2D ColorTexture;
+Texture2D NormalMap;
 SamplerState TrilinearSampler
 {
     Filter = MIN_MAG_MIP_LINEAR;

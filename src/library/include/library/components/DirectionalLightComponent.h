@@ -5,6 +5,13 @@
 
 namespace library
 {
+struct DirectionalLightData : LightData
+{
+	math::Vector3 direction;
+};
+
+//-------------------------------------------------------------------------
+
 class DirectionalLightComponent : public virtual LightComponent
 {
 public:

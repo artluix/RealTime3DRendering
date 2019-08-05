@@ -8,7 +8,7 @@ DirectionalLightMaterial::DirectionalLightMaterial(
 )
 	: LightMaterial(effect, defaultTechniqueName)
 
-	, m_lightDirection(effect.GetVariable("lightDirection"))
+	, m_lightData(effect.GetVariable("lightData"))
 {}
 
 DirectionalLightMaterial::~DirectionalLightMaterial() = default;

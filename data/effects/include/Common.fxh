@@ -6,13 +6,28 @@
 
 // Data Structures
 
+struct POINT_LIGHT_DATA
+{
+    float3 position;
+    float radius;
+    float4 color;
+};
+
+struct DIRECTIONAL_LIGHT_DATA
+{
+    float3 direction;
+    float4 color;
+}
+
 struct LIGHT_CONTRIBUTION_DATA
 {
     float4 color;
     float3 normal;
     float3 viewDirection;
+
     float4 lightColor;
     float4 lightDirection;
+
     float4 specularColor;
     float specularPower;
 };

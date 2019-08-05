@@ -285,7 +285,7 @@ void ShadowMappingDemo::Draw_SetData(
 	m_material->GetLightPosition() << m_pointLight->GetPosition();
 	m_material->GetLightRadius() << m_pointLight->GetRadius();
 
-	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
+	m_material->GetModelTexture() << m_textures[Texture::Default].Get();
 	m_material->GetShadowMapTexture() << m_depthMapRenderTarget->GetOutputTexture();
 
 	m_material->GetProjectiveTextureMatrix() << projectiveTextureMatrix;

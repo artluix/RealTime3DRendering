@@ -266,7 +266,7 @@ void MultiplePointLightsDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	}
 
 	m_material->GetLightsCount() << m_lightsCount;
-	m_material->GetPointLights() << pointLights;
+	m_material->GetLightsData() << pointLights;
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }

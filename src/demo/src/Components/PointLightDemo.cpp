@@ -209,7 +209,7 @@ void PointLightDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetLightColor() << m_pointLight->GetColor().ToVector4();
 	m_material->GetLightPosition() << m_pointLight->GetPosition();
 	m_material->GetLightRadius() << m_pointLight->GetRadius();
-	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
+	m_material->GetModelTexture() << m_textures[Texture::Default].Get();
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }

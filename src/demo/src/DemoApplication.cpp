@@ -373,10 +373,10 @@ void DemoApplication::Initialize()
 		m_fullScreenQuad->SetMaterialUpdateFunction(
 			[this, material]()
 			{
-				material->GetColorTexture() << m_multipleRenderTarget->GetOutputTexture(0);
-				material->GetNormalTexture() << m_multipleRenderTarget->GetOutputTexture(1);
-				material->GetWorldPositionTexture() << m_multipleRenderTarget->GetOutputTexture(2);
-				material->GetDepthTexture() << m_multipleRenderTarget->GetDepthOutputTexture();
+				material->GetColorBufferTexture() << m_multipleRenderTarget->GetOutputTexture(0);
+				material->GetNormalBufferTexture() << m_multipleRenderTarget->GetOutputTexture(1);
+				material->GetWorldPositionBufferTexture() << m_multipleRenderTarget->GetOutputTexture(2);
+				material->GetDepthBufferTexture() << m_multipleRenderTarget->GetDepthOutputTexture();
 			}
 		);
 		m_fullScreenQuad->Initialize(*this);

@@ -209,7 +209,7 @@ void FogDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetWVP() << wvp;
 	m_material->GetWorld() << world;
 
-	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
+	m_material->GetModelTexture() << m_textures[Texture::Default].Get();
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }

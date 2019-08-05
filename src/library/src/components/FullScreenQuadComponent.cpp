@@ -76,7 +76,10 @@ void FullScreenQuadComponent::InitializeInternal()
 
 	// index buffer
 	{
-		const std::array<unsigned, 6> indices = {0, 1, 2, 0, 2, 3};
+		const std::array<unsigned, 6> indices = {
+			0, 1, 2,
+			0, 2, 3
+		};
 		pd.indexBuffer = IndexBufferData(GetApp().GetDevice(), indices);
 	}
 }

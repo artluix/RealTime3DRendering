@@ -4,11 +4,8 @@
 cbuffer CBufferPerFrame
 {
     float4 ambientColor : AMBIENT;
-    float4 lightColor : COLOR;
-    float3 lightPosition : POSITION;
-    float lightRadius = 10.0f;
-
     float3 cameraPosition : CAMERAPOSITION;
+    POINT_LIGHT_DATA lightData;
 }
 
 cbuffer CBufferPerObject
@@ -25,12 +22,7 @@ RasterizerState DisableCulling
     CullMode = None;
 };
 
-Texture2D ColorTexture <
-    string ResourceName="default_color.dds";
-    string UIName="Color Texture";
-    string ResourceType="2D";
->;
-
+Texture2D ColorTexture;
 SamplerState ColorSampler
 {
     Filter = MIN_MAG_MIP_LINEAR;
@@ -65,8 +57,8 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
     OUT.normal = normalize(mul(float4(IN.normal, 0), world).xyz);
 
-    float3 lightDirection = lightPosition - OUT.worldPosition;
-    OUT.attenuation = saturate(1.0f - (length(lightDirection) / lightRadius));
+    float3 lightDirection = lightData.position - OUT.worldPosition;
+    OUT.attenuation = saturate(1.0f - (length(lightDirection) / lightData.radius));
 
     return OUT;
 }
@@ -76,7 +68,7 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 OUT = (float4)0;
 
-    float3 lightDirection = normalize(lightPosition - IN.worldPosition);
+    float3 lightDirection = normalize(lightData.position - IN.worldPosition);
     float3 viewDirection = normalize(cameraPosition - IN.worldPosition);
 
     float3 normal = normalize(IN.normal);
@@ -88,7 +80,7 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     float4 lightCoefficients = lit(n_dot_l, n_dot_h, specularPower);
 
     float3 ambient = get_color_contribution(ambientColor, color.rgb);
-    float3 diffuse = get_color_contribution(lightColor, lightCoefficients.y * color.rgb) * IN.attenuation;
+    float3 diffuse = get_color_contribution(lightData.color, lightCoefficients.y * color.rgb) * IN.attenuation;
     float3 specular = get_color_contribution(specularColor, min(lightCoefficients.z, color.w)) * IN.attenuation;
 
     OUT.rgb = ambient + diffuse + specular;

@@ -4,6 +4,14 @@
 
 namespace library
 {
+struct PointLightData : LightData
+{
+	math::Vector3 position;
+	float radius;
+};
+
+//-------------------------------------------------------------------------
+
 class PointLightComponent : public virtual LightComponent
 {
 public:

@@ -4,7 +4,7 @@
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION <string UIWIdget="None";>;
+    float4x4 wvp : WORLDVIEWPROJECTION;
 }
 
 RasterizerState DisableCulling
@@ -12,13 +12,8 @@ RasterizerState DisableCulling
     CullMode = None;
 };
 
-Texture2D ColorTexture <
-    string ResourceName="default_color.dds";
-    string UIName="Color Texture";
-    string ResourceType="2D";
->;
-
-SamplerState ColorSampler
+Texture2D ColorTexture;
+SamplerState ColorSampler;
 {
     Filter = MIN_MAG_MIP_LINEAR;
     AddressU = WRAP;

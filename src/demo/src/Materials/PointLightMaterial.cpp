@@ -10,8 +10,7 @@ PointLightMaterial::PointLightMaterial(
 )
 	: LightMaterial(effect, defaultTechniqueName)
 
-	, m_lightPosition(effect.GetVariable("lightPosition"))
-	, m_lightRadius(effect.GetVariable("lightRadius"))
+	, m_lightData(effect.GetVariable("lightData"))
 {}
 
 PointLightMaterial::~PointLightMaterial() = default;

@@ -2,13 +2,10 @@
 
 cbuffer CBufferPerObject
 {
-    float4x4 WorldViewProjection : WORLDVIEWPROJECTION < string UIWidget="None"; >;
+    float4x4 WorldViewProjection : WORLDVIEWPROJECTION;
 }
 
-TextureCube SkyboxTexture <
-    string UIName =  "Skybox Texture";
-    string ResourceType = "3D";
->;
+TextureCube SkyboxTexture;
 
 SamplerState TrilinearSampler
 {

@@ -8,9 +8,11 @@ static const float DepthBias = 0.005f;
 cbuffer CBufferPerFrame
 {
     float4 ambientColor = { 1.0f, 1.0f, 1.0f, 0.0f };
+    float3 cameraPosition;
+
     float4 lightColor = { 1.0f, 1.0f, 1.0f, 1.0f };
     float3 lightDirection = { 0.0f, 0.0f, 1.0f };
-    float3 cameraPosition;
+
     float2 shadowMapSize = { 1024.f, 1024.f };
 }
 

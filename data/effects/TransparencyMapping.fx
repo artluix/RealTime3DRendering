@@ -3,73 +3,31 @@
 // Resources
 cbuffer CBufferPerFrame
 {
-    float4 ambientColor : AMBIENT <
-        string UIName = "Ambient Light";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 0.0f };
+    float4 ambientColor : AMBIENT;
+    float3 cameraPosition : CAMERAPOSITION;
 
-    float4 lightColor : COLOR <
-        string Object = "LightColor0";
-        string UIName = "Light Color";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 1.0f };
+    float4 lightColor : COLOR;
+    float3 lightPosition : POSITION;
+    float lightRadius;
 
-    float3 lightPosition : POSITION <
-        string Object = "PointLight0";
-        string UIName = "Light Position";
-        string Space = "World";
-    > = { 0.0f, 0.0f, 0.0f };
-
-    float lightRadius <
-        string UIName = "Light Radius";
-        string UIWidget = "slider";
-        float UIMin = 0.0;
-        float UIMax = 100.0;
-        float UIStep = 1.0;
-    > = { 10.0f };
-
-    float3 fogColor <
-        string UIName = "Fog Color";
-        string UIWIdget = "Color";
-    > = { 0.5f, 0.5f, 0.5f };
-
+    float3 fogColor = { 0.5f, 0.5f, 0.5f };
     float fogStart = { 20.0f };
     float fogRange = { 40.0f };
-
-    float3 cameraPosition : CAMERAPOSITION <string UIWIdget="None";>;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION <string UIWIdget="None";>;
-    float4x4 world : WORLD <string UIWIdget="None";>;
+    float4x4 wvp : WORLDVIEWPROJECTION;
+    float4x4 world : WORLD;
 
-    float4 specularColor : SPECULAR <
-        string UIName = "Specular Color";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-    float specularPower : SPECULARPOWER <
-        string UIName = "Specular Power";
-        string UIWidget = "slider";
-        float UIMin = 1.0;
-        float UIMax = 255.0;
-        float UIStep = 1.0;
-    > = { 25.0f };
+    float4 specularColor : SPECULAR;
+    float specularPower : SPECULARPOWER;
 }
 
-Texture2D ColorTexture <
-    string ResourceName="default_color.dds";
-    string UIName="Color Texture";
-    string ResourceType="2D";
->;
+Texture2D ColorTexture;
+Texture2D TransparencyMap;
 
-Texture2D TransparencyMap <
-    string UIName = "Transparency Map";
-    string ResourceType = "2D";
->;
-
-SamplerState TrilinearSampler
+SamplerState Sampler
 {
     Filter = MIN_MAG_MIP_LINEAR;
     AddressU = WRAP;
@@ -137,7 +95,7 @@ float4 pixel_shader(VS_OUTPUT IN, uniform bool fogEnabled) : SV_Target
 
     float3 normal = normalize(IN.normal);
     float3 viewDirection = normalize(IN.viewDirection);
-    float4 color = ColorTexture.Sample(TrilinearSampler, IN.textureCoordinate);
+    float4 color = ColorTexture.Sample(Sampler, IN.textureCoordinate);
     float3 ambient = get_color_contribution(ambientColor, color.rgb);
 
     LIGHT_CONTRIBUTION_DATA lightContributionData;
@@ -151,7 +109,7 @@ float4 pixel_shader(VS_OUTPUT IN, uniform bool fogEnabled) : SV_Target
     float3 light_contribution = get_light_contribution(lightContributionData);
 
     OUT.rgb = ambient + light_contribution;
-    OUT.a = TransparencyMap.Sample(TrilinearSampler, IN.textureCoordinate).a;
+    OUT.a = TransparencyMap.Sample(Sampler, IN.textureCoordinate).a;
 
     if (fogEnabled)
     {

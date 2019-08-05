@@ -3,73 +3,27 @@
 // Resources
 cbuffer CBufferPerFrame
 {
-    float4 ambientColor : AMBIENT <
-        string UIName = "Ambient Light";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 1.0f };
+    float4 ambientColor : AMBIENT;
+    float3 cameraPosition : CAMERAPOSITION;
 
-    float4 lightColor : COLOR <
-        string Object = "LightColor0";
-        string UIName = "Light Color";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 1.0f };
+    float4 lightColor : COLOR;
+    float3 lightPosition : POSITION;
+    float lightRadius;
 
-    float3 lightPosition : POSITION <
-        string Object = "PointLight0";
-        string UIName = "Light Position";
-        string Space = "World";
-    > = { 0.0f, 0.0f, 0.0f };
-
-    float lightRadius <
-        string UIName = "Light Radius";
-        string UIWidget = "slider";
-        float UIMin = 0.0;
-        float UIMax = 100.0;
-        float UIStep = 1.0;
-    > = { 10.0f };
-
-    float displacementScale <
-        string UIName = "Displacement Scale";
-        string UIWidget = "slider";
-        float UIMin = 0.0;
-        float UIMax = 2.0;
-        float UIStep = 0.01;
-    > = { 0.0f };
-
-    float3 cameraPosition : CAMERAPOSITION <string UIWIdget="None";>;
+    float displacementScale;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION <string UIWIdget="None";>;
-    float4x4 world : WORLD <string UIWIdget="None";>;
+    float4x4 wvp : WORLDVIEWPROJECTION;
+    float4x4 world : WORLD;
 
-    float4 specularColor : SPECULAR <
-        string UIName = "Specular Color";
-        string UIWidget = "Color";
-    > = { 1.0f, 1.0f, 1.0f, 1.0f };
-
-    float specularPower : SPECULARPOWER <
-        string UIName = "Specular Power";
-        string UIWidget = "slider";
-        float UIMin = 1.0;
-        float UIMax = 255.0;
-        float UIStep = 1.0;
-    > = { 25.0f };
+    float4 specularColor : SPECULAR;
+    float specularPower : SPECULARPOWER;
 }
 
-Texture2D ColorTexture <
-    string ResourceName="default_color.dds";
-    string UIName="Color Texture";
-    string ResourceType="2D";
->;
-
-Texture2D DisplacementMap <
-    string UIName = "Displacement Map";
-    string ResourceType = "2D";
->;
-
-
+Texture2D ColorTexture;
+Texture2D DisplacementMap;
 SamplerState TrilinearSampler
 {
     Filter = MIN_MAG_MIP_LINEAR;
