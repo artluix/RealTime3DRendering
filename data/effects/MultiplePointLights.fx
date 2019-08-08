@@ -59,9 +59,9 @@ struct VS_INPUT
 struct VS_OUTPUT
 {
     float4 position : SV_Position;
+    float3 worldPosition : POSITION;
     float2 textureCoordinate : TEXCOORD;
     float3 normal : NORMAL;
-    float3 viewDirection : DIRECTION;
 };
 
 struct PSD_OUTPUT
@@ -143,7 +143,7 @@ float4 pixel_shader_forward(VS_OUTPUT IN) : SV_Target
     float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
 
     OUT = pixel_shader_common(color, normal, IN.worldPosition);
-    
+
     return OUT;
 }
 

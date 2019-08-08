@@ -6,9 +6,7 @@ cbuffer CBufferPerFrame
     float4 ambientColor : AMBIENT;
     float3 cameraPosition : CAMERAPOSITION;
 
-    float4 lightColor : COLOR;
-    float3 lightPosition : POSITION;
-    float lightRadius;
+    POINT_LIGHT_DATA lightData;
 
     float3 fogColor = { 0.5f, 0.5f, 0.5f };
     float fogStart = { 20.0f };
@@ -46,7 +44,7 @@ BlendState EnableAlphaBlending
     DestBlend = INV_SRC_ALPHA;
 };
 
-// Data Structures 
+// Data Structures
 struct VS_INPUT
 {
     float4 objectPosition : POSITION;
@@ -64,7 +62,7 @@ struct VS_OUTPUT
     float fogAmount : TEXCOORD3;
 };
 
-// Vertex Shader 
+// Vertex Shader
 VS_OUTPUT vertex_shader(VS_INPUT IN, uniform bool fogEnabled)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
@@ -75,7 +73,7 @@ VS_OUTPUT vertex_shader(VS_INPUT IN, uniform bool fogEnabled)
 
     float3 worldPosition = mul(IN.objectPosition, world).xyz;
 
-    OUT.lightDirection = get_light_data(lightPosition, worldPosition, lightRadius);
+    OUT.lightDirection = get_light_data(lightData.position, worldPosition, lightData.radius);
     float3 viewDirection = cameraPosition - worldPosition;
 
     if (fogEnabled)
@@ -105,7 +103,7 @@ float4 pixel_shader(VS_OUTPUT IN, uniform bool fogEnabled) : SV_Target
     lightContributionData.lightDirection = IN.lightDirection;
     lightContributionData.specularColor = specularColor;
     lightContributionData.specularPower = specularPower;
-    lightContributionData.lightColor = lightColor;
+    lightContributionData.lightColor = lightData.color;
     float3 light_contribution = get_light_contribution(lightContributionData);
 
     OUT.rgb = ambient + light_contribution;
@@ -120,26 +118,26 @@ float4 pixel_shader(VS_OUTPUT IN, uniform bool fogEnabled) : SV_Target
 }
 
 // Techniques
-technique10 alphaBlendingWithFog
+technique11 alphaBlendingWithFog
 {
     pass p0
     {
-        SetVertexShader(CompileShader(vs_4_0, vertex_shader(true)));
+        SetVertexShader(CompileShader(vs_5_0, vertex_shader(true)));
         SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_4_0, pixel_shader(true)));
+        SetPixelShader(CompileShader(ps_5_0, pixel_shader(true)));
 
         SetRasterizerState(DisableCulling);
         // SetBlendState(EnableAlphaBlending, (float4)0, 0xFFFFFFFF); not supported by Effects11
     }
 }
 
-technique10 alphaBlendingWithoutFog
+technique11 alphaBlendingWithoutFog
 {
     pass p0
     {
-        SetVertexShader(CompileShader(vs_4_0, vertex_shader(false)));
+        SetVertexShader(CompileShader(vs_5_0, vertex_shader(false)));
         SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_4_0, pixel_shader(false)));
+        SetPixelShader(CompileShader(ps_5_0, pixel_shader(false)));
 
         SetRasterizerState(DisableCulling);
         // SetBlendState(EnableAlphaBlending, (float4)0, 0xFFFFFFFF); not supported by Effects11

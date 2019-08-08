@@ -5,6 +5,7 @@ cbuffer CBufferPerFrame
 {
     float4 ambientColor : AMBIENT;
     float3 cameraPosition : CAMERAPOSITION;
+
     POINT_LIGHT_DATA lightData;
 }
 

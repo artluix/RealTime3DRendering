@@ -6,6 +6,12 @@
 
 // Data Structures
 
+struct DIRECTIONAL_LIGHT_DATA
+{
+    float3 direction;
+    float4 color;
+};
+
 struct POINT_LIGHT_DATA
 {
     float3 position;
@@ -13,11 +19,13 @@ struct POINT_LIGHT_DATA
     float4 color;
 };
 
-struct DIRECTIONAL_LIGHT_DATA
+struct SPOT_LIGHT_DATA
 {
     float3 direction;
+    float3 position;
+    float radius;
     float4 color;
-}
+};
 
 struct LIGHT_CONTRIBUTION_DATA
 {

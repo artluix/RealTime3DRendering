@@ -5,8 +5,8 @@
 using namespace library;
 
 SpotlightMaterial::SpotlightMaterial(Effect& effect)
-	: PointLightMaterial(effect, "main10")
-	, m_lightLookAt(effect.GetVariable("lightLookAt"))
+	: PointLightMaterial(effect, "main11")
+
 	, m_spotlightInnerAngle(effect.GetVariable("spotlightInnerAngle"))
 	, m_spotlightOuterAngle(effect.GetVariable("spotlightOuterAngle"))
 {}

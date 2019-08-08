@@ -6,10 +6,7 @@ cbuffer CBufferPerFrame
     float4 ambientColor : AMBIENT;
     float3 cameraPosition : CAMERAPOSITION;
 
-    float4 lightColor : COLOR;
-    float3 lightPosition : POSITION;
-    float3 lightLookAt : DIRECTION;
-    float lightRadius;
+    SPOT_LIGHT_DATA lightData;
 
     float spotlightInnerAngle;
     float spotlightOuterAngle;
@@ -65,10 +62,10 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
     OUT.normal = normalize(mul(float4(IN.normal, 0), world).xyz);
 
-    float3 lightDirection = lightPosition - OUT.worldPosition;
-    OUT.attenuation = saturate(1.0f - (length(lightDirection) / lightRadius));
+    float3 lightDirection = lightData.position - OUT.worldPosition;
+    OUT.attenuation = saturate(1.0f - (length(lightDirection) / lightData.radius));
 
-    OUT.lightLookAt = -lightLookAt;
+    OUT.lightLookAt = -lightData.direction;
 
     return OUT;
 }
@@ -78,7 +75,7 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 OUT = (float4)0;
 
-    float3 lightDirection = normalize(lightPosition - IN.worldPosition);
+    float3 lightDirection = normalize(lightData.position - IN.worldPosition);
     float3 viewDirection = normalize(cameraPosition - IN.worldPosition);
 
     float3 normal = normalize(IN.normal);
@@ -91,7 +88,7 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     float4 lightCoefficients = lit(n_dot_l, n_dot_h, specularPower);
 
     float3 ambient = get_color_contribution(ambientColor, color.rgb);
-    float3 diffuse = get_color_contribution(lightColor, lightCoefficients.y * color.rgb) * IN.attenuation;
+    float3 diffuse = get_color_contribution(lightData.color, lightCoefficients.y * color.rgb) * IN.attenuation;
     float3 specular = get_color_contribution(specularColor, min(lightCoefficients.z, color.w)) * IN.attenuation;
 
     float spotFactor = 0.0f;
@@ -108,13 +105,13 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
 }
 
 // Techniques
-technique10 main10
+technique11 main11
 {
     pass p0
     {
-        SetVertexShader(CompileShader(vs_4_0, vertex_shader()));
+        SetVertexShader(CompileShader(vs_5_0, vertex_shader()));
         SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_4_0, pixel_shader()));
+        SetPixelShader(CompileShader(ps_5_0, pixel_shader()));
 
         SetRasterizerState(DisableCulling);
     }

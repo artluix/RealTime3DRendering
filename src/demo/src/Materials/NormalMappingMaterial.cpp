@@ -6,7 +6,7 @@
 using namespace library;
 
 NormalMappingMaterial::NormalMappingMaterial(Effect& effect)
-	: DirectionalLightMaterial(effect, "main10")
+	: DirectionalLightMaterial(effect, "main11")
 
 	, m_normalMap(effect.GetVariable("NormalMap"))
 {}

@@ -10,9 +10,7 @@ cbuffer CBufferPerFrame
     float4 ambientColor = { 1.0f, 1.0f, 1.0f, 0.0f };
     float3 cameraPosition;
 
-    float4 lightColor = { 1.0f, 1.0f, 1.0f, 1.0f };
-    float3 lightPosition = { 0.0f, 0.0f, 0.0f };
-    float lightRadius = 10.0f;
+    POINT_LIGHT_DATA lightData;
 
     float2 shadowMapSize = { 1024.f, 1024.f };
 }
@@ -96,9 +94,9 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
     OUT.worldPosition = mul(IN.objectPosition, world).xyz;
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
     OUT.normal = normalize(mul(float4(IN.normal, 0), world).xyz);
-    
-    float3 lightDirection = lightPosition - OUT.worldPosition;
-    OUT.attenuation = saturate(1.0f - (length(lightDirection) / lightRadius));
+
+    float3 lightDirection = lightData.position - OUT.worldPosition;
+    OUT.attenuation = saturate(1.0f - (length(lightDirection) / lightData.radius));
 
     OUT.shadowTextureCoordinate = mul(IN.objectPosition, projectiveTextureMatrix);
 
@@ -111,7 +109,7 @@ LIGHT_OUTPUT compute_light(VS_OUTPUT IN)
 {
     LIGHT_OUTPUT OUT = (LIGHT_OUTPUT)0;
 
-    float3 lightDirection = normalize(lightPosition - IN.worldPosition);
+    float3 lightDirection = normalize(lightData.position - IN.worldPosition);
     float3 viewDirection = normalize(cameraPosition - IN.worldPosition);
 
     float3 normal = normalize(IN.normal);
@@ -123,7 +121,7 @@ LIGHT_OUTPUT compute_light(VS_OUTPUT IN)
     float4 lightCoefficients = lit(n_dot_l, n_dot_h, specularPower);
 
     OUT.ambient = get_color_contribution(ambientColor, color.rgb);
-    OUT.diffuse = get_color_contribution(lightColor, lightCoefficients.y * color.rgb) * IN.attenuation;
+    OUT.diffuse = get_color_contribution(lightData.color, lightCoefficients.y * color.rgb) * IN.attenuation;
     OUT.specular = get_color_contribution(specularColor, min(lightCoefficients.z, color.w)) * IN.attenuation;
 
     return OUT;

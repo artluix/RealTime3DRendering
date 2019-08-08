@@ -10,8 +10,7 @@ cbuffer CBufferPerFrame
     float4 ambientColor = { 1.0f, 1.0f, 1.0f, 0.0f };
     float3 cameraPosition;
 
-    float4 lightColor = { 1.0f, 1.0f, 1.0f, 1.0f };
-    float3 lightDirection = { 0.0f, 0.0f, 1.0f };
+    DIRECTIONAL_LIGHT_DATA lightData;
 
     float2 shadowMapSize = { 1024.f, 1024.f };
 }
@@ -96,7 +95,7 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
     OUT.normal = normalize(mul(float4(IN.normal, 0), world).xyz);
 
-    OUT.lightDirection = normalize(-lightDirection);
+    OUT.lightDirection = normalize(-lightData.direction);
     OUT.shadowTextureCoordinate = mul(IN.objectPosition, projectiveTextureMatrix);
 
     return OUT;
@@ -119,7 +118,7 @@ LIGHT_OUTPUT compute_light(VS_OUTPUT IN)
     float4 lightCoefficients = lit(n_dot_l, n_dot_h, specularPower);
 
     OUT.ambient = get_color_contribution(ambientColor, color.rgb);
-    OUT.diffuse = get_color_contribution(lightColor, lightCoefficients.y * color.rgb);
+    OUT.diffuse = get_color_contribution(lightData.color, lightCoefficients.y * color.rgb);
     OUT.specular = get_color_contribution(specularColor, min(lightCoefficients.z, color.w));
 
     return OUT;

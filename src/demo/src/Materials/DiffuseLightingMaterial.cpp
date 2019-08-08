@@ -6,7 +6,7 @@
 using namespace library;
 
 DiffuseLightingMaterial::DiffuseLightingMaterial(Effect& effect)
-	: Material(effect, "main10")
+	: Material(effect, "main11")
 
 	, m_ambientColor(effect.GetVariable("ambientColor"))
 	, m_lightColor(effect.GetVariable("lightColor"))

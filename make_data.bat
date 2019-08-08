@@ -26,6 +26,8 @@ for %%f in (%SRC_PATH%\effects\*.fx) do (
     call :build_effect %%f %%~nf
 )
 
+xcopy %SRC_PATH%\effects\include %DEST_PATH%\effects\include /i /f /d
+
 :: export textures
 set /a STEP+=1
 echo.

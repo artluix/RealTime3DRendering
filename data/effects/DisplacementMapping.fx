@@ -6,9 +6,7 @@ cbuffer CBufferPerFrame
     float4 ambientColor : AMBIENT;
     float3 cameraPosition : CAMERAPOSITION;
 
-    float4 lightColor : COLOR;
-    float3 lightPosition : POSITION;
-    float lightRadius;
+    POINT_LIGHT_DATA lightData;
 
     float displacementScale;
 }
@@ -36,7 +34,7 @@ RasterizerState DisableCulling
     CullMode = None;
 };
 
-// Data Structures 
+// Data Structures
 struct VS_INPUT
 {
     float4 objectPosition : POSITION;
@@ -53,7 +51,7 @@ struct VS_OUTPUT
     float3 viewDirection : TEXCOORD2;
 };
 
-// Vertex Shader 
+// Vertex Shader
 VS_OUTPUT vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
@@ -69,11 +67,11 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
     OUT.position = mul(IN.objectPosition, wvp);
     OUT.textureCoordinate = textureCoordinate;
     OUT.normal = normalize(mul(float4(IN.normal, 0), world).xyz);
-    
+
     float3 worldPosition = mul(IN.objectPosition, world).xyz;
     OUT.viewDirection = normalize(cameraPosition - worldPosition);
 
-    OUT.lightDirection = get_light_data(lightPosition, worldPosition, lightRadius);
+    OUT.lightDirection = get_light_data(lightData.position, worldPosition, lightData.radius);
 
     return OUT;
 }
@@ -95,23 +93,23 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     lightContributionData.lightDirection = IN.lightDirection;
     lightContributionData.specularColor = specularColor;
     lightContributionData.specularPower = specularPower;
-    lightContributionData.lightColor = lightColor;
+    lightContributionData.lightColor = lightData.color;
     float3 light_contribution = get_light_contribution(lightContributionData);
 
     OUT.rgb = ambient + light_contribution;
     OUT.a = 1.0f;
-    
+
     return OUT;
 }
 
 // Techniques
-technique10 main10
+technique11 main11
 {
     pass p0
     {
-        SetVertexShader(CompileShader(vs_4_0, vertex_shader()));
+        SetVertexShader(CompileShader(vs_5_0, vertex_shader()));
         SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_4_0, pixel_shader()));
+        SetPixelShader(CompileShader(ps_5_0, pixel_shader()));
 
         SetRasterizerState(DisableCulling);
     }

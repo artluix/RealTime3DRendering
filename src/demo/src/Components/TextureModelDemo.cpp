@@ -35,7 +35,7 @@ void TextureModelDemo::InitializeInternal()
 	InitializeEffect("TextureMapping");
 
 	// Look up the technique, pass, and WVP variable from the effect
-	m_technique = m_effect->GetTechniqueByName("main10");
+	m_technique = m_effect->GetTechniqueByName("main11");
 	assert("ID3DX11Effect::GetTechniqueByName() could not find the specified technique." && m_technique);
 
 	// get pass

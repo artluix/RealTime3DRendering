@@ -28,7 +28,7 @@ RasterizerState DisableCulling
     CullMode = None;
 };
 
-// Data Structures 
+// Data Structures
 struct VS_INPUT
 {
     float4 objectPosition : POSITION;
@@ -43,7 +43,7 @@ struct VS_OUTPUT
     float3 reflectionVector : TEXCOORD1;
 };
 
-// Vertex Shader 
+// Vertex Shader
 VS_OUTPUT vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
@@ -77,13 +77,13 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
 }
 
 // Techniques
-technique10 main10
+technique11 main11
 {
     pass p0
     {
-        SetVertexShader(CompileShader(vs_4_0, vertex_shader()));
+        SetVertexShader(CompileShader(vs_5_0, vertex_shader()));
         SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_4_0, pixel_shader()));
+        SetPixelShader(CompileShader(ps_5_0, pixel_shader()));
 
         SetRasterizerState(DisableCulling);
     }

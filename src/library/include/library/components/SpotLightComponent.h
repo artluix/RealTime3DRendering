@@ -4,6 +4,12 @@
 
 namespace library
 {
+struct SpotlightData : PointLightData, DirectionalLightData
+{
+};
+
+//-------------------------------------------------------------------------
+
 class SpotlightComponent
 	: public DirectionalLightComponent
 	, public PointLightComponent

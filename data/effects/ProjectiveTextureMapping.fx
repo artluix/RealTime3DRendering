@@ -9,9 +9,7 @@ cbuffer CBufferPerFrame
     float4 ambientColor = { 1.0f, 1.0f, 1.0f, 0.0f };
     float3 cameraPosition;
 
-    float4 lightColor = { 1.0f, 1.0f, 1.0f, 1.0f };
-    float3 lightPosition = { 0.0f, 0.0f, 0.0f };
-    float lightRadius = 10.0f;
+    POINT_LIGHT_DATA lightData;
 
     float depthBias = 0.005f;
 }
@@ -88,9 +86,9 @@ VS_OUTPUT project_texture_vertex_shader(VS_INPUT IN)
     OUT.worldPosition = mul(IN.objectPosition, world).xyz;
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
     OUT.normal = normalize(mul(float4(IN.normal, 0), world).xyz);
-    
-    float3 lightDirection = lightPosition - OUT.worldPosition;
-    OUT.attenuation = saturate(1.0f - (length(lightDirection) / lightRadius));
+
+    float3 lightDirection = lightData.position - OUT.worldPosition;
+    OUT.attenuation = saturate(1.0f - (length(lightDirection) / lightData.radius));
 
     OUT.projectedTextureCoordinate = mul(IN.objectPosition, projectiveTextureMatrix);
 
@@ -103,7 +101,7 @@ float4 project_texture_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 OUT = (float4)0;
 
-    float3 lightDirection = normalize(lightPosition - IN.worldPosition);
+    float3 lightDirection = normalize(lightData.position - IN.worldPosition);
     float3 viewDirection = normalize(cameraPosition - IN.worldPosition);
 
     float3 normal = normalize(IN.normal);
@@ -115,7 +113,7 @@ float4 project_texture_pixel_shader(VS_OUTPUT IN) : SV_Target
     float4 lightCoefficients = lit(n_dot_l, n_dot_h, specularPower);
 
     float3 ambient = get_color_contribution(ambientColor, color.rgb);
-    float3 diffuse = get_color_contribution(lightColor, lightCoefficients.y * color.rgb) * IN.attenuation;
+    float3 diffuse = get_color_contribution(lightData.color, lightCoefficients.y * color.rgb) * IN.attenuation;
     float3 specular = get_color_contribution(specularColor, min(lightCoefficients.z, color.w)) * IN.attenuation;
 
     OUT.rgb = ambient + diffuse + specular;
@@ -136,7 +134,7 @@ float4 project_texture_depth_map_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 OUT = (float4)0;
 
-    float3 lightDirection = normalize(lightPosition - IN.worldPosition);
+    float3 lightDirection = normalize(lightData.position - IN.worldPosition);
     float3 viewDirection = normalize(cameraPosition - IN.worldPosition);
 
     float3 normal = normalize(IN.normal);
@@ -148,7 +146,7 @@ float4 project_texture_depth_map_pixel_shader(VS_OUTPUT IN) : SV_Target
     float4 lightCoefficients = lit(n_dot_l, n_dot_h, specularPower);
 
     float3 ambient = get_color_contribution(ambientColor, color.rgb);
-    float3 diffuse = get_color_contribution(lightColor, lightCoefficients.y * color.rgb) * IN.attenuation;
+    float3 diffuse = get_color_contribution(lightData.color, lightCoefficients.y * color.rgb) * IN.attenuation;
     float3 specular = get_color_contribution(specularColor, min(lightCoefficients.z, color.w)) * IN.attenuation;
 
     OUT.rgb = ambient + diffuse + specular;
