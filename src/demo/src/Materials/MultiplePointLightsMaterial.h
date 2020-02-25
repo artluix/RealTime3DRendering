@@ -28,6 +28,7 @@ protected:
 
 private:
 	library::EffectVariable& m_lightsData;
+	library::EffectVariable& m_lightData;
 	library::EffectVariable& m_lightsCount;
 
 	// for deferred shading

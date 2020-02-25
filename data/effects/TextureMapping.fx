@@ -4,7 +4,7 @@
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION;
+    float4x4 WVP : WORLDVIEWPROJECTION;
 }
 
 RasterizerState DisableCulling
@@ -48,7 +48,7 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
 
-    OUT.position = mul(IN.objectPosition, wvp);
+    OUT.position = mul(IN.objectPosition, WVP);
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
 
     return OUT;

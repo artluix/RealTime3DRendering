@@ -5,18 +5,18 @@
 using namespace library;
 
 ShadowMappingMaterial::ShadowMappingMaterial(Effect& effect)
-	: PointLightMaterial(effect, "shadow_mapping")
+	: LightMaterial(effect, "shadow_mapping")
 
-	, m_projectiveTextureMatrix(effect.GetVariable("projectiveTextureMatrix"))
+	, m_projectiveTextureMatrix(effect.GetVariable("ProjectiveTextureMatrix"))
 	, m_shadowMapTexture(effect.GetVariable("ShadowMapTexture"))
-	, m_shadowMapSize(effect.GetVariable("shadowMapSize"))
+	, m_shadowMapSize(effect.GetVariable("ShadowMapSize"))
 {}
 
 //-------------------------------------------------------------------------
 
 void ShadowMappingMaterial::InitializeInternal()
 {
-	PointLightMaterial::InitializeInternal();
+	LightMaterial::InitializeInternal();
 
 	const auto& inputElementDescriptions = GetCurrentPass().GetInputElementDescriptions();
 

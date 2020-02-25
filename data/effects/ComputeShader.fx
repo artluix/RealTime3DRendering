@@ -4,14 +4,14 @@ RWTexture2D<float4> OutputTexture;
 
 cbuffer CBufferPerFrame
 {
-    float2 textureSize;
-    float blueColor;
+    float2 TextureSize;
+    float BlueColor;
 };
 
 [numthreads(32, 32, 1)]
 void compute_shader(uint3 threadID : SV_DispatchThreadID)
 {
-	OutputTexture[threadID.xy] = float4((threadID.xy / textureSize), blueColor, 1);
+    OutputTexture[threadID.xy] = float4((threadID.xy / TextureSize), BlueColor, 1);
 }
 
 technique11 compute

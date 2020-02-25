@@ -26,6 +26,7 @@ class LightMaterial : public library::Material
 public:
 	using Vertex = library::VertexPositionTextureNormal;
 
+	explicit LightMaterial(library::Effect& effect, const std::string& defaultTechniqueName = "main11");
 	~LightMaterial();
 
 	library::EffectVariable& GetAmbientColor() { return m_ambientColor; }
@@ -47,8 +48,6 @@ public:
 	) const override;
 
 protected:
-	explicit LightMaterial(library::Effect& effect, const std::string& defaultTechniqueName = "main11");
-
 	void InitializeInternal() override;
 
 private:

@@ -1,5 +1,5 @@
 #pragma once
-#include "Materials/SpotlightMaterial.h"
+#include "Materials/LightMaterial.h"
 
 #include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
@@ -13,7 +13,7 @@ class TextComponent;
 } // namespace library
 
 class SpotlightDemo
-	: public library::ConcreteMaterialPrimitiveComponent<SpotlightMaterial>
+	: public library::ConcreteMaterialPrimitiveComponent<LightMaterial>
 	, public library::InputReceivableComponent
 {
 	RTTI_CLASS(SpotlightDemo, library::PrimitiveComponent, library::InputReceivableComponent)
@@ -51,10 +51,5 @@ private:
 	std::unique_ptr<library::SpotlightComponent> m_spotlight;
 	std::unique_ptr<library::ProxyModelComponent> m_proxyModel;
 
-	std::unique_ptr<library::SpotlightComponent> m_spotlight2;
-	std::unique_ptr<library::ProxyModelComponent> m_proxyModel2;
-
 	std::unique_ptr<library::TextComponent> m_text;
-
-	LightsData m_lightsData;
 };

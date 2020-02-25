@@ -4,8 +4,8 @@
 
 cbuffer CBufferPerFrame
 {
-    float2 sampleOffsets[SAMPLE_COUNT];
-    float sampleWeights[SAMPLE_COUNT];
+    float2 SampleOffsets[SAMPLE_COUNT];
+    float SampleWeights[SAMPLE_COUNT];
 };
 
 Texture2D SceneTexture;
@@ -51,7 +51,7 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
 
     for (int i = 0; i < SAMPLE_COUNT; i++)
     {
-        color += SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate + sampleOffsets[i]) * sampleWeights[i];
+        color += SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate + SampleOffsets[i]) * SampleWeights[i];
     }
 
     return color;

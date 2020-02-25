@@ -26,7 +26,7 @@ struct POINT_LIGHT_DATA // 32 bytes
     float radius;
 };
 
-struct SPOT_LIGHT_DATA // 64 bytes
+struct SPOTLIGHT_DATA // 64 bytes
 {
     float4 color;
     float3 direction;
@@ -68,7 +68,7 @@ struct LIGHTS_DATA
 {
     DIRECTIONAL_LIGHT_DATA dirLights[MAX_LIGHTS_COUNT];
     POINT_LIGHT_DATA pointLights[MAX_LIGHTS_COUNT];
-    SPOT_LIGHT_DATA spotlights[MAX_LIGHTS_COUNT];
+    SPOTLIGHT_DATA spotlights[MAX_LIGHTS_COUNT];
 
     uint dirLightsCount;
     uint pointLightsCount;
@@ -83,7 +83,7 @@ struct LIGHTS_DATA
 
 cbuffer CBufferLights // MAX_LIGHTS_COUNT * (128) + 12 bytes
 {
-    LIGHTS_DATA lightsData;
+    LIGHTS_DATA LightsData;
 }
 
 //-------------------------------------------------------------------------
@@ -130,7 +130,6 @@ float3 get_light_contribution(LIGHT_CONTRIBUTION_DATA IN)
     return (diffuse + specular) * lightAttenuation;
 }
 
-// float3 get_lights_contribution(LIGHTS_DATA lightsData, LIGHTS_COMMON_PARAMS lightsCommonParams)
 float3 get_lights_contribution(LIGHTS_COMMON_PARAMS lightsCommonParams)
 {
     float3 lightsContribution = (float3)0.f;
@@ -147,35 +146,35 @@ float3 get_lights_contribution(LIGHTS_COMMON_PARAMS lightsCommonParams)
 
     // Directional lights
     [loop]
-    for (uint i = 0; i < lightsData.dirLightsCount; i++)
+    for (uint i = 0; i < LightsData.dirLightsCount; i++)
     {
-        lightContributionData.lightColor = lightsData.dirLights[i].color;
-        lightContributionData.lightData = float4(lightsData.dirLights[i].direction, 1.0f);
+        lightContributionData.lightColor = LightsData.dirLights[i].color;
+        lightContributionData.lightData = float4(LightsData.dirLights[i].direction, 1.0f);
         lightsContribution += get_light_contribution(lightContributionData);
     }
 
     // Point lights
     [loop]
-    for (uint i = 0; i < lightsData.pointLightsCount; i++)
+    for (i = 0; i < LightsData.pointLightsCount; i++)
     {
-        lightContributionData.lightColor = lightsData.pointLights[i].color;
-        lightContributionData.lightData = get_light_data(lightsData.pointLights[i].position, lightsData.pointLights[i].radius, lightsCommonParams.worldPosition);
+        lightContributionData.lightColor = LightsData.pointLights[i].color;
+        lightContributionData.lightData = get_light_data(LightsData.pointLights[i].position, LightsData.pointLights[i].radius, lightsCommonParams.worldPosition);
         lightsContribution += get_light_contribution(lightContributionData);
     }
 
     // Spotlights
     [loop]
-    for (uint i = 0; i < lightsData.spotlightsCount; i++)
+    for (i = 0; i < LightsData.spotlightsCount; i++)
     {
         float spotFactor = 0.f;
-        float4 lightData = get_light_data(lightsData.spotlights[i].position, lightsData.spotlights[i].radius, lightsCommonParams.worldPosition);
-        float lightAngle = dot(lightData.xyz, -lightsData.spotlights[i].direction);
+        float4 lightData = get_light_data(LightsData.spotlights[i].position, LightsData.spotlights[i].radius, lightsCommonParams.worldPosition);
+        float lightAngle = dot(lightData.xyz, -LightsData.spotlights[i].direction);
 
         if (lightAngle > 0.f)
         {
-            spotFactor = smoothstep(lightsData.spotlights[i].outerAngle, lightsData.spotlights[i].innerAngle, lightAngle);
+            spotFactor = smoothstep(LightsData.spotlights[i].outerAngle, LightsData.spotlights[i].innerAngle, lightAngle);
 
-            lightContributionData.lightColor = lightsData.spotlights[i].color;
+            lightContributionData.lightColor = LightsData.spotlights[i].color;
             lightContributionData.lightData = lightData;
             lightsContribution += get_light_contribution(lightContributionData) * spotFactor;
         }

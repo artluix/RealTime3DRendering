@@ -8,8 +8,8 @@ using namespace library;
 QuadHeightMapTessellationMaterial::QuadHeightMapTessellationMaterial(Effect& effect)
 	: TessellationMaterial(effect)
 
-	, m_textureMatrix(effect.GetVariable("textureMatrix"))
-	, m_displacementScale(effect.GetVariable("displacementScale"))
+	, m_textureMatrix(effect.GetVariable("TextureMatrix"))
+	, m_displacementScale(effect.GetVariable("DisplacementScale"))
 	, m_heightMapTexture(effect.GetVariable("HeightMap"))
 {}
 

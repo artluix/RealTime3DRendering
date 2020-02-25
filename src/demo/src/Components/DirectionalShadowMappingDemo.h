@@ -1,5 +1,5 @@
 #pragma once
-#include "Materials/DirectionalShadowMappingMaterial.h"
+#include "Materials/ShadowMappingMaterial.h"
 
 #include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
@@ -20,7 +20,7 @@ class DepthMapRenderTarget;
 //-------------------------------------------------------------------------
 
 class DirectionalShadowMappingDemo
-	: public library::ConcreteMaterialPrimitiveComponent<DirectionalShadowMappingMaterial>
+	: public library::ConcreteMaterialPrimitiveComponent<ShadowMappingMaterial>
 	, public library::InputReceivableComponent
 {
 	RTTI_CLASS(DirectionalShadowMappingDemo, library::PrimitiveComponent, library::InputReceivableComponent)
@@ -72,7 +72,7 @@ private:
 
 	void InitializeProjectedTextureScalingMatrix();
 
-	DirectionalShadowMappingTechnique::Type m_techniqueType;
+	ShadowMappingTechnique::Type m_techniqueType;
 
 	std::unique_ptr<library::TextComponent> m_text;
 	std::unique_ptr<library::UIComponent> m_uiDepthMap;

@@ -9,11 +9,11 @@ namespace library
 BloomMaterial::BloomMaterial(Effect& effect)
 	: PostProcessingMaterial(effect)
 	, m_bloomTexture(effect.GetVariable("BloomTexture"))
-	, m_bloomThreshold(effect.GetVariable("bloomThreshold"))
-	, m_bloomIntensity(effect.GetVariable("bloomIntensity"))
-	, m_bloomSaturation(effect.GetVariable("bloomSaturation"))
-	, m_sceneIntensity(effect.GetVariable("sceneIntensity"))
-	, m_sceneSaturation(effect.GetVariable("sceneSaturation"))
+	, m_bloomThreshold(effect.GetVariable("BloomThreshold"))
+	, m_bloomIntensity(effect.GetVariable("BloomIntensity"))
+	, m_bloomSaturation(effect.GetVariable("BloomSaturation"))
+	, m_sceneIntensity(effect.GetVariable("SceneIntensity"))
+	, m_sceneSaturation(effect.GetVariable("SceneSaturation"))
 {}
 
 BloomMaterial::~BloomMaterial() = default;

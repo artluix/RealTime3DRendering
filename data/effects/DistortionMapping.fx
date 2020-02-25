@@ -5,12 +5,12 @@ Texture2D DistortionMapTexture;
 
 cbuffer CBufferPerObject
 {
-    float displacementScale = 1.f;
+    float DisplacementScale = 1.f;
 };
 
 cbuffer CBufferPerObjectCutout
 {
-    float4x4 wvp : WORLDVIEWPROJECTION;
+    float4x4 WVP : WORLDVIEWPROJECTION;
 };
 
 SamplerState TrilinearSampler
@@ -50,7 +50,7 @@ VS_OUTPUT distortion_cutout_vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT= (VS_OUTPUT)0;
 
-    OUT.position = mul(IN.position, wvp);
+    OUT.position = mul(IN.position, WVP);
     OUT.textureCoordinate = IN.textureCoordinate;
 
     return OUT;
@@ -70,7 +70,7 @@ float4 distortion_pixel_shader(VS_OUTPUT IN) : SV_Target
     else
     {
         displacement -= (0.5f + k_zeroCorrection);
-        return SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate + (displacement * displacementScale));
+        return SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate + (displacement * DisplacementScale));
     }
 }
 

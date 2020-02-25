@@ -2,18 +2,18 @@
 
 cbuffer CBufferPerFrame
 {
-    float3 k_cameraPosition : CAMERAPOSITION;
-    float3 k_cameraUp;
+    float3 CameraPosition : CAMERAPOSITION;
+    float3 CameraUp;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 k_viewProjection;
+    float4x4 ViewProjection;
 }
 
-Texture2D k_colorTexture;
+Texture2D ColorTexture;
 
-SamplerState k_colorSampler
+SamplerState ColorSampler
 {
     Filter = MIN_MAG_MIP_LINEAR;
     AddressU = WRAP;
@@ -73,11 +73,11 @@ void geometry_shader(point VS_OUTPUT IN[1], inout TriangleStream<GS_OUTPUT> triS
 
     float2 halfSize = IN[0].size / 2.f;
 
-    float3 direction = k_cameraPosition - IN[0].position.xyz;
-    float3 right = cross(normalize(direction), k_cameraUp);
+    float3 direction = CameraPosition - IN[0].position.xyz;
+    float3 right = cross(normalize(direction), CameraUp);
 
     float3 offsetX = halfSize.x * right;
-    float3 offsetY = halfSize.y * k_cameraUp;
+    float3 offsetY = halfSize.y * CameraUp;
 
     float4 vertices[4] = {
         float4(IN[0].position.xyz + offsetX - offsetY, 1.f), // lower-left
@@ -87,30 +87,30 @@ void geometry_shader(point VS_OUTPUT IN[1], inout TriangleStream<GS_OUTPUT> triS
     };
 
     // tri: 0, 1, 2
-    OUT.position = mul(vertices[0], k_viewProjection);
+    OUT.position = mul(vertices[0], ViewProjection);
     OUT.textureCoordinate = k_quadUVs[0];
     triStream.Append(OUT);
 
-    OUT.position = mul(vertices[1], k_viewProjection);
+    OUT.position = mul(vertices[1], ViewProjection);
     OUT.textureCoordinate = k_quadUVs[1];
     triStream.Append(OUT);
 
-    OUT.position = mul(vertices[2], k_viewProjection);
+    OUT.position = mul(vertices[2], ViewProjection);
     OUT.textureCoordinate = k_quadUVs[2];
     triStream.Append(OUT);
 
     triStream.RestartStrip();
 
     // tri: 0, 2, 3
-    OUT.position = mul(vertices[0], k_viewProjection);
+    OUT.position = mul(vertices[0], ViewProjection);
     OUT.textureCoordinate = k_quadUVs[0];
     triStream.Append(OUT);
 
-    OUT.position = mul(vertices[2], k_viewProjection);
+    OUT.position = mul(vertices[2], ViewProjection);
     OUT.textureCoordinate = k_quadUVs[2];
     triStream.Append(OUT);
 
-    OUT.position = mul(vertices[3], k_viewProjection);
+    OUT.position = mul(vertices[3], ViewProjection);
     OUT.textureCoordinate = k_quadUVs[3];
     triStream.Append(OUT);
 }
@@ -129,11 +129,11 @@ void geometry_shader_strip(point VS_OUTPUT IN[1], inout TriangleStream<GS_OUTPUT
 
     float2 halfSize = IN[0].size / 2.f;
 
-    float3 direction = k_cameraPosition - IN[0].position.xyz;
-    float3 right = cross(normalize(direction), k_cameraUp);
+    float3 direction = CameraPosition - IN[0].position.xyz;
+    float3 right = cross(normalize(direction), CameraUp);
 
     float3 offsetX = halfSize.x * right;
-    float3 offsetY = halfSize.y * k_cameraUp;
+    float3 offsetY = halfSize.y * CameraUp;
 
     float4 vertices[4] = {
         float4(IN[0].position.xyz + offsetX - offsetY, 1.f), // lower-left
@@ -145,7 +145,7 @@ void geometry_shader_strip(point VS_OUTPUT IN[1], inout TriangleStream<GS_OUTPUT
     [unroll]
     for (int i = 0; i < 4; i++)
     {
-        OUT.position = mul(vertices[i], k_viewProjection);
+        OUT.position = mul(vertices[i], ViewProjection);
         OUT.textureCoordinate = k_quadStripUVs[i];
 
         triStream.Append(OUT);
@@ -159,11 +159,11 @@ void geometry_shader_linestrip(point VS_OUTPUT IN[1], inout LineStream<GS_OUTPUT
 
     float2 halfSize = IN[0].size / 2.f;
 
-    float3 direction = k_cameraPosition - IN[0].position.xyz;
-    float3 right = cross(normalize(direction), k_cameraUp);
+    float3 direction = CameraPosition - IN[0].position.xyz;
+    float3 right = cross(normalize(direction), CameraUp);
 
     float3 offsetX = halfSize.x * right;
-    float3 offsetY = halfSize.y * k_cameraUp;
+    float3 offsetY = halfSize.y * CameraUp;
 
     float4 vertices[5] = {
         float4(IN[0].position.xyz - offsetX, 1.f), // left
@@ -176,7 +176,7 @@ void geometry_shader_linestrip(point VS_OUTPUT IN[1], inout LineStream<GS_OUTPUT
     [unroll]
     for (int i = 0; i < 5; i++)
     {
-        OUT.position = mul(vertices[i], k_viewProjection);
+        OUT.position = mul(vertices[i], ViewProjection);
         lineStream.Append(OUT);
     }
 }
@@ -200,11 +200,11 @@ void geometry_shader_nosize(
     float size = float(primitiveID) + 1.f;
     float2 halfSize = size / 2.f;
 
-    float3 direction = k_cameraPosition - IN[0].position.xyz;
-    float3 right = cross(normalize(direction), k_cameraUp);
+    float3 direction = CameraPosition - IN[0].position.xyz;
+    float3 right = cross(normalize(direction), CameraUp);
 
     float3 offsetX = halfSize.x * right;
-    float3 offsetY = halfSize.y * k_cameraUp;
+    float3 offsetY = halfSize.y * CameraUp;
 
     float4 vertices[4] = {
         float4(IN[0].position.xyz + offsetX - offsetY, 1.f), // lower-left
@@ -216,7 +216,7 @@ void geometry_shader_nosize(
     [unroll]
     for (int i = 0; i < 4; i++)
     {
-        OUT.position = mul(vertices[i], k_viewProjection);
+        OUT.position = mul(vertices[i], ViewProjection);
         OUT.textureCoordinate = k_quadStripUVs[i];
 
         triStream.Append(OUT);
@@ -227,7 +227,7 @@ void geometry_shader_nosize(
 
 float4 pixel_shader(GS_OUTPUT IN) : SV_Target
 {
-    return k_colorTexture.Sample(k_colorSampler, IN.textureCoordinate);
+    return ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
 }
 
 float4 pixel_shader_linestrip(GS_OUTPUT IN) : SV_Target

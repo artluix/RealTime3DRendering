@@ -5,11 +5,11 @@
 using namespace library;
 
 FogMaterial::FogMaterial(Effect& effect)
-	: DirectionalLightMaterial(effect, "fogEnabled")
+	: LightMaterial(effect, "fogEnabled")
 
-	, m_fogColor(effect.GetVariable("fogColor"))
-	, m_fogStart(effect.GetVariable("fogStart"))
-	, m_fogRange(effect.GetVariable("fogRange"))
+	, m_fogColor(effect.GetVariable("FogColor"))
+	, m_fogStart(effect.GetVariable("FogStart"))
+	, m_fogRange(effect.GetVariable("FogRange"))
 {}
 
 FogMaterial::~FogMaterial() = default;
@@ -18,7 +18,7 @@ FogMaterial::~FogMaterial() = default;
 
 void FogMaterial::InitializeInternal()
 {
-	DirectionalLightMaterial::InitializeInternal();
+	LightMaterial::InitializeInternal();
 
 	const auto& inputElementDescriptions = GetCurrentPass().GetInputElementDescriptions();
 

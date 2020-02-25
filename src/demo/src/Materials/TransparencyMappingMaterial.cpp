@@ -5,11 +5,11 @@
 using namespace library;
 
 TransparencyMappingMaterial::TransparencyMappingMaterial(Effect& effect)
-	: PointLightMaterial(effect, "alphaBlendingWithoutFog")
+	: LightMaterial(effect, "alphaBlendingWithoutFog")
 
-	, m_fogColor(effect.GetVariable("fogColor"))
-	, m_fogStart(effect.GetVariable("fogStart"))
-	, m_fogRange(effect.GetVariable("fogRange"))
+	, m_fogColor(effect.GetVariable("FogColor"))
+	, m_fogStart(effect.GetVariable("FogStart"))
+	, m_fogRange(effect.GetVariable("FogRange"))
 
 	, m_transparencyMap(effect.GetVariable("TransparencyMap"))
 {}
@@ -20,7 +20,7 @@ TransparencyMappingMaterial::~TransparencyMappingMaterial() = default;
 
 void TransparencyMappingMaterial::InitializeInternal()
 {
-	PointLightMaterial::InitializeInternal();
+	LightMaterial::InitializeInternal();
 
 	const auto& inputElementDescriptions = GetCurrentPass().GetInputElementDescriptions();
 

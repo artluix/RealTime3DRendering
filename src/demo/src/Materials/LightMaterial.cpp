@@ -8,17 +8,17 @@ using namespace library;
 LightMaterial::LightMaterial(Effect& effect, const std::string& defaultTechniqueName /*= "main11"*/)
 	: Material(effect, defaultTechniqueName)
 
-	, m_ambientColor(effect.GetVariable("ambientColor"))
-	, m_cameraPosition(effect.GetVariable("cameraPosition"))
+	, m_ambientColor(effect.GetVariable("AmbientColor"))
+	, m_cameraPosition(effect.GetVariable("CameraPosition"))
 
-	, m_lightData(effect.GetVariable("lightData"))
-	, m_lightsData(effect.GetVariable("lightsData"))
+	, m_lightData(effect.GetVariable("LightData"))
+	, m_lightsData(effect.GetVariable("LightsData"))
 
-	, m_wvp(effect.GetVariable("wvp"))
-	, m_world(effect.GetVariable("world"))
+	, m_wvp(effect.GetVariable("WVP"))
+	, m_world(effect.GetVariable("World"))
 
-	, m_specularPower(effect.GetVariable("specularPower"))
-	, m_specularColor(effect.GetVariable("specularColor"))
+	, m_specularPower(effect.GetVariable("SpecularPower"))
+	, m_specularColor(effect.GetVariable("SpecularColor"))
 
 	, m_colorTexture(effect.GetVariable("ColorTexture"))
 {}

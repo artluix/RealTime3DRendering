@@ -10,9 +10,7 @@ InstancingPointLightMaterial::InstancingPointLightMaterial(Effect& effect)
 
 	, m_ambientColor(effect.GetVariable("ambientColor"))
 
-	, m_lightColor(effect.GetVariable("lightColor"))
-	, m_lightPosition(effect.GetVariable("lightPosition"))
-	, m_lightRadius(effect.GetVariable("lightRadius"))
+	, m_lightData(effect.GetVariable("lightData"))
 
 	, m_cameraPosition(effect.GetVariable("cameraPosition"))
 	, m_viewProjection(effect.GetVariable("viewProjection"))

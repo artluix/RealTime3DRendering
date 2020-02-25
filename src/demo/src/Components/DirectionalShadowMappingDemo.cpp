@@ -57,7 +57,7 @@ DirectionalShadowMappingDemo::DirectionalShadowMappingDemo()
 	, m_depthBias(0.0005f)
 	, m_slopeScaledDepthBias(2.f)
 
-	, m_techniqueType(DirectionalShadowMappingTechnique::Simple)
+	, m_techniqueType(ShadowMappingTechnique::Simple)
 
 	, m_specularPower(25.f)
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
@@ -172,9 +172,9 @@ void DirectionalShadowMappingDemo::InitializeInternal()
 			 << L"Rotate Projector (Arrow Keys)\n"
 			 << L"Show Depth Map (Enter): " << (m_drawDepthMap ? "Yes" : "No") << '\n'
 			 << L"Active Technique (Space): "
-			 << DirectionalShadowMappingTechnique::ToDisplayString(m_techniqueType) << '\n';
+			 << ShadowMappingTechnique::ToDisplayString(m_techniqueType) << '\n';
 
-		if (m_techniqueType == DirectionalShadowMappingTechnique::PCF)
+		if (m_techniqueType == ShadowMappingTechnique::PCF)
 		{
 			woss << std::setprecision(5) << L"Depth Bias Amount (+J/-K): " << (int)m_depthBias << '\n'
 				 << L"Slope-Scaled Depth Bias (+O/-P): " << m_slopeScaledDepthBias;
@@ -333,10 +333,10 @@ void DirectionalShadowMappingDemo::UpdateTechnique()
 	{
 		if (m_keyboard->WasKeyPressed(Key::Space))
 		{
-			m_techniqueType = DirectionalShadowMappingTechnique::Next(m_techniqueType);
-			m_material->SetCurrentTechnique(DirectionalShadowMappingTechnique::ToString(m_techniqueType));
+			m_techniqueType = ShadowMappingTechnique::Next(m_techniqueType);
+			m_material->SetCurrentTechnique(ShadowMappingTechnique::ToString(m_techniqueType));
 
-			const auto depthMapTechnique = DirectionalShadowMappingTechnique::GetDepthMapTechniqueType(m_techniqueType);
+			const auto depthMapTechnique = ShadowMappingTechnique::GetDepthMapTechniqueType(m_techniqueType);
 			m_depthMapMaterial->SetCurrentTechnique(DepthMappingTechnique::ToString(depthMapTechnique));
 		}
 	}

@@ -71,16 +71,6 @@ void SpotlightDemo::InitializeInternal()
 	m_proxyModel->SetPosition(m_spotlight->GetPosition());
 	m_proxyModel->Initialize(GetApp());
 
-	m_spotlight2 = std::make_unique<SpotlightComponent>();
-	m_spotlight2->SetRadius(10.f);
-	m_spotlight2->SetPosition(math::Vector3(1.0f, 0.f, 0.5f));
-
-	m_proxyModel2 = std::make_unique<ProxyModelComponent>("SpotlightProxy", 0.3f);
-	m_proxyModel2->SetCamera(*GetCamera());
-	m_proxyModel2->SetInitialTransform(math::Matrix4::RotationPitchYawRoll(k_proxyModelRotationOffset));
-	m_proxyModel2->SetPosition(m_spotlight2->GetPosition());
-	m_proxyModel2->Initialize(GetApp());
-
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
 	m_text->SetTextUpdateFunction([this]() -> std::wstring {
@@ -110,7 +100,6 @@ void SpotlightDemo::Update(const Time& time)
 
 	m_text->Update(time);
 	m_proxyModel->Update(time);
-	m_proxyModel2->Update(time);
 
 	PrimitiveComponent::Update(time);
 }
@@ -268,22 +257,6 @@ void SpotlightDemo::UpdateSpotlight(const Time& time)
 			}
 		}
 	}
-
-	// Cull light
-	{
-		m_lightsData.spotlightsCount = 0;
-
-		const auto lightDirection = m_spotlight->GetPosition() - GetPosition();
-		m_lightsData.spotlightsCount += unsigned(lightDirection.Length() < m_spotlight->GetRadius());
-
-		if (m_lightsData.spotlightsCount)
-		{
-			m_lightsData.spotlights[0] = m_spotlight->GetData();
-		}
-
-		m_lightsData.spotlightsCount++;
-		m_lightsData.spotlights[1] = m_spotlight2->GetData();
-	}
 }
 
 void SpotlightDemo::UpdateSpecularLight(const Time& time)
@@ -330,10 +303,10 @@ void SpotlightDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetSpecularColor() << m_specularColor.ToVector4();
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
 
-	m_material->GetLightData() << m_spotlight->GetData();
-	m_material->GetLightsData() << m_lightsData;
-
-	constexpr auto b = sizeof(LightsData);
+	LightsData ld;
+	ld.spotlights[0] = m_spotlight->GetData();
+	ld.spotlightsCount = 1;
+	m_material->GetLightsData() << ld;
 
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 

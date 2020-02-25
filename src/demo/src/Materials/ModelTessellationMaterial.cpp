@@ -10,12 +10,12 @@ using namespace library;
 ModelTessellationMaterial::ModelTessellationMaterial(Effect& effect)
 	: TessellationMaterial(effect, "solid_color_manual_factors")
 
-	, m_world(effect.GetVariable("world"))
-	, m_cameraPosition(effect.GetVariable("cameraPosition"))
+	, m_world(effect.GetVariable("World"))
+	, m_cameraPosition(effect.GetVariable("CameraPosition"))
 	, m_colorTexture(effect.GetVariable("ColorTexture"))
-	, m_maxTessFactor(effect.GetVariable("maxTessFactor"))
-	, m_minTessDistance(effect.GetVariable("minTessDistance"))
-	, m_maxTessDistance(effect.GetVariable("maxTessDistance"))
+	, m_maxTessFactor(effect.GetVariable("MaxTessFactor"))
+	, m_minTessDistance(effect.GetVariable("MinTessDistance"))
+	, m_maxTessDistance(effect.GetVariable("MaxTessDistance"))
 {
 }
 

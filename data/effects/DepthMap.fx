@@ -2,7 +2,7 @@
 
 cbuffer CBufferPerObject
 {
-    float4x4 worldLightViewProjection;
+    float4x4 WorldLightViewProjection;
 };
 
 // RasterizerState DepthBias
@@ -22,14 +22,14 @@ struct VS_OUTPUT
 
 float4 vertex_shader(float4 objectPosition : POSITION) : SV_Position
 {
-    return mul(objectPosition, worldLightViewProjection);
+    return mul(objectPosition, WorldLightViewProjection);
 }
 
 VS_OUTPUT render_target_vertex_shader(float4 objectPosition : POSITION)
 {
     VS_OUTPUT OUT= (VS_OUTPUT)0;
 
-    OUT.position = mul(objectPosition, worldLightViewProjection);
+    OUT.position = mul(objectPosition, WorldLightViewProjection);
     OUT.depth = OUT.position.zw;
 
     return OUT;

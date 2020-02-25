@@ -178,7 +178,7 @@ elseif(TOOLS)
 
     add_executable(MakeSpriteFont ${MAKESPRITEFONT_SOURCES})
 
-    set_target_properties(MakeSpriteFont PROPERTIES VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1")
+    # set_target_properties(MakeSpriteFont PROPERTIES VS_DOTNET_TARGET_FRAMEWORK_VERSION "v4.6.1")
     set_target_properties(MakeSpriteFont PROPERTIES VS_DOTNET_REFERENCE_System "System")
     set_target_properties(MakeSpriteFont PROPERTIES VS_DOTNET_REFERENCE_System.Drawing "System.Drawing")
     set_target_properties(MakeSpriteFont PROPERTIES VS_DOTNET_REFERENCES_COPY_LOCAL OFF)

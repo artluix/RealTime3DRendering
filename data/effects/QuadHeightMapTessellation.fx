@@ -2,16 +2,16 @@
 
 cbuffer CBufferPerFrame
 {
-    float tessellationEdgeFactors[4];
-    float tessellationInsideFactor[2];
+    float TessellationEdgeFactors[4];
+    float TessellationInsideFactor[2];
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp;
-    float4x4 textureMatrix;
+    float4x4 WVP : WORLDVIEWPROJECTION;
+    float4x4 TextureMatrix;
 
-    float displacementScale;
+    float DisplacementScale;
 }
 
 Texture2D HeightMap;
@@ -61,7 +61,7 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
     VS_OUTPUT OUT = (VS_OUTPUT)0;
 
     OUT.objectPosition = IN.objectPosition;
-    OUT.textureCoordinate = mul(float4(IN.textureCoordinate.xy, 0.f, 1.f), textureMatrix).xy;
+    OUT.textureCoordinate = mul(float4(IN.textureCoordinate.xy, 0.f, 1.f), TextureMatrix).xy;
 
     return OUT;
 }
@@ -90,11 +90,11 @@ HS_CONSTANT_OUTPUT constant_hull_shader(InputPatch<VS_OUTPUT, 4> patch)
     [unroll]
     for (int i = 0; i < 4; i++)
     {
-        OUT.edgeFactors[i] = tessellationEdgeFactors[i];
+        OUT.edgeFactors[i] = TessellationEdgeFactors[i];
     }
 
-    OUT.insideFactors[0] = tessellationInsideFactor[0];
-    OUT.insideFactors[1] = tessellationInsideFactor[1];
+    OUT.insideFactors[0] = TessellationInsideFactor[0];
+    OUT.insideFactors[1] = TessellationInsideFactor[1];
 
     return OUT;
 }
@@ -114,9 +114,9 @@ DS_OUTPUT domain_shader(HS_CONSTANT_OUTPUT IN, float2 uv : SV_DomainLocation, co
     float2 texCoord1 = lerp(patch[2].textureCoordinate, patch[3].textureCoordinate, uv.x);
     float2 textureCoordinate = lerp(texCoord0, texCoord1, uv.y);
 
-    objectPosition.y = (2.f * HeightMap.SampleLevel(TrilinearSampler, textureCoordinate, 0.f).x - 1.f) * displacementScale;
+    objectPosition.y = (2.f * HeightMap.SampleLevel(TrilinearSampler, textureCoordinate, 0.f).x - 1.f) * DisplacementScale;
 
-    OUT.position = mul(float4(objectPosition.xyz, 1.f), wvp);
+    OUT.position = mul(float4(objectPosition.xyz, 1.f), WVP);
 
     return OUT;
 }

@@ -186,19 +186,19 @@ void DemoApplication::Initialize()
 	textureMapping->SetKeyboard(*m_keyboard);
 
 	// diffuse lighting
-	auto diffuseLighting = std::make_shared<DiffuseLightingDemo>();
+	/*auto diffuseLighting = std::make_shared<DiffuseLightingDemo>();
 	diffuseLighting->SetCamera(*camera);
-	diffuseLighting->SetKeyboard(*m_keyboard);
+	diffuseLighting->SetKeyboard(*m_keyboard);*/
 
 	// point light
-	auto pointLight = std::make_shared<PointLightDemo>();
+	/*auto pointLight = std::make_shared<PointLightDemo>();
 	pointLight->SetCamera(*camera);
-	pointLight->SetKeyboard(*m_keyboard);
+	pointLight->SetKeyboard(*m_keyboard);*/
 
 	// multiple point lights
-	auto multiplePointLights = std::make_shared<MultiplePointLightsDemo>();
+	/*auto multiplePointLights = std::make_shared<MultiplePointLightsDemo>();
 	multiplePointLights->SetCamera(*camera);
-	multiplePointLights->SetKeyboard(*m_keyboard);
+	multiplePointLights->SetKeyboard(*m_keyboard);*/
 
 	// spotlight
 	auto spotlight = std::make_shared<SpotlightDemo>();
@@ -211,24 +211,24 @@ void DemoApplication::Initialize()
 	normalMapping->SetKeyboard(*m_keyboard);
 
 	// environment mapping
-	auto environmentMapping = std::make_shared<EnvironmentMappingDemo>();
+	/*auto environmentMapping = std::make_shared<EnvironmentMappingDemo>();
 	environmentMapping->SetCamera(*camera);
-	environmentMapping->SetKeyboard(*m_keyboard);
+	environmentMapping->SetKeyboard(*m_keyboard);*/
 
 	// transparency mapping
-	auto transparencyMapping = std::make_shared<TransparencyMappingDemo>();
+	/*auto transparencyMapping = std::make_shared<TransparencyMappingDemo>();
 	transparencyMapping->SetCamera(*camera);
-	transparencyMapping->SetKeyboard(*m_keyboard);
+	transparencyMapping->SetKeyboard(*m_keyboard);*/
 
 	// displacement mapping
-	auto displacementMapping = std::make_shared<DisplacementMappingDemo>();
+	/*auto displacementMapping = std::make_shared<DisplacementMappingDemo>();
 	displacementMapping->SetCamera(*camera);
-	displacementMapping->SetKeyboard(*m_keyboard);
+	displacementMapping->SetKeyboard(*m_keyboard);*/
 
 	// fog
-	auto fog = std::make_shared<FogDemo>();
+	/*auto fog = std::make_shared<FogDemo>();
 	fog->SetCamera(*camera);
-	fog->SetKeyboard(*m_keyboard);
+	fog->SetKeyboard(*m_keyboard);*/
 
 	// post-processing
 	{
@@ -334,8 +334,8 @@ void DemoApplication::Initialize()
 	// m_components.push_back(diffuseLighting);
 	// m_components.push_back(pointLight);
 	// m_components.push_back(multiplePointLights);
-	m_components.push_back(spotlight);
-	// m_components.push_back(normalMapping);
+	// m_components.push_back(spotlight);
+	m_components.push_back(normalMapping);
 	// m_components.push_back(environmentMapping);
 	// m_components.push_back(transparencyMapping);
 	// m_components.push_back(displacementMapping);

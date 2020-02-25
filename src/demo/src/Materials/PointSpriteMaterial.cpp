@@ -8,12 +8,12 @@ using namespace library;
 PointSpriteMaterial::PointSpriteMaterial(Effect& effect)
 	: Material(effect, "main11")
 
-	, m_cameraPosition(effect.GetVariable("k_cameraPosition"))
-	, m_cameraUp(effect.GetVariable("k_cameraUp"))
+	, m_cameraPosition(effect.GetVariable("CameraPosition"))
+	, m_cameraUp(effect.GetVariable("CameraUp"))
 
-	, m_viewProjection(effect.GetVariable("k_viewProjection"))
+	, m_viewProjection(effect.GetVariable("ViewProjection"))
 
-	, m_colorTexture(effect.GetVariable("k_colorTexture"))
+	, m_colorTexture(effect.GetVariable("ColorTexture"))
 {}
 
 //-------------------------------------------------------------------------

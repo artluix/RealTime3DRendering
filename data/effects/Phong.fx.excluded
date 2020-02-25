@@ -3,8 +3,8 @@
 // Resources
 cbuffer CBufferPerFrame
 {
-    float4 ambientColor : AMBIENT;
-    float3 cameraPosition : CAMERAPOSITION;
+    float4 AmbientColor : AMBIENT;
+    float3 CameraPosition : CAMERAPOSITION;
 
     float4 lightColor : COLOR;
     float3 lightDirection : DIRECTION;
@@ -12,8 +12,8 @@ cbuffer CBufferPerFrame
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION;
-    float4x4 world : WORLD;
+    float4x4 WVP : WORLDVIEWPROJECTION;
+    float4x4 World : WORLD;
 
     float4 specularColor : SPECULAR;
     float specularPower : SPECULARPOWER;
@@ -54,13 +54,13 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
 
-    OUT.position = mul(IN.objectPosition, wvp);
+    OUT.position = mul(IN.objectPosition, WVP);
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
-    OUT.normal = normalize(mul(float4(IN.normal, 0), world).xyz);
+    OUT.normal = normalize(mul(float4(IN.normal, 0), World).xyz);
     OUT.lightDirection = normalize(-lightDirection);
 
-    float3 worldPosition = mul(IN.objectPosition, world).xyz;
-    OUT.viewDirection = normalize(cameraPosition - worldPosition);
+    float3 worldPosition = mul(IN.objectPosition, World).xyz;
+    OUT.viewDirection = normalize(CameraPosition - worldPosition);
 
     return OUT;
 }
@@ -76,7 +76,7 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     float n_dot_l = dot(lightDirection, normal);
 
     float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
-    float3 ambient = ambientColor.rgb * ambientColor.a * color.rgb;
+    float3 ambient = AmbientColor.rgb * AmbientColor.a * color.rgb;
 
     float3 diffuse = (float3)0;
     float3 specular = (float3)0;

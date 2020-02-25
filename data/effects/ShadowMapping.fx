@@ -1,4 +1,5 @@
 #include "include/Common.fxh"
+#include "include/Lights.fxh"
 
 /************* Resources *************/
 static const float4 WhiteColor = { 1.f, 1.f, 1.f, 1.f };
@@ -7,23 +8,23 @@ static const float DepthBias = 0.005f;
 
 cbuffer CBufferPerFrame
 {
-    float4 ambientColor = { 1.0f, 1.0f, 1.0f, 0.0f };
-    float3 cameraPosition;
+    float4 AmbientColor = { 1.0f, 1.0f, 1.0f, 0.0f };
+    float3 CameraPosition;
 
-    POINT_LIGHT_DATA lightData;
+    POINT_LIGHT_DATA LightData;
 
-    float2 shadowMapSize = { 1024.f, 1024.f };
+    float2 ShadowMapSize = { 1024.f, 1024.f };
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION;
-    float4x4 world : WORLD;
+    float4x4 WVP : WORLDVIEWPROJECTION;
+    float4x4 World : WORLD;
 
-    float4 specularColor : SPECULAR = { 1.0f, 1.0f, 1.0f, 1.0f };
-    float specularPower : SPECULARPOWER = 25.0f;
+    float4 SpecularColor : SPECULAR = { 1.0f, 1.0f, 1.0f, 1.0f };
+    float SpecularPower : SPECULARPOWER = 25.0f;
 
-    float4x4 projectiveTextureMatrix;
+    float4x4 ProjectiveTextureMatrix;
 }
 
 RasterizerState BackCulling
@@ -90,15 +91,15 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
 
-    OUT.position = mul(IN.objectPosition, wvp);
-    OUT.worldPosition = mul(IN.objectPosition, world).xyz;
+    OUT.position = mul(IN.objectPosition, WVP);
+    OUT.worldPosition = mul(IN.objectPosition, World).xyz;
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
-    OUT.normal = normalize(mul(float4(IN.normal, 0), world).xyz);
+    OUT.normal = normalize(mul(float4(IN.normal, 0), World).xyz);
 
-    float3 lightDirection = lightData.position - OUT.worldPosition;
-    OUT.attenuation = saturate(1.0f - (length(lightDirection) / lightData.radius));
+    float3 lightDirection = LightData.position - OUT.worldPosition;
+    OUT.attenuation = saturate(1.0f - (length(lightDirection) / LightData.radius));
 
-    OUT.shadowTextureCoordinate = mul(IN.objectPosition, projectiveTextureMatrix);
+    OUT.shadowTextureCoordinate = mul(IN.objectPosition, ProjectiveTextureMatrix);
 
     return OUT;
 }
@@ -109,8 +110,8 @@ LIGHT_OUTPUT compute_light(VS_OUTPUT IN)
 {
     LIGHT_OUTPUT OUT = (LIGHT_OUTPUT)0;
 
-    float3 lightDirection = normalize(lightData.position - IN.worldPosition);
-    float3 viewDirection = normalize(cameraPosition - IN.worldPosition);
+    float3 lightDirection = normalize(LightData.position - IN.worldPosition);
+    float3 viewDirection = normalize(CameraPosition - IN.worldPosition);
 
     float3 normal = normalize(IN.normal);
     float n_dot_l = dot(normal, lightDirection);
@@ -118,11 +119,11 @@ LIGHT_OUTPUT compute_light(VS_OUTPUT IN)
     float n_dot_h = dot(normal, halfVector);
 
     float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
-    float4 lightCoefficients = lit(n_dot_l, n_dot_h, specularPower);
+    float4 lightCoefficients = lit(n_dot_l, n_dot_h, SpecularPower);
 
-    OUT.ambient = get_color_contribution(ambientColor, color.rgb);
-    OUT.diffuse = get_color_contribution(lightData.color, lightCoefficients.y * color.rgb) * IN.attenuation;
-    OUT.specular = get_color_contribution(specularColor, min(lightCoefficients.z, color.w)) * IN.attenuation;
+    OUT.ambient = get_color_contribution(AmbientColor, color.rgb);
+    OUT.diffuse = get_color_contribution(LightData.color, lightCoefficients.y * color.rgb) * IN.attenuation;
+    OUT.specular = get_color_contribution(SpecularColor, min(lightCoefficients.z, color.w)) * IN.attenuation;
 
     return OUT;
 }
@@ -163,7 +164,7 @@ float4 manual_pcf_pixel_shader(VS_OUTPUT IN) : SV_Target
     {
         IN.shadowTextureCoordinate.xyz /= IN.shadowTextureCoordinate.w;
 
-        float2 texelSize = 1.f / shadowMapSize;
+        float2 texelSize = 1.f / ShadowMapSize;
 
         float sampledDepths[4];
         sampledDepths[0] = ShadowMapTexture.Sample(ShadowMapSampler, IN.shadowTextureCoordinate.xy).x + DepthBias;
@@ -179,7 +180,7 @@ float4 manual_pcf_pixel_shader(VS_OUTPUT IN) : SV_Target
             shadowFactors[i] = (pixelDepth > sampledDepths[i] ? 0.f : 1.f);
         }
 
-        float2 lerpValues = frac(IN.shadowTextureCoordinate.xy * shadowMapSize);
+        float2 lerpValues = frac(IN.shadowTextureCoordinate.xy * ShadowMapSize);
 
         float shadow = lerp(
             lerp(shadowFactors[0], shadowFactors[1], lerpValues.x),

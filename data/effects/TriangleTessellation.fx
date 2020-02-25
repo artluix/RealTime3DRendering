@@ -2,13 +2,13 @@
 
 cbuffer CBufferPerFrame
 {
-    float tessellationEdgeFactors[3];
-    float tessellationInsideFactor;
+    float TessellationEdgeFactors[3];
+    float TessellationInsideFactor;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp;
+    float4x4 WVP : WORLDVIEWPROJECTION;
 }
 
 /************* Data Structures *************/
@@ -73,10 +73,10 @@ HS_CONSTANT_OUTPUT constant_hull_shader(InputPatch<VS_OUTPUT, 3> patch)
     [unroll]
     for (int i = 0; i < 3; i++)
     {
-        OUT.edgeFactors[i] = tessellationEdgeFactors[i];
+        OUT.edgeFactors[i] = TessellationEdgeFactors[i];
     }
 
-    OUT.insideFactor = tessellationInsideFactor;
+    OUT.insideFactor = TessellationInsideFactor;
 
     return OUT;
 }
@@ -93,7 +93,7 @@ DS_OUTPUT domain_shader(HS_CONSTANT_OUTPUT IN, float3 uvw : SV_DomainLocation, c
         uvw.y * patch[1].objectPosition.xyz +
         uvw.z * patch[2].objectPosition.xyz;
 
-    OUT.position = mul(float4(objectPosition, 1.f), wvp);
+    OUT.position = mul(float4(objectPosition, 1.f), WVP);
 
     return OUT;
 }

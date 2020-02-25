@@ -49,7 +49,8 @@ void NormalMappingDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
-	CreateMaterialWithEffect("NormalMapping");
+	//CreateMaterialWithEffect("NormalMapping", false);
+	CreateMaterialWithEffect("NormalMapping", true);
 
 	// build vertices manually
 	{
@@ -79,7 +80,7 @@ void NormalMappingDemo::InitializeInternal()
 	m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
 	m_proxyModel = std::make_unique<ProxyModelComponent>("DirectionalLightProxy", 0.2f);
-	m_proxyModel->SetPosition(GetPosition() + math::Vector3(5.f));
+	m_proxyModel->SetPosition(GetPosition() + math::Vector3(2.f));
 	m_proxyModel->SetInitialTransform(math::Matrix4::RotationPitchYawRoll(k_proxyModelRotationOffset));
 	m_proxyModel->SetCamera(*GetCamera());
 	m_proxyModel->Initialize(GetApp());
@@ -227,10 +228,10 @@ void NormalMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetSpecularColor() << m_specularColor.ToVector4();
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
 
-	m_material->GetLightData() << m_directionalLight->GetData();
-
-	//m_material->GetLightColor() << m_directionalLight->GetColor().ToVector4();
-	//m_material->GetLightDirection() << m_directionalLight->GetDirection();
+	LightsData ld;
+	ld.dirLights[0] = m_directionalLight->GetData();
+	ld.dirLightsCount = 1;
+	m_material->GetLightsData() << ld;
 
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 	m_material->GetNormalMap() << m_textures[Texture::NormalMap].Get();

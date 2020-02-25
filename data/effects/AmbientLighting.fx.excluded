@@ -4,12 +4,12 @@
 
 cbuffer CBufferPerFrame
 {
-    float4 ambientColor : AMBIENT;
+    float4 AmbientColor : AMBIENT;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION;
+    float4x4 WVP : WORLDVIEWPROJECTION;
 }
 
 RasterizerState DisableCulling
@@ -53,7 +53,7 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
 
-    OUT.position = mul(IN.objectPosition, wvp);
+    OUT.position = mul(IN.objectPosition, WVP);
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
 
     return OUT;
@@ -65,7 +65,7 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     float4 OUT = (float4)0;
 
     OUT = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
-    OUT.rgb *= ambientColor.rgb * ambientColor.a; // Color (.rgb) * Intensity (.a)
+    OUT.rgb *= AmbientColor.rgb * AmbientColor.a; // Color (.rgb) * Intensity (.a)
 
     return OUT;
 }

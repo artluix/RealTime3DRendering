@@ -8,7 +8,7 @@ using namespace library;
 
 DepthMapMaterial::DepthMapMaterial(Effect& effect)
 	: Material(effect, "create_depth_map")
-	, m_worldLightViewProjection(effect.GetVariable("worldLightViewProjection"))
+	, m_worldLightViewProjection(effect.GetVariable("WorldLightViewProjection"))
 {}
 
 DepthMapMaterial::~DepthMapMaterial() = default;

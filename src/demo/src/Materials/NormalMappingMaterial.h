@@ -1,9 +1,9 @@
 #pragma once
-#include "Materials/DirectionalLightMaterial.h"
+#include "Materials/LightMaterial.h"
 
-class NormalMappingMaterial : public DirectionalLightMaterial
+class NormalMappingMaterial : public LightMaterial
 {
-	RTTI_CLASS(NormalMappingMaterial, DirectionalLightMaterial)
+	RTTI_CLASS(NormalMappingMaterial, LightMaterial)
 
 public:
 	using Vertex = library::VertexPositionTextureNormalTangent;

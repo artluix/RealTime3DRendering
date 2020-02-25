@@ -2,20 +2,20 @@
 
 cbuffer CBufferPerFrame
 {
-    float tessellationEdgeFactors[3];
-    float tessellationInsideFactor;
+    float TessellationEdgeFactors[3];
+    float TessellationInsideFactor;
 
-    float maxTessFactor = 64.f;
-    float minTessDistance = 2.f;
-    float maxTessDistance = 20.f;
+    float MaxTessFactor = 64.f;
+    float MinTessDistance = 2.f;
+    float MaxTessDistance = 20.f;
 
-    float3 cameraPosition : CAMERAPOSITION;
+    float3 CameraPosition : CAMERAPOSITION;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION;
-    float4x4 world : WORLD;
+    float4x4 WVP : WORLDVIEWPROJECTION;
+    float4x4 World : WORLD;
 }
 
 Texture2D ColorTexture;
@@ -95,10 +95,10 @@ HS_CONSTANT_OUTPUT constant_hull_shader(InputPatch<VS_OUTPUT, 3> patch)
     [unroll]
     for (int i = 0; i < 3; i++)
     {
-        OUT.edgeFactors[i] = tessellationEdgeFactors[i];
+        OUT.edgeFactors[i] = TessellationEdgeFactors[i];
     }
 
-    OUT.insideFactor = tessellationInsideFactor;
+    OUT.insideFactor = TessellationInsideFactor;
 
     return OUT;
 }
@@ -126,13 +126,13 @@ HS_CONSTANT_OUTPUT distance_constant_hull_shader(InputPatch<VS_OUTPUT, 3> patch)
 
     // Calculate the center of the patch
     float3 objectCenter = (patch[0].objectPosition.xyz + patch[1].objectPosition.xyz + patch[2].objectPosition.xyz) / 3.f;
-    float3 worldCenter = mul(float4(objectCenter, 1.f), world).xyz;
+    float3 worldCenter = mul(float4(objectCenter, 1.f), World).xyz;
 
     // Calculate uniform tessellation factor based on distance from the camera
     float tessFactor = max(
         min(
-            maxTessFactor,
-            (maxTessDistance - distance(worldCenter, cameraPosition)) / (maxTessDistance - minTessDistance) * maxTessFactor
+            MaxTessFactor,
+            (MaxTessDistance - distance(worldCenter, CameraPosition)) / (MaxTessDistance - MinTessDistance) * MaxTessFactor
         ),
         1.f
     );
@@ -168,7 +168,7 @@ DS_OUTPUT domain_shader(HS_CONSTANT_OUTPUT IN, float3 uvw : SV_DomainLocation, c
         uvw.y * patch[1].textureCoordinate +
         uvw.z * patch[2].textureCoordinate;
 
-    OUT.position = mul(float4(objectPosition, 1.f), wvp);
+    OUT.position = mul(float4(objectPosition, 1.f), WVP);
     OUT.textureCoordinate = textureCoordinate;
 
     return OUT;

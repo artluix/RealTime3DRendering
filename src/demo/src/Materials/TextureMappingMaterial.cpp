@@ -7,7 +7,7 @@ using namespace library;
 
 TextureMappingMaterial::TextureMappingMaterial(Effect& effect)
 	: Material(effect, "main11")
-	, m_wvp(effect.GetVariable("wvp"))
+	, m_wvp(effect.GetVariable("WVP"))
 	, m_colorTexture(effect.GetVariable("ColorTexture"))
 {}
 

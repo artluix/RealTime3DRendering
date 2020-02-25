@@ -1,18 +1,19 @@
 #include "include/Common.fxh"
+#include "include/Lights.fxh"
 
 /************* Resources *************/
 
 cbuffer CBufferPerFrame
 {
-    float4 ambientColor = { 1.0f, 1.0f, 1.0f, 0.0f };
-    float3 cameraPosition : CAMERAPOSITION;
+    float4 AmbientColor = { 1.0f, 1.0f, 1.0f, 0.0f };
+    float3 CameraPosition : CAMERAPOSITION;
 
-    POINT_LIGHT_DATA lightData;
+    POINT_LIGHT_DATA LightData;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 viewProjection : WORLDVIEWPROJECTION;
+    float4x4 ViewProjection : WORLDVIEWPROJECTION;
 }
 
 Texture2D ColorTexture;
@@ -31,7 +32,7 @@ struct VS_INPUT
     float4 objectPosition : POSITION;
     float2 textureCoordinate : TEXCOORD;
     float3 normal : NORMAL;
-    row_major float4x4 world : WORLD;
+    row_major float4x4 World : WORLD;
     float4 specularColor : SPECULAR;
     float specularPower : SPECULARPOWER;
 };
@@ -41,7 +42,7 @@ struct VS_OUTPUT
     float4 position: SV_Position;
     float3 normal : NORMAL;
     float2 textureCoordinate : TEXCOORD0;
-    float3 worldPosition : WORLD;
+    float3 worldPosition : TEXCOORD1;
     float attenuation : TEXCOORD2;
     float4 specularColor : SPECULAR;
     float specularPower : SPECULARPOWER;
@@ -53,13 +54,13 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
 
-    OUT.worldPosition = mul(IN.objectPosition, IN.world).xyz;
-    OUT.position = mul(float4(OUT.worldPosition, 1.f), viewProjection);
-    OUT.normal = normalize(mul(float4(IN.normal, 0.f), IN.world).xyz);
+    OUT.worldPosition = mul(IN.objectPosition, IN.World).xyz;
+    OUT.position = mul(float4(OUT.worldPosition, 1.f), ViewProjection);
+    OUT.normal = normalize(mul(float4(IN.normal, 0.f), IN.World).xyz);
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate); // ?
 
-    float3 lightDirection = lightData.position - OUT.worldPosition;
-    OUT.attenuation = saturate(1.0f - (length(lightDirection) / lightData.radius));
+    float3 lightDirection = LightData.position - OUT.worldPosition;
+    OUT.attenuation = saturate(1.0f - (length(lightDirection) / LightData.radius));
     OUT.specularColor = IN.specularColor;
     OUT.specularPower = IN.specularPower;
 
@@ -72,8 +73,8 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 OUT = (float4)0;
 
-    float3 lightDirection = normalize(lightData.position - IN.worldPosition);
-    float3 viewDirection = normalize(cameraPosition - IN.worldPosition);
+    float3 lightDirection = normalize(LightData.position - IN.worldPosition);
+    float3 viewDirection = normalize(CameraPosition - IN.worldPosition);
 
     float3 normal = normalize(IN.normal);
     float n_dot_l = dot(normal, lightDirection);
@@ -83,8 +84,8 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
     float4 lightCoefficients = lit(n_dot_l, n_dot_h, IN.specularPower);
 
-    float3 ambient = get_color_contribution(ambientColor, color.rgb);
-    float3 diffuse = get_color_contribution(lightData.color, lightCoefficients.y * color.rgb) * IN.attenuation;
+    float3 ambient = get_color_contribution(AmbientColor, color.rgb);
+    float3 diffuse = get_color_contribution(LightData.color, lightCoefficients.y * color.rgb) * IN.attenuation;
     float3 specular = get_color_contribution(IN.specularColor, min(lightCoefficients.z, color.w)) * IN.attenuation;
 
     OUT.rgb = ambient + diffuse + specular;

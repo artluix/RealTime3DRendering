@@ -11,9 +11,9 @@ TessellationMaterial::TessellationMaterial(
 )
 	: Material(effect, defaultTechniqueName)
 
-	, m_wvp(effect.GetVariable("wvp"))
-	, m_tessellationEdgeFactors(effect.GetVariable("tessellationEdgeFactors"))
-	, m_tessellationInsideFactors(effect.GetVariable("tessellationInsideFactor"))
+	, m_wvp(effect.GetVariable("WVP"))
+	, m_tessellationEdgeFactors(effect.GetVariable("TessellationEdgeFactors"))
+	, m_tessellationInsideFactors(effect.GetVariable("TessellationInsideFactor"))
 {}
 
 //-------------------------------------------------------------------------

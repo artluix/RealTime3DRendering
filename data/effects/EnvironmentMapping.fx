@@ -1,19 +1,20 @@
 #include "include/Common.fxh"
+#include "include/Lights.fxh"
 
 // Resources
 cbuffer CBufferPerFrame
 {
-    float4 ambientColor : AMBIENT;
-    float3 cameraPosition : CAMERAPOSITION;
-    float4 envColor : COLOR;
+    float4 AmbientColor : AMBIENT;
+    float3 CameraPosition : CAMERAPOSITION;
+    float4 EnvColor : COLOR;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION;
-    float4x4 world : WORLDVIEWPROJECTION;
+    float4x4 WVP : WORLDVIEWPROJECTION;
+    float4x4 World : WORLDVIEWPROJECTION;
 
-    float reflectionAmount;
+    float ReflectionAmount;
 }
 
 Texture2D ColorTexture;
@@ -48,12 +49,12 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
 
-    OUT.position = mul(IN.objectPosition, wvp);
+    OUT.position = mul(IN.objectPosition, WVP);
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
 
-    float3 worldPosition = mul(IN.objectPosition, world).xyz;
-    float3 incident = normalize(worldPosition - cameraPosition);
-    float3 normal = normalize(mul(float4(IN.normal, 0), world).xyz);
+    float3 worldPosition = mul(IN.objectPosition, World).xyz;
+    float3 incident = normalize(worldPosition - CameraPosition);
+    float3 normal = normalize(mul(float4(IN.normal, 0), World).xyz);
 
     // Reflection Vector for cube map: R = I - 2 * N * (I, N)
     OUT.reflectionVector = reflect(incident, normal);
@@ -67,11 +68,11 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     float4 OUT = (float4)0;
 
     float4 color = ColorTexture.Sample(TrilinearSampler, IN.textureCoordinate);
-    float3 ambient = get_color_contribution(ambientColor, color.rgb);
+    float3 ambient = get_color_contribution(AmbientColor, color.rgb);
     float3 environment = EnvironmentMap.Sample(TrilinearSampler, IN.reflectionVector).rgb;
-    float3 reflection = get_color_contribution(envColor, environment);
+    float3 reflection = get_color_contribution(EnvColor, environment);
 
-    OUT.rgb = lerp(ambient, reflection, reflectionAmount);
+    OUT.rgb = lerp(ambient, reflection, ReflectionAmount);
 
     return OUT;
 }

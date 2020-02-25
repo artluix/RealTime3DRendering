@@ -9,7 +9,7 @@ namespace library
 struct Vertex
 {};
 
-struct VertexPosition : public Vertex
+struct VertexPosition : Vertex
 {
 	math::Vector4 position;
 
@@ -18,7 +18,7 @@ struct VertexPosition : public Vertex
 
 //-------------------------------------------------------------------------
 
-struct VertexPositionColor : public VertexPosition
+struct VertexPositionColor : VertexPosition
 {
 	math::Color color;
 
@@ -30,7 +30,7 @@ struct VertexPositionColor : public VertexPosition
 
 //-------------------------------------------------------------------------
 
-struct VertexPositionTexture : public VertexPosition
+struct VertexPositionTexture : VertexPosition
 {
 	math::Vector2 textureCoordinates;
 
@@ -46,7 +46,7 @@ using VertexPositionSize = VertexPositionTexture;
 
 //-------------------------------------------------------------------------
 
-struct VertexPositionNormal : public VertexPosition
+struct VertexPositionNormal : VertexPosition
 {
 	math::Vector3 normal;
 
@@ -58,7 +58,7 @@ struct VertexPositionNormal : public VertexPosition
 
 //-------------------------------------------------------------------------
 
-struct VertexPositionTextureNormal : public VertexPositionTexture
+struct VertexPositionTextureNormal : VertexPositionTexture
 {
 	math::Vector3 normal;
 
@@ -74,7 +74,7 @@ struct VertexPositionTextureNormal : public VertexPositionTexture
 
 //-------------------------------------------------------------------------
 
-struct VertexPositionTextureNormalTangent : public VertexPositionTextureNormal
+struct VertexPositionTextureNormalTangent : VertexPositionTextureNormal
 {
 	math::Vector3 tangent;
 
@@ -91,7 +91,7 @@ struct VertexPositionTextureNormalTangent : public VertexPositionTextureNormal
 
 //-------------------------------------------------------------------------
 
-struct VertexPositionTextureNormalSkinned : public VertexPositionTextureNormal
+struct VertexPositionTextureNormalSkinned : VertexPositionTextureNormal
 {
 	math::Vector4u boneIndices;
 	math::Vector4 boneWeights;

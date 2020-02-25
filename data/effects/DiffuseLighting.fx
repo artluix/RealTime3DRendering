@@ -1,17 +1,18 @@
 #include "include/Common.fxh"
+#include "include/Lights.fxh"
 
 // Resources
 cbuffer CBufferPerFrame
 {
-    float4 ambientColor : AMBIENT;
+    float4 AmbientColor : AMBIENT;
 
-    DIRECTIONAL_LIGHT_DATA lightData;
+    DIRECTIONAL_LIGHT_DATA LightData;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION;
-    float4x4 world : WORLD;
+    float4x4 WVP : WORLDVIEWPROJECTION;
+    float4x4 World : WORLD;
 }
 
 RasterizerState DisableCulling
@@ -48,10 +49,10 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
 
-    OUT.position = mul(IN.objectPosition, wvp);
+    OUT.position = mul(IN.objectPosition, WVP);
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
-    OUT.normal = normalize(mul(float4(IN.normal, 0), world).xyz);
-    OUT.lightDirection = normalize(-lightData.direction);
+    OUT.normal = normalize(mul(float4(IN.normal, 0), World).xyz);
+    OUT.lightDirection = normalize(-LightData.direction);
 
     return OUT;
 }
@@ -66,13 +67,13 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     float n_dot_l = dot(lightDirection, normal);
 
     float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
-    float3 ambient = ambientColor.rgb * ambientColor.a * color.rgb;
+    float3 ambient = AmbientColor.rgb * AmbientColor.a * color.rgb;
 
     float3 diffuse = (float3)0;
 
     if (n_dot_l > 0)
     {
-        diffuse = lightData.color.rgb * lightData.color.a * n_dot_l * color.rgb;
+        diffuse = LightData.color.rgb * LightData.color.a * n_dot_l * color.rgb;
     }
 
     OUT.rgb = ambient + diffuse;

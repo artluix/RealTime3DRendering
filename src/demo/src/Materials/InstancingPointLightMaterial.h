@@ -12,9 +12,7 @@ public:
 	~InstancingPointLightMaterial();
 
 	library::EffectVariable& GetAmbientColor() { return m_ambientColor; }
-	library::EffectVariable& GetLightColor() { return m_lightColor; }
-	library::EffectVariable& GetLightPosition() { return m_lightPosition; }
-	library::EffectVariable& GetLightRadius() { return m_lightRadius; }
+	library::EffectVariable& GetLightData() { return m_lightData; }
 
 	library::EffectVariable& GetCameraPosition() { return m_cameraPosition; }
 	library::EffectVariable& GetViewProjection() { return m_viewProjection; }
@@ -31,9 +29,7 @@ protected:
 
 private:
 	library::EffectVariable& m_ambientColor;
-	library::EffectVariable& m_lightColor;
-	library::EffectVariable& m_lightPosition;
-	library::EffectVariable& m_lightRadius;
+	library::EffectVariable& m_lightData;
 
 	library::EffectVariable& m_cameraPosition;
 	library::EffectVariable& m_viewProjection;

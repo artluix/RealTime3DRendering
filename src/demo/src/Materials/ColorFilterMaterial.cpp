@@ -4,7 +4,7 @@
 
 ColorFilterMaterial::ColorFilterMaterial(library::Effect& effect)
 	: PostProcessingMaterial(effect)
-	, m_colorFilter(effect.GetVariable("colorFilter"))
+	, m_colorFilter(effect.GetVariable("ColorFilter"))
 {}
 
 ColorFilterMaterial::~ColorFilterMaterial() = default;

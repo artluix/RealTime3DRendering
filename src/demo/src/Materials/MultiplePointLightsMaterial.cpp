@@ -8,8 +8,9 @@ using namespace library;
 MultiplePointLightsMaterial::MultiplePointLightsMaterial(Effect& effect)
 	: LightMaterial(effect, "forward")
 
-	, m_lightsData(effect.GetVariable("lightsData"))
-	, m_lightsCount(effect.GetVariable("lightsCount"))
+	, m_lightsData(effect.GetVariable("LightsData"))
+	, m_lightData(effect.GetVariable("LightData"))
+	, m_lightsCount(effect.GetVariable("LightsCount"))
 
 	, m_colorBufferTexture(effect.GetVariable("ColorBufferTexture"))
 	, m_normalBufferTexture(effect.GetVariable("NormalBufferTexture"))

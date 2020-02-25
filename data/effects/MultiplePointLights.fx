@@ -1,4 +1,5 @@
 #include "include/Common.fxh"
+#include "include/Lights.fxh"
 
 /************* Resources *************/
 
@@ -6,20 +7,20 @@
 
 cbuffer CBufferPerFrame
 {
-    float4 ambientColor : AMBIENT;
-    float3 cameraPosition : CAMERAPOSITION;
+    float4 AmbientColor : AMBIENT;
+    float3 CameraPosition : CAMERAPOSITION;
 
-    POINT_LIGHT_DATA lightsData[MAX_LIGHTS_COUNT];
-    uint lightsCount;
+    POINT_LIGHT_DATA LightsData[MAX_LIGHTS_COUNT];
+    uint LightsCount;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION;
-    float4x4 world : WORLD;
+    float4x4 WVP : WORLDVIEWPROJECTION;
+    float4x4 World : WORLD;
 
-    float4 specularColor : SPECULAR;
-    float specularPower : SPECULARPOWER = 25.0f;
+    float4 SpecularColor : SPECULAR;
+    float SpecularPower : SPECULARPOWER = 25.0f;
 }
 
 RasterizerState DisableCulling
@@ -95,23 +96,23 @@ float4 pixel_shader_common(float4 color, float3 normal, float3 worldPosition)
 {
     float4 outColor = (float4)0;
 
-    float3 viewDirection = normalize(cameraPosition - worldPosition);
-    float3 ambient = get_color_contribution(ambientColor, color.rgb);
+    float3 viewDirection = normalize(CameraPosition - worldPosition);
+    float3 ambient = get_color_contribution(AmbientColor, color.rgb);
 
     LIGHT_CONTRIBUTION_DATA lightContributionData;
     lightContributionData.color = color;
     lightContributionData.normal = normal;
     lightContributionData.viewDirection = viewDirection;
-    lightContributionData.specularColor = specularColor;
-    lightContributionData.specularPower = specularPower;
+    lightContributionData.specularColor = SpecularColor;
+    lightContributionData.specularPower = SpecularPower;
 
     float3 totalLightContribution = (float3)0;
 
     [loop]
-    for (uint i = 0; i < lightsCount; i++)
+    for (uint i = 0; i < LightsCount; i++)
     {
-        lightContributionData.lightDirection = get_light_data(lightsData[i].position, worldPosition, lightsData[i].radius);
-        lightContributionData.lightColor = lightsData[i].color;
+        lightContributionData.lightData = get_light_data(LightsData[i].position, worldPosition, LightsData[i].radius);
+        lightContributionData.lightColor = LightsData[i].color;
         totalLightContribution += get_light_contribution(lightContributionData);
     }
 
@@ -127,10 +128,10 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
 
-    OUT.position = mul(IN.objectPosition, wvp);
-    OUT.worldPosition = mul(IN.objectPosition, world).xyz;
+    OUT.position = mul(IN.objectPosition, WVP);
+    OUT.worldPosition = mul(IN.objectPosition, World).xyz;
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
-    OUT.normal = normalize(mul(float4(IN.normal, 0), world).xyz);
+    OUT.normal = normalize(mul(float4(IN.normal, 0), World).xyz);
 
     return OUT;
 }

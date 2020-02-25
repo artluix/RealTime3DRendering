@@ -1,23 +1,24 @@
 #include "include/Common.fxh"
+#include "include/Lights.fxh"
 
 // Resources
 cbuffer CBufferPerFrame
 {
-    float4 ambientColor : AMBIENT;
-    float3 cameraPosition : CAMERAPOSITION;
+    float4 AmbientColor : AMBIENT;
+    float3 CameraPosition : CAMERAPOSITION;
 
-    POINT_LIGHT_DATA lightData;
+    POINT_LIGHT_DATA LightData;
 
-    float displacementScale;
+    float DisplacementScale;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 wvp : WORLDVIEWPROJECTION;
-    float4x4 world : WORLD;
+    float4x4 WVP : WORLDVIEWPROJECTION;
+    float4x4 World : WORLD;
 
-    float4 specularColor : SPECULAR;
-    float specularPower : SPECULARPOWER;
+    float4 SpecularColor : SPECULAR;
+    float SpecularPower : SPECULARPOWER;
 }
 
 Texture2D ColorTexture;
@@ -58,20 +59,20 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 
     float2 textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
 
-    if (displacementScale > 0.0f)
+    if (DisplacementScale > 0.0f)
     {
         float displacement = DisplacementMap.SampleLevel(TrilinearSampler, textureCoordinate, 0).x;
-        IN.objectPosition.xyz += IN.normal * displacementScale * (displacement - 1);
+        IN.objectPosition.xyz += IN.normal * DisplacementScale * (displacement - 1);
     }
 
-    OUT.position = mul(IN.objectPosition, wvp);
+    OUT.position = mul(IN.objectPosition, WVP);
     OUT.textureCoordinate = textureCoordinate;
-    OUT.normal = normalize(mul(float4(IN.normal, 0), world).xyz);
+    OUT.normal = normalize(mul(float4(IN.normal, 0), World).xyz);
 
-    float3 worldPosition = mul(IN.objectPosition, world).xyz;
-    OUT.viewDirection = normalize(cameraPosition - worldPosition);
+    float3 worldPosition = mul(IN.objectPosition, World).xyz;
+    OUT.viewDirection = normalize(CameraPosition - worldPosition);
 
-    OUT.lightDirection = get_light_data(lightData.position, worldPosition, lightData.radius);
+    OUT.lightDirection = get_light_data(LightData.position, LightData.radius, worldPosition);
 
     return OUT;
 }
@@ -84,16 +85,16 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     float3 normal = normalize(IN.normal);
     float3 viewDirection = normalize(IN.viewDirection);
     float4 color = ColorTexture.Sample(TrilinearSampler, IN.textureCoordinate);
-    float3 ambient = get_color_contribution(ambientColor, color.rgb);
+    float3 ambient = get_color_contribution(AmbientColor, color.rgb);
 
     LIGHT_CONTRIBUTION_DATA lightContributionData;
     lightContributionData.color = color;
     lightContributionData.normal = normal;
     lightContributionData.viewDirection = viewDirection;
-    lightContributionData.lightDirection = IN.lightDirection;
-    lightContributionData.specularColor = specularColor;
-    lightContributionData.specularPower = specularPower;
-    lightContributionData.lightColor = lightData.color;
+    lightContributionData.lightData = IN.lightDirection;
+    lightContributionData.specularColor = SpecularColor;
+    lightContributionData.specularPower = SpecularPower;
+    lightContributionData.lightColor = LightData.color;
     float3 light_contribution = get_light_contribution(lightContributionData);
 
     OUT.rgb = ambient + light_contribution;

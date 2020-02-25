@@ -1,9 +1,9 @@
 #pragma once
-#include "Materials/PointLightMaterial.h"
+#include "Materials/LightMaterial.h"
 
-class TransparencyMappingMaterial : public PointLightMaterial
+class TransparencyMappingMaterial : public LightMaterial
 {
-	RTTI_CLASS(TransparencyMappingMaterial, PointLightMaterial)
+	RTTI_CLASS(TransparencyMappingMaterial, LightMaterial)
 
 public:
 	explicit TransparencyMappingMaterial(library::Effect& effect);

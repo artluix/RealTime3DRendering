@@ -8,13 +8,13 @@ using namespace library;
 EnvironmentMappingMaterial::EnvironmentMappingMaterial(Effect& effect)
 	: Material(effect, "main11")
 
-	, m_ambientColor(effect.GetVariable("ambientColor"))
-	, m_environmentColor(effect.GetVariable("envColor"))
-	, m_cameraPosition(effect.GetVariable("cameraPosition"))
+	, m_ambientColor(effect.GetVariable("AmbientColor"))
+	, m_environmentColor(effect.GetVariable("EnvColor"))
+	, m_cameraPosition(effect.GetVariable("CameraPosition"))
 
-	, m_wvp(effect.GetVariable("wvp"))
-	, m_world(effect.GetVariable("world"))
-	, m_reflectionAmount(effect.GetVariable("reflectionAmount"))
+	, m_wvp(effect.GetVariable("WVP"))
+	, m_world(effect.GetVariable("World"))
+	, m_reflectionAmount(effect.GetVariable("ReflectionAmount"))
 
 	, m_colorTexture(effect.GetVariable("ColorTexture"))
 	, m_environmentMap(effect.GetVariable("EnvironmentMap"))

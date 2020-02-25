@@ -2,7 +2,7 @@
 
 cbuffer CBufferPerObject
 {
-    float4x4 colorFilter = {
+    float4x4 ColorFilter = {
         1, 0, 0, 0,
         0, 1, 0, 0,
         0, 0, 1, 0,
@@ -78,7 +78,7 @@ float4 sepia_pixel_shader(VS_OUTPUT IN) : SV_Target
 float4 generic_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 color = SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate);
-    return float4(mul(colorFilter, color).rgb, color.a);
+    return float4(mul(ColorFilter, color).rgb, color.a);
 }
 
 /************* Techniques *************/

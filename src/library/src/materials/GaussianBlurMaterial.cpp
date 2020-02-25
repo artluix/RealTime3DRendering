@@ -7,8 +7,8 @@ namespace library
 {
 GaussianBlurMaterial::GaussianBlurMaterial(Effect& effect)
 	: PostProcessingMaterial(effect)
-	, m_sampleOffsets(effect.GetVariable("sampleOffsets"))
-	, m_sampleWeights(effect.GetVariable("sampleWeights"))
+	, m_sampleOffsets(effect.GetVariable("SampleOffsets"))
+	, m_sampleWeights(effect.GetVariable("SampleWeights"))
 {}
 
 GaussianBlurMaterial::~GaussianBlurMaterial() = default;
