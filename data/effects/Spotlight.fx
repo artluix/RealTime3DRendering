@@ -4,19 +4,15 @@
 // Resources
 cbuffer CBufferPerFrame
 {
-    float4 AmbientColor : AMBIENT;
-    float3 CameraPosition : CAMERAPOSITION;
+    float3 CameraPosition;
 
-    SPOTLIGHT_DATA LightData;
+    SPOTLIGHT_DATA LightData; // TODO: remove
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 WVP : WORLDVIEWPROJECTION;
-    float4x4 World : WORLD;
-
-    float4 SpecularColor : SPECULAR;
-    float SpecularPower : SPECULARPOWER;
+    float4x4 WVP;
+    float4x4 World;
 }
 
 RasterizerState DisableCulling
@@ -68,19 +64,16 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 OUT = (float4)0;
 
-    float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
     float3 viewDirection = normalize(IN.viewDirection);
+    float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
 
     LIGHTS_COMMON_PARAMS lightsCommonParams;
     lightsCommonParams.normal = IN.normal;
     lightsCommonParams.viewDirection = viewDirection;
     lightsCommonParams.worldPosition = IN.worldPosition;
-    lightsCommonParams.specularPower = SpecularPower;
-    lightsCommonParams.specularColor = SpecularColor;
-    lightsCommonParams.ambientColor = AmbientColor;
     lightsCommonParams.color = color;
 
-    OUT.rgb = get_lights_contribution(lightsCommonParams);
+    OUT.rgb = get_light_contribution(lightsCommonParams);
     OUT.a = 1.0f;
 
     return OUT;

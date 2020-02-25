@@ -2,7 +2,7 @@
 
 cbuffer CBufferPerFrame
 {
-    float3 CameraPosition : CAMERAPOSITION;
+    float3 CameraPosition;
     float3 CameraUp;
 }
 

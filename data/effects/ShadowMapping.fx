@@ -8,21 +8,17 @@ static const float DepthBias = 0.005f;
 
 cbuffer CBufferPerFrame
 {
-    float4 AmbientColor = { 1.0f, 1.0f, 1.0f, 0.0f };
     float3 CameraPosition;
 
-    POINT_LIGHT_DATA LightData;
-
     float2 ShadowMapSize = { 1024.f, 1024.f };
+
+    POINT_LIGHT_DATA LightData; // TODO: remove
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 WVP : WORLDVIEWPROJECTION;
-    float4x4 World : WORLD;
-
-    float4 SpecularColor : SPECULAR = { 1.0f, 1.0f, 1.0f, 1.0f };
-    float SpecularPower : SPECULARPOWER = 25.0f;
+    float4x4 WVP;
+    float4x4 World;
 
     float4x4 ProjectiveTextureMatrix;
 }
@@ -74,15 +70,8 @@ struct VS_OUTPUT
     float3 normal : NORMAL;
     float2 textureCoordinate : TEXCOORD0;
     float3 worldPosition : TEXCOORD1;
-    float attenuation : TEXCOORD2;
+    float3 viewDirection : TEXCOORD2;
     float4 shadowTextureCoordinate : TEXCOORD3;
-};
-
-struct LIGHT_OUTPUT
-{
-    float3 ambient;
-    float3 diffuse;
-    float3 specular;
 };
 
 /************* Vertex Shader *************/
@@ -92,13 +81,10 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
     VS_OUTPUT OUT = (VS_OUTPUT)0;
 
     OUT.position = mul(IN.objectPosition, WVP);
-    OUT.worldPosition = mul(IN.objectPosition, World).xyz;
-    OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
     OUT.normal = normalize(mul(float4(IN.normal, 0), World).xyz);
-
-    float3 lightDirection = LightData.position - OUT.worldPosition;
-    OUT.attenuation = saturate(1.0f - (length(lightDirection) / LightData.radius));
-
+    OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
+    OUT.worldPosition = mul(IN.objectPosition, World).xyz;
+    OUT.viewDirection = normalize(CameraPosition - OUT.worldPosition);
     OUT.shadowTextureCoordinate = mul(IN.objectPosition, ProjectiveTextureMatrix);
 
     return OUT;
@@ -106,33 +92,25 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 
 /************* Pixel Shader *************/
 
-LIGHT_OUTPUT compute_light(VS_OUTPUT IN)
+float3 compute_specular_diffuse(VS_OUTPUT IN)
 {
-    LIGHT_OUTPUT OUT = (LIGHT_OUTPUT)0;
-
-    float3 lightDirection = normalize(LightData.position - IN.worldPosition);
-    float3 viewDirection = normalize(CameraPosition - IN.worldPosition);
-
-    float3 normal = normalize(IN.normal);
-    float n_dot_l = dot(normal, lightDirection);
-    float3 halfVector = normalize(lightDirection + viewDirection);
-    float n_dot_h = dot(normal, halfVector);
-
+    float3 viewDirection = normalize(IN.viewDirection);
     float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
-    float4 lightCoefficients = lit(n_dot_l, n_dot_h, SpecularPower);
 
-    OUT.ambient = get_color_contribution(AmbientColor, color.rgb);
-    OUT.diffuse = get_color_contribution(LightData.color, lightCoefficients.y * color.rgb) * IN.attenuation;
-    OUT.specular = get_color_contribution(SpecularColor, min(lightCoefficients.z, color.w)) * IN.attenuation;
+    LIGHTS_COMMON_PARAMS lightsCommonParams;
+    lightsCommonParams.normal = normalize(IN.normal);
+    lightsCommonParams.viewDirection = viewDirection;
+    lightsCommonParams.worldPosition = IN.worldPosition;
+    lightsCommonParams.color = color;
 
-    return OUT;
+    return get_specular_diffuse(lightsCommonParams);
 }
 
 float4 pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 OUT = (float4)0;
 
-    LIGHT_OUTPUT light = compute_light(IN);
+    float3 specularDiffuse = compute_specular_diffuse(IN);
 
     if (IN.shadowTextureCoordinate.w >= 0.f)
     {
@@ -143,11 +121,10 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
         // Shadow applied in a boolean fashion -- either shadow or not
         float3 shadow = (pixelDepth > sampledDepth ? BlackColor : WhiteColor.rgb);
 
-        light.diffuse *= shadow;
-        light.specular *= shadow;
+        specularDiffuse *= shadow;
     }
 
-    OUT.rgb = light.ambient + light.diffuse + light.specular;
+    OUT.rgb = get_ambient(color.rgb) + specularDiffuse;
     OUT.a = 1.0f;
 
     return OUT;
@@ -158,7 +135,7 @@ float4 manual_pcf_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 OUT = (float4)0;
 
-    LIGHT_OUTPUT light = compute_light(IN);
+    float3 specularDiffuse = compute_specular_diffuse(IN);
 
     if (IN.shadowTextureCoordinate.w >= 0.f)
     {
@@ -188,11 +165,10 @@ float4 manual_pcf_pixel_shader(VS_OUTPUT IN) : SV_Target
             lerpValues.y
         );
 
-        light.diffuse *= shadow;
-        light.specular *= shadow;
+        specularDiffuse *= shadow;
     }
 
-    OUT.rgb = light.ambient + light.diffuse + light.specular;
+    OUT.rgb = get_ambient(color.rgb) + specularDiffuse;
     OUT.a = 1.0f;
 
     return OUT;
@@ -203,7 +179,7 @@ float4 pcf_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 OUT = (float4)0;
 
-    LIGHT_OUTPUT light = compute_light(IN);
+    float3 specularDiffuse = compute_specular_diffuse(IN);
 
     if (IN.shadowTextureCoordinate.w >= 0.f)
     {
@@ -211,11 +187,10 @@ float4 pcf_pixel_shader(VS_OUTPUT IN) : SV_Target
         float pixelDepth = IN.shadowTextureCoordinate.z;
         float shadow = ShadowMapTexture.SampleCmpLevelZero(PcfShadowMapSampler, IN.shadowTextureCoordinate.xy, pixelDepth).x;
 
-        light.diffuse *= shadow;
-        light.specular *= shadow;
+        specularDiffuse *= shadow;
     }
 
-    OUT.rgb = light.ambient + light.diffuse + light.specular;
+    OUT.rgb = get_ambient(color.rgb) + specularDiffuse;
     OUT.a = 1.0f;
 
     return OUT;

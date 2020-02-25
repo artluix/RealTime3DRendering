@@ -9,13 +9,13 @@ cbuffer CBufferPerFrame
     float MinTessDistance = 2.f;
     float MaxTessDistance = 20.f;
 
-    float3 CameraPosition : CAMERAPOSITION;
+    float3 CameraPosition;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 WVP : WORLDVIEWPROJECTION;
-    float4x4 World : WORLD;
+    float4x4 WVP;
+    float4x4 World;
 }
 
 Texture2D ColorTexture;
@@ -157,14 +157,14 @@ DS_OUTPUT domain_shader(HS_CONSTANT_OUTPUT IN, float3 uvw : SV_DomainLocation, c
     DS_OUTPUT OUT = (DS_OUTPUT)0;
 
     float3 objectPosition =
-        uvw.x * patch[0].objectPosition.xyz + 
+        uvw.x * patch[0].objectPosition.xyz +
         uvw.y * patch[1].objectPosition.xyz +
         uvw.z * patch[2].objectPosition.xyz;
 
     objectPosition = normalize(objectPosition); // for icosahedron demo
 
     float2 textureCoordinate =
-        uvw.x * patch[0].textureCoordinate + 
+        uvw.x * patch[0].textureCoordinate +
         uvw.y * patch[1].textureCoordinate +
         uvw.z * patch[2].textureCoordinate;
 

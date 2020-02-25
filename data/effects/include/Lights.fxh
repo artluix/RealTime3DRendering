@@ -38,32 +38,6 @@ struct SPOTLIGHT_DATA // 64 bytes
     float3 _padding;
 };
 
-struct LIGHTS_COMMON_PARAMS
-{
-    float3 normal;
-    float3 viewDirection;
-    float3 worldPosition;
-
-    float specularPower;
-    float4 specularColor;
-
-    float4 ambientColor;
-    float4 color;
-};
-
-struct LIGHT_CONTRIBUTION_DATA
-{
-    float4 color;
-    float3 normal;
-    float3 viewDirection;
-
-    float specularPower;
-    float4 specularColor;
-
-    float4 lightColor;
-    float4 lightData; // Light Direction(.xyz) + Attenuation(.w)
-};
-
 struct LIGHTS_DATA
 {
     DIRECTIONAL_LIGHT_DATA dirLights[MAX_LIGHTS_COUNT];
@@ -77,13 +51,38 @@ struct LIGHTS_DATA
     uint _padding;
 };
 
+struct LIGHT_PARAMS
+{
+    float4 color;
+    float3 normal;
+    float3 viewDirection;
+
+    float4 lightColor;
+    float4 lightData; // Light Direction(.xyz) + Attenuation(.w)
+};
+
+struct LIGHTS_COMMON_PARAMS
+{
+    float4 color;
+    float3 normal;
+    float3 viewDirection;
+    float3 worldPosition;
+};
+
 //-------------------------------------------------------------------------
 // Constant buffers
 //-------------------------------------------------------------------------
 
-cbuffer CBufferLights // MAX_LIGHTS_COUNT * (128) + 12 bytes
+cbuffer CBufferLightsPerFrame // MAX_LIGHTS_COUNT * (128) + 12 bytes
 {
     LIGHTS_DATA LightsData;
+}
+
+cbuffer CBufferLightsPerObject
+{
+    float4 AmbientColor = { 1.0f, 1.0f, 1.0f, 0.0f };
+    float4 SpecularColor = { 1.0f, 1.0f, 1.0f, 1.0f };
+    float SpecularPower = 25.0f;
 }
 
 //-------------------------------------------------------------------------
@@ -92,13 +91,11 @@ cbuffer CBufferLights // MAX_LIGHTS_COUNT * (128) + 12 bytes
 
 float3 get_color_contribution(float4 light, float3 color)
 {
-    // Color (.rgb) * Intensity (.a)
     return light.rgb * light.a * color;
 }
 
 float3 get_color_contribution(float4 light, float color)
 {
-    // Color * Intensity (.a)
     return light.rgb * light.a * color;
 }
 
@@ -114,35 +111,42 @@ float4 get_light_data(float3 lightPosition, float lightRadius, float3 worldPosit
     return lightData;
 }
 
-float3 get_light_contribution(LIGHT_CONTRIBUTION_DATA IN)
+float3 get_ambient(float3 color)
 {
-    float3 lightDirection = IN.lightData.xyz;
-    float lightAttenuation = IN.lightData.w;
+    return get_color_contribution(AmbientColor, color);
+}
 
-    float n_dot_l = dot(IN.normal, lightDirection);
-    float3 halfVector = normalize(lightDirection + IN.viewDirection);
-    float n_dot_h = dot(IN.normal, halfVector);
+float3 get_specular_diffuse(LIGHT_PARAMS lightParams)
+{
+    float3 lightDirection = lightParams.lightData.xyz;
+    float lightAttenuation = lightParams.lightData.w;
 
-    float4 lightCoefficients = lit(n_dot_l, n_dot_h, IN.specularPower);
-    float3 diffuse = get_color_contribution(IN.lightColor, lightCoefficients.y * IN.color.rgb);
-    float3 specular = get_color_contribution(IN.specularColor, min(lightCoefficients.z, IN.color.w));
+    float n_dot_l = dot(lightParams.normal, lightDirection);
+    float3 halfVector = normalize(lightDirection + lightParams.viewDirection);
+    float n_dot_h = dot(lightParams.normal, halfVector);
+
+    float4 lightCoefficients = lit(n_dot_l, n_dot_h, SpecularPower);
+    float3 diffuse = get_color_contribution(lightParams.lightColor, lightCoefficients.y * lightParams.color.rgb);
+    float3 specular = get_color_contribution(SpecularColor, min(lightCoefficients.z, lightParams.color.w));
 
     return (diffuse + specular) * lightAttenuation;
 }
 
-float3 get_lights_contribution(LIGHTS_COMMON_PARAMS lightsCommonParams)
+float3 get_light_contribution(LIGHT_PARAMS lightParams)
 {
-    float3 lightsContribution = (float3)0.f;
+    return get_ambient(lightParams.color.rgb) + get_specular_diffuse(lightParams);
+}
 
-    float3 ambient = get_color_contribution(lightsCommonParams.ambientColor, lightsCommonParams.color.rgb);
-    lightsContribution += ambient;
+//-------------------------------------------------------------------------
 
-    LIGHT_CONTRIBUTION_DATA lightContributionData;
+float3 get_specular_diffuse(LIGHTS_COMMON_PARAMS lightsCommonParams)
+{
+    float3 specularDiffuse = (float3)0.f;
+
+    LIGHT_PARAMS lightContributionData;
     lightContributionData.normal = lightsCommonParams.normal;
     lightContributionData.color = lightsCommonParams.color;
     lightContributionData.viewDirection = lightsCommonParams.viewDirection;
-    lightContributionData.specularColor = lightsCommonParams.specularColor;
-    lightContributionData.specularPower = lightsCommonParams.specularPower;
 
     // Directional lights
     [loop]
@@ -150,7 +154,7 @@ float3 get_lights_contribution(LIGHTS_COMMON_PARAMS lightsCommonParams)
     {
         lightContributionData.lightColor = LightsData.dirLights[i].color;
         lightContributionData.lightData = float4(LightsData.dirLights[i].direction, 1.0f);
-        lightsContribution += get_light_contribution(lightContributionData);
+        specularDiffuse += get_specular_diffuse(lightContributionData);
     }
 
     // Point lights
@@ -159,7 +163,7 @@ float3 get_lights_contribution(LIGHTS_COMMON_PARAMS lightsCommonParams)
     {
         lightContributionData.lightColor = LightsData.pointLights[i].color;
         lightContributionData.lightData = get_light_data(LightsData.pointLights[i].position, LightsData.pointLights[i].radius, lightsCommonParams.worldPosition);
-        lightsContribution += get_light_contribution(lightContributionData);
+        specularDiffuse += get_specular_diffuse(lightContributionData);
     }
 
     // Spotlights
@@ -176,11 +180,17 @@ float3 get_lights_contribution(LIGHTS_COMMON_PARAMS lightsCommonParams)
 
             lightContributionData.lightColor = LightsData.spotlights[i].color;
             lightContributionData.lightData = lightData;
-            lightsContribution += get_light_contribution(lightContributionData) * spotFactor;
+            specularDiffuse += get_specular_diffuse(lightContributionData) * spotFactor;
         }
     }
 
-    return lightsContribution;
+    return specularDiffuse;
 }
+
+float3 get_light_contribution(LIGHTS_COMMON_PARAMS lightsCommonParams)
+{
+    return get_ambient(lightsCommonParams.color.rgb) + get_specular_diffuse(lightsCommonParams);
+}
+
 
 #endif

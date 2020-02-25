@@ -4,19 +4,15 @@
 // Resources
 cbuffer CBufferPerFrame
 {
-    float4 AmbientColor : AMBIENT;
-    float3 CameraPosition : CAMERAPOSITION;
+    float3 CameraPosition;
 
-    DIRECTIONAL_LIGHT_DATA LightData;
+    DIRECTIONAL_LIGHT_DATA LightData; // TODO: remove
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 WVP : WORLDVIEWPROJECTION;
-    float4x4 World : WORLD;
-
-    float4 SpecularColor : SPECULAR;
-    float SpecularPower : SPECULARPOWER;
+    float4x4 WVP;
+    float4x4 World;
 }
 
 Texture2D ColorTexture;
@@ -63,7 +59,6 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
     OUT.tangent = normalize(mul(float4(IN.tangent, 0), World).xyz);
     OUT.binormal = cross(OUT.normal, OUT.tangent);
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
-
     OUT.worldPosition = mul(IN.objectPosition, World).xyz;
     OUT.viewDirection = normalize(CameraPosition - OUT.worldPosition);
 
@@ -89,12 +84,9 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     lightsCommonParams.normal = sampledNormal;
     lightsCommonParams.viewDirection = viewDirection;
     lightsCommonParams.worldPosition = IN.worldPosition;
-    lightsCommonParams.specularPower = SpecularPower;
-    lightsCommonParams.specularColor = SpecularColor;
-    lightsCommonParams.ambientColor = AmbientColor;
     lightsCommonParams.color = color;
 
-    OUT.rgb = get_lights_contribution(lightsCommonParams);
+    OUT.rgb = get_light_contribution(lightsCommonParams);
     OUT.a = 1.0f;
 
     return OUT;

@@ -3,24 +3,15 @@
 
 /************* Resources *************/
 
-#define MAX_LIGHTS_COUNT 4
-
 cbuffer CBufferPerFrame
 {
-    float4 AmbientColor : AMBIENT;
-    float3 CameraPosition : CAMERAPOSITION;
-
-    POINT_LIGHT_DATA LightsData[MAX_LIGHTS_COUNT];
-    uint LightsCount;
+    float3 CameraPosition;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 WVP : WORLDVIEWPROJECTION;
-    float4x4 World : WORLD;
-
-    float4 SpecularColor : SPECULAR;
-    float SpecularPower : SPECULARPOWER = 25.0f;
+    float4x4 WVP;
+    float4x4 World;
 }
 
 RasterizerState DisableCulling
@@ -92,31 +83,20 @@ struct PSL_OUTPUT
 
 /* Common Pixel Shader Part */
 
-float4 pixel_shader_common(float4 color, float3 normal, float3 worldPosition)
+float4 compute_light(float4 color, float3 normal, float3 worldPosition)
 {
     float4 outColor = (float4)0;
 
+    // compute it here because it saves render target
     float3 viewDirection = normalize(CameraPosition - worldPosition);
-    float3 ambient = get_color_contribution(AmbientColor, color.rgb);
 
-    LIGHT_CONTRIBUTION_DATA lightContributionData;
-    lightContributionData.color = color;
-    lightContributionData.normal = normal;
-    lightContributionData.viewDirection = viewDirection;
-    lightContributionData.specularColor = SpecularColor;
-    lightContributionData.specularPower = SpecularPower;
+    LIGHTS_COMMON_PARAMS lightsCommonParams;
+    lightsCommonParams.normal = normal;
+    lightsCommonParams.viewDirection = viewDirection;
+    lightsCommonParams.worldPosition = worldPosition;
+    lightsCommonParams.color = color;
 
-    float3 totalLightContribution = (float3)0;
-
-    [loop]
-    for (uint i = 0; i < LightsCount; i++)
-    {
-        lightContributionData.lightData = get_light_data(LightsData[i].position, worldPosition, LightsData[i].radius);
-        lightContributionData.lightColor = LightsData[i].color;
-        totalLightContribution += get_light_contribution(lightContributionData);
-    }
-
-    outColor.rgb = ambient + totalLightContribution;
+    outColor.rgb = get_light_contribution(lightsCommonParams);
     outColor.a = 1.0f;
 
     return outColor;
@@ -138,14 +118,10 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 
 float4 pixel_shader_forward(VS_OUTPUT IN) : SV_Target
 {
-    float4 OUT = (float4)0;
-
     float3 normal = normalize(IN.normal);
     float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
 
-    OUT = pixel_shader_common(color, normal, IN.worldPosition);
-
-    return OUT;
+    return compute_light(color, normal, IN.worldPosition);
 }
 
 /* Geometry Pass (uses Vertex Shader from Forward) */
@@ -181,7 +157,7 @@ PSL_OUTPUT pixel_shader_light(VSL_OUTPUT IN)
     float3 normal = NormalBufferTexture.Sample(PointSampler, IN.textureCoordinate).xyz;
     float3 worldPosition = WorldPositionBufferTexture.Sample(PointSampler, IN.textureCoordinate).xyz;
 
-    OUT.color = pixel_shader_common(color, normal, worldPosition);
+    OUT.color = compute_light(color, normal, worldPosition);
     OUT.depth = DepthBufferTexture.Sample(PointSampler, IN.textureCoordinate).x;
 
     return OUT;

@@ -8,7 +8,7 @@ cbuffer CBufferPerFrame
 
 cbuffer CBufferPerObject
 {
-    float4x4 WVP : WORLDVIEWPROJECTION;
+    float4x4 WVP;
     float4x4 TextureMatrix;
 
     float DisplacementScale;

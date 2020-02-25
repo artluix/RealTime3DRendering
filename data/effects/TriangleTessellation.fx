@@ -8,7 +8,7 @@ cbuffer CBufferPerFrame
 
 cbuffer CBufferPerObject
 {
-    float4x4 WVP : WORLDVIEWPROJECTION;
+    float4x4 WVP;
 }
 
 /************* Data Structures *************/
@@ -89,7 +89,7 @@ DS_OUTPUT domain_shader(HS_CONSTANT_OUTPUT IN, float3 uvw : SV_DomainLocation, c
     DS_OUTPUT OUT = (DS_OUTPUT)0;
 
     float3 objectPosition =
-        uvw.x * patch[0].objectPosition.xyz + 
+        uvw.x * patch[0].objectPosition.xyz +
         uvw.y * patch[1].objectPosition.xyz +
         uvw.z * patch[2].objectPosition.xyz;
 

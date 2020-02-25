@@ -5,10 +5,9 @@
 
 cbuffer CBufferPerFrame
 {
-    float4 AmbientColor = { 1.0f, 1.0f, 1.0f, 0.0f };
     float3 CameraPosition : CAMERAPOSITION;
 
-    POINT_LIGHT_DATA LightData;
+    POINT_LIGHT_DATA LightData; // TODO: remove
 }
 
 cbuffer CBufferPerObject
@@ -33,8 +32,6 @@ struct VS_INPUT
     float2 textureCoordinate : TEXCOORD;
     float3 normal : NORMAL;
     row_major float4x4 World : WORLD;
-    float4 specularColor : SPECULAR;
-    float specularPower : SPECULARPOWER;
 };
 
 struct VS_OUTPUT
@@ -43,9 +40,7 @@ struct VS_OUTPUT
     float3 normal : NORMAL;
     float2 textureCoordinate : TEXCOORD0;
     float3 worldPosition : TEXCOORD1;
-    float attenuation : TEXCOORD2;
-    float4 specularColor : SPECULAR;
-    float specularPower : SPECULARPOWER;
+    float3 viewDirection : TEXCOORD1;
 };
 
 /************* Vertex Shader *************/
