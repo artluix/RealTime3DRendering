@@ -4,8 +4,9 @@
 
 namespace library
 {
-struct PointLightData : LightData
+__declspec(align(16)) struct PointLightData
 {
+	math::Color color;
 	math::Vector3 position;
 	float radius;
 };
@@ -14,9 +15,15 @@ struct PointLightData : LightData
 
 class PointLightComponent : public virtual LightComponent
 {
+	RTTI_CLASS(PointLightComponent, LightComponent)
+
 public:
+	using Data = PointLightData;
+
 	PointLightComponent();
 	~PointLightComponent();
+
+	Data GetData() const;
 
 	const math::Vector3& GetPosition() const { return m_position; }
 	void SetPosition(const math::Vector3& position);

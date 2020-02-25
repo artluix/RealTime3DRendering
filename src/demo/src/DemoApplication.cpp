@@ -196,13 +196,9 @@ void DemoApplication::Initialize()
 	pointLight->SetKeyboard(*m_keyboard);
 
 	// multiple point lights
-	//auto multiplePointLights = std::make_shared<MultiplePointLightsDemo>();
-	//multiplePointLights->SetCamera(*camera);
-	//multiplePointLights->SetKeyboard(*m_keyboard);
-
-	m_multiplePointLights = std::make_shared<MultiplePointLightsDemo>();
-	m_multiplePointLights->SetCamera(*camera);
-	m_multiplePointLights->SetKeyboard(*m_keyboard);
+	auto multiplePointLights = std::make_shared<MultiplePointLightsDemo>();
+	multiplePointLights->SetCamera(*camera);
+	multiplePointLights->SetKeyboard(*m_keyboard);
 
 	// spotlight
 	auto spotlight = std::make_shared<SpotlightDemo>();
@@ -269,7 +265,7 @@ void DemoApplication::Initialize()
 			woss << L"Deferred lighting: " << (m_deferredLightingEnabled ? L"Enabled" : L"Disabled");
 			return woss.str();
 		});
-		deferredLightingText->SetPosition(math::Vector2(0.f, 210.f));
+		deferredLightingText->SetPosition(math::Vector2(0.f, 280.f));
 
 		m_components.push_back(deferredLightingText);
 	}
@@ -338,7 +334,7 @@ void DemoApplication::Initialize()
 	// m_components.push_back(diffuseLighting);
 	// m_components.push_back(pointLight);
 	// m_components.push_back(multiplePointLights);
-	// m_components.push_back(spotlight);
+	m_components.push_back(spotlight);
 	// m_components.push_back(normalMapping);
 	// m_components.push_back(environmentMapping);
 	// m_components.push_back(transparencyMapping);
@@ -361,11 +357,12 @@ void DemoApplication::Initialize()
 
 	Application::Initialize();
 
-	m_multiplePointLights->Initialize(*this);
 	m_postProcessing->Initialize(*this);
 
+	//m_multiplePointLights->Initialize(*this);
+
 	// deferred shading for multiplePointLights only
-	{
+	/*{
 		auto material = m_multiplePointLights->GetMaterial();
 
 		m_fullScreenQuad = std::make_unique<FullScreenQuadComponent>();
@@ -380,7 +377,7 @@ void DemoApplication::Initialize()
 			}
 		);
 		m_fullScreenQuad->Initialize(*this);
-	}
+	}*/
 }
 
 void DemoApplication::Update(const Time& time)
@@ -400,16 +397,24 @@ void DemoApplication::Update(const Time& time)
 		{
 			m_deferredLightingEnabled = !m_deferredLightingEnabled;
 
-			auto material = m_multiplePointLights->GetMaterial();
-
-			if (m_deferredLightingEnabled)
-				material->SetCurrentTechnique("deferred", "geometry");
-			else
-				material->SetCurrentTechnique("forward");
+			for (auto component : m_components)
+			{
+				if (auto drawableComponent = component->As<DrawableComponent>())
+				{
+					if (auto material = drawableComponent->GetMaterial())
+					{
+						if (auto lightMaterial = material->As<LightMaterial>())
+						{
+							//if (m_deferredLightingEnabled)
+							//	material->SetCurrentTechnique("deferred", "geometry");
+							//else
+							//	material->SetCurrentTechnique("forward");
+						}
+					}
+				}
+			}
 		}
 	}
-
-	m_multiplePointLights->Update(time);
 
 	if (m_deferredLightingEnabled)
 		m_fullScreenQuad->Update(time);
@@ -473,7 +478,7 @@ void DemoApplication::Draw(const Time& time)
 		);
 	}
 
-	m_multiplePointLights->Draw(time);
+	//m_multiplePointLights->Draw(time);
 
 	// pop deferred lighting RT
 	if (m_deferredLightingEnabled)

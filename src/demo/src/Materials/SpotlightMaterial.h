@@ -1,18 +1,12 @@
 #pragma once
-#include "Materials/PointLightMaterial.h"
+#include "Materials/LightMaterial.h"
 
-class SpotlightMaterial : public PointLightMaterial
+class SpotlightMaterial : public LightMaterial
 {
-	RTTI_CLASS(SpotlightMaterial, PointLightMaterial)
+	RTTI_CLASS(SpotlightMaterial, LightMaterial)
 
 public:
-	explicit SpotlightMaterial(library::Effect& effect);
-	~SpotlightMaterial();
-
-	library::EffectVariable& GetSpotlightInnerAngle() { return m_spotlightInnerAngle; }
-	library::EffectVariable& GetSpotlightOuterAngle() { return m_spotlightOuterAngle; }
-
-private:
-	library::EffectVariable& m_spotlightInnerAngle;
-	library::EffectVariable& m_spotlightOuterAngle;
+	explicit SpotlightMaterial(library::Effect& effect, const std::string& defaultTechniqueName = "main11")
+		: LightMaterial(effect, defaultTechniqueName)
+	{}
 };

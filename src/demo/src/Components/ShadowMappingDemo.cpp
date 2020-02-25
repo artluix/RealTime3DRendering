@@ -281,11 +281,14 @@ void ShadowMappingDemo::Draw_SetData(
 	m_material->GetSpecularPower() << m_specularPower;
 	m_material->GetSpecularColor() << m_specularColor.ToVector4();
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
-	m_material->GetLightColor() << m_pointLight->GetColor().ToVector4();
-	m_material->GetLightPosition() << m_pointLight->GetPosition();
-	m_material->GetLightRadius() << m_pointLight->GetRadius();
 
-	m_material->GetModelTexture() << m_textures[Texture::Default].Get();
+	m_material->GetLightData() << m_pointLight->GetData();
+
+	//m_material->GetLightColor() << m_pointLight->GetColor().ToVector4();
+	//m_material->GetLightPosition() << m_pointLight->GetPosition();
+	//m_material->GetLightRadius() << m_pointLight->GetRadius();
+
+	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 	m_material->GetShadowMapTexture() << m_depthMapRenderTarget->GetOutputTexture();
 
 	m_material->GetProjectiveTextureMatrix() << projectiveTextureMatrix;

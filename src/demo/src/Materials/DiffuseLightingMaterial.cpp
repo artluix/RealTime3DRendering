@@ -9,8 +9,7 @@ DiffuseLightingMaterial::DiffuseLightingMaterial(Effect& effect)
 	: Material(effect, "main11")
 
 	, m_ambientColor(effect.GetVariable("ambientColor"))
-	, m_lightColor(effect.GetVariable("lightColor"))
-	, m_lightDirection(effect.GetVariable("lightDirection"))
+	, m_lightData(effect.GetVariable("lightData"))
 
 	, m_wvp(effect.GetVariable("wvp"))
 	, m_world(effect.GetVariable("world"))

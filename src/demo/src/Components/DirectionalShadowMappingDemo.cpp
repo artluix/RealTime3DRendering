@@ -280,8 +280,11 @@ void DirectionalShadowMappingDemo::Draw_SetData(
 	m_material->GetSpecularPower() << m_specularPower;
 	m_material->GetSpecularColor() << m_specularColor.ToVector4();
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
-	m_material->GetLightColor() << m_directionalLight->GetColor().ToVector4();
-	m_material->GetLightDirection() << m_directionalLight->GetDirection();
+
+	m_material->GetLightData() << m_directionalLight->GetData();
+
+	//m_material->GetLightColor() << m_directionalLight->GetColor().ToVector4();
+	//m_material->GetLightDirection() << m_directionalLight->GetDirection();
 
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 	m_material->GetShadowMapTexture() << m_depthMapRenderTarget->GetOutputTexture();

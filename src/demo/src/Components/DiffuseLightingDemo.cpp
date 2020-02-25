@@ -30,7 +30,6 @@ constexpr float k_lightModulationRate = k_byteMax / 40;
 constexpr auto k_lightRotationRate = math::Vector2(math::Pi);
 
 constexpr auto k_proxyModelRotationOffset = math::Vector3(0.f, math::Pi_Div_2, 0.f);
-constexpr float k_proxyModelDistanceOffset = 10.f;
 } // namespace
 
 //-------------------------------------------------------------------------
@@ -60,8 +59,7 @@ void DiffuseLightingDemo::InitializeInternal()
 	m_directionalLight = std::make_unique<DirectionalLightComponent>();
 
 	m_proxyModel = std::make_unique<ProxyModelComponent>("DirectionalLightProxy", 0.5f);
-	m_proxyModel->SetPosition(
-		GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
+	m_proxyModel->SetPosition(GetPosition() + math::Vector3(5.f));
 	m_proxyModel->SetInitialTransform(math::Matrix4::RotationPitchYawRoll(k_proxyModelRotationOffset));
 	m_proxyModel->SetCamera(*GetCamera());
 	m_proxyModel->Initialize(GetApp());
@@ -139,25 +137,23 @@ void DiffuseLightingDemo::UpdateDirectionalLight(const Time& time)
 		// rotate directional light
 		math::Vector2 rotationAmount;
 		if (m_keyboard->IsKeyDown(Key::Left))
-			rotationAmount.x -= k_lightRotationRate.x * elapsedTime;
-
-		if (m_keyboard->IsKeyDown(Key::Right))
 			rotationAmount.x += k_lightRotationRate.x * elapsedTime;
 
+		if (m_keyboard->IsKeyDown(Key::Right))
+			rotationAmount.x -= k_lightRotationRate.x * elapsedTime;
+
 		if (m_keyboard->IsKeyDown(Key::Up))
-			rotationAmount.y -= k_lightRotationRate.y * elapsedTime;
+			rotationAmount.y += k_lightRotationRate.y * elapsedTime;
 
 		if (m_keyboard->IsKeyDown(Key::Down))
-			rotationAmount.y += k_lightRotationRate.y * elapsedTime;
+			rotationAmount.y -= k_lightRotationRate.y * elapsedTime;
 
 		if (rotationAmount)
 		{
-			m_directionalLight->Rotate(math::Quaternion::RotationPitchYawRoll(
-				math::Vector3(rotationAmount.y, rotationAmount.x, 0.f)));
-
-			m_proxyModel->SetPosition(
-				GetPosition() + -m_directionalLight->GetDirection() * k_proxyModelDistanceOffset);
-			m_proxyModel->SetRotation(m_directionalLight->GetRotation());
+			// test quaternion rotation
+			const auto rotation = math::Quaternion::RotationPitchYawRoll(rotationAmount.y, rotationAmount.x, 0.f);
+			m_directionalLight->Rotate(rotation);
+			m_proxyModel->Rotate(rotation);
 		}
 	}
 }
@@ -172,8 +168,7 @@ void DiffuseLightingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetWVP() << wvp;
 	m_material->GetWorld() << world;
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
-	m_material->GetLightColor() << m_directionalLight->GetColor().ToVector4();
-	m_material->GetLightDirection() << m_directionalLight->GetDirection();
+	m_material->GetLightData() << m_directionalLight->GetData();
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);

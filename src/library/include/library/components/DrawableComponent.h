@@ -15,12 +15,12 @@ public:
 	void SetVisible(const bool visible) { m_visible = visible; }
 
 	virtual void Draw(const Time& time) = 0;
+
+	virtual Material* GetMaterial() { return nullptr; }
 	virtual const Material* GetMaterial() const { return nullptr; }
 
 protected:
 	DrawableComponent() = default;
-
-	virtual Material* GetMaterial() { return nullptr; }
 
 private:
 	bool m_visible = true;

@@ -117,7 +117,7 @@ if(APPLICATION)
             src/Materials/DiffuseLightingMaterial.cpp
 
             src/Materials/DirectionalLightMaterial.h
-            src/Materials/DirectionalLightMaterial.cpp
+            # src/Materials/DirectionalLightMaterial.cpp
 
             src/Materials/DirectionalShadowMappingMaterial.h
             src/Materials/DirectionalShadowMappingMaterial.cpp
@@ -150,7 +150,7 @@ if(APPLICATION)
             src/Materials/NormalMappingMaterial.cpp
 
             src/Materials/PointLightMaterial.h
-            src/Materials/PointLightMaterial.cpp
+            # src/Materials/PointLightMaterial.cpp
 
             src/Materials/PointSpriteMaterial.h
             src/Materials/PointSpriteMaterial.cpp
@@ -168,7 +168,7 @@ if(APPLICATION)
             src/Materials/SkinnedModelMaterial.cpp
 
             src/Materials/SpotlightMaterial.h
-            src/Materials/SpotlightMaterial.cpp
+            # src/Materials/SpotlightMaterial.cpp
 
             src/Materials/TessellationMaterial.h
             src/Materials/TextureMappingMaterial.cpp

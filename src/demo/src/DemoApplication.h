@@ -46,7 +46,6 @@ private:
 	std::shared_ptr<library::MouseComponent> m_mouse;
 
 	std::shared_ptr<library::GridComponent> m_grid;
-	std::shared_ptr<MultiplePointLightsDemo> m_multiplePointLights;
 
 	std::unique_ptr<library::FullScreenRenderTarget> m_sceneRenderTarget;
 	std::unique_ptr<library::PostProcessingComponent> m_postProcessing;

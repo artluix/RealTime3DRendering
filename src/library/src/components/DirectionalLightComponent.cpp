@@ -6,15 +6,29 @@
 
 namespace library
 {
-DirectionalLightComponent::DirectionalLightComponent()
-	: m_direction(math::Direction::Forward)
-	, m_up(math::Direction::Up)
-	, m_right(math::Direction::Right)
 
-	, m_rotation(math::Quaternion::Identity)
+namespace
+{
+constexpr auto k_defaultDirection = math::Direction::Forward;
+}
+
+DirectionalLightComponent::DirectionalLightComponent()
+	: m_direction(k_defaultDirection)
 {}
 
 DirectionalLightComponent::~DirectionalLightComponent() = default;
+
+//-------------------------------------------------------------------------
+
+DirectionalLightComponent::Data DirectionalLightComponent::GetData() const
+{
+	return Data{ m_color, m_direction };
+}
+
+void DirectionalLightComponent::SetDirection(const math::Vector3& direction)
+{
+	m_direction = direction;
+}
 
 //-------------------------------------------------------------------------
 
@@ -23,20 +37,13 @@ void DirectionalLightComponent::Rotate(const math::Quaternion& rotation)
 	if (rotation == math::Quaternion::Identity)
 		return;
 
-	SetRotation(m_rotation * rotation);
+	const auto rotationMatrix = math::Matrix4::RotationQuaternion(rotation);
+	m_direction = m_direction.Transform(rotationMatrix);
 }
 
 void DirectionalLightComponent::SetRotation(const math::Quaternion& rotation)
 {
-	if (m_rotation == rotation)
-		return;
-
-	m_rotation = rotation;
-
-	const auto rotationMatrix = math::Matrix4::RotationQuaternion(m_rotation);
-
+	const auto rotationMatrix = math::Matrix4::RotationQuaternion(rotation);
 	m_direction = rotationMatrix.GetForward();
-	m_right = rotationMatrix.GetRight();
-	m_up = rotationMatrix.GetUp();
 }
 } // namespace library

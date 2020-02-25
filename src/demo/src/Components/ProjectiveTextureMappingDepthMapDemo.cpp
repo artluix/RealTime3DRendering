@@ -149,7 +149,7 @@ void ProjectiveTextureMappingDepthMapDemo::InitializeInternal()
 
 		m_modelWorldMatrix = Matrix4::Scaling(Vector3(0.1f)) * Matrix4::Translation(Vector3(0.f, 0.f, 5.f));
 	}
-	
+
 	m_depthMapRenderTarget = std::make_unique<DepthMapRenderTarget>(
 		GetApp(), k_depthMapWidth, k_depthMapHeight
 	);
@@ -216,7 +216,7 @@ void ProjectiveTextureMappingDepthMapDemo::Draw(const Time& time)
 
 		if (modelData.indexBuffer)
 			deviceContext->IASetIndexBuffer(
-				modelData.indexBuffer->buffer.Get(),DXGI_FORMAT_R32_UINT, 0);
+				modelData.indexBuffer->buffer.Get(), DXGI_FORMAT_R32_UINT, 0);
 
 		m_depthMapMaterial->GetWorldLightViewProjection() <<  m_modelWorldMatrix * m_projector->GetViewProjectionMatrix();
 
@@ -272,11 +272,14 @@ void ProjectiveTextureMappingDepthMapDemo::Draw_SetData(
 	m_material->GetSpecularPower() << m_specularPower;
 	m_material->GetSpecularColor() << m_specularColor.ToVector4();
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
-	m_material->GetLightColor() << m_pointLight->GetColor().ToVector4();
-	m_material->GetLightPosition() << m_pointLight->GetPosition();
-	m_material->GetLightRadius() << m_pointLight->GetRadius();
 
-	m_material->GetModelTexture() << m_textures[Texture::Default].Get();
+	m_material->GetLightData() << m_pointLight->GetData();
+
+	//m_material->GetLightColor() << m_pointLight->GetColor().ToVector4();
+	//m_material->GetLightPosition() << m_pointLight->GetPosition();
+	//m_material->GetLightRadius() << m_pointLight->GetRadius();
+
+	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 	m_material->GetProjectedTexture() << m_textures[Texture::Projected].Get();
 
 	m_material->GetProjectiveTextureMatrix() << projectiveTextureMatrix;

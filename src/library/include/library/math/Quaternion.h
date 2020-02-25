@@ -28,6 +28,8 @@ public:
 
 	//-------------------------------------------------------------------------
 
+	static Quaternion RotationBetweenVectors(const Vector3& from, const Vector3& to);
+
 	static Quaternion RotationAxis(const Vector3& axis, const float angle);
 	static Quaternion RotationMatrix(const Matrix4& matrix);
 	static Quaternion RotationPitchYawRoll(const float pitch, const float yaw, const float roll);

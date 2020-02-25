@@ -50,5 +50,11 @@ private:
 
 	std::unique_ptr<library::SpotlightComponent> m_spotlight;
 	std::unique_ptr<library::ProxyModelComponent> m_proxyModel;
+
+	std::unique_ptr<library::SpotlightComponent> m_spotlight2;
+	std::unique_ptr<library::ProxyModelComponent> m_proxyModel2;
+
 	std::unique_ptr<library::TextComponent> m_text;
+
+	LightsData m_lightsData;
 };

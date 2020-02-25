@@ -1,11 +1,16 @@
 #pragma once
-#include "library/Components/PointLightComponent.h"
 #include "library/Components/DirectionalLightComponent.h"
+#include "library/Components/PointLightComponent.h"
 
 namespace library
 {
-struct SpotlightData : PointLightData, DirectionalLightData
+__declspec(align(16)) struct SpotlightData
 {
+	math::Color color;
+	math::Vector3 direction;
+	float radius;
+	math::Vector3 position;
+	float innerAngle, outerAngle;
 };
 
 //-------------------------------------------------------------------------
@@ -14,9 +19,15 @@ class SpotlightComponent
 	: public DirectionalLightComponent
 	, public PointLightComponent
 {
+	RTTI_CLASS(SpotlightComponent, DirectionalLightComponent, PointLightComponent)
+
 public:
+	using Data = SpotlightData;
+
 	SpotlightComponent();
 	~SpotlightComponent();
+
+	Data GetData() const;
 
 	float GetInnerAngle() const { return m_innerAngle; }
 	void SetInnerAngle(const float innerAngle);

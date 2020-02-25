@@ -22,8 +22,6 @@ public:
 
 	void Update(const library::Time& time) override;
 
-	using ConcreteMaterialPrimitiveComponent::GetMaterial;
-
 protected:
 	void InitializeInternal() override;
 	void Draw_SetData(const library::PrimitiveData& primitiveData) override;

@@ -71,7 +71,7 @@ void ProjectiveTextureMappingDemo::InitializeInternal()
 		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
 	}
 
-	
+
 	m_textures.resize(Texture::Count);
 	m_textures[Texture::Default] = GetApp().LoadTexture("Checkerboard");
 	m_textures[Texture::Projected] = GetApp().LoadTexture("ProjectedTexture");
@@ -156,11 +156,14 @@ void ProjectiveTextureMappingDemo::Draw_SetData(const PrimitiveData& primitiveDa
 	m_material->GetSpecularPower() << m_specularPower;
 	m_material->GetSpecularColor() << m_specularColor.ToVector4();
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
-	m_material->GetLightColor() << m_pointLight->GetColor().ToVector4();
-	m_material->GetLightPosition() << m_pointLight->GetPosition();
-	m_material->GetLightRadius() << m_pointLight->GetRadius();
-	
-	m_material->GetModelTexture() << m_textures[Texture::Default].Get();
+
+	m_material->GetLightData() << m_pointLight->GetData();
+
+	//m_material->GetLightColor() << m_pointLight->GetColor().ToVector4();
+	//m_material->GetLightPosition() << m_pointLight->GetPosition();
+	//m_material->GetLightRadius() << m_pointLight->GetRadius();
+
+	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 	m_material->GetProjectedTexture() << m_textures[Texture::Projected].Get();
 
 	m_material->GetProjectiveTextureMatrix() << projectiveTextureMatrix;

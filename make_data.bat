@@ -26,7 +26,7 @@ for %%f in (%SRC_PATH%\effects\*.fx) do (
     call :build_effect %%f %%~nf
 )
 
-xcopy %SRC_PATH%\effects\include %DEST_PATH%\effects\include /i /f /d
+xcopy %SRC_PATH%\effects\include %DEST_PATH%\effects\include /i /f /d /y
 
 :: export textures
 set /a STEP+=1
@@ -46,13 +46,13 @@ for %%f in (%SRC_PATH%\textures\*.*) do (
 set /a STEP+=1
 echo.
 echo %STEP%. Copy Fonts
-xcopy %SRC_PATH%\fonts %DEST_PATH%\fonts /i /f /d
+xcopy %SRC_PATH%\fonts %DEST_PATH%\fonts /i /f /d /y
 
 :: copy models
 set /a STEP+=1
 echo.
 echo %STEP%. Copy models
-xcopy %SRC_PATH%\models %DEST_PATH%\models /i /f /d
+xcopy %SRC_PATH%\models %DEST_PATH%\models /i /f /d /y
 
 endlocal
 

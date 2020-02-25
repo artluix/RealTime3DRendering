@@ -11,10 +11,20 @@ constexpr float k_defaultRadius = 10.f;
 
 //-------------------------------------------------------------------------
 
-PointLightComponent::PointLightComponent() : m_position(math::Vector3::Zero), m_radius(k_defaultRadius)
-{}
+PointLightComponent::PointLightComponent()
+	: m_position(math::Vector3::Zero)
+	, m_radius(k_defaultRadius)
+{
+}
 
 PointLightComponent::~PointLightComponent() = default;
+
+//-------------------------------------------------------------------------
+
+PointLightComponent::Data PointLightComponent::GetData() const
+{
+	return Data{ m_color, m_position, m_radius };
+}
 
 //-------------------------------------------------------------------------
 

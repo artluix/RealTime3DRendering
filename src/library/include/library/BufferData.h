@@ -41,13 +41,13 @@ struct IndexBufferData : BufferData
 
 		static_assert(std::is_integral_v<ElementType>, "IndexBuffer type must be integral");
 
-		elementsCount = elements.size();
+		elementsCount = unsigned(elements.size());
 
 		CreateBuffer(
 			device,
 			D3D11_BIND_INDEX_BUFFER,
 			elements.data(),
-			sizeof(ElementType) * elements.size()
+			sizeof(ElementType) * elementsCount
 		);
 	}
 };
@@ -56,7 +56,7 @@ struct IndexBufferData : BufferData
 
 struct VertexBufferData : BufferData
 {
-	unsigned stride;
+	unsigned stride = 0;
 	unsigned offset = 0;
 
 	VertexBufferData() = default;
@@ -75,15 +75,15 @@ struct VertexBufferData : BufferData
 		static_assert(
 			is_std_vector<ContainerType> || is_std_array<ContainerType>,
 			"BufferData can be created from std::array or std::vector only."
-			);
+		);
 
 		static_assert(
 			std::is_base_of_v<Vertex, ElementType> ||
 			std::is_same_v<InstanceData, ElementType>,
 			"VertexBuffer type must be derived from Vertex"
-			);
+		);
 
-		elementsCount = elements.size();
+		elementsCount = static_cast<unsigned>(elements.size());
 
 		CreateBuffer(
 			device,

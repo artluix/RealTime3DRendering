@@ -11,6 +11,9 @@ LightMaterial::LightMaterial(Effect& effect, const std::string& defaultTechnique
 	, m_ambientColor(effect.GetVariable("ambientColor"))
 	, m_cameraPosition(effect.GetVariable("cameraPosition"))
 
+	, m_lightData(effect.GetVariable("lightData"))
+	, m_lightsData(effect.GetVariable("lightsData"))
+
 	, m_wvp(effect.GetVariable("wvp"))
 	, m_world(effect.GetVariable("world"))
 

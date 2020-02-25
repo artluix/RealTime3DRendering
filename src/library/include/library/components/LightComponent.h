@@ -4,13 +4,6 @@
 
 namespace library
 {
-struct LightData
-{
-	math::Color color;
-};
-
-//-------------------------------------------------------------------------
-
 class LightComponent : public virtual Component
 {
 	RTTI_CLASS(LightComponent, Component)

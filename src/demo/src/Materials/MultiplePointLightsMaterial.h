@@ -1,8 +1,6 @@
 #pragma once
 #include "Materials/LightMaterial.h"
 
-//-------------------------------------------------------------------------
-
 class MultiplePointLightsMaterial : public LightMaterial
 {
 	RTTI_CLASS(MultiplePointLightsMaterial, LightMaterial)

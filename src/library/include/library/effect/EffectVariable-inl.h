@@ -18,7 +18,7 @@ inline void EffectVariable::SetRawArray(
 	const T* data, const std::size_t count
 )
 {
-	variable->SetRawValue(data, 0, sizeof(T) * count);
+	variable->SetRawValue(data, 0, unsigned(sizeof(T) * count));
 }
 
 
@@ -72,7 +72,7 @@ inline void EffectVariable::SetScalarArray<float>(
 	const float* data, const std::size_t count
 )
 {
-	scalarVariable->SetFloatArray(data, 0, count);
+	scalarVariable->SetFloatArray(data, 0, unsigned(count));
 }
 
 template<>
@@ -81,7 +81,7 @@ inline void EffectVariable::SetScalarArray<s32>(
 	const s32* data, const std::size_t count
 )
 {
-	scalarVariable->SetIntArray(data, 0, count);
+	scalarVariable->SetIntArray(data, 0, unsigned(count));
 }
 
 template<>
@@ -90,7 +90,7 @@ inline void EffectVariable::SetScalarArray<u32>(
 	const u32* data, const std::size_t count
 )
 {
-	scalarVariable->SetIntArray(reinterpret_cast<const int*>(data), 0, count);
+	scalarVariable->SetIntArray(reinterpret_cast<const int*>(data), 0, unsigned(count));
 }
 
 template<>
@@ -99,7 +99,7 @@ inline void EffectVariable::SetScalarArray<bool>(
 	const bool* data, const std::size_t count
 )
 {
-	scalarVariable->SetBoolArray(data, 0, count);
+	scalarVariable->SetBoolArray(data, 0, unsigned(count));
 }
 
 template<typename T>
@@ -108,7 +108,7 @@ inline void EffectVariable::SetScalarArray(
 	const T* data, const std::size_t count
 )
 {
-	scalarVariable->SetRawValue(data, 0, sizeof(T) * count);
+	scalarVariable->SetRawValue(data, 0, unsigned(sizeof(T) * count));
 }
 
 //-------------------------------------------------------------------------
@@ -149,7 +149,7 @@ inline void EffectVariable::SetVectorArray<float>(
 	const float* data, const std::size_t count
 )
 {
-	vectorVariable->SetFloatVectorArray(data, 0, count);
+	vectorVariable->SetFloatVectorArray(data, 0, unsigned(count));
 }
 
 template<>
@@ -158,7 +158,7 @@ inline void EffectVariable::SetVectorArray<s32>(
 	const s32* data, const std::size_t count
 )
 {
-	vectorVariable->SetIntVectorArray(data, 0, count);
+	vectorVariable->SetIntVectorArray(data, 0, unsigned(count));
 }
 
 template<>
@@ -167,7 +167,7 @@ inline void EffectVariable::SetVectorArray<u32>(
 	const u32* data, const std::size_t count
 )
 {
-	vectorVariable->SetIntVectorArray(reinterpret_cast<const s32*>(data), 0, count);
+	vectorVariable->SetIntVectorArray(reinterpret_cast<const s32*>(data), 0, unsigned(count));
 }
 
 template<>
@@ -176,7 +176,7 @@ inline void EffectVariable::SetVectorArray<bool>(
 	const bool* data, const std::size_t count
 )
 {
-	vectorVariable->SetBoolVectorArray(data, 0, count);
+	vectorVariable->SetBoolVectorArray(data, 0, unsigned(count));
 }
 
 //-------------------------------------------------------------------------
@@ -288,7 +288,7 @@ inline EffectVariable& EffectVariable::operator<<(const math::MatrixArray<Size>&
 	return *this;
 }
 
-template<unsigned Size, unsigned Count>
+template<unsigned Size, std::size_t Count>
 inline EffectVariable& EffectVariable::operator<<(const math::MatrixFixedArray<Size, Count>& value)
 {
 	if (auto matrixVariable = ToMatrixVariable())

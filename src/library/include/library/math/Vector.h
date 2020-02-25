@@ -37,7 +37,7 @@ struct VectorType<T, 2>
 
 	static const VectorType Zero;
 	static const VectorType One;
-	
+
 	//-------------------------------------------------------------------------
 
 	explicit operator bool() const;
@@ -212,7 +212,7 @@ extern template struct VectorType<s32, 4>;
 extern template struct VectorType<u32, 4>;
 
 // -----------------------------------------------------------------------------
-// Clamp and Lerp
+// Clamp, Lerp & Abs
 // -----------------------------------------------------------------------------
 
 template<typename T, unsigned Size>
@@ -242,6 +242,13 @@ inline VectorType<T, Size> Lerp(
 {
 	return VectorType<T, Size>(dx::XMVectorLerpV(dx::VECTOR(from), dx::VECTOR(to), dx::VECTOR(factor)));
 }
+
+template<typename T, unsigned Size>
+inline VectorType<T, Size> Abs(const VectorType<T, Size>& vec)
+{
+	return VectorType<T, Size>(dx::XMVectorAbs(dx::VECTOR(vec)));
+}
+
 } // namespace library::math
 
 #include "library/Math/Vector-inl.h"

@@ -12,8 +12,7 @@ public:
 	~DiffuseLightingMaterial();
 
 	library::EffectVariable& GetAmbientColor() { return m_ambientColor; }
-	library::EffectVariable& GetLightColor() { return m_lightColor; }
-	library::EffectVariable& GetLightDirection() { return m_lightDirection; }
+	library::EffectVariable& GetLightData() { return m_lightData; }
 
 	library::EffectVariable& GetWVP() { return m_wvp; }
 	library::EffectVariable& GetWorld() { return m_world; }
@@ -30,8 +29,7 @@ protected:
 
 private:
 	library::EffectVariable& m_ambientColor;
-	library::EffectVariable& m_lightColor;
-	library::EffectVariable& m_lightDirection;
+	library::EffectVariable& m_lightData;
 
 	library::EffectVariable& m_wvp;
 	library::EffectVariable& m_world;

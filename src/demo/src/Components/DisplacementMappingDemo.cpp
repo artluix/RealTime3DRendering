@@ -201,9 +201,12 @@ void DisplacementMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	}
 
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
-	m_material->GetLightColor() << m_pointLight->GetColor().ToVector4();
-	m_material->GetLightPosition() << m_pointLight->GetPosition();
-	m_material->GetLightRadius() << m_pointLight->GetRadius();
+
+	m_material->GetLightData() << m_pointLight->GetData();
+
+	//m_material->GetLightColor() << m_pointLight->GetColor().ToVector4();
+	//m_material->GetLightPosition() << m_pointLight->GetPosition();
+	//m_material->GetLightRadius() << m_pointLight->GetRadius();
 
 	m_material->GetWVP() << wvp;
 	m_material->GetWorld() << world;
@@ -211,7 +214,7 @@ void DisplacementMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetSpecularColor() << m_specularColor.ToVector4();
 	m_material->GetDisplacementScale() << m_displacementScale;
 
-	m_material->GetModelTexture() << m_textures[Texture::Default].Get();
+	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 	m_material->GetDisplacementMap() << m_textures[Texture::DisplacementMap].Get();
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);

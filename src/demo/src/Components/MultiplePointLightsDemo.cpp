@@ -253,16 +253,14 @@ void MultiplePointLightsDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetSpecularPower() << m_specularPower;
 	m_material->GetSpecularColor() << m_specularColor.ToVector4();
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
-	m_material->GetModelTexture() << m_textures[Texture::Default].Get();
+	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 
-	std::vector<PointLight> pointLights;
+	std::vector<PointLightComponent::Data> pointLights;
 	pointLights.resize(m_lightsCount);
 
 	for (unsigned i = 0; i < m_lightsCount; i++)
 	{
-		pointLights[i].position = m_lightGlues[i].light->GetPosition();
-		pointLights[i].lightRadius = m_lightGlues[i].light->GetRadius();
-		pointLights[i].color = m_lightGlues[i].light->GetColor();
+		pointLights[i] = m_lightGlues[i].light->GetData();
 	}
 
 	m_material->GetLightsCount() << m_lightsCount;

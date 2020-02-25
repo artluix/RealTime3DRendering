@@ -3,7 +3,7 @@
 set "SOURCE_FOLDER=%~dp0\src"
 set "BUILD_FOLDER=%~dp0\build"
 
-set "GENERATOR=Visual Studio 15 2017"
+set "GENERATOR=Visual Studio 16 2019"
 
 set TARGET=APPLICATION
 set PLATFORM=
@@ -27,7 +27,7 @@ if not exist %BUILD_FOLDER% (
 )
 
 pushd %BUILD_FOLDER%
-cmake -G "%GENERATOR%%PLATFORM%" %SOURCE_FOLDER% -D%TARGET%=TRUE -T v141
+cmake -G "%GENERATOR%%PLATFORM%" %SOURCE_FOLDER% -D%TARGET%=TRUE
 popd
 
 echo.

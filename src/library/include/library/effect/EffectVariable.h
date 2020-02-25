@@ -48,7 +48,7 @@ public:
 	template<typename T>
 	std::enable_if_t<!is_hlsl_scalar<T>, EffectVariable&>
 	operator<<(const std::vector<T>& value);
-	
+
 	template <typename T, std::size_t Count>
 	std::enable_if_t<!is_hlsl_scalar<T>, EffectVariable&>
 	operator<<(const std::array<T, Count>& value);

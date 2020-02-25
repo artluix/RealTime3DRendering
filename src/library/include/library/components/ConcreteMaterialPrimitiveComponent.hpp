@@ -18,7 +18,9 @@ public:
 
 	const Effect& GetEffect() const { return m_effect; }
 
+	Material* GetMaterial() override { return m_material.get(); }
 	const Material* GetMaterial() const override { return m_material.get(); }
+
 	ID3D11InputLayout* GetInputLayout() const override { return GetMaterial()->GetCurrentInputLayout(); }
 
 protected:
@@ -37,8 +39,6 @@ protected:
 		auto& pass = GetMaterial()->GetCurrentPass();
 		pass.Apply(0, GetApp().GetDeviceContext());
 	}
-
-	Material* GetMaterial() override { return m_material.get(); }
 
 	std::shared_ptr<Effect> m_effect;
 	std::unique_ptr<Material> m_material;

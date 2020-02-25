@@ -12,6 +12,33 @@ const Quaternion Quaternion::Identity{ 0.f, 0.f, 0.f, 1.f };
 
 //-------------------------------------------------------------------------
 
+Quaternion Quaternion::RotationBetweenVectors(const Vector3& from, const Vector3& to)
+{
+	const float normFromTo = std::sqrt(from.LengthSq() * to.LengthSq());
+	const float dot = from.Dot(to);
+	float realPart = normFromTo + dot;
+
+	Vector3 w;
+
+	if (dot < 1.e-6f)
+	{
+		/* If from and to are exactly opposite, rotate 180 degrees
+		 * around an arbitrary orthogonal axis. Axis normalization
+		 * can happen later, when we normalize the quaternion. */
+		realPart = 0.f;
+		w = (abs(from.x) > abs(from.z)) ?
+			Vector3(-from.y, from.x, 0.f) :
+			Vector3(0.f, -from.z, from.y);
+	}
+	else
+	{
+		/* Otherwise, build quaternion the standard way. */
+		w = from.Cross(to);
+	}
+
+	return Quaternion(w.x, w.y, w.z, realPart).Normalize();
+}
+
 Quaternion Quaternion::RotationAxis(const Vector3& axis, const float angle)
 {
 	return Quaternion(dx::XMQuaternionRotationAxis(dx::VECTOR(axis), angle));

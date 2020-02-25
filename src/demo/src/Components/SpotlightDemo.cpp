@@ -63,13 +63,23 @@ void SpotlightDemo::InitializeInternal()
 
 	m_spotlight = std::make_unique<SpotlightComponent>();
 	m_spotlight->SetRadius(10.f);
-	m_spotlight->SetPosition(math::Vector3(0.0f, 0.f, 5.f));
+	m_spotlight->SetPosition(math::Vector3(0.0f, 0.f, 0.5f));
 
 	m_proxyModel = std::make_unique<ProxyModelComponent>("SpotlightProxy", 0.3f);
 	m_proxyModel->SetCamera(*GetCamera());
 	m_proxyModel->SetInitialTransform(math::Matrix4::RotationPitchYawRoll(k_proxyModelRotationOffset));
 	m_proxyModel->SetPosition(m_spotlight->GetPosition());
 	m_proxyModel->Initialize(GetApp());
+
+	m_spotlight2 = std::make_unique<SpotlightComponent>();
+	m_spotlight2->SetRadius(10.f);
+	m_spotlight2->SetPosition(math::Vector3(1.0f, 0.f, 0.5f));
+
+	m_proxyModel2 = std::make_unique<ProxyModelComponent>("SpotlightProxy", 0.3f);
+	m_proxyModel2->SetCamera(*GetCamera());
+	m_proxyModel2->SetInitialTransform(math::Matrix4::RotationPitchYawRoll(k_proxyModelRotationOffset));
+	m_proxyModel2->SetPosition(m_spotlight2->GetPosition());
+	m_proxyModel2->Initialize(GetApp());
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -100,6 +110,7 @@ void SpotlightDemo::Update(const Time& time)
 
 	m_text->Update(time);
 	m_proxyModel->Update(time);
+	m_proxyModel2->Update(time);
 
 	PrimitiveComponent::Update(time);
 }
@@ -161,9 +172,9 @@ void SpotlightDemo::UpdateSpotlight(const Time& time)
 				movementAmount.x++;
 
 			if (m_keyboard->IsKeyDown(Key::Num_9))
-				movementAmount.y--;
-			if (m_keyboard->IsKeyDown(Key::Num_3))
 				movementAmount.y++;
+			if (m_keyboard->IsKeyDown(Key::Num_3))
+				movementAmount.y--;
 
 			if (m_keyboard->IsKeyDown(Key::Num_8))
 				movementAmount.z--;
@@ -172,10 +183,13 @@ void SpotlightDemo::UpdateSpotlight(const Time& time)
 
 			if (movementAmount)
 			{
-				const auto movement = movementAmount * k_lightMovementRate * elapsedTime;
+				auto movement = movementAmount * k_lightMovementRate * elapsedTime;
+
+				const auto rotationMatrix = math::Matrix4::RotationQuaternion(m_proxyModel->GetRotation());
+				movement = movement.Transform(rotationMatrix);
 
 				m_spotlight->SetPosition(m_spotlight->GetPosition() + movement);
-				m_proxyModel->SetPosition(m_spotlight->GetPosition());
+				m_proxyModel->SetPosition(m_spotlight->GetPosition() + movement);
 			}
 		}
 
@@ -197,9 +211,9 @@ void SpotlightDemo::UpdateSpotlight(const Time& time)
 
 			if (rotationAmount)
 			{
-				m_spotlight->Rotate(math::Quaternion::RotationPitchYawRoll(
-					math::Vector3(rotationAmount.y, rotationAmount.x, 0.f)));
-				m_proxyModel->SetRotation(m_spotlight->GetRotation());
+				const auto rotation = math::Quaternion::RotationPitchYawRoll(rotationAmount.y, rotationAmount.x, 0.f);
+				m_spotlight->Rotate(rotation);
+				m_proxyModel->Rotate(rotation);
 			}
 		}
 
@@ -254,6 +268,22 @@ void SpotlightDemo::UpdateSpotlight(const Time& time)
 			}
 		}
 	}
+
+	// Cull light
+	{
+		m_lightsData.spotlightsCount = 0;
+
+		const auto lightDirection = m_spotlight->GetPosition() - GetPosition();
+		m_lightsData.spotlightsCount += unsigned(lightDirection.Length() < m_spotlight->GetRadius());
+
+		if (m_lightsData.spotlightsCount)
+		{
+			m_lightsData.spotlights[0] = m_spotlight->GetData();
+		}
+
+		m_lightsData.spotlightsCount++;
+		m_lightsData.spotlights[1] = m_spotlight2->GetData();
+	}
 }
 
 void SpotlightDemo::UpdateSpecularLight(const Time& time)
@@ -299,13 +329,13 @@ void SpotlightDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetSpecularPower() << m_specularPower;
 	m_material->GetSpecularColor() << m_specularColor.ToVector4();
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
-	m_material->GetLightColor() << m_spotlight->GetColor().ToVector4();
-	m_material->GetLightPosition() << m_spotlight->GetPosition();
-	m_material->GetLightRadius() << m_spotlight->GetRadius();
-	m_material->GetLightLookAt() << m_spotlight->GetDirection();
-	m_material->GetSpotlightInnerAngle() << m_spotlight->GetInnerAngle();
-	m_material->GetSpotlightOuterAngle() << m_spotlight->GetOuterAngle();
-	m_material->GetModelTexture() << m_textures[Texture::Default].Get();
+
+	m_material->GetLightData() << m_spotlight->GetData();
+	m_material->GetLightsData() << m_lightsData;
+
+	constexpr auto b = sizeof(LightsData);
+
+	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }
