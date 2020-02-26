@@ -4,15 +4,14 @@
 // Resources
 cbuffer CBufferPerFrame
 {
-    float4 AmbientColor : AMBIENT;
-    float3 CameraPosition : CAMERAPOSITION;
-    float4 EnvColor : COLOR;
+    float3 CameraPosition;
+    float4 EnvColor;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 WVP : WORLDVIEWPROJECTION;
-    float4x4 World : WORLDVIEWPROJECTION;
+    float4x4 WVP;
+    float4x4 World;
 
     float ReflectionAmount;
 }

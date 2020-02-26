@@ -10,7 +10,7 @@ cbuffer CBufferPerObject
 
 cbuffer CBufferPerObjectCutout
 {
-    float4x4 WVP : WORLDVIEWPROJECTION;
+    float4x4 WVP;
 };
 
 SamplerState TrilinearSampler

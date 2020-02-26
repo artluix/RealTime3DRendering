@@ -92,25 +92,23 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 
 /************* Pixel Shader *************/
 
-float3 compute_specular_diffuse(VS_OUTPUT IN)
+float3 compute_specular_diffuse(VS_OUTPUT IN, float4 color)
 {
-    float3 viewDirection = normalize(IN.viewDirection);
-    float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
+    LIGHT_OBJECT_PARAMS lightObjectParams;
+    lightObjectParams.normal = normalize(IN.normal);
+    lightObjectParams.viewDirection = normalize(IN.viewDirection);
+    lightObjectParams.worldPosition = IN.worldPosition;
+    lightObjectParams.color = color;
 
-    LIGHTS_COMMON_PARAMS lightsCommonParams;
-    lightsCommonParams.normal = normalize(IN.normal);
-    lightsCommonParams.viewDirection = viewDirection;
-    lightsCommonParams.worldPosition = IN.worldPosition;
-    lightsCommonParams.color = color;
-
-    return get_specular_diffuse(lightsCommonParams);
+    return get_specular_diffuse(lightObjectParams);
 }
 
 float4 pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 OUT = (float4)0;
 
-    float3 specularDiffuse = compute_specular_diffuse(IN);
+    float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
+    float3 specularDiffuse = compute_specular_diffuse(IN, color);
 
     if (IN.shadowTextureCoordinate.w >= 0.f)
     {
@@ -135,7 +133,8 @@ float4 manual_pcf_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 OUT = (float4)0;
 
-    float3 specularDiffuse = compute_specular_diffuse(IN);
+    float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
+    float3 specularDiffuse = compute_specular_diffuse(IN, color);
 
     if (IN.shadowTextureCoordinate.w >= 0.f)
     {
@@ -179,7 +178,8 @@ float4 pcf_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 OUT = (float4)0;
 
-    float3 specularDiffuse = compute_specular_diffuse(IN);
+    float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
+    float3 specularDiffuse = compute_specular_diffuse(IN, color);
 
     if (IN.shadowTextureCoordinate.w >= 0.f)
     {

@@ -77,16 +77,15 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     // Transform normal to World space
     sampledNormal = mul(sampledNormal, tbn);
 
-    float3 viewDirection = normalize(IN.viewDirection);
     float4 color = ColorTexture.Sample(TrilinearSampler, IN.textureCoordinate);
 
-    LIGHTS_COMMON_PARAMS lightsCommonParams;
-    lightsCommonParams.normal = sampledNormal;
-    lightsCommonParams.viewDirection = viewDirection;
-    lightsCommonParams.worldPosition = IN.worldPosition;
-    lightsCommonParams.color = color;
+    LIGHT_OBJECT_PARAMS lightObjectParams;
+    lightObjectParams.normal = sampledNormal;
+    lightObjectParams.viewDirection = normalize(IN.viewDirection);
+    lightObjectParams.worldPosition = IN.worldPosition;
+    lightObjectParams.color = color;
 
-    OUT.rgb = get_light_contribution(lightsCommonParams);
+    OUT.rgb = get_light_contribution(lightObjectParams);
     OUT.a = 1.0f;
 
     return OUT;

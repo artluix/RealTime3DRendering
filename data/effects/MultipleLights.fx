@@ -90,13 +90,13 @@ float4 compute_light(float4 color, float3 normal, float3 worldPosition)
     // compute it here because it saves render target
     float3 viewDirection = normalize(CameraPosition - worldPosition);
 
-    LIGHTS_COMMON_PARAMS lightsCommonParams;
-    lightsCommonParams.normal = normal;
-    lightsCommonParams.viewDirection = viewDirection;
-    lightsCommonParams.worldPosition = worldPosition;
-    lightsCommonParams.color = color;
+    LIGHT_OBJECT_PARAMS lightObjectParams;
+    lightObjectParams.normal = normalize(normal);
+    lightObjectParams.viewDirection = viewDirection;
+    lightObjectParams.worldPosition = worldPosition;
+    lightObjectParams.color = color;
 
-    outColor.rgb = get_light_contribution(lightsCommonParams);
+    outColor.rgb = get_light_contribution(lightObjectParams);
     outColor.a = 1.0f;
 
     return outColor;
@@ -118,10 +118,9 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 
 float4 pixel_shader_forward(VS_OUTPUT IN) : SV_Target
 {
-    float3 normal = normalize(IN.normal);
     float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
 
-    return compute_light(color, normal, IN.worldPosition);
+    return compute_light(color, IN.normal, IN.worldPosition);
 }
 
 /* Geometry Pass (uses Vertex Shader from Forward) */

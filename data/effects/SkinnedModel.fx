@@ -85,16 +85,15 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float4 OUT = (float4)0;
 
-    float3 viewDirection = normalize(IN.viewDirection);
     float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
 
-    LIGHTS_COMMON_PARAMS lightsCommonParams;
-    lightsCommonParams.normal = IN.normal;
-    lightsCommonParams.viewDirection = viewDirection;
-    lightsCommonParams.worldPosition = IN.worldPosition;
-    lightsCommonParams.color = color;
+    LIGHT_OBJECT_PARAMS lightObjectParams;
+    lightObjectParams.normal = normalize(IN.normal);
+    lightObjectParams.viewDirection = normalize(IN.viewDirection);
+    lightObjectParams.worldPosition = IN.worldPosition;
+    lightObjectParams.color = color;
 
-    OUT.rgb = get_light_contribution(lightsCommonParams);
+    OUT.rgb = get_light_contribution(lightObjectParams);
     OUT.a = 1.0f;
 
     return OUT;

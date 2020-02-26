@@ -4,10 +4,9 @@
 // Resources
 cbuffer CBufferPerFrame
 {
-    float4 AmbientColor : AMBIENT;
-    float3 CameraPosition : CAMERAPOSITION;
+    float3 CameraPosition;
 
-    DIRECTIONAL_LIGHT_DATA LightData;
+    DIRECTIONAL_LIGHT_DATA LightData; // TODO: remove
 
     float3 FogColor = { 0.5f, 0.5f, 0.5f };
     float FogStart = { 20.0f };
@@ -16,11 +15,8 @@ cbuffer CBufferPerFrame
 
 cbuffer CBufferPerObject
 {
-    float4x4 WVP : WORLDVIEWPROJECTION;
-    float4x4 World : WORLD;
-
-    float4 SpecularColor : SPECULAR;
-    float SpecularPower : SPECULARPOWER;
+    float4x4 WVP;
+    float4x4 World;
 }
 
 Texture2D ColorTexture;
@@ -49,7 +45,7 @@ struct VS_OUTPUT
     float4 position: SV_Position;
     float3 normal : NORMAL;
     float2 textureCoordinate : TEXCOORD0;
-    float3 lightDirection : TEXCOORD1;
+    float3 worldPosition : TEXCOORD1;
     float3 viewDirection : TEXCOORD2;
     float fogAmount : TEXCOORD3;
 };
@@ -63,10 +59,8 @@ VS_OUTPUT vertex_shader(VS_INPUT IN, uniform bool fogEnabled)
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
     OUT.normal = normalize(mul(float4(IN.normal, 0), World).xyz);
 
-    float3 worldPosition = mul(IN.objectPosition, World).xyz;
-
-    OUT.lightDirection = normalize(-LightData.direction);
-    float3 viewDirection = CameraPosition - worldPosition;
+    OUT.worldPosition = mul(IN.objectPosition, World).xyz;
+    float3 viewDirection = CameraPosition - OUT.worldPosition;
 
     if (fogEnabled)
     {
@@ -83,22 +77,15 @@ float4 pixel_shader(VS_OUTPUT IN, uniform bool fogEnabled) : SV_Target
 {
     float4 OUT = (float4)0;
 
-    float3 normal = normalize(IN.normal);
-    float3 viewDirection = normalize(IN.viewDirection);
     float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
-    float3 ambient = get_color_contribution(AmbientColor, color.rgb);
 
-    LIGHT_CONTRIBUTION_DATA lightContributionData;
-    lightContributionData.color = color;
-    lightContributionData.normal = normal;
-    lightContributionData.viewDirection = viewDirection;
-    lightContributionData.lightData = float4(IN.lightDirection, 1.0f);
-    lightContributionData.specularColor = SpecularColor;
-    lightContributionData.specularPower = SpecularPower;
-    lightContributionData.lightColor = LightData.color;
-    float3 light_contribution = get_light_contribution(lightContributionData);
+    LIGHT_OBJECT_PARAMS lightObjectParams;
+    lightObjectParams.normal = normalize(IN.normal);
+    lightObjectParams.viewDirection = normalize(IN.viewDirection);
+    lightObjectParams.worldPosition = IN.worldPosition;
+    lightObjectParams.color = color;
 
-    OUT.rgb = ambient + light_contribution;
+    OUT.rgb = get_light_contribution(lightObjectParams);
     OUT.a = 1.0f;
 
     if (fogEnabled)

@@ -4,7 +4,7 @@
 
 cbuffer CBufferPerObject
 {
-    float4x4 WVP : WORLDVIEWPROJECTION;
+    float4x4 WVP;
 }
 
 RasterizerState DisableCulling

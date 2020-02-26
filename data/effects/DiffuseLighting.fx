@@ -1,18 +1,17 @@
 #include "include/Common.fxh"
 #include "include/Lights.fxh"
 
+// legacy, just for learning
 // Resources
 cbuffer CBufferPerFrame
 {
-    float4 AmbientColor : AMBIENT;
-
     DIRECTIONAL_LIGHT_DATA LightData;
 }
 
 cbuffer CBufferPerObject
 {
-    float4x4 WVP : WORLDVIEWPROJECTION;
-    float4x4 World : WORLD;
+    float4x4 WVP;
+    float4x4 World;
 }
 
 RasterizerState DisableCulling
