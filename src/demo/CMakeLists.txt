@@ -46,9 +46,6 @@ if(APPLICATION)
             src/Components/DiffuseLightingDemo.h
             src/Components/DiffuseLightingDemo.cpp
 
-            src/Components/DirectionalShadowMappingDemo.h
-            src/Components/DirectionalShadowMappingDemo.cpp
-
             src/Components/DisplacementMappingDemo.h
             src/Components/DisplacementMappingDemo.cpp
 
@@ -67,8 +64,8 @@ if(APPLICATION)
             src/Components/GeometryShaderDemo.h
             src/Components/GeometryShaderDemo.cpp
 
-            src/Components/InstancingPointLightDemo.h
-            src/Components/InstancingPointLightDemo.cpp
+            src/Components/InstancingDemo.h
+            src/Components/InstancingDemo.cpp
 
             src/Components/ModelTessellationDemo.h
             src/Components/ModelTessellationDemo.cpp
@@ -137,8 +134,8 @@ if(APPLICATION)
             src/Materials/ModelTessellationMaterial.h
             src/Materials/ModelTessellationMaterial.cpp
 
-            src/Materials/MultiplePointLightsMaterial.h
-            src/Materials/MultiplePointLightsMaterial.cpp
+            src/Materials/MultipleLightsMaterial.h
+            src/Materials/MultipleLightsMaterial.cpp
 
             src/Materials/NormalMappingMaterial.h
             src/Materials/NormalMappingMaterial.cpp
