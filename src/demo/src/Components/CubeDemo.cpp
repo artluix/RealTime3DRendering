@@ -72,7 +72,7 @@ void CubeDemo::InitializeInternal()
 
 		auto hr = GetApp().GetDevice()->CreateInputLayout(
 			inputElementDescriptions.data(),
-			inputElementDescriptions.size(),
+			unsigned(inputElementDescriptions.size()),
 			passDesc.pIAInputSignature,
 			passDesc.IAInputSignatureSize,
 			&m_inputLayout

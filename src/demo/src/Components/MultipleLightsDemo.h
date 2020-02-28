@@ -1,5 +1,5 @@
 #pragma once
-#include "Materials/MultiplePointLightsMaterial.h"
+#include "Materials/MultipleLightsMaterial.h"
 
 #include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
@@ -11,14 +11,14 @@ class ProxyModelComponent;
 class PointLightComponent;
 } // namespace library
 
-class MultiplePointLightsDemo
-	: public library::ConcreteMaterialPrimitiveComponent<MultiplePointLightsMaterial>
+class MultipleLightsDemo
+	: public library::ConcreteMaterialPrimitiveComponent<MultipleLightsMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(MultiplePointLightsDemo, library::PrimitiveComponent, library::InputReceivableComponent)
+	RTTI_CLASS(MultipleLightsDemo, library::PrimitiveComponent, library::InputReceivableComponent)
 
 public:
-	MultiplePointLightsDemo();
+	MultipleLightsDemo();
 
 	void Update(const library::Time& time) override;
 

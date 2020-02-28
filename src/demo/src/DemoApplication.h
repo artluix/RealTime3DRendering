@@ -19,7 +19,7 @@ class MultipleRenderTarget;
 class FullScreenQuadComponent;
 } // namespace library
 
-class MultiplePointLightsDemo;
+class MultipleLightsDemo;
 
 class DemoApplication : public library::Application
 {

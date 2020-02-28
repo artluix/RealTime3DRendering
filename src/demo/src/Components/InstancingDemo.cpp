@@ -1,4 +1,4 @@
-#include "InstancingPointLightDemo.h"
+#include "InstancingDemo.h"
 
 #include <library/Components/TextComponent.h>
 #include <library/Components/CameraComponent.h>
@@ -30,14 +30,14 @@ constexpr unsigned k_instancesCount = k_axisInstanceCount * k_axisInstanceCount 
 constexpr float k_axisOffset = 20.f;
 } // namespace
 
-InstancingPointLightDemo::InstancingPointLightDemo()
+InstancingDemo::InstancingDemo()
 	: m_specularPower(25.f)
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
 	, m_ambientColor(1.f, 1.f, 1.f, 0.f)
 {
 }
 
-void InstancingPointLightDemo::InitializeInternal()
+void InstancingDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
@@ -105,7 +105,7 @@ void InstancingPointLightDemo::InitializeInternal()
 
 //-------------------------------------------------------------------------
 
-void InstancingPointLightDemo::Update(const Time& time)
+void InstancingDemo::Update(const Time& time)
 {
 	UpdateAmbientLight(time);
 	UpdatePointLight(time);
@@ -116,7 +116,7 @@ void InstancingPointLightDemo::Update(const Time& time)
 	PrimitiveComponent::Update(time);
 }
 
-void InstancingPointLightDemo::UpdateAmbientLight(const Time& time)
+void InstancingDemo::UpdateAmbientLight(const Time& time)
 {
 	static float ambientLightIntensity = m_ambientColor.a;
 
@@ -136,7 +136,7 @@ void InstancingPointLightDemo::UpdateAmbientLight(const Time& time)
 	}
 }
 
-void InstancingPointLightDemo::UpdatePointLight(const Time& time)
+void InstancingDemo::UpdatePointLight(const Time& time)
 {
 	static float pointLightIntensity = m_pointLight->GetColor().a;
 
@@ -193,7 +193,7 @@ void InstancingPointLightDemo::UpdatePointLight(const Time& time)
 
 //-------------------------------------------------------------------------
 
-void InstancingPointLightDemo::Draw_SetIA(const PrimitiveData& primitiveData)
+void InstancingDemo::Draw_SetIA(const PrimitiveData& primitiveData)
 {
 	auto deviceContext = GetApp().GetDeviceContext();
 
@@ -236,7 +236,7 @@ void InstancingPointLightDemo::Draw_SetIA(const PrimitiveData& primitiveData)
 	}
 }
 
-void InstancingPointLightDemo::Draw_SetData(const PrimitiveData& primitiveData)
+void InstancingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	auto vp = math::Matrix4::Identity;
 	if (auto camera = GetCamera())
@@ -254,7 +254,7 @@ void InstancingPointLightDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }
 
-void InstancingPointLightDemo::Draw_Render(const PrimitiveData& primitiveData)
+void InstancingDemo::Draw_Render(const PrimitiveData& primitiveData)
 {
 	auto deviceContext = GetApp().GetDeviceContext();
 

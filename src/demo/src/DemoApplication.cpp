@@ -10,7 +10,7 @@
 
 #include "Components/DiffuseLightingDemo.h"
 #include "Components/PointLightDemo.h"
-#include "Components/MultiplePointLightsDemo.h"
+#include "Components/MultipleLightsDemo.h"
 #include "Components/SpotlightDemo.h"
 
 #include "Components/NormalMappingDemo.h"
@@ -28,7 +28,6 @@
 #include "Components/ProjectiveTextureMappingDemo.h"
 #include "Components/ProjectiveTextureMappingDepthMapDemo.h"
 #include "Components/ShadowMappingDemo.h"
-#include "Components/DirectionalShadowMappingDemo.h"
 
 #include "Components/AnimationDemo.h"
 
@@ -37,7 +36,7 @@
 #include "Components/QuadHeightMapTessellationDemo.h"
 #include "Components/ModelTessellationDemo.h"
 
-#include "Components/InstancingPointLightDemo.h"
+#include "Components/InstancingDemo.h"
 
 #include "Components/ComputeShaderDemo.h"
 
@@ -283,10 +282,6 @@ void DemoApplication::Initialize()
 	shadowMapping->SetCamera(*camera);
 	shadowMapping->SetKeyboard(*m_keyboard);
 
-	auto directionalShadowMapping = std::make_shared<DirectionalShadowMappingDemo>();
-	directionalShadowMapping->SetCamera(*camera);
-	directionalShadowMapping->SetKeyboard(*m_keyboard);
-
 	// animation
 	auto animation = std::make_shared<AnimationDemo>();
 	animation->SetCamera(*camera);
@@ -310,7 +305,7 @@ void DemoApplication::Initialize()
 	modelTessellation->SetCamera(*camera);
 	modelTessellation->SetKeyboard(*m_keyboard);
 
-	auto instancing = std::make_shared<InstancingPointLightDemo>();
+	auto instancing = std::make_shared<InstancingDemo>();
 	instancing->SetCamera(*camera);
 	instancing->SetKeyboard(*m_keyboard);
 

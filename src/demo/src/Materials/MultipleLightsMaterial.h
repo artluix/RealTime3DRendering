@@ -1,17 +1,12 @@
 #pragma once
 #include "Materials/LightMaterial.h"
 
-class MultiplePointLightsMaterial : public LightMaterial
+class MultipleLightsMaterial : public LightMaterial
 {
-	RTTI_CLASS(MultiplePointLightsMaterial, LightMaterial)
+	RTTI_CLASS(MultipleLightsMaterial, LightMaterial)
 
 public:
-	explicit MultiplePointLightsMaterial(library::Effect& effect);
-
-	library::EffectVariable& GetLightsData() { return m_lightsData; }
-	library::EffectVariable& GetLightsCount() { return m_lightsCount; }
-
-	//-------------------------------------------------------------------------
+	explicit MultipleLightsMaterial(library::Effect& effect);
 
 	library::EffectVariable& GetColorBufferTexture() { return m_colorBufferTexture; }
 	library::EffectVariable& GetNormalBufferTexture() { return m_normalBufferTexture; }
@@ -27,10 +22,6 @@ protected:
 	void InitializeInternal() override;
 
 private:
-	library::EffectVariable& m_lightsData;
-	library::EffectVariable& m_lightData;
-	library::EffectVariable& m_lightsCount;
-
 	// for deferred shading
 	library::EffectVariable& m_colorBufferTexture;
 	library::EffectVariable& m_normalBufferTexture;

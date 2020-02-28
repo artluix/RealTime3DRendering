@@ -48,8 +48,9 @@ private:
 	library::math::Color m_specularColor;
 	library::math::Color m_ambientColor;
 
+	LightsData m_lightsData;
+
 	std::unique_ptr<library::SpotlightComponent> m_spotlight;
 	std::unique_ptr<library::ProxyModelComponent> m_proxyModel;
-
 	std::unique_ptr<library::TextComponent> m_text;
 };

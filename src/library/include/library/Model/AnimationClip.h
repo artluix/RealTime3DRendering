@@ -30,11 +30,11 @@ public:
 	const std::string& GetName() const { return m_name; }
 	const Duration& GetDuration() const { return m_duration; }
 	float GetTicksPerSecond() const { return m_ticksPerSecond; }
-	std::size_t GetKeyframesCount() const { return m_keyframesCount; }
+	unsigned GetKeyframesCount() const { return unsigned(m_keyframesCount); }
 
 	// bone animations
 	bool HasBoneAnimations() const { return !m_boneAnimations.empty(); }
-	std::size_t GetBoneAnimationsCount() const { return m_boneAnimations.size(); }
+	unsigned GetBoneAnimationsCount() const { return unsigned(m_boneAnimations.size()); }
 	bool HasBoneAnimation(const Bone& bone) const;
 
 	unsigned GetBoneAnimationIdx(const Bone& bone) const;

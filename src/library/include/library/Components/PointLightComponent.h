@@ -31,6 +31,8 @@ public:
 	float GetRadius() const { return m_radius; }
 	void SetRadius(const float radius);
 
+	bool IsVisibleFrom(const math::Vector3& positionFrom) const;
+
 protected:
 	math::Vector3 m_position;
 	float m_radius;

@@ -1,5 +1,5 @@
 #pragma once
-#include "library/Math/MathFwd.h"
+#include "library/Math/DxMathFwd.h"
 
 namespace dx
 {

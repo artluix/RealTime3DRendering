@@ -97,7 +97,7 @@ void MultipleRenderTarget::Begin()
 	RenderTarget::Begin(
 		m_app.GetDeviceContext(),
 		Data(
-			rtvs.data(), m_renderTargetViews.size(),
+			rtvs.data(), unsigned(m_renderTargetViews.size()),
 			m_depthStencilView.Get(),
 			m_app.GetViewport()
 		)

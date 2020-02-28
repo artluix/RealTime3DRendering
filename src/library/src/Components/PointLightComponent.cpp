@@ -37,4 +37,11 @@ void PointLightComponent::SetRadius(const float radius)
 {
 	m_radius = radius;
 }
+
+bool PointLightComponent::IsVisibleFrom(const math::Vector3& positionFrom) const
+{
+	const auto distance = (m_position - positionFrom).Length();
+	return (distance < m_radius);
+}
+
 } // namespace library

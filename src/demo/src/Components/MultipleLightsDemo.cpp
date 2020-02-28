@@ -1,4 +1,4 @@
-#include "Components/MultiplePointLightsDemo.h"
+#include "Components/MultipleLightsDemo.h"
 
 #include <library/Components/CameraComponent.h>
 #include <library/Components/KeyboardComponent.h>
@@ -34,7 +34,7 @@ constexpr unsigned k_maxLightsCount = 4;
 constexpr auto k_backgroundColor = math::Color(0.f);
 } // namespace
 
-MultiplePointLightsDemo::MultiplePointLightsDemo()
+MultipleLightsDemo::MultipleLightsDemo()
 	: m_lightsCount(1)
 
 	, m_specularPower(25.f)
@@ -43,7 +43,7 @@ MultiplePointLightsDemo::MultiplePointLightsDemo()
 {
 }
 
-void MultiplePointLightsDemo::InitializeInternal()
+void MultipleLightsDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
@@ -97,7 +97,7 @@ void MultiplePointLightsDemo::InitializeInternal()
 
 //-------------------------------------------------------------------------
 
-void MultiplePointLightsDemo::Update(const Time& time)
+void MultipleLightsDemo::Update(const Time& time)
 {
 	if (!!m_keyboard)
 	{
@@ -122,7 +122,7 @@ void MultiplePointLightsDemo::Update(const Time& time)
 	//PrimitiveComponent::Update(time);
 }
 
-void MultiplePointLightsDemo::UpdateAmbientLight(const Time& time)
+void MultipleLightsDemo::UpdateAmbientLight(const Time& time)
 {
 	static float ambientLightIntensity = m_ambientColor.a;
 
@@ -142,7 +142,7 @@ void MultiplePointLightsDemo::UpdateAmbientLight(const Time& time)
 	}
 }
 
-void MultiplePointLightsDemo::UpdatePointLight(const Time& time)
+void MultipleLightsDemo::UpdatePointLight(const Time& time)
 {
 	static float pointLightIntensity = m_lightColor.a;
 
@@ -208,7 +208,7 @@ void MultiplePointLightsDemo::UpdatePointLight(const Time& time)
 	}
 }
 
-void MultiplePointLightsDemo::UpdateSpecularLight(const Time& time)
+void MultipleLightsDemo::UpdateSpecularLight(const Time& time)
 {
 	static float specularLightIntensity = m_specularPower;
 
@@ -236,7 +236,7 @@ void MultiplePointLightsDemo::UpdateSpecularLight(const Time& time)
 
 //-------------------------------------------------------------------------
 
-void MultiplePointLightsDemo::Draw_SetData(const PrimitiveData& primitiveData)
+void MultipleLightsDemo::Draw_SetData(const PrimitiveData& primitiveData)
 {
 	const auto& world = GetWorldMatrix();
 	auto wvp = world;
@@ -263,7 +263,6 @@ void MultiplePointLightsDemo::Draw_SetData(const PrimitiveData& primitiveData)
 		pointLights[i] = m_lightGlues[i].light->GetData();
 	}
 
-	m_material->GetLightsCount() << m_lightsCount;
 	m_material->GetLightsData() << pointLights;
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);

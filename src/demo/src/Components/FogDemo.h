@@ -50,6 +50,8 @@ private:
 	float m_fogRange;
 	float m_fogEnabled;
 
+	LightsData m_lightsData;
+
 	std::unique_ptr<library::DirectionalLightComponent> m_directionalLight;
 	std::unique_ptr<library::ProxyModelComponent> m_proxyModel;
 	std::unique_ptr<library::TextComponent> m_text;

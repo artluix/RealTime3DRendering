@@ -11,14 +11,14 @@ class PointLightComponent;
 class ProxyModelComponent;
 } // namespace library
 
-class InstancingPointLightDemo
+class InstancingDemo
 	: public library::ConcreteMaterialPrimitiveComponent<InstancingPointLightMaterial>
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(InstancingPointLightDemo, library::PrimitiveComponent, library::InputReceivableComponent)
+	RTTI_CLASS(InstancingDemo, library::PrimitiveComponent, library::InputReceivableComponent)
 
 public:
-	InstancingPointLightDemo();
+	InstancingDemo();
 
 	void Update(const library::Time& time) override;
 

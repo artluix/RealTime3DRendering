@@ -71,6 +71,9 @@ void SpotlightDemo::InitializeInternal()
 	m_proxyModel->SetPosition(m_spotlight->GetPosition());
 	m_proxyModel->Initialize(GetApp());
 
+	m_lightsData.spotlights[0] = m_spotlight->GetData();
+	m_lightsData.spotlightsCount = unsigned(m_spotlight->IsVisibleFrom(GetPosition()));
+
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
 	m_text->SetTextUpdateFunction([this]() -> std::wstring {
@@ -137,9 +140,11 @@ void SpotlightDemo::UpdateSpotlight(const Time& time)
 		{
 			spotlightIntensity += k_lightModulationRate * elapsedTime;
 
-			auto spotightColor = m_spotlight->GetColor();
-			spotightColor.a = math::Min(spotlightIntensity, k_byteMax);
-			m_spotlight->SetColor(spotightColor);
+			auto spotlightColor = m_spotlight->GetColor();
+			spotlightColor.a = math::Min(spotlightIntensity, k_byteMax);
+			m_spotlight->SetColor(spotlightColor);
+
+			m_lightsData.spotlights[0].color = spotlightColor;
 		}
 
 		if (m_keyboard->IsKeyDown(Key::End) && spotlightIntensity > 0)
@@ -149,6 +154,8 @@ void SpotlightDemo::UpdateSpotlight(const Time& time)
 			auto spotlightColor = m_spotlight->GetColor();
 			spotlightColor.a = math::Max(spotlightIntensity, 0.f);
 			m_spotlight->SetColor(spotlightColor);
+
+			m_lightsData.spotlights[0].color = spotlightColor;
 		}
 
 		// move
@@ -179,6 +186,9 @@ void SpotlightDemo::UpdateSpotlight(const Time& time)
 
 				m_spotlight->SetPosition(m_spotlight->GetPosition() + movement);
 				m_proxyModel->SetPosition(m_spotlight->GetPosition() + movement);
+
+				m_lightsData.spotlights[0] = m_spotlight->GetData();
+				m_lightsData.spotlightsCount = unsigned(m_spotlight->IsVisibleFrom(GetPosition()));
 			}
 		}
 
@@ -203,6 +213,8 @@ void SpotlightDemo::UpdateSpotlight(const Time& time)
 				const auto rotation = math::Quaternion::RotationPitchYawRoll(rotationAmount.y, rotationAmount.x, 0.f);
 				m_spotlight->Rotate(rotation);
 				m_proxyModel->Rotate(rotation);
+
+				m_lightsData.spotlights[0] = m_spotlight->GetData();
 			}
 		}
 
@@ -212,6 +224,9 @@ void SpotlightDemo::UpdateSpotlight(const Time& time)
 			{
 				float radius = m_spotlight->GetRadius() + k_lightModulationRate * elapsedTime;
 				m_spotlight->SetRadius(radius);
+
+				m_lightsData.spotlights[0].radius = radius;
+				m_lightsData.spotlightsCount = unsigned(m_spotlight->IsVisibleFrom(GetPosition()));
 			}
 
 			if (m_keyboard->IsKeyDown(Key::N))
@@ -219,6 +234,9 @@ void SpotlightDemo::UpdateSpotlight(const Time& time)
 				float radius = m_spotlight->GetRadius() - k_lightModulationRate * elapsedTime;
 				radius = math::Max(radius, 0.0f);
 				m_spotlight->SetRadius(radius);
+
+				m_lightsData.spotlights[0].radius = radius;
+				m_lightsData.spotlightsCount = unsigned(m_spotlight->IsVisibleFrom(GetPosition()));
 			}
 		}
 
@@ -231,6 +249,8 @@ void SpotlightDemo::UpdateSpotlight(const Time& time)
 				innerAngle = math::Min(innerAngle, 1.0f);
 
 				m_spotlight->SetInnerAngle(innerAngle);
+
+				m_lightsData.spotlights[0].innerAngle = innerAngle;
 			}
 			if (m_keyboard->IsKeyDown(Key::X) && innerAngle > 0.5f)
 			{
@@ -238,6 +258,8 @@ void SpotlightDemo::UpdateSpotlight(const Time& time)
 				innerAngle = math::Max(innerAngle, 0.5f);
 
 				m_spotlight->SetInnerAngle(innerAngle);
+
+				m_lightsData.spotlights[0].innerAngle = innerAngle;
 			}
 
 			static float outerAngle = m_spotlight->GetOuterAngle();
@@ -247,6 +269,8 @@ void SpotlightDemo::UpdateSpotlight(const Time& time)
 				outerAngle = math::Min(outerAngle, 0.5f);
 
 				m_spotlight->SetOuterAngle(outerAngle);
+
+				m_lightsData.spotlights[0].outerAngle = outerAngle;
 			}
 			if (m_keyboard->IsKeyDown(Key::V) && outerAngle > 0.0f)
 			{
@@ -254,8 +278,12 @@ void SpotlightDemo::UpdateSpotlight(const Time& time)
 				outerAngle = math::Max(outerAngle, 0.0f);
 
 				m_spotlight->SetOuterAngle(outerAngle);
+
+				m_lightsData.spotlights[0].outerAngle = outerAngle;
 			}
 		}
+
+		// visiblity
 	}
 }
 
@@ -303,10 +331,7 @@ void SpotlightDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetSpecularColor() << m_specularColor.ToVector4();
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
 
-	LightsData ld;
-	ld.spotlights[0] = m_spotlight->GetData();
-	ld.spotlightsCount = 1;
-	m_material->GetLightsData() << ld;
+	m_material->GetLightsData() << m_lightsData;
 
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 

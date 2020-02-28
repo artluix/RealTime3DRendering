@@ -1,11 +1,9 @@
 #pragma once
 #include <library/Materials/Material.h>
-
 #include <library/Components/SpotlightComponent.h>
 
-#define MAX_LIGHTS_COUNT 4
+constexpr inline unsigned MAX_LIGHTS_COUNT = 4;
 
-// move it somewhere else
 struct LightsData
 {
 	std::array<library::DirectionalLightData, MAX_LIGHTS_COUNT> dirLights;
@@ -36,6 +34,7 @@ public:
 
 	library::EffectVariable& GetWVP() { return m_wvp; }
 	library::EffectVariable& GetWorld() { return m_world; }
+
 	library::EffectVariable& GetSpecularPower() { return m_specularPower; }
 	library::EffectVariable& GetSpecularColor() { return m_specularColor; }
 

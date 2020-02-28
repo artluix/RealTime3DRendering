@@ -9,6 +9,9 @@ if(APPLICATION)
             src/DemoApplication.cpp
             src/Program.cpp
 
+            src/DemoUtils.h
+            src/DemoUtils.cpp
+
         # components
 
         # without materials
@@ -70,8 +73,8 @@ if(APPLICATION)
             src/Components/ModelTessellationDemo.h
             src/Components/ModelTessellationDemo.cpp
 
-            src/Components/MultiplePointLightsDemo.h
-            src/Components/MultiplePointLightsDemo.cpp
+            src/Components/MultipleLightsDemo.h
+            src/Components/MultipleLightsDemo.cpp
 
             src/Components/NormalMappingDemo.h
             src/Components/NormalMappingDemo.cpp

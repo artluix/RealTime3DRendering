@@ -1,5 +1,6 @@
 #pragma once
 #include "library/Math/DxMath.h"
+#include "library/Math/MathFwd.h"
 
 #include <string>
 

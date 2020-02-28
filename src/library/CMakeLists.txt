@@ -62,7 +62,11 @@ if(APPLICATION)
                 include/library/Math/Color.h
                 include/library/Math/Direction.h
                 include/library/Math/DxMath.h
+                include/library/Math/DXMathFwd.h
                 include/library/Math/Frustum.h
+                include/library/Math/Interval.h
+                include/library/Math/MathConstants.h
+                include/library/Math/MathUtils.h
                 include/library/Math/Matrix.h
                 include/library/Math/Matrix-inl.h
                 include/library/Math/Plane.h
@@ -71,7 +75,6 @@ if(APPLICATION)
                 include/library/Math/Transform.h
                 include/library/Math/Vector.h
                 include/library/Math/Vector-inl.h
-                include/library/Math/DXMath.h
 
             # Model
                 include/library/Model/Model.h
@@ -100,6 +103,7 @@ if(APPLICATION)
             include/library/ComPtr.hpp
             include/library/DxForward.h
             include/library/FxForward.h
+            include/library/InstanceData.h
             include/library/Key.h
             include/library/Logger.h
             include/library/NonCopyable.hpp

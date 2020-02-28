@@ -1,16 +1,12 @@
-#include "Materials/MultiplePointLightsMaterial.h"
+#include "Materials/MultipleLightsMaterial.h"
 
 #include <library/Effect/Effect.h>
 #include <library/Model/Mesh.h>
 
 using namespace library;
 
-MultiplePointLightsMaterial::MultiplePointLightsMaterial(Effect& effect)
+MultipleLightsMaterial::MultipleLightsMaterial(Effect& effect)
 	: LightMaterial(effect, "forward")
-
-	, m_lightsData(effect.GetVariable("LightsData"))
-	, m_lightData(effect.GetVariable("LightData"))
-	, m_lightsCount(effect.GetVariable("LightsCount"))
 
 	, m_colorBufferTexture(effect.GetVariable("ColorBufferTexture"))
 	, m_normalBufferTexture(effect.GetVariable("NormalBufferTexture"))
@@ -19,7 +15,7 @@ MultiplePointLightsMaterial::MultiplePointLightsMaterial(Effect& effect)
 {
 }
 
-void MultiplePointLightsMaterial::InitializeInternal()
+void MultipleLightsMaterial::InitializeInternal()
 {
 	// vertex buffer input
 	{
@@ -88,7 +84,7 @@ void MultiplePointLightsMaterial::InitializeInternal()
 	}
 }
 
-VertexBufferData MultiplePointLightsMaterial::CreateVertexBufferData(
+VertexBufferData MultipleLightsMaterial::CreateVertexBufferData(
 	ID3D11Device* const device,
 	const Mesh& mesh
 ) const
