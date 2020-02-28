@@ -1,5 +1,7 @@
 #include "DiffuseLightingDemo.h"
 
+#include "LightsData.h"
+
 #include <library/Components/CameraComponent.h>
 #include <library/Components/KeyboardComponent.h>
 #include <library/Components/DirectionalLightComponent.h>
@@ -168,7 +170,9 @@ void DiffuseLightingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetWVP() << wvp;
 	m_material->GetWorld() << world;
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
-	m_material->GetLightData() << m_directionalLight->GetData();
+
+	m_material->GetLightData() << DirectionalLightData(*m_directionalLight);
+	
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);

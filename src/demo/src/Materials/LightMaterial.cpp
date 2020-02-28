@@ -11,7 +11,14 @@ LightMaterial::LightMaterial(Effect& effect, const std::string& defaultTechnique
 	, m_ambientColor(effect.GetVariable("AmbientColor"))
 	, m_cameraPosition(effect.GetVariable("CameraPosition"))
 
-	, m_lightsData(effect.GetVariable("LightsData"))
+	, m_dirLights(effect.GetVariable("DirLights"))
+	, m_dirLightsCount(effect.GetVariable("DirLightsCount"))
+
+	, m_pointLights(effect.GetVariable("PointLights"))
+	, m_pointLightsCount(effect.GetVariable("PointLightsCount"))
+
+	, m_spotlights(effect.GetVariable("Spotlights"))
+	, m_spotlightsCount(effect.GetVariable("SpotlightsCount"))
 
 	, m_wvp(effect.GetVariable("WVP"))
 	, m_world(effect.GetVariable("World"))

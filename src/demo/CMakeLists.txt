@@ -12,6 +12,8 @@ if(APPLICATION)
             src/DemoUtils.h
             src/DemoUtils.cpp
 
+            src/LightsData.h
+
         # components
 
         # without materials

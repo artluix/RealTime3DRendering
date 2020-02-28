@@ -49,8 +49,6 @@ private:
 	library::math::Color m_specularColor;
 	library::math::Color m_ambientColor;
 
-	LightsData m_lightsData;
-
 	std::unique_ptr<library::DirectionalLightComponent> m_directionalLight;
 	std::unique_ptr<library::ProxyModelComponent> m_proxyModel;
 	std::unique_ptr<library::TextComponent> m_text;

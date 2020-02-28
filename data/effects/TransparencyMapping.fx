@@ -6,8 +6,6 @@ cbuffer CBufferPerFrame
 {
     float3 CameraPosition;
 
-    POINT_LIGHT_DATA LightData; // TODO: remove
-
     float3 FogColor = { 0.5f, 0.5f, 0.5f };
     float FogStart = { 20.0f };
     float FogRange = { 40.0f };

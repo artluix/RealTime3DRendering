@@ -21,13 +21,6 @@ PointLightComponent::~PointLightComponent() = default;
 
 //-------------------------------------------------------------------------
 
-PointLightComponent::Data PointLightComponent::GetData() const
-{
-	return Data{ m_color, m_position, m_radius };
-}
-
-//-------------------------------------------------------------------------
-
 void PointLightComponent::SetPosition(const math::Vector3& position)
 {
 	m_position = position;

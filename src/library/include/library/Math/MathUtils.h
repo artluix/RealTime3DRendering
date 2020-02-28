@@ -5,6 +5,9 @@
 
 namespace library::math
 {
+
+inline namespace utils
+{
 constexpr float ToRadians(const float degrees) { return degrees / Radian; }
 constexpr float ToDegrees(const float radians) { return radians * Radian; }
 
@@ -29,5 +32,6 @@ Lerp(const T& lhs, const T& rhs, const float factor) { return lhs + factor * (rh
 template <typename T>
 constexpr std::enable_if_t<std::is_arithmetic_v<T>, T>
 Abs(const T& val) { return (val > 0) ? val : -val; }
+} // inline namespace utils
 
 } // namespace library::math

@@ -6,8 +6,6 @@
 cbuffer CBufferPerFrame
 {
     float3 CameraPosition;
-
-    POINT_LIGHT_DATA LightData; // TODO: remove
 }
 
 cbuffer CBufferPerObject

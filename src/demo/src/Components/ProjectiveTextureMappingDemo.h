@@ -67,6 +67,4 @@ private:
 	float m_specularPower;
 	library::math::Color m_specularColor;
 	library::math::Color m_ambientColor;
-
-	LightsData m_lightsData;
 };

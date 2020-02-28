@@ -19,7 +19,6 @@
 #include <library/Effect/EffectVariable.h>
 
 #include <sstream>
-#include <array>
 
 using namespace library;
 
@@ -85,9 +84,6 @@ void NormalMappingDemo::InitializeInternal()
 	m_proxyModel->SetCamera(*GetCamera());
 	m_proxyModel->Initialize(GetApp());
 
-	m_lightsData.dirLights[0] = m_directionalLight->GetData();
-	m_lightsData.dirLightsCount = 1;
-
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
 	m_text->SetTextUpdateFunction([this]() -> std::wstring {
@@ -149,8 +145,6 @@ void NormalMappingDemo::UpdateDirectionalLight(const Time& time)
 			auto directionalLightColor = m_directionalLight->GetColor();
 			directionalLightColor.a = math::Min(directionalLightIntensity, k_byteMax);
 			m_directionalLight->SetColor(directionalLightColor);
-
-			m_lightsData.dirLights[0].color = directionalLightColor;
 		}
 
 		if (m_keyboard->IsKeyDown(Key::End) && directionalLightIntensity > 0)
@@ -160,8 +154,6 @@ void NormalMappingDemo::UpdateDirectionalLight(const Time& time)
 			auto directionalLightColor = m_directionalLight->GetColor();
 			directionalLightColor.a = math::Max(directionalLightIntensity, 0.f);
 			m_directionalLight->SetColor(directionalLightColor);
-
-			m_lightsData.dirLights[0].color = directionalLightColor;
 		}
 
 		// rotate directional light
@@ -184,8 +176,6 @@ void NormalMappingDemo::UpdateDirectionalLight(const Time& time)
 			const auto rotation = math::Quaternion::RotationPitchYawRoll(rotationAmount.y, rotationAmount.x, 0.f);
 			m_directionalLight->Rotate(rotation);
 			m_proxyModel->Rotate(rotation);
-
-			m_lightsData.dirLights[0] = m_directionalLight->GetData();
 		}
 	}
 }
@@ -236,7 +226,8 @@ void NormalMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetSpecularColor() << m_specularColor.ToVector4();
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
 
-	m_material->GetLightsData() << m_lightsData;
+	m_material->GetDirLights() << DirectionalLightData(*m_directionalLight);
+	m_material->GetDirLightsCount() << 1;
 
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 	m_material->GetNormalMap() << m_textures[Texture::NormalMap].Get();

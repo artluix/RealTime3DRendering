@@ -5,25 +5,13 @@
 
 namespace library
 {
-__declspec(align(16)) struct DirectionalLightData
-{
-	math::Color color;
-	math::Vector3 direction;
-};
-
-//-------------------------------------------------------------------------
-
 class DirectionalLightComponent : public virtual LightComponent
 {
 	RTTI_CLASS(DirectionalLightComponent, LightComponent)
 
 public:
-	using Data = DirectionalLightData;
-
 	DirectionalLightComponent();
 	~DirectionalLightComponent();
-
-	Data GetData() const;
 
 	const math::Vector3& GetDirection() const { return m_direction; }
 	void SetDirection(const math::Vector3& direction);

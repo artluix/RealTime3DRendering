@@ -4,17 +4,6 @@
 
 namespace library
 {
-__declspec(align(16)) struct SpotlightData
-{
-	math::Color color;
-	math::Vector3 direction;
-	float radius;
-	math::Vector3 position;
-	float innerAngle, outerAngle;
-};
-
-//-------------------------------------------------------------------------
-
 class SpotlightComponent
 	: public DirectionalLightComponent
 	, public PointLightComponent
@@ -22,12 +11,8 @@ class SpotlightComponent
 	RTTI_CLASS(SpotlightComponent, DirectionalLightComponent, PointLightComponent)
 
 public:
-	using Data = SpotlightData;
-
 	SpotlightComponent();
 	~SpotlightComponent();
-
-	Data GetData() const;
 
 	float GetInnerAngle() const { return m_innerAngle; }
 	void SetInnerAngle(const float innerAngle);

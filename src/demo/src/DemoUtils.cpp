@@ -8,10 +8,10 @@ namespace utils
 	void UpdateValue(
 		const library::Time& time,
 		float& value, // out
-		const library::math::Interval interval,
+		const library::math::Interval& interval,
 		const float modulationRate,
 		const library::KeyboardComponent* keyboard,
-		const library::Pair<library::Key> keys
+		const library::Pair<library::Key>& keys
 	)
 	{
 		if (keyboard)

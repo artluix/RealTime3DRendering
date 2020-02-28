@@ -11,8 +11,6 @@ cbuffer CBufferPerFrame
     float3 CameraPosition;
 
     float2 ShadowMapSize = { 1024.f, 1024.f };
-
-    POINT_LIGHT_DATA LightData; // TODO: remove
 }
 
 cbuffer CBufferPerObject

@@ -231,6 +231,7 @@ if(APPLICATION)
         PUBLIC
             -DUNICODE
             -D_UNICODE
+            -DNOMINMAX
 
             # debug
             $<$<CONFIG:DEBUG>: -DDEBUG -D_DEBUG>

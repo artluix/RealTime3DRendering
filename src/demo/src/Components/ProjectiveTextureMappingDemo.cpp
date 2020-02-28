@@ -85,9 +85,6 @@ void ProjectiveTextureMappingDemo::InitializeInternal()
 	m_proxyModel->SetPosition(m_pointLight->GetPosition());
 	m_proxyModel->Initialize(GetApp());
 
-	m_lightsData.pointLights[0] = m_pointLight->GetData();
-	m_lightsData.pointLightsCount = unsigned(m_pointLight->IsVisibleFrom(GetPosition()));
-
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
 	m_text->SetTextUpdateFunction(
@@ -160,7 +157,10 @@ void ProjectiveTextureMappingDemo::Draw_SetData(const PrimitiveData& primitiveDa
 	m_material->GetSpecularColor() << m_specularColor.ToVector4();
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
 
-	m_material->GetLightsData() << m_pointLight->GetData();
+	const auto isLightVisible = m_pointLight->IsVisibleFrom(GetPosition());
+	m_material->GetPointLightsCount() << unsigned(isLightVisible);
+	if (isLightVisible)
+		m_material->GetPointLights() << PointLightData(*m_pointLight);
 
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 	m_material->GetProjectedTexture() << m_textures[Texture::Projected].Get();

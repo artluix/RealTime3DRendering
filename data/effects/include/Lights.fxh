@@ -38,28 +38,21 @@ struct SPOTLIGHT_DATA // 64 bytes
     float3 _padding;
 };
 
-struct LIGHTS_DATA
-{
-    DIRECTIONAL_LIGHT_DATA dirLights[MAX_LIGHTS_COUNT];
-    POINT_LIGHT_DATA pointLights[MAX_LIGHTS_COUNT];
-    SPOTLIGHT_DATA spotlights[MAX_LIGHTS_COUNT];
-
-    uint dirLightsCount;
-    uint pointLightsCount;
-    uint spotlightsCount;
-
-    uint _padding;
-};
-
 //-------------------------------------------------------------------------
 // Constant buffers
 //-------------------------------------------------------------------------
 
 cbuffer CBufferLightsPerFrame // MAX_LIGHTS_COUNT * (128) + 12 bytes
 {
-    LIGHTS_DATA LightsData;
-
     float4 AmbientColor = { 1.0f, 1.0f, 1.0f, 0.0f };
+
+    DIRECTIONAL_LIGHT_DATA DirLights[MAX_LIGHTS_COUNT];
+    POINT_LIGHT_DATA PointLights[MAX_LIGHTS_COUNT];
+    SPOTLIGHT_DATA Spotlights[MAX_LIGHTS_COUNT];
+
+    uint DirLightsCount;
+    uint PointLightsCount;
+    uint SpotlightsCount;
 }
 
 cbuffer CBufferLightsPerObject
@@ -175,35 +168,35 @@ float3 get_specular_diffuse(LIGHT_OBJECT_PARAMS_EX lightObjectParamsEx)
 
     // Directional lights
     [loop]
-    for (uint i = 0; i < LightsData.dirLightsCount; i++)
+    for (uint i = 0; i < DirLightsCount; i++)
     {
-        lightParams.lightColor = LightsData.dirLights[i].color;
-        lightParams.lightData = float4(LightsData.dirLights[i].direction, 1.0f);
+        lightParams.lightColor = DirLights[i].color;
+        lightParams.lightData = float4(DirLights[i].direction, 1.0f);
         specularDiffuse += get_specular_diffuse(lightParams);
     }
 
     // Point lights
     [loop]
-    for (i = 0; i < LightsData.pointLightsCount; i++)
+    for (i = 0; i < PointLightsCount; i++)
     {
-        lightParams.lightColor = LightsData.pointLights[i].color;
-        lightParams.lightData = get_light_data(LightsData.pointLights[i].position, LightsData.pointLights[i].radius, lightObjectParamsEx.worldPosition);
+        lightParams.lightColor = PointLights[i].color;
+        lightParams.lightData = get_light_data(PointLights[i].position, PointLights[i].radius, lightObjectParamsEx.worldPosition);
         specularDiffuse += get_specular_diffuse(lightParams);
     }
 
     // Spotlights
     [loop]
-    for (i = 0; i < LightsData.spotlightsCount; i++)
+    for (i = 0; i < SpotlightsCount; i++)
     {
         float spotFactor = 0.f;
-        float4 lightData = get_light_data(LightsData.spotlights[i].position, LightsData.spotlights[i].radius, lightObjectParamsEx.worldPosition);
-        float lightAngle = dot(lightData.xyz, -LightsData.spotlights[i].direction);
+        float4 lightData = get_light_data(Spotlights[i].position, Spotlights[i].radius, lightObjectParamsEx.worldPosition);
+        float lightAngle = dot(lightData.xyz, -Spotlights[i].direction);
 
         if (lightAngle > 0.f)
         {
-            spotFactor = smoothstep(LightsData.spotlights[i].outerAngle, LightsData.spotlights[i].innerAngle, lightAngle);
+            spotFactor = smoothstep(Spotlights[i].outerAngle, Spotlights[i].innerAngle, lightAngle);
 
-            lightParams.lightColor = LightsData.spotlights[i].color;
+            lightParams.lightColor = Spotlights[i].color;
             lightParams.lightData = lightData;
             specularDiffuse += get_specular_diffuse(lightParams) * spotFactor;
         }

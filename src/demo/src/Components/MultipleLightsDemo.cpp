@@ -255,15 +255,16 @@ void MultipleLightsDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 
-	std::vector<PointLightComponent::Data> pointLights;
-	pointLights.resize(m_lightsCount);
-
+	std::vector<PointLightData> pointLightsData;
 	for (unsigned i = 0; i < m_lightsCount; i++)
 	{
-		pointLights[i] = m_lightGlues[i].light->GetData();
+		const auto& light = *m_lightGlues[i].light;
+		const auto isLightVisible = light.IsVisibleFrom(GetPosition());
+		if (isLightVisible)
+			pointLightsData.emplace_back(PointLightData(light));
 	}
-
-	m_material->GetLightsData() << pointLights;
+	m_material->GetPointLightsCount() << unsigned(pointLightsData.size());
+	m_material->GetPointLights() << pointLightsData.data();
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }

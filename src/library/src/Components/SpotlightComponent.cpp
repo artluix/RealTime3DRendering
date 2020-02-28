@@ -22,13 +22,6 @@ SpotlightComponent::~SpotlightComponent() = default;
 
 //-------------------------------------------------------------------------
 
-SpotlightComponent::Data SpotlightComponent::GetData() const
-{
-	return Data{ m_color, m_direction, m_radius, m_position, m_innerAngle, m_outerAngle };
-}
-
-//-------------------------------------------------------------------------
-
 void SpotlightComponent::SetInnerAngle(const float innerAngle)
 {
 	m_innerAngle = innerAngle;

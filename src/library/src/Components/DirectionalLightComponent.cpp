@@ -20,11 +20,6 @@ DirectionalLightComponent::~DirectionalLightComponent() = default;
 
 //-------------------------------------------------------------------------
 
-DirectionalLightComponent::Data DirectionalLightComponent::GetData() const
-{
-	return Data{ m_color, m_direction };
-}
-
 void DirectionalLightComponent::SetDirection(const math::Vector3& direction)
 {
 	m_direction = direction;

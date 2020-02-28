@@ -1,21 +1,7 @@
 #pragma once
+#include "LightsData.h"
+
 #include <library/Materials/Material.h>
-#include <library/Components/SpotlightComponent.h>
-
-constexpr inline unsigned MAX_LIGHTS_COUNT = 4;
-
-struct LightsData
-{
-	std::array<library::DirectionalLightData, MAX_LIGHTS_COUNT> dirLights;
-	std::array<library::PointLightData, MAX_LIGHTS_COUNT> pointLights;
-	std::array<library::SpotlightData, MAX_LIGHTS_COUNT> spotlights;
-
-	unsigned int dirLightsCount = 0;
-	unsigned int pointLightsCount = 0;
-	unsigned int spotlightsCount = 0;
-};
-
-//-------------------------------------------------------------------------
 
 class LightMaterial : public library::Material
 {
@@ -30,7 +16,14 @@ public:
 	library::EffectVariable& GetAmbientColor() { return m_ambientColor; }
 	library::EffectVariable& GetCameraPosition() { return m_cameraPosition; }
 
-	library::EffectVariable& GetLightsData() { return m_lightsData; }
+	library::EffectVariable& GetDirLights() { return m_dirLights; }
+	library::EffectVariable& GetDirLightsCount() { return m_dirLightsCount; }
+
+	library::EffectVariable& GetPointLights() { return m_pointLights; }
+	library::EffectVariable& GetPointLightsCount() { return m_pointLightsCount; }
+
+	library::EffectVariable& GetSpotlights() { return m_spotlights; }
+	library::EffectVariable& GetSpotlightsCount() { return m_spotlightsCount; }
 
 	library::EffectVariable& GetWVP() { return m_wvp; }
 	library::EffectVariable& GetWorld() { return m_world; }
@@ -52,7 +45,14 @@ private:
 	library::EffectVariable& m_ambientColor;
 	library::EffectVariable& m_cameraPosition;
 
-	library::EffectVariable& m_lightsData;
+	library::EffectVariable& m_dirLights;
+	library::EffectVariable& m_dirLightsCount;
+
+	library::EffectVariable& m_pointLights;
+	library::EffectVariable& m_pointLightsCount;
+
+	library::EffectVariable& m_spotlights;
+	library::EffectVariable& m_spotlightsCount;
 
 	library::EffectVariable& m_wvp;
 	library::EffectVariable& m_world;

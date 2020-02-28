@@ -7,9 +7,6 @@ static const float4 WhiteColor = { 1.f, 1.f, 1.f, 1.f };
 cbuffer CBufferPerFrame
 {
     float3 CameraPosition;
-
-    POINT_LIGHT_DATA LightData; // TODO: remove
-
     float DepthBias = 0.005f;
 }
 

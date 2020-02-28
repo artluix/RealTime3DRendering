@@ -202,7 +202,10 @@ void DisplacementMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
 
-	m_material->GetLightData() << m_pointLight->GetData();
+	const auto isLightVisible = m_pointLight->IsVisibleFrom(GetPosition());
+	m_material->GetPointLightsCount() << unsigned(isLightVisible);
+	if (isLightVisible)
+		m_material->GetPointLights() << PointLightData(*m_pointLight);
 
 	m_material->GetWVP() << wvp;
 	m_material->GetWorld() << world;
