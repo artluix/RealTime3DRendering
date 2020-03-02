@@ -19,6 +19,10 @@ public:
 	void Rotate(const math::Quaternion& rotation);
 	void SetRotation(const math::Quaternion& rotation);
 
+#ifdef USE_LIGHT_PROXY_MODEL
+	void SetupProxyModel(const CameraComponent& camera) override;
+#endif
+
 protected:
 	math::Vector3 m_direction;
 };

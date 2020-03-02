@@ -109,13 +109,9 @@ void ProjectiveTextureMappingDepthMapDemo::InitializeInternal()
 	m_depthMapMaterial->Initialize();
 
 	m_pointLight = std::make_unique<PointLightComponent>();
+	m_pointLight->SetupProxyModel(*GetCamera());
 	m_pointLight->SetRadius(500.f);
 	m_pointLight->SetPosition(math::Vector3(0.f, 0.f, 10.f));
-
-	m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.5f);
-	m_proxyModel->SetCamera(*camera);
-	m_proxyModel->SetPosition(m_pointLight->GetPosition());
-	m_proxyModel->Initialize(GetApp());
 
 	// specific
 	SetScaling(math::Vector3(10.f));
@@ -311,7 +307,7 @@ void ProjectiveTextureMappingDepthMapDemo::Update(const Time& time)
 		m_uiDepthMap->Update(time);
 
 	m_text->Update(time);
-	m_proxyModel->Update(time);
+	m_pointLight->Update(time);
 	m_projector->Update(time);
 	m_renderableProjectorFrustum->Update(time);
 
@@ -370,7 +366,6 @@ void ProjectiveTextureMappingDepthMapDemo::UpdatePointLightAndProjector(const Ti
 			const auto position = m_pointLight->GetPosition() + movement;
 
 			m_pointLight->SetPosition(position);
-			m_proxyModel->SetPosition(position);
 			m_projector->SetPosition(position);
 			m_renderableProjectorFrustum->SetPosition(position);
 		}
@@ -397,7 +392,6 @@ void ProjectiveTextureMappingDepthMapDemo::UpdatePointLightAndProjector(const Ti
 				rotationAmount.y, rotationAmount.x, 0.f
 			);
 
-			m_proxyModel->Rotate(rotationQuat);
 			m_renderableProjectorFrustum->Rotate(rotationQuat);
 			m_projector->Rotate(rotationQuat);
 		}

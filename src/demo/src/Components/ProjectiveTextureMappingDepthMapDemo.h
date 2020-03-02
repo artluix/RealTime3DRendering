@@ -9,7 +9,6 @@ namespace library
 {
 class PointLightComponent;
 class ProjectorComponent;
-class ProxyModelComponent;
 class RenderableFrustumComponent;
 class UIComponent;
 class TextComponent;
@@ -75,7 +74,6 @@ private:
 	std::unique_ptr<library::UIComponent> m_uiDepthMap;
 
 	std::unique_ptr<library::PointLightComponent> m_pointLight;
-	std::unique_ptr<library::ProxyModelComponent> m_proxyModel;
 
 	std::unique_ptr<library::ProjectorComponent> m_projector;
 	std::unique_ptr<library::RenderableFrustumComponent> m_renderableProjectorFrustum;

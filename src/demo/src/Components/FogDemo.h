@@ -8,7 +8,6 @@
 namespace library
 {
 class DirectionalLightComponent;
-class ProxyModelComponent;
 class TextComponent;
 } // namespace library
 
@@ -51,6 +50,5 @@ private:
 	float m_fogEnabled;
 
 	std::unique_ptr<library::DirectionalLightComponent> m_directionalLight;
-	std::unique_ptr<library::ProxyModelComponent> m_proxyModel;
 	std::unique_ptr<library::TextComponent> m_text;
 };

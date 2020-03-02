@@ -60,28 +60,21 @@ void MultipleLightsDemo::InitializeInternal()
 	m_textures.resize(Texture::Count);
 	m_textures[Texture::Default] = GetApp().LoadTexture("EarthAtDay");
 
-	m_lightGlues.resize(k_maxLightsCount);
-	for (auto& lightGlue : m_lightGlues)
+	m_lights.reserve(k_maxLightsCount);
+	for (unsigned i = 0; i < k_maxLightsCount; i++)
 	{
-		lightGlue.light = std::make_unique<PointLightComponent>();
-		lightGlue.light->SetRadius(500.f);
+		auto pointLightComponent = std::make_unique<PointLightComponent>();
+		pointLightComponent->SetupProxyModel(*GetCamera());
+		pointLightComponent->SetRadius(500.f);
 
-		lightGlue.model = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.5f);
-		lightGlue.model->SetCamera(*GetCamera());
+		m_lights.emplace_back(std::move(pointLightComponent));
 	}
 
 	// set position for lights
-	m_lightGlues[0].light->SetPosition(math::Vector3(0.f, -10.f, 10.f));
-	m_lightGlues[1].light->SetPosition(math::Vector3(0.f, 10.f, 10.f));
-	m_lightGlues[2].light->SetPosition(math::Vector3(-10.f, 0.f, 0.f));
-	m_lightGlues[3].light->SetPosition(math::Vector3(10.f, 0.f, 0.f));
-
-	// initialize light models
-	for (auto& lightGlue : m_lightGlues)
-	{
-		lightGlue.model->SetPosition(lightGlue.light->GetPosition());
-		lightGlue.model->Initialize(GetApp());
-	}
+	m_lights[0]->SetPosition(math::Vector3(0.f, -10.f, 10.f));
+	m_lights[1]->SetPosition(math::Vector3(0.f, 10.f, 10.f));
+	m_lights[2]->SetPosition(math::Vector3(-10.f, 0.f, 0.f));
+	m_lights[3]->SetPosition(math::Vector3(10.f, 0.f, 0.f));
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -119,7 +112,7 @@ void MultipleLightsDemo::Update(const Time& time)
 
 	for (unsigned i = 0; i < m_lightsCount; i++)
 	{
-		m_lightGlues[i].model->Update(time);
+		m_lights[i]->Update(time);
 	}
 
 	SceneComponent::Update(time);
@@ -144,7 +137,7 @@ void MultipleLightsDemo::UpdatePointLight(const Time& time, const KeyboardCompon
 		{
 			for (unsigned i = 0; i < m_lightsCount; i++)
 			{
-				m_lightGlues[i].light->SetColor(m_lightColor);
+				m_lights[i]->SetColor(m_lightColor);
 			}
 		}
 	}
@@ -172,11 +165,9 @@ void MultipleLightsDemo::UpdatePointLight(const Time& time, const KeyboardCompon
 
 		for (unsigned i = 0; i < m_lightsCount; i++)
 		{
-			auto& lightGlue = m_lightGlues[i];
-			const auto position = lightGlue.light->GetPosition() + movement;
+			const auto position = m_lights[i]->GetPosition() + movement;
 
-			lightGlue.light->SetPosition(position);
-			lightGlue.model->SetPosition(position);
+			m_lights[i]->SetPosition(position);
 		}
 	}
 }
@@ -211,7 +202,7 @@ void MultipleLightsDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	std::vector<PointLightData> pointLightsData;
 	for (unsigned i = 0; i < m_lightsCount; i++)
 	{
-		const auto& light = *m_lightGlues[i].light;
+		const auto& light = *m_lights[i];
 		const auto isLightVisible = light.IsVisibleFrom(GetPosition());
 		if (isLightVisible)
 			pointLightsData.emplace_back(PointLightData(light));

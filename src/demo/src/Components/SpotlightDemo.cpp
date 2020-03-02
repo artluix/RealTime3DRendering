@@ -31,8 +31,6 @@ constexpr float k_lightModulationRate = 10.f;
 constexpr float k_lightAngleDelta = 5.f;
 constexpr float k_lightMovementRate = 10.f;
 constexpr auto k_lightRotationRate = math::Vector2(math::Pi_2);
-
-constexpr auto k_proxyModelRotationOffset = math::Vector3(math::Pi_Div_2, 0.f, 0.f);
 } // namespace
 
 //-------------------------------------------------------------------------
@@ -64,14 +62,9 @@ void SpotlightDemo::InitializeInternal()
 	m_textures[Texture::Default] = GetApp().LoadTexture("Checkerboard");
 
 	m_spotlight = std::make_unique<SpotlightComponent>();
+	m_spotlight->SetupProxyModel(*GetCamera());
 	m_spotlight->SetRadius(10.f);
 	m_spotlight->SetPosition(math::Vector3(0.0f, 0.f, 0.5f));
-
-	m_proxyModel = std::make_unique<ProxyModelComponent>("SpotlightProxy", 0.3f);
-	m_proxyModel->SetCamera(*GetCamera());
-	m_proxyModel->SetInitialTransform(math::Matrix4::RotationPitchYawRoll(k_proxyModelRotationOffset));
-	m_proxyModel->SetPosition(m_spotlight->GetPosition());
-	m_proxyModel->Initialize(GetApp());
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -99,13 +92,14 @@ void SpotlightDemo::Update(const Time& time)
 	if (!!m_keyboard)
 	{
 		const auto& keyboard = *m_keyboard;
+
 		UpdateAmbientLight(time, keyboard);
 		UpdateSpotlight(time, keyboard);
 		UpdateSpecularLight(time, keyboard);
 	}
 
 	m_text->Update(time);
-	m_proxyModel->Update(time);
+	m_spotlight->Update(time);
 
 	PrimitiveComponent::Update(time);
 }
@@ -151,13 +145,8 @@ void SpotlightDemo::UpdateSpotlight(const Time& time, const library::KeyboardCom
 
 		if (movementAmount)
 		{
-			auto movement = movementAmount * k_lightMovementRate * elapsedTime;
-
-			const auto rotationMatrix = math::Matrix4::RotationQuaternion(m_proxyModel->GetRotation());
-			movement = movement.Transform(rotationMatrix);
-
+			const auto movement = movementAmount * k_lightMovementRate * elapsedTime;
 			m_spotlight->SetPosition(m_spotlight->GetPosition() + movement);
-			m_proxyModel->SetPosition(m_spotlight->GetPosition() + movement);
 		}
 	}
 
@@ -181,7 +170,6 @@ void SpotlightDemo::UpdateSpotlight(const Time& time, const library::KeyboardCom
 		{
 			const auto rotation = math::Quaternion::RotationPitchYawRoll(rotationAmount.y, rotationAmount.x, 0.f);
 			m_spotlight->Rotate(rotation);
-			m_proxyModel->Rotate(rotation);
 		}
 	}
 

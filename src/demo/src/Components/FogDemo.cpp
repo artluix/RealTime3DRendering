@@ -65,12 +65,8 @@ void FogDemo::InitializeInternal()
 	m_textures[Texture::Default] = GetApp().LoadTexture("EarthComposite");
 
 	m_directionalLight = std::make_unique<DirectionalLightComponent>();
-
-	m_proxyModel = std::make_unique<ProxyModelComponent>("DirectionalLightProxy", 0.2f);
-	m_proxyModel->SetPosition(GetPosition() + math::Vector3(5.f));
-	m_proxyModel->SetInitialTransform(math::Matrix4::RotationPitchYawRoll(k_proxyModelRotationOffset));
-	m_proxyModel->SetCamera(*GetCamera());
-	m_proxyModel->Initialize(GetApp());
+	m_directionalLight->SetupProxyModel(*GetCamera());
+	m_directionalLight->GetProxyModel()->SetPosition(GetPosition() + math::Vector3(5.f));
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -106,7 +102,7 @@ void FogDemo::Update(const Time& time)
 	}
 
 	m_text->Update(time);
-	m_proxyModel->Update(time);
+	m_directionalLight->Update(time);
 
 	PrimitiveComponent::Update(time);
 }
@@ -152,7 +148,6 @@ void FogDemo::UpdateDirectionalLight(const Time& time, const KeyboardComponent& 
 		// test quaternion rotation
 		const auto rotation = math::Quaternion::RotationPitchYawRoll(rotationAmount.y, rotationAmount.x, 0.f);
 		m_directionalLight->Rotate(rotation);
-		m_proxyModel->Rotate(rotation);
 	}
 }
 

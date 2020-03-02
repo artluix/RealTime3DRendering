@@ -69,6 +69,9 @@ if(APPLICATION)
             src/Components/GeometryShaderDemo.h
             src/Components/GeometryShaderDemo.cpp
 
+            src/Components/HdrDemo.h
+            src/Components/HdrDemo.cpp
+
             src/Components/InstancingDemo.h
             src/Components/InstancingDemo.cpp
 
@@ -162,6 +165,9 @@ if(APPLICATION)
 
             src/Materials/TextureMappingMaterial.h
             src/Materials/TessellationMaterial.cpp
+
+            src/Materials/ToneMappingMaterial.h
+            src/Materials/ToneMappingMaterial.cpp
 
             src/Materials/TransparencyMappingMaterial.h
             src/Materials/TransparencyMappingMaterial.cpp

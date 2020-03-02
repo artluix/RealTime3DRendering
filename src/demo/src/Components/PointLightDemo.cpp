@@ -57,13 +57,9 @@ void PointLightDemo::InitializeInternal()
 	m_textures[Texture::Default] = GetApp().LoadTexture("EarthAtDay");
 
 	m_pointLight = std::make_unique<PointLightComponent>();
+	m_pointLight->SetupProxyModel(*GetCamera());
 	m_pointLight->SetRadius(500.f);
 	m_pointLight->SetPosition(math::Vector3(0.f, 0.f, 10.f));
-
-	m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.5f);
-	m_proxyModel->SetPosition(m_pointLight->GetPosition());
-	m_proxyModel->SetCamera(*GetCamera());
-	m_proxyModel->Initialize(GetApp());
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -90,7 +86,7 @@ void PointLightDemo::Update(const Time& time)
 	}
 
 	m_text->Update(time);
-	m_proxyModel->Update(time);
+	m_pointLight->Update(time);
 
 	PrimitiveComponent::Update(time);
 }
@@ -139,7 +135,6 @@ void PointLightDemo::UpdatePointLight(const Time& time, const KeyboardComponent&
 		const auto position = m_pointLight->GetPosition() + movement;
 
 		m_pointLight->SetPosition(position);
-		m_proxyModel->SetPosition(position);
 	}
 }
 

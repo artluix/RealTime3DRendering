@@ -1,6 +1,10 @@
 #include "StdAfx.h"
 #include "library/Components/PointLightComponent.h"
 
+#ifdef USE_LIGHT_PROXY_MODEL
+#include "library/Components/ProxyModelComponent.h"
+#endif
+
 namespace library
 {
 
@@ -24,6 +28,10 @@ PointLightComponent::~PointLightComponent() = default;
 void PointLightComponent::SetPosition(const math::Vector3& position)
 {
 	m_position = position;
+#ifdef USE_LIGHT_PROXY_MODEL
+	if (!!m_proxyModel)
+		m_proxyModel->SetPosition(position);
+#endif
 }
 
 void PointLightComponent::SetRadius(const float radius)
@@ -36,5 +44,14 @@ bool PointLightComponent::IsVisibleFrom(const math::Vector3& positionFrom) const
 	const auto distance = (m_position - positionFrom).Length();
 	return (distance < m_radius);
 }
+
+#ifdef USE_LIGHT_PROXY_MODEL
+void PointLightComponent::SetupProxyModel(const CameraComponent& camera)
+{
+	m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.5f);
+	m_proxyModel->SetCamera(camera);
+	m_proxyModel->Initialize(GetApp());
+}
+#endif
 
 } // namespace library

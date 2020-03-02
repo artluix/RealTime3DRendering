@@ -79,13 +79,9 @@ void ProjectiveTextureMappingDemo::InitializeInternal()
 	m_textures[Texture::Projected] = GetApp().LoadTexture("ProjectedTexture");
 
 	m_pointLight = std::make_unique<PointLightComponent>();
+	m_pointLight->SetupProxyModel(*GetCamera());
 	m_pointLight->SetRadius(500.f);
 	m_pointLight->SetPosition(math::Vector3(0.f, 0.f, 10.f));
-
-	m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.5f);
-	m_proxyModel->SetCamera(*camera);
-	m_proxyModel->SetPosition(m_pointLight->GetPosition());
-	m_proxyModel->Initialize(GetApp());
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -186,7 +182,7 @@ void ProjectiveTextureMappingDemo::Update(const Time& time)
 	}
 
 	m_text->Update(time);
-	m_proxyModel->Update(time);
+	m_pointLight->Update(time);
 	m_projector->Update(time);
 	m_renderableProjectorFrustum->Update(time);
 
@@ -239,7 +235,6 @@ void ProjectiveTextureMappingDemo::UpdatePointLightAndProjector(const Time& time
 			const auto position = m_pointLight->GetPosition() + movement;
 
 			m_pointLight->SetPosition(position);
-			m_proxyModel->SetPosition(position);
 			m_projector->SetPosition(position);
 			m_renderableProjectorFrustum->SetPosition(position);
 		}
@@ -266,7 +261,6 @@ void ProjectiveTextureMappingDemo::UpdatePointLightAndProjector(const Time& time
 				math::Vector3(rotationAmount.y, rotationAmount.x, 0.f)
 			);
 
-			m_proxyModel->Rotate(rotationQuat);
 			m_renderableProjectorFrustum->Rotate(rotationQuat);
 			m_projector->Rotate(rotationQuat);
 		}

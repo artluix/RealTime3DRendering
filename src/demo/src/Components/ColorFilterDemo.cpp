@@ -29,11 +29,11 @@ std::string ColorFilterDemo::ToTechniqueName(const Type t)
 {
 	switch (t)
 	{
-		case Grayscale:		return "grayscale_filter";
-		case Inverse:		return "inverse_filter";
-		case Sepia:			return "sepia_filter";
-		case Generic:		return "generic_filter";
-		default:			return "";
+		case Type::Grayscale:	return "grayscale_filter";
+		case Type::Inverse:		return "inverse_filter";
+		case Type::Sepia:		return "sepia_filter";
+		case Type::Generic:		return "generic_filter";
+		default:				return "";
 	}
 }
 
@@ -41,25 +41,25 @@ std::string ColorFilterDemo::ToString(const Type t)
 {
 	switch (t)
 	{
-		case Grayscale:		return "Grayscale";
-		case Inverse:		return "Inverse";
-		case Sepia:			return "Sepia";
-		case Generic:		return "Generic";
-		default:			return "";
+		case Type::Grayscale:	return "Grayscale";
+		case Type::Inverse:		return "Inverse";
+		case Type::Sepia:		return "Sepia";
+		case Type::Generic:		return "Generic";
+		default:				return "";
 	}
 }
 
 ColorFilterDemo::Type ColorFilterDemo::Next(const Type t)
 {
-	if (t == Last)
-		return First;
+	if (t == Type::Last)
+		return Type::First;
 
-	return static_cast<Type>(t + 1);
+	return static_cast<Type>(std::underlying_type_t<Type>(t) + 1);
 }
 
 //-------------------------------------------------------------------------
 
-ColorFilterDemo::ColorFilterDemo() : m_type(ColorFilterDemo::First), m_genericFilter(math::Matrix4::Identity)
+ColorFilterDemo::ColorFilterDemo() : m_type(Type::First), m_genericFilter(math::Matrix4::Identity)
 {}
 
 ColorFilterDemo::~ColorFilterDemo() = default;
@@ -80,9 +80,9 @@ void ColorFilterDemo::InitializeInternal()
 	m_text->SetPosition(math::Vector2(0.f, 70.f));
 	m_text->SetTextUpdateFunction([this]() -> std::wstring {
 		std::ostringstream oss;
-		oss << "Color Filter (Space Bar): " << ColorFilterDemo::ToString(m_type);
+		oss << "Color Filter (Space Bar): " << ToString(m_type);
 
-		if (m_type == ColorFilterDemo::Generic)
+		if (m_type == Type::Generic)
 			oss << ", Brightness (+Comma/-Period): " << m_genericFilter._11;
 
 		oss << '\n';
@@ -97,10 +97,10 @@ void ColorFilterDemo::Update(const Time& time)
 	if (m_keyboard->WasKeyPressed(Key::Space))
 	{
 		m_type = ColorFilterDemo::Next(m_type);
-		m_fullScreenQuad->SetActiveTechnique(ColorFilterDemo::ToTechniqueName(m_type));
+		m_fullScreenQuad->SetActiveTechnique(ToTechniqueName(m_type));
 	}
 
-	if (m_type == ColorFilterDemo::Generic)
+	if (m_type == Type::Generic)
 		UpdateGenericFilter(time);
 
 	m_text->Update(time);

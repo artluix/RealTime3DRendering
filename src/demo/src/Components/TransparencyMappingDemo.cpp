@@ -76,13 +76,9 @@ void TransparencyMappingDemo::InitializeInternal()
 	m_textures[Texture::TransparencyMap] = GetApp().LoadTexture("AlphaMask_32bpp");
 
 	m_pointLight = std::make_unique<PointLightComponent>();
+	m_pointLight->SetupProxyModel(*GetCamera());
 	m_pointLight->SetRadius(50.f);
 	m_pointLight->SetPosition(math::Vector3(0.f, 0.f, 10.f));
-
-	m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.2f);
-	m_proxyModel->SetPosition(m_pointLight->GetPosition());
-	m_proxyModel->SetCamera(*GetCamera());
-	m_proxyModel->Initialize(GetApp());
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
@@ -109,7 +105,7 @@ void TransparencyMappingDemo::Update(const Time& time)
 	}
 
 	m_text->Update(time);
-	m_proxyModel->Update(time);
+	m_pointLight->Update(time);
 
 	PrimitiveComponent::Update(time);
 }
@@ -157,7 +153,6 @@ void TransparencyMappingDemo::UpdatePointLight(const Time& time, const KeyboardC
 		auto movement = movementAmount * k_lightMovementRate * elapsedTime;
 
 		m_pointLight->SetPosition(m_pointLight->GetPosition() + movement);
-		m_proxyModel->Translate(movement);
 	}
 }
 

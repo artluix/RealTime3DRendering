@@ -20,6 +20,10 @@ public:
 
 	bool IsVisibleFrom(const math::Vector3& positionFrom) const;
 
+#ifdef USE_LIGHT_PROXY_MODEL
+	void SetupProxyModel(const CameraComponent& camera) override;
+#endif
+
 protected:
 	math::Vector3 m_position;
 	float m_radius;

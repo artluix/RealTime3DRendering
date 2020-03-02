@@ -8,7 +8,6 @@
 namespace library
 {
 class SpotlightComponent;
-class ProxyModelComponent;
 class TextComponent;
 } // namespace library
 
@@ -49,6 +48,5 @@ private:
 	library::math::Color m_ambientColor;
 
 	std::unique_ptr<library::SpotlightComponent> m_spotlight;
-	std::unique_ptr<library::ProxyModelComponent> m_proxyModel;
 	std::unique_ptr<library::TextComponent> m_text;
 };

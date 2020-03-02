@@ -17,7 +17,7 @@ class ColorFilterDemo
 	RTTI_CLASS(ColorFilterDemo, library::PostProcessingComponent, library::InputReceivableComponent)
 
 public:
-	enum Type
+	enum class Type
 	{
 		Grayscale,
 		Inverse,

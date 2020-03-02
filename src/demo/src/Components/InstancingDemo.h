@@ -8,7 +8,6 @@ namespace library
 {
 class TextComponent;
 class PointLightComponent;
-class ProxyModelComponent;
 } // namespace library
 
 class InstancingDemo
@@ -51,6 +50,5 @@ private:
 	library::VertexBufferData m_instanceVertexBuffer; // we use only one
 
 	std::unique_ptr<library::PointLightComponent> m_pointLight;
-	std::unique_ptr<library::ProxyModelComponent> m_proxyModel;
 	std::unique_ptr<library::TextComponent> m_text;
 };

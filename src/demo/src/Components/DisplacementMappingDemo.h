@@ -8,7 +8,6 @@
 namespace library
 {
 class PointLightComponent;
-class ProxyModelComponent;
 class TextComponent;
 } // namespace library
 
@@ -54,6 +53,5 @@ private:
 	float m_displacementScale;
 
 	std::unique_ptr<library::PointLightComponent> m_pointLight;
-	std::unique_ptr<library::ProxyModelComponent> m_proxyModel;
 	std::unique_ptr<library::TextComponent> m_text;
 };

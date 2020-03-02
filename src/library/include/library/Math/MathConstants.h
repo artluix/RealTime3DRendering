@@ -1,5 +1,4 @@
 #pragma once
-#include "library/Math/Interval.h"
 
 namespace library::math
 {

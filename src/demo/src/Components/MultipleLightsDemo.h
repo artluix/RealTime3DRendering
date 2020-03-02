@@ -7,7 +7,6 @@
 namespace library
 {
 class TextComponent;
-class ProxyModelComponent;
 class PointLightComponent;
 } // namespace library
 
@@ -49,13 +48,7 @@ private:
 	library::math::Color m_specularColor;
 	library::math::Color m_ambientColor;
 
-	struct PointLightGlue
-	{
-		std::unique_ptr<library::ProxyModelComponent> model;
-		std::unique_ptr<library::PointLightComponent> light;
-	};
-
-	std::vector<PointLightGlue> m_lightGlues;
+	std::vector<std::unique_ptr<library::PointLightComponent>> m_lights;
 	std::unique_ptr<library::TextComponent> m_text;
 
 	library::math::Color m_lightColor; // use common color

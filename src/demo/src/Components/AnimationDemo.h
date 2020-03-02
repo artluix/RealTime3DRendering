@@ -9,7 +9,6 @@
 namespace library
 {
 class PointLightComponent;
-class ProxyModelComponent;
 class TextComponent;
 class AnimationPlayerComponent;
 
@@ -52,7 +51,6 @@ private:
 
 	std::unique_ptr<library::TextComponent> m_text;
 	std::unique_ptr<library::PointLightComponent> m_pointLight;
-	std::unique_ptr<library::ProxyModelComponent> m_proxyModel;
 	std::unique_ptr<library::AnimationPlayerComponent> m_animationPlayer;
 
 	std::unique_ptr<library::Model> m_model;

@@ -4,6 +4,7 @@
 
 #include "library/Effect/Effect.h"
 #include "library/Effect/EffectPass.h"
+#include "library/Application.h"
 
 #include <memory>
 #include <type_traits>
