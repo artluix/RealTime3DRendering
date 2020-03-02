@@ -5,7 +5,7 @@
 using namespace library;
 
 DisplacementMappingMaterial::DisplacementMappingMaterial(Effect& effect)
-	: LightMaterial(effect, "main11")
+	: LightsMaterial(effect, "main11")
 
 	, m_displacementScale(effect.GetVariable("DisplacementScale"))
 	, m_displacementMap(effect.GetVariable("DisplacementMap"))

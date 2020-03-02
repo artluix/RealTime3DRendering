@@ -3,15 +3,15 @@
 
 #include <library/Materials/Material.h>
 
-class LightMaterial : public library::Material
+class LightsMaterial : public library::Material
 {
-	RTTI_CLASS(LightMaterial, library::Material)
+	RTTI_CLASS(LightsMaterial, library::Material)
 
 public:
 	using Vertex = library::VertexPositionTextureNormal;
 
-	explicit LightMaterial(library::Effect& effect, const std::string& defaultTechniqueName = "main11");
-	~LightMaterial();
+	explicit LightsMaterial(library::Effect& effect, const std::string& defaultTechniqueName="forward");
+	~LightsMaterial();
 
 	library::EffectVariable& GetAmbientColor() { return m_ambientColor; }
 	library::EffectVariable& GetCameraPosition() { return m_cameraPosition; }
@@ -32,6 +32,12 @@ public:
 	library::EffectVariable& GetSpecularColor() { return m_specularColor; }
 
 	library::EffectVariable& GetColorTexture() { return m_colorTexture; }
+
+	// deferred part
+	library::EffectVariable& GetColorBufferTexture() { return m_colorBufferTexture; }
+	library::EffectVariable& GetNormalBufferTexture() { return m_normalBufferTexture; }
+	library::EffectVariable& GetWorldPositionBufferTexture() { return m_worldPositionBufferTexture; }
+	library::EffectVariable& GetDepthBufferTexture() { return m_depthBufferTexture; }
 
 	library::VertexBufferData CreateVertexBufferData(
 		ID3D11Device* const device,
@@ -60,4 +66,10 @@ private:
 	library::EffectVariable& m_specularColor;
 
 	library::EffectVariable& m_colorTexture;
+
+	// for deferred shading
+	library::EffectVariable& m_colorBufferTexture;
+	library::EffectVariable& m_normalBufferTexture;
+	library::EffectVariable& m_worldPositionBufferTexture;
+	library::EffectVariable& m_depthBufferTexture;
 };

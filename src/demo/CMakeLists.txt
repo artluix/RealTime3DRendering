@@ -133,14 +133,11 @@ if(APPLICATION)
             src/Materials/InstancingPointLightMaterial.h
             src/Materials/InstancingPointLightMaterial.cpp
 
-            src/Materials/LightMaterial.h
-            src/Materials/LightMaterial.cpp
+            src/Materials/LightsMaterial.h
+            src/Materials/LightsMaterial.cpp
 
             src/Materials/ModelTessellationMaterial.h
             src/Materials/ModelTessellationMaterial.cpp
-
-            src/Materials/MultipleLightsMaterial.h
-            src/Materials/MultipleLightsMaterial.cpp
 
             src/Materials/NormalMappingMaterial.h
             src/Materials/NormalMappingMaterial.cpp

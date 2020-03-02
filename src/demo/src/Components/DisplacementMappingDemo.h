@@ -41,10 +41,9 @@ private:
 		};
 	};
 
-	void UpdateAmbientLight(const library::Time& time);
-	void UpdatePointLight(const library::Time& time);
-
-	void UpdateDisplacement(const library::Time& time);
+	void UpdateAmbientLight(const library::Time& time, const library::KeyboardComponent& keyboard);
+	void UpdatePointLight(const library::Time& time, const library::KeyboardComponent& keyboard);
+	void UpdateDisplacement(const library::Time& time, const library::KeyboardComponent& keyboard);
 
 	library::ComPtr<ID3D11ShaderResourceView> m_displacementMapTexture;
 

@@ -1,9 +1,9 @@
 #pragma once
-#include "Materials/LightMaterial.h"
+#include "Materials/LightsMaterial.h"
 
-class ProjectiveTextureMappingMaterial : public LightMaterial
+class ProjectiveTextureMappingMaterial : public LightsMaterial
 {
-	RTTI_CLASS(ProjectiveTextureMappingMaterial, LightMaterial)
+	RTTI_CLASS(ProjectiveTextureMappingMaterial, LightsMaterial)
 
 public:
 	explicit ProjectiveTextureMappingMaterial(library::Effect& effect);

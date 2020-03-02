@@ -251,7 +251,7 @@ void BasicTessellationDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	auto wvp = GetWorldMatrix();
 	if (auto camera = GetCamera())
 		wvp *= camera->GetViewProjectionMatrix();
-	
+
 	auto material = GetMaterial();
 	material->GetWVP() << wvp;
 

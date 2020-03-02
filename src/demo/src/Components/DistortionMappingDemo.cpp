@@ -1,5 +1,7 @@
 #include "DistortionMappingDemo.h"
 
+#include "DemoUtils.h"
+
 #include <library/Components/FullScreenQuadComponent.h>
 #include <library/Components/TextComponent.h>
 #include <library/Components/KeyboardComponent.h>
@@ -64,7 +66,7 @@ void DistortionMappingDemo::InitializeInternal()
 			std::wostringstream woss;
 			woss
 				<< L"Displacement Scale (+Comma/-Period): " << m_displacementScale << '\n'
-				<< L"Display Mode (Space): " << utils::ToWideString(ModeToString(m_mode));
+				<< L"Display Mode (Space): " << library::utils::ToWideString(ModeToString(m_mode));
 			return woss.str();
 		}
 	);
@@ -134,7 +136,7 @@ void DistortionMappingDemo::Draw(const Time& time)
 		default:
 			return;
 	}
-	
+
 	m_fullScreenQuad->Draw(time);
 
 	GetApp().UnbindPixelShaderResources(0, 2);
@@ -171,7 +173,7 @@ void DistortionMappingDemo::DrawMeshForDistortionCutout()
 	// SetData
 	{
 		auto wvp = math::Matrix4::Identity;
-		
+
 		if (!!m_camera)
 		{
 			wvp *= m_camera->GetViewProjectionMatrix();
@@ -197,18 +199,7 @@ void DistortionMappingDemo::UpdateDisplacementScale(const Time& time)
 	if (!!m_keyboard)
 	{
 		const auto elapsedTime = time.elapsed.GetSeconds();
-
-		if (m_keyboard->IsKeyDown(Key::Comma) && m_displacementScale < 3.0f)
-		{
-			m_displacementScale += elapsedTime;
-			m_displacementScale = math::Min(m_displacementScale, 3.0f);
-		}
-
-		if (m_keyboard->IsKeyDown(Key::Period) && m_displacementScale > 0.0f)
-		{
-			m_displacementScale -= elapsedTime;
-			m_displacementScale = math::Max(m_displacementScale, 0.0f);
-		}
+		::utils::UpdateValue(m_displacementScale, elapsedTime, math::Interval(.0f, 3.f), *m_keyboard, KeyPair(Key::Comma, Key::Period));
 	}
 }
 

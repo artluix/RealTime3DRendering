@@ -4,8 +4,8 @@
 
 namespace library
 {
-	struct Time;
 	enum class Key : std::uint8_t;
+	using KeyPair = Pair<Key>;
 	class KeyboardComponent;
 } // namespace library
 
@@ -13,12 +13,11 @@ namespace library
 
 namespace utils
 {
-	void UpdateValue(
-		const library::Time& time,
+	bool UpdateValue(
 		float& value, // out
+		const float stepValue,
 		const library::math::Interval& interval,
-		const float modulationRate,
-		const library::KeyboardComponent* keyboard,
-		const library::Pair<library::Key>& keys // (increaseKey, decreaseKey)
+		const library::KeyboardComponent& keyboard,
+		const library::KeyPair& keys // (increaseKey, decreaseKey)
 	);
 } // namespace utils

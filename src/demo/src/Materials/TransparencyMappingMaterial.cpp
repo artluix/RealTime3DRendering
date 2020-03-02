@@ -5,7 +5,7 @@
 using namespace library;
 
 TransparencyMappingMaterial::TransparencyMappingMaterial(Effect& effect)
-	: LightMaterial(effect, "alphaBlendingWithoutFog")
+	: LightsMaterial(effect, "alphaBlendingWithoutFog")
 
 	, m_fogColor(effect.GetVariable("FogColor"))
 	, m_fogStart(effect.GetVariable("FogStart"))
@@ -20,7 +20,7 @@ TransparencyMappingMaterial::~TransparencyMappingMaterial() = default;
 
 void TransparencyMappingMaterial::InitializeInternal()
 {
-	LightMaterial::InitializeInternal();
+	LightsMaterial::InitializeInternal();
 
 	const auto& inputElementDescriptions = GetCurrentPass().GetInputElementDescriptions();
 

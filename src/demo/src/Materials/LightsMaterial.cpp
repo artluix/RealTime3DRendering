@@ -1,13 +1,34 @@
-#include "Materials/MultipleLightsMaterial.h"
+#include "Materials/LightsMaterial.h"
 
 #include <library/Effect/Effect.h>
 #include <library/Model/Mesh.h>
 
 using namespace library;
 
-MultipleLightsMaterial::MultipleLightsMaterial(Effect& effect)
-	: LightMaterial(effect, "forward")
+LightsMaterial::LightsMaterial(Effect& effect, const std::string& defaultTechniqueName /*= "forward"*/)
+	: Material(effect, defaultTechniqueName)
 
+	, m_ambientColor(effect.GetVariable("AmbientColor"))
+	, m_cameraPosition(effect.GetVariable("CameraPosition"))
+
+	, m_dirLights(effect.GetVariable("DirLights"))
+	, m_dirLightsCount(effect.GetVariable("DirLightsCount"))
+
+	, m_pointLights(effect.GetVariable("PointLights"))
+	, m_pointLightsCount(effect.GetVariable("PointLightsCount"))
+
+	, m_spotlights(effect.GetVariable("Spotlights"))
+	, m_spotlightsCount(effect.GetVariable("SpotlightsCount"))
+
+	, m_wvp(effect.GetVariable("WVP"))
+	, m_world(effect.GetVariable("World"))
+
+	, m_specularPower(effect.GetVariable("SpecularPower"))
+	, m_specularColor(effect.GetVariable("SpecularColor"))
+
+	, m_colorTexture(effect.GetVariable("ColorTexture"))
+
+	// deferred
 	, m_colorBufferTexture(effect.GetVariable("ColorBufferTexture"))
 	, m_normalBufferTexture(effect.GetVariable("NormalBufferTexture"))
 	, m_worldPositionBufferTexture(effect.GetVariable("WorldPositionBufferTexture"))
@@ -15,7 +36,9 @@ MultipleLightsMaterial::MultipleLightsMaterial(Effect& effect)
 {
 }
 
-void MultipleLightsMaterial::InitializeInternal()
+LightsMaterial::~LightsMaterial() = default;
+
+void LightsMaterial::InitializeInternal()
 {
 	// vertex buffer input
 	{
@@ -84,7 +107,7 @@ void MultipleLightsMaterial::InitializeInternal()
 	}
 }
 
-VertexBufferData MultipleLightsMaterial::CreateVertexBufferData(
+VertexBufferData LightsMaterial::CreateVertexBufferData(
 	ID3D11Device* const device,
 	const Mesh& mesh
 ) const

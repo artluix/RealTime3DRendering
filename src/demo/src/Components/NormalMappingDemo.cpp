@@ -1,5 +1,7 @@
 #include "NormalMappingDemo.h"
 
+#include "DemoUtils.h"
+
 #include <library/Components/CameraComponent.h>
 #include <library/Components/KeyboardComponent.h>
 #include <library/Components/DirectionalLightComponent.h>
@@ -99,9 +101,14 @@ void NormalMappingDemo::InitializeInternal()
 
 void NormalMappingDemo::Update(const Time& time)
 {
-	UpdateAmbientLight(time);
-	UpdateDirectionalLight(time);
-	UpdateSpecularLight(time);
+	if (!!m_keyboard)
+	{
+		const auto& keyboard = *m_keyboard;
+
+		UpdateAmbientLight(time, keyboard);
+		UpdateDirectionalLight(time, keyboard);
+		UpdateSpecularLight(time, keyboard);
+	}
 
 	m_text->Update(time);
 	m_proxyModel->Update(time);
@@ -109,101 +116,54 @@ void NormalMappingDemo::Update(const Time& time)
 	PrimitiveComponent::Update(time);
 }
 
-void NormalMappingDemo::UpdateAmbientLight(const Time& time)
+void NormalMappingDemo::UpdateAmbientLight(const Time& time, const KeyboardComponent& keyboard)
 {
-	static float ambientLightIntensity = m_ambientColor.a;
+	const float stepValue = time.elapsed.GetSeconds() * k_lightModulationRate;
+	::utils::UpdateValue(m_ambientColor.a, stepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::PageUp, Key::PageDown));
+}
 
-	if (!!m_keyboard)
+void NormalMappingDemo::UpdateDirectionalLight(const Time& time, const KeyboardComponent& keyboard)
+{
+	const auto elapsedTime = time.elapsed.GetSeconds();
+
+	// update light color intensity
 	{
-		if (m_keyboard->IsKeyDown(Key::PageUp) && ambientLightIntensity < k_byteMax)
-		{
-			ambientLightIntensity += k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Min(ambientLightIntensity, k_byteMax);
-		}
+		const float modulationStepValue = elapsedTime * k_lightModulationRate;
 
-		if (m_keyboard->IsKeyDown(Key::PageDown) && ambientLightIntensity > 0)
+		auto lightColor = m_directionalLight->GetColor();
+		if (::utils::UpdateValue(lightColor.a, modulationStepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::Home, Key::End)))
 		{
-			ambientLightIntensity -= k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Max(ambientLightIntensity, 0.f);
+			m_directionalLight->SetColor(lightColor);
 		}
+	}
+
+	// rotate directional light
+	math::Vector2 rotationAmount;
+	if (keyboard.IsKeyDown(Key::Left))
+		rotationAmount.x += k_lightRotationRate.x * elapsedTime;
+
+	if (keyboard.IsKeyDown(Key::Right))
+		rotationAmount.x -= k_lightRotationRate.x * elapsedTime;
+
+	if (keyboard.IsKeyDown(Key::Up))
+		rotationAmount.y += k_lightRotationRate.y * elapsedTime;
+
+	if (keyboard.IsKeyDown(Key::Down))
+		rotationAmount.y -= k_lightRotationRate.y * elapsedTime;
+
+	if (rotationAmount)
+	{
+		// test quaternion rotation
+		const auto rotation = math::Quaternion::RotationPitchYawRoll(rotationAmount.y, rotationAmount.x, 0.f);
+		m_directionalLight->Rotate(rotation);
+		m_proxyModel->Rotate(rotation);
 	}
 }
 
-void NormalMappingDemo::UpdateDirectionalLight(const Time& time)
+void NormalMappingDemo::UpdateSpecularLight(const Time& time, const KeyboardComponent& keyboard)
 {
-	static float directionalLightIntensity = m_directionalLight->GetColor().a;
-
-	if (!!m_keyboard)
-	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
-
-		// update directional light intensity
-		if (m_keyboard->IsKeyDown(Key::Home) && directionalLightIntensity < k_byteMax)
-		{
-			directionalLightIntensity += k_lightModulationRate * elapsedTime;
-
-			auto directionalLightColor = m_directionalLight->GetColor();
-			directionalLightColor.a = math::Min(directionalLightIntensity, k_byteMax);
-			m_directionalLight->SetColor(directionalLightColor);
-		}
-
-		if (m_keyboard->IsKeyDown(Key::End) && directionalLightIntensity > 0)
-		{
-			directionalLightIntensity -= k_lightModulationRate * elapsedTime;
-
-			auto directionalLightColor = m_directionalLight->GetColor();
-			directionalLightColor.a = math::Max(directionalLightIntensity, 0.f);
-			m_directionalLight->SetColor(directionalLightColor);
-		}
-
-		// rotate directional light
-		math::Vector2 rotationAmount;
-		if (m_keyboard->IsKeyDown(Key::Left))
-			rotationAmount.x += k_lightRotationRate.x * elapsedTime;
-
-		if (m_keyboard->IsKeyDown(Key::Right))
-			rotationAmount.x -= k_lightRotationRate.x * elapsedTime;
-
-		if (m_keyboard->IsKeyDown(Key::Up))
-			rotationAmount.y += k_lightRotationRate.y * elapsedTime;
-
-		if (m_keyboard->IsKeyDown(Key::Down))
-			rotationAmount.y -= k_lightRotationRate.y * elapsedTime;
-
-		if (rotationAmount)
-		{
-			// test quaternion rotation
-			const auto rotation = math::Quaternion::RotationPitchYawRoll(rotationAmount.y, rotationAmount.x, 0.f);
-			m_directionalLight->Rotate(rotation);
-			m_proxyModel->Rotate(rotation);
-		}
-	}
-}
-
-void NormalMappingDemo::UpdateSpecularLight(const Time& time)
-{
-	static float specularLightIntensity = m_specularPower;
-
-	if (!!m_keyboard)
-	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
-
-		if (m_keyboard->IsKeyDown(Key::Insert) && specularLightIntensity < k_byteMax)
-		{
-			specularLightIntensity += k_lightModulationRate * elapsedTime;
-			specularLightIntensity = math::Min(specularLightIntensity, k_byteMax);
-
-			m_specularPower = specularLightIntensity;
-		}
-
-		if (m_keyboard->IsKeyDown(Key::Delete) && specularLightIntensity > 0)
-		{
-			specularLightIntensity -= k_lightModulationRate * elapsedTime;
-			specularLightIntensity = math::Max(specularLightIntensity, 0.f);
-
-			m_specularPower = specularLightIntensity;
-		}
-	}
+	const float stepValue = time.elapsed.GetSeconds() * k_lightModulationRate;
+	::utils::UpdateValue(m_specularPower, stepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::Insert, Key::Delete));
 }
 
 //-------------------------------------------------------------------------

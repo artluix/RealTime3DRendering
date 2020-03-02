@@ -61,14 +61,14 @@ private:
 
 	void Draw_SetData(const library::math::Matrix4& worldMatrix, const library::PrimitiveData& primitiveData);
 
-	void UpdateTechnique();
+	void UpdateTechnique(const library::KeyboardComponent& keyboard);
 
-	void UpdateDepthBias(const library::Time& time);
+	void UpdateDepthBias(const library::Time& time, const library::KeyboardComponent& keyboard);
 	void UpdateDepthBiasState();
 
-	void UpdateAmbientLight(const library::Time& time);
-	void UpdatePointLightAndProjector(const library::Time& time);
-	void UpdateSpecularLight(const library::Time& time);
+	void UpdateAmbientLight(const library::Time& time, const library::KeyboardComponent& keyboard);
+	void UpdatePointLightAndProjector(const library::Time& time, const library::KeyboardComponent& keyboard);
+	void UpdateSpecularLight(const library::Time& time, const library::KeyboardComponent& keyboard);
 
 	void InitializeProjectedTextureScalingMatrix();
 

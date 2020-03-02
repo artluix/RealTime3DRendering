@@ -1,5 +1,7 @@
 #include "FogDemo.h"
 
+#include "DemoUtils.h"
+
 #include <library/Components/CameraComponent.h>
 #include <library/Components/KeyboardComponent.h>
 #include <library/Components/DirectionalLightComponent.h>
@@ -89,14 +91,19 @@ void FogDemo::InitializeInternal()
 
 void FogDemo::Update(const Time& time)
 {
-	if (!!m_keyboard && m_keyboard->WasKeyReleased(Key::Space))
+	if (!!m_keyboard)
 	{
-		m_fogEnabled = !m_fogEnabled;
-		SetActiveTechnique();
-	}
+		const auto& keyboard = *m_keyboard;
 
-	UpdateDirectionalLight(time);
-	UpdateAmbientLight(time);
+		if (keyboard.WasKeyReleased(Key::Space))
+		{
+			m_fogEnabled = !m_fogEnabled;
+			SetActiveTechnique();
+		}
+
+		UpdateDirectionalLight(time, keyboard);
+		UpdateAmbientLight(time, keyboard);
+	}
 
 	m_text->Update(time);
 	m_proxyModel->Update(time);
@@ -104,75 +111,48 @@ void FogDemo::Update(const Time& time)
 	PrimitiveComponent::Update(time);
 }
 
-void FogDemo::UpdateAmbientLight(const Time& time)
+void FogDemo::UpdateAmbientLight(const Time& time, const KeyboardComponent& keyboard)
 {
-	static float ambientLightIntensity = m_ambientColor.a;
-
-	if (!!m_keyboard)
-	{
-		if (m_keyboard->IsKeyDown(Key::PageUp) && ambientLightIntensity < k_byteMax)
-		{
-			ambientLightIntensity += k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Min(ambientLightIntensity, k_byteMax);
-		}
-
-		if (m_keyboard->IsKeyDown(Key::PageDown) && ambientLightIntensity > 0)
-		{
-			ambientLightIntensity -= k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Max(ambientLightIntensity, 0.f);
-		}
-	}
+	const float stepValue = time.elapsed.GetSeconds() * k_lightModulationRate;
+	::utils::UpdateValue(m_ambientColor.a, stepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::PageUp, Key::PageDown));
 }
 
-void FogDemo::UpdateDirectionalLight(const Time& time)
+void FogDemo::UpdateDirectionalLight(const Time& time, const KeyboardComponent& keyboard)
 {
-	static float directionalLightIntensity = m_directionalLight->GetColor().a;
+	const auto elapsedTime = time.elapsed.GetSeconds();
 
-	if (!!m_keyboard)
+	// update light color intensity
 	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
+		const float modulationStepValue = elapsedTime * k_lightModulationRate;
 
-		// update directional light intensity
-		if (m_keyboard->IsKeyDown(Key::Home) && directionalLightIntensity < k_byteMax)
+		auto lightColor = m_directionalLight->GetColor();
+		if (::utils::UpdateValue(lightColor.a, modulationStepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::Home, Key::End)))
 		{
-			directionalLightIntensity += k_lightModulationRate * elapsedTime;
-
-			auto directionalLightColor = m_directionalLight->GetColor();
-			directionalLightColor.a = math::Min(directionalLightIntensity, k_byteMax);
-			m_directionalLight->SetColor(directionalLightColor);
+			m_directionalLight->SetColor(lightColor);
 		}
+	}
 
-		if (m_keyboard->IsKeyDown(Key::End) && directionalLightIntensity > 0)
-		{
-			directionalLightIntensity -= k_lightModulationRate * elapsedTime;
+	// rotate directional light
+	math::Vector2 rotationAmount;
+	if (m_keyboard->IsKeyDown(Key::Left))
+		rotationAmount.x += k_lightRotationRate.x * elapsedTime;
 
-			auto directionalLightColor = m_directionalLight->GetColor();
-			directionalLightColor.a = math::Max(directionalLightIntensity, 0.f);
-			m_directionalLight->SetColor(directionalLightColor);
-		}
+	if (m_keyboard->IsKeyDown(Key::Right))
+		rotationAmount.x -= k_lightRotationRate.x * elapsedTime;
 
-		// rotate directional light
-		math::Vector2 rotationAmount;
-		if (m_keyboard->IsKeyDown(Key::Left))
-			rotationAmount.x += k_lightRotationRate.x * elapsedTime;
+	if (m_keyboard->IsKeyDown(Key::Up))
+		rotationAmount.y += k_lightRotationRate.y * elapsedTime;
 
-		if (m_keyboard->IsKeyDown(Key::Right))
-			rotationAmount.x -= k_lightRotationRate.x * elapsedTime;
-
-		if (m_keyboard->IsKeyDown(Key::Up))
-			rotationAmount.y += k_lightRotationRate.y * elapsedTime;
-
-		if (m_keyboard->IsKeyDown(Key::Down))
-			rotationAmount.y -= k_lightRotationRate.y * elapsedTime;
+	if (m_keyboard->IsKeyDown(Key::Down))
+		rotationAmount.y -= k_lightRotationRate.y * elapsedTime;
 
 
-		if (rotationAmount)
-		{
-			// test quaternion rotation
-			const auto rotation = math::Quaternion::RotationPitchYawRoll(rotationAmount.y, rotationAmount.x, 0.f);
-			m_directionalLight->Rotate(rotation);
-			m_proxyModel->Rotate(rotation);
-		}
+	if (rotationAmount)
+	{
+		// test quaternion rotation
+		const auto rotation = math::Quaternion::RotationPitchYawRoll(rotationAmount.y, rotationAmount.x, 0.f);
+		m_directionalLight->Rotate(rotation);
+		m_proxyModel->Rotate(rotation);
 	}
 }
 

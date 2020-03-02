@@ -6,7 +6,7 @@
 using namespace library;
 
 SkinnedModelMaterial::SkinnedModelMaterial(Effect& effect)
-	: LightMaterial(effect)
+	: LightsMaterial(effect)
 
 	, m_boneTransforms(effect.GetVariable("BoneTransforms"))
 {}

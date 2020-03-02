@@ -1,5 +1,7 @@
 #include "EnvironmentMappingDemo.h"
 
+#include "DemoUtils.h"
+
 #include <library/Components/KeyboardComponent.h>
 #include <library/Components/CameraComponent.h>
 #include <library/Components/TextComponent.h>
@@ -63,17 +65,7 @@ void EnvironmentMappingDemo::Update(const Time& time)
 	if (!!m_keyboard)
 	{
 		const auto elapsedTime = time.elapsed.GetSeconds();
-
-		if (m_keyboard->IsKeyDown(Key::Up) && m_reflectionAmount < 1.0f)
-		{
-			m_reflectionAmount += elapsedTime;
-			m_reflectionAmount = math::Min(m_reflectionAmount, 1.0f);
-		}
-		if (m_keyboard->IsKeyDown(Key::Down) && m_reflectionAmount > 0.0f)
-		{
-			m_reflectionAmount -= elapsedTime;
-			m_reflectionAmount = math::Max(m_reflectionAmount, 0.0f);
-		}
+		::utils::UpdateValue(m_reflectionAmount, elapsedTime, math::UnitInterval, *m_keyboard, KeyPair(Key::Up, Key::Down));
 	}
 
 	m_text->Update(time);

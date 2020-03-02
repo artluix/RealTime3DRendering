@@ -40,8 +40,8 @@ private:
 		};
 	};
 
-	void UpdateAmbientLight(const library::Time& time);
-	void UpdateDirectionalLight(const library::Time& time);
+	void UpdateAmbientLight(const library::Time& time, const library::KeyboardComponent& keyboard);
+	void UpdateDirectionalLight(const library::Time& time, const library::KeyboardComponent& keyboard);
 	void SetActiveTechnique();
 
 	library::math::Color m_ambientColor;

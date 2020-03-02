@@ -1,6 +1,7 @@
 #include "DiffuseLightingDemo.h"
 
 #include "LightsData.h"
+#include "DemoUtils.h"
 
 #include <library/Components/CameraComponent.h>
 #include <library/Components/KeyboardComponent.h>
@@ -80,8 +81,13 @@ void DiffuseLightingDemo::InitializeInternal()
 
 void DiffuseLightingDemo::Update(const Time& time)
 {
-	UpdateDirectionalLight(time);
-	UpdateAmbientLight(time);
+	if (!!m_keyboard)
+	{
+		const auto& keyboard = *m_keyboard;
+
+		UpdateDirectionalLight(time, keyboard);
+		UpdateAmbientLight(time, keyboard);
+	}
 
 	m_text->Update(time);
 	m_proxyModel->Update(time);
@@ -89,74 +95,47 @@ void DiffuseLightingDemo::Update(const Time& time)
 	PrimitiveComponent::Update(time);
 }
 
-void DiffuseLightingDemo::UpdateAmbientLight(const Time& time)
+void DiffuseLightingDemo::UpdateAmbientLight(const Time& time, const KeyboardComponent& keyboard)
 {
-	static float ambientLightIntensity = m_ambientColor.a;
-
-	if (!!m_keyboard)
-	{
-		if (m_keyboard->IsKeyDown(Key::PageUp) && ambientLightIntensity < k_byteMax)
-		{
-			ambientLightIntensity += k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Min(ambientLightIntensity, k_byteMax);
-		}
-
-		if (m_keyboard->IsKeyDown(Key::PageDown) && ambientLightIntensity > 0)
-		{
-			ambientLightIntensity -= k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Max(ambientLightIntensity, 0.f);
-		}
-	}
+	const float stepValue = time.elapsed.GetSeconds() * k_lightModulationRate;
+	::utils::UpdateValue(m_ambientColor.a, stepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::PageUp, Key::PageDown));
 }
 
-void DiffuseLightingDemo::UpdateDirectionalLight(const Time& time)
+void DiffuseLightingDemo::UpdateDirectionalLight(const Time& time, const KeyboardComponent& keyboard)
 {
-	static float directionalLightIntensity = m_directionalLight->GetColor().a;
+	const auto elapsedTime = time.elapsed.GetSeconds();
 
-	if (!!m_keyboard)
+	// update light color intensity
 	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
+		const float modulationStepValue = elapsedTime * k_lightModulationRate;
 
-		// update directional light intensity
-		if (m_keyboard->IsKeyDown(Key::Home) && directionalLightIntensity < k_byteMax)
+		auto lightColor = m_directionalLight->GetColor();
+		if (::utils::UpdateValue(lightColor.a, modulationStepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::Home, Key::End)))
 		{
-			directionalLightIntensity += k_lightModulationRate * elapsedTime;
-
-			auto directionalLightColor = m_directionalLight->GetColor();
-			directionalLightColor.a = math::Min(directionalLightIntensity, k_byteMax);
-			m_directionalLight->SetColor(directionalLightColor);
+			m_directionalLight->SetColor(lightColor);
 		}
+	}
 
-		if (m_keyboard->IsKeyDown(Key::End) && directionalLightIntensity > 0)
-		{
-			directionalLightIntensity -= k_lightModulationRate * elapsedTime;
+	// rotate directional light
+	math::Vector2 rotationAmount;
+	if (keyboard.IsKeyDown(Key::Left))
+		rotationAmount.x += k_lightRotationRate.x * elapsedTime;
 
-			auto directionalLightColor = m_directionalLight->GetColor();
-			directionalLightColor.a = math::Max(directionalLightIntensity, 0.f);
-			m_directionalLight->SetColor(directionalLightColor);
-		}
+	if (keyboard.IsKeyDown(Key::Right))
+		rotationAmount.x -= k_lightRotationRate.x * elapsedTime;
 
-		// rotate directional light
-		math::Vector2 rotationAmount;
-		if (m_keyboard->IsKeyDown(Key::Left))
-			rotationAmount.x += k_lightRotationRate.x * elapsedTime;
+	if (keyboard.IsKeyDown(Key::Up))
+		rotationAmount.y += k_lightRotationRate.y * elapsedTime;
 
-		if (m_keyboard->IsKeyDown(Key::Right))
-			rotationAmount.x -= k_lightRotationRate.x * elapsedTime;
+	if (keyboard.IsKeyDown(Key::Down))
+		rotationAmount.y -= k_lightRotationRate.y * elapsedTime;
 
-		if (m_keyboard->IsKeyDown(Key::Up))
-			rotationAmount.y += k_lightRotationRate.y * elapsedTime;
-
-		if (m_keyboard->IsKeyDown(Key::Down))
-			rotationAmount.y -= k_lightRotationRate.y * elapsedTime;
-
-		if (rotationAmount)
-		{
-			// test quaternion rotation
-			const auto rotation = math::Quaternion::RotationPitchYawRoll(rotationAmount.y, rotationAmount.x, 0.f);
-			m_directionalLight->Rotate(rotation);
-			m_proxyModel->Rotate(rotation);
-		}
+	if (rotationAmount)
+	{
+		// test quaternion rotation
+		const auto rotation = math::Quaternion::RotationPitchYawRoll(rotationAmount.y, rotationAmount.x, 0.f);
+		m_directionalLight->Rotate(rotation);
+		m_proxyModel->Rotate(rotation);
 	}
 }
 
@@ -172,7 +151,7 @@ void DiffuseLightingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
 
 	m_material->GetLightData() << DirectionalLightData(*m_directionalLight);
-	
+
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);

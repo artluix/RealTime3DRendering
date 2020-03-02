@@ -44,9 +44,9 @@ private:
 		};
 	};
 
-	void UpdateAmbientLight(const library::Time& time);
-	void UpdatePointLightAndProjector(const library::Time& time);
-	void UpdateSpecularLight(const library::Time& time);
+	void UpdateAmbientLight(const library::Time& time, const library::KeyboardComponent& keyboard);
+	void UpdatePointLightAndProjector(const library::Time& time, const library::KeyboardComponent& keyboard);
+	void UpdateSpecularLight(const library::Time& time, const library::KeyboardComponent& keyboard);
 
 	void InitializeProjectedTextureScalingMatrix(
 		const unsigned textureWidth,

@@ -1,6 +1,7 @@
 #include "ProjectiveTextureMappingDepthMapDemo.h"
 
 #include "Materials/DepthMapMaterial.h"
+#include "DemoUtils.h"
 
 #include <library/Components/CameraComponent.h>
 #include <library/Components/KeyboardComponent.h>
@@ -295,14 +296,16 @@ void ProjectiveTextureMappingDepthMapDemo::Update(const Time& time)
 {
 	if (!!m_keyboard)
 	{
-		if (m_keyboard->WasKeyPressed(Key::Space))
-			m_drawDepthMap = !m_drawDepthMap;
-	}
+		const auto& keyboard = *m_keyboard;
 
-	UpdateDepthBias(time);
-	UpdateAmbientLight(time);
-	UpdatePointLightAndProjector(time);
-	UpdateSpecularLight(time);
+		if (keyboard.WasKeyPressed(Key::Space))
+			m_drawDepthMap = !m_drawDepthMap;
+
+		UpdateDepthBias(time, keyboard);
+		UpdateAmbientLight(time, keyboard);
+		UpdatePointLightAndProjector(time, keyboard);
+		UpdateSpecularLight(time, keyboard);
+	}
 
 	if (m_drawDepthMap)
 		m_uiDepthMap->Update(time);
@@ -315,157 +318,96 @@ void ProjectiveTextureMappingDepthMapDemo::Update(const Time& time)
 	PrimitiveComponent::Update(time);
 }
 
-void ProjectiveTextureMappingDepthMapDemo::UpdateDepthBias(const Time& time)
+void ProjectiveTextureMappingDepthMapDemo::UpdateDepthBias(const Time& time, const KeyboardComponent& keyboard)
 {
-	if (!!m_keyboard)
+	const float stepValue = time.elapsed.GetSeconds() * k_depthBiasModulationRate;
+	::utils::UpdateValue(m_depthBias, stepValue, math::Interval(.0f, 1.f), keyboard, KeyPair(Key::O, Key::P));
+}
+
+void ProjectiveTextureMappingDepthMapDemo::UpdateAmbientLight(const Time& time, const KeyboardComponent& keyboard)
+{
+	const float stepValue = time.elapsed.GetSeconds() * k_lightModulationRate;
+	::utils::UpdateValue(m_ambientColor.a, stepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::PageUp, Key::PageDown));
+}
+
+void ProjectiveTextureMappingDepthMapDemo::UpdatePointLightAndProjector(const Time& time, const KeyboardComponent& keyboard)
+{
+	const auto elapsedTime = time.elapsed.GetSeconds();
+
+	// update light color intensity
 	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
+		const float modulationStepValue = elapsedTime * k_lightModulationRate;
 
-		if (m_keyboard->IsKeyDown(Key::O) && m_depthBias < 1.f)
+		auto lightColor = m_pointLight->GetColor();
+		if (::utils::UpdateValue(lightColor.a, modulationStepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::Home, Key::End)))
 		{
-			m_depthBias += k_depthBiasModulationRate * elapsedTime;
-			m_depthBias = math::Min(m_depthBias, 1.f);
+			m_pointLight->SetColor(lightColor);
 		}
+	}
 
-		if (m_keyboard->IsKeyDown(Key::P) && m_depthBias > 0.f)
+	// move
+	{
+		math::Vector3i movementAmount;
+
+		if (keyboard.IsKeyDown(Key::Num_4))
+			movementAmount.x--;
+		if (keyboard.IsKeyDown(Key::Num_6))
+			movementAmount.x++;
+
+		if (keyboard.IsKeyDown(Key::Num_9))
+			movementAmount.y++;
+		if (keyboard.IsKeyDown(Key::Num_3))
+			movementAmount.y--;
+
+		if (keyboard.IsKeyDown(Key::Num_8))
+			movementAmount.z--;
+		if (keyboard.IsKeyDown(Key::Num_2))
+			movementAmount.z++;
+
+		if (movementAmount)
 		{
-			m_depthBias -= k_depthBiasModulationRate * elapsedTime;
-			m_depthBias = math::Max(m_depthBias, 0.f);
+			const auto movement = movementAmount * k_lightMovementRate * elapsedTime;
+			const auto position = m_pointLight->GetPosition() + movement;
+
+			m_pointLight->SetPosition(position);
+			m_proxyModel->SetPosition(position);
+			m_projector->SetPosition(position);
+			m_renderableProjectorFrustum->SetPosition(position);
+		}
+	}
+
+	// rotate projector
+	{
+		math::Vector2 rotationAmount;
+		if (keyboard.IsKeyDown(Key::Left))
+			rotationAmount.x += k_lightRotationRate.x * elapsedTime;
+
+		if (keyboard.IsKeyDown(Key::Right))
+			rotationAmount.x -= k_lightRotationRate.x * elapsedTime;
+
+		if (keyboard.IsKeyDown(Key::Up))
+			rotationAmount.y += k_lightRotationRate.y * elapsedTime;
+
+		if (keyboard.IsKeyDown(Key::Down))
+			rotationAmount.y -= k_lightRotationRate.y * elapsedTime;
+
+		if (rotationAmount)
+		{
+			const auto rotationQuat = math::Quaternion::RotationPitchYawRoll(
+				rotationAmount.y, rotationAmount.x, 0.f
+			);
+
+			m_proxyModel->Rotate(rotationQuat);
+			m_renderableProjectorFrustum->Rotate(rotationQuat);
+			m_projector->Rotate(rotationQuat);
 		}
 	}
 }
 
-void ProjectiveTextureMappingDepthMapDemo::UpdateAmbientLight(const Time& time)
+void ProjectiveTextureMappingDepthMapDemo::UpdateSpecularLight(const Time& time, const KeyboardComponent& keyboard)
 {
-	static float ambientLightIntensity = m_ambientColor.a;
-
-	if (!!m_keyboard)
-	{
-		if (m_keyboard->IsKeyDown(Key::PageUp) && ambientLightIntensity < k_byteMax)
-		{
-			ambientLightIntensity += k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Min(ambientLightIntensity, k_byteMax);
-		}
-
-		if (m_keyboard->IsKeyDown(Key::PageDown) && ambientLightIntensity > 0)
-		{
-			ambientLightIntensity -= k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Max(ambientLightIntensity, 0.f);
-		}
-	}
-}
-
-void ProjectiveTextureMappingDepthMapDemo::UpdatePointLightAndProjector(const Time& time)
-{
-	static float pointLightIntensity = m_pointLight->GetColor().a;
-
-	if (!!m_keyboard)
-	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
-
-		// update directional light intensity
-		if (m_keyboard->IsKeyDown(Key::Home) && pointLightIntensity < k_byteMax)
-		{
-			pointLightIntensity += k_lightModulationRate * elapsedTime;
-
-			auto pointLightColor = m_pointLight->GetColor();
-			pointLightColor.a = math::Min(pointLightIntensity, k_byteMax);
-			m_pointLight->SetColor(pointLightColor);
-		}
-
-		if (m_keyboard->IsKeyDown(Key::End) && pointLightIntensity > 0)
-		{
-			pointLightIntensity -= k_lightModulationRate * elapsedTime;
-
-			auto pointLightColor = m_pointLight->GetColor();
-			pointLightColor.a = math::Max(pointLightIntensity, 0.f);
-			m_pointLight->SetColor(pointLightColor);
-		}
-
-		// move
-		{
-			math::Vector3i movementAmount;
-
-			if (m_keyboard->IsKeyDown(Key::Num_4))
-				movementAmount.x--;
-			if (m_keyboard->IsKeyDown(Key::Num_6))
-				movementAmount.x++;
-
-			if (m_keyboard->IsKeyDown(Key::Num_9))
-				movementAmount.y++;
-			if (m_keyboard->IsKeyDown(Key::Num_3))
-				movementAmount.y--;
-
-			if (m_keyboard->IsKeyDown(Key::Num_8))
-				movementAmount.z--;
-			if (m_keyboard->IsKeyDown(Key::Num_2))
-				movementAmount.z++;
-
-			if (movementAmount)
-			{
-				const auto movement = movementAmount * k_lightMovementRate * elapsedTime;
-				const auto position = m_pointLight->GetPosition() + movement;
-
-				m_pointLight->SetPosition(position);
-				m_proxyModel->SetPosition(position);
-				m_projector->SetPosition(position);
-				m_renderableProjectorFrustum->SetPosition(position);
-			}
-		}
-
-		// rotate projector
-		{
-			math::Vector2 rotationAmount;
-			if (m_keyboard->IsKeyDown(Key::Left))
-				rotationAmount.x += k_lightRotationRate.x * elapsedTime;
-
-			if (m_keyboard->IsKeyDown(Key::Right))
-				rotationAmount.x -= k_lightRotationRate.x * elapsedTime;
-
-			if (m_keyboard->IsKeyDown(Key::Up))
-				rotationAmount.y += k_lightRotationRate.y * elapsedTime;
-
-			if (m_keyboard->IsKeyDown(Key::Down))
-				rotationAmount.y -= k_lightRotationRate.y * elapsedTime;
-
-			if (rotationAmount)
-			{
-				const auto rotationQuat = math::Quaternion::RotationPitchYawRoll(
-					rotationAmount.y, rotationAmount.x, 0.f
-				);
-
-				m_proxyModel->Rotate(rotationQuat);
-				m_renderableProjectorFrustum->Rotate(rotationQuat);
-				m_projector->Rotate(rotationQuat);
-			}
-		}
-	}
-}
-
-void ProjectiveTextureMappingDepthMapDemo::UpdateSpecularLight(const Time& time)
-{
-	static float specularLightIntensity = m_specularPower;
-
-	if (!!m_keyboard)
-	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
-
-		if (m_keyboard->IsKeyDown(Key::Insert) && specularLightIntensity < k_byteMax)
-		{
-			specularLightIntensity += k_lightModulationRate * elapsedTime;
-			specularLightIntensity = math::Min(specularLightIntensity, k_byteMax);
-
-			m_specularPower = specularLightIntensity;
-		}
-
-		if (m_keyboard->IsKeyDown(Key::Delete) && specularLightIntensity > 0)
-		{
-			specularLightIntensity -= k_lightModulationRate * elapsedTime;
-			specularLightIntensity = math::Max(specularLightIntensity, 0.f);
-
-			m_specularPower = specularLightIntensity;
-		}
-	}
+	const float stepValue = time.elapsed.GetSeconds() * k_lightModulationRate;
+	::utils::UpdateValue(m_specularPower, stepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::Insert, Key::Delete));
 }
 
 //-------------------------------------------------------------------------

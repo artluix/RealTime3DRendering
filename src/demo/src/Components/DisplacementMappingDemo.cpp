@@ -1,5 +1,7 @@
 #include "DisplacementMappingDemo.h"
 
+#include "DemoUtils.h"
+
 #include <library/Components/CameraComponent.h>
 #include <library/Components/KeyboardComponent.h>
 #include <library/Components/PointLightComponent.h>
@@ -83,10 +85,14 @@ void DisplacementMappingDemo::InitializeInternal()
 
 void DisplacementMappingDemo::Update(const Time& time)
 {
-	UpdateAmbientLight(time);
-	UpdatePointLight(time);
+	if (!!m_keyboard)
+	{
+		const auto& keyboard = *m_keyboard;
 
-	UpdateDisplacement(time);
+		UpdateAmbientLight(time, keyboard);
+		UpdatePointLight(time, keyboard);
+		UpdateDisplacement(time, keyboard);
+	}
 
 	m_text->Update(time);
 	m_proxyModel->Update(time);
@@ -94,98 +100,57 @@ void DisplacementMappingDemo::Update(const Time& time)
 	PrimitiveComponent::Update(time);
 }
 
-void DisplacementMappingDemo::UpdateAmbientLight(const Time& time)
+void DisplacementMappingDemo::UpdateAmbientLight(const Time& time, const KeyboardComponent& keyboard)
 {
-	static float ambientLightIntensity = m_ambientColor.a;
+	const float stepValue = time.elapsed.GetSeconds() * k_lightModulationRate;
+	::utils::UpdateValue(m_ambientColor.a, stepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::PageUp, Key::PageDown));
+}
 
-	if (!!m_keyboard)
+void DisplacementMappingDemo::UpdatePointLight(const Time& time, const KeyboardComponent& keyboard)
+{
+	const auto elapsedTime = time.elapsed.GetSeconds();
+
+	// update light color intensity
 	{
-		if (m_keyboard->IsKeyDown(Key::PageUp) && ambientLightIntensity < k_byteMax)
-		{
-			ambientLightIntensity += k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Min(ambientLightIntensity, k_byteMax);
-		}
+		const float modulationStepValue = elapsedTime * k_lightModulationRate;
 
-		if (m_keyboard->IsKeyDown(Key::PageDown) && ambientLightIntensity > 0)
+		auto lightColor = m_pointLight->GetColor();
+		if (::utils::UpdateValue(lightColor.a, modulationStepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::Home, Key::End)))
 		{
-			ambientLightIntensity -= k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Max(ambientLightIntensity, 0.f);
+			m_pointLight->SetColor(lightColor);
 		}
+	}
+
+	math::Vector3i movementAmount;
+
+	if (keyboard.IsKeyDown(Key::Num_4))
+		movementAmount.x--;
+	if (keyboard.IsKeyDown(Key::Num_6))
+		movementAmount.x++;
+
+	if (keyboard.IsKeyDown(Key::Num_9))
+		movementAmount.y++;
+	if (keyboard.IsKeyDown(Key::Num_3))
+		movementAmount.y--;
+
+	if (keyboard.IsKeyDown(Key::Num_8))
+		movementAmount.z--;
+	if (keyboard.IsKeyDown(Key::Num_2))
+		movementAmount.z++;
+
+	if (movementAmount)
+	{
+		const auto movement = movementAmount * k_lightMovementRate * elapsedTime;
+
+		m_pointLight->SetPosition(m_pointLight->GetPosition() + movement);
+		m_proxyModel->SetPosition(m_pointLight->GetPosition());
 	}
 }
 
-void DisplacementMappingDemo::UpdatePointLight(const Time& time)
+void DisplacementMappingDemo::UpdateDisplacement(const Time& time, const KeyboardComponent& keyboard)
 {
-	static float pointLightIntensity = m_pointLight->GetColor().a;
-
-	if (!!m_keyboard)
-	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
-
-		// update directional light intensity
-		if (m_keyboard->IsKeyDown(Key::Home) && pointLightIntensity < k_byteMax)
-		{
-			pointLightIntensity += k_lightModulationRate * elapsedTime;
-
-			auto pointLightColor = m_pointLight->GetColor();
-			pointLightColor.a = math::Min(pointLightIntensity, k_byteMax);
-			m_pointLight->SetColor(pointLightColor);
-		}
-
-		if (m_keyboard->IsKeyDown(Key::End) && pointLightIntensity > 0)
-		{
-			pointLightIntensity -= k_lightModulationRate * elapsedTime;
-
-			auto pointLightColor = m_pointLight->GetColor();
-			pointLightColor.a = math::Max(pointLightIntensity, 0.f);
-			m_pointLight->SetColor(pointLightColor);
-		}
-
-		math::Vector3i movementAmount;
-
-		if (m_keyboard->IsKeyDown(Key::Num_4))
-			movementAmount.x--;
-		if (m_keyboard->IsKeyDown(Key::Num_6))
-			movementAmount.x++;
-
-		if (m_keyboard->IsKeyDown(Key::Num_9))
-			movementAmount.y++;
-		if (m_keyboard->IsKeyDown(Key::Num_3))
-			movementAmount.y--;
-
-		if (m_keyboard->IsKeyDown(Key::Num_8))
-			movementAmount.z--;
-		if (m_keyboard->IsKeyDown(Key::Num_2))
-			movementAmount.z++;
-
-		if (movementAmount)
-		{
-			const auto movement = movementAmount * k_lightMovementRate * elapsedTime;
-
-			m_pointLight->SetPosition(m_pointLight->GetPosition() + movement);
-			m_proxyModel->SetPosition(m_pointLight->GetPosition());
-		}
-	}
-}
-
-void DisplacementMappingDemo::UpdateDisplacement(const Time& time)
-{
-	if (!!m_keyboard)
-	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
-
-		if (m_keyboard->IsKeyDown(Key::Insert) && m_displacementScale < 2.0f)
-		{
-			m_displacementScale += k_displacementRate * elapsedTime;
-			m_displacementScale = math::Min(m_displacementScale, 2.0f);
-		}
-
-		if (m_keyboard->IsKeyDown(Key::Delete) && m_displacementScale > 0)
-		{
-			m_displacementScale -= k_displacementRate * elapsedTime;
-			m_displacementScale = math::Max(m_displacementScale, 0.f);
-		}
-	}
+	const float stepValue = time.elapsed.GetSeconds() * k_displacementRate;
+	::utils::UpdateValue(m_displacementScale, stepValue, math::Interval(.0f, 2.f), keyboard, KeyPair(Key::Insert, Key::Delete));
 }
 
 void DisplacementMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)

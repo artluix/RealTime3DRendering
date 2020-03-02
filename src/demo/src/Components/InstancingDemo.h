@@ -41,8 +41,8 @@ private:
 		};
 	};
 
-	void UpdateAmbientLight(const library::Time& time);
-	void UpdatePointLight(const library::Time& time);
+	void UpdateAmbientLight(const library::Time& time, const library::KeyboardComponent& keyboard);
+	void UpdatePointLight(const library::Time& time, const library::KeyboardComponent& keyboard);
 
 	float m_specularPower;
 	library::math::Color m_specularColor;

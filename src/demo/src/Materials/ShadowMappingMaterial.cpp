@@ -5,7 +5,7 @@
 using namespace library;
 
 ShadowMappingMaterial::ShadowMappingMaterial(Effect& effect)
-	: LightMaterial(effect, "shadow_mapping")
+	: LightsMaterial(effect, "shadow_mapping")
 
 	, m_projectiveTextureMatrix(effect.GetVariable("ProjectiveTextureMatrix"))
 	, m_shadowMapTexture(effect.GetVariable("ShadowMapTexture"))
@@ -16,7 +16,7 @@ ShadowMappingMaterial::ShadowMappingMaterial(Effect& effect)
 
 void ShadowMappingMaterial::InitializeInternal()
 {
-	LightMaterial::InitializeInternal();
+	LightsMaterial::InitializeInternal();
 
 	const auto& inputElementDescriptions = GetCurrentPass().GetInputElementDescriptions();
 

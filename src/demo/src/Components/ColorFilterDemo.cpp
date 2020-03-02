@@ -1,5 +1,7 @@
 #include "ColorFilterDemo.h"
 
+#include "DemoUtils.h"
+
 #include <library/Components/FullScreenQuadComponent.h>
 #include <library/Components/TextComponent.h>
 #include <library/Components/KeyboardComponent.h>
@@ -85,7 +87,7 @@ void ColorFilterDemo::InitializeInternal()
 
 		oss << '\n';
 
-		return utils::ToWideString(oss.str());
+		return library::utils::ToWideString(oss.str());
 	});
 	m_text->Initialize(GetApp());
 }
@@ -111,23 +113,12 @@ void ColorFilterDemo::Draw(const Time& time)
 
 void ColorFilterDemo::UpdateGenericFilter(const Time& time)
 {
-	static float brightness = 1.0f;
-
 	if (!!m_keyboard)
 	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
-
-		if (m_keyboard->IsKeyDown(Key::Comma) && brightness < 1.f)
+		const float stepValue = time.elapsed.GetSeconds() * k_brightnessModulationRate;
+		float brightness = 1.f;
+		if (::utils::UpdateValue(brightness, stepValue, math::UnitInterval, *m_keyboard, KeyPair(Key::Comma, Key::Period)))
 		{
-			brightness += k_brightnessModulationRate * elapsedTime;
-			brightness = math::Min(brightness, 1.f);
-			m_genericFilter = math::Matrix4::Scaling(math::Vector3(brightness));
-		}
-
-		if (m_keyboard->IsKeyDown(Key::Period) && brightness > 0.f)
-		{
-			brightness -= k_brightnessModulationRate * elapsedTime;
-			brightness = math::Max(brightness, 0.f);
 			m_genericFilter = math::Matrix4::Scaling(math::Vector3(brightness));
 		}
 	}

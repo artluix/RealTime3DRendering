@@ -1,5 +1,7 @@
 #include "GaussianBlurDemo.h"
 
+#include "DemoUtils.h"
+
 #include <library/Components/KeyboardComponent.h>
 #include <library/Components/TextComponent.h>
 #include <library/Components/GaussianBlurComponent.h>
@@ -18,6 +20,7 @@ using namespace library;
 
 namespace
 {
+constexpr float k_maxBlurAmount = 100.f;
 constexpr float k_blurModulationRate = 1.0f;
 constexpr auto k_backgroundColor = colors::Black;
 } // namespace
@@ -57,19 +60,13 @@ void GaussianBlurDemo::UpdateBlurAmount(const Time& time)
 {
 	if (!!m_keyboard)
 	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
+		const auto stepValue = time.elapsed.GetSeconds() * k_blurModulationRate;
 
-		if (m_keyboard->IsKeyDown(Key::J))
+		auto blurAmount = GetBlurAmount();
+		if (::utils::UpdateValue(blurAmount, stepValue, math::Interval(0.f, k_maxBlurAmount), *m_keyboard, KeyPair(Key::Up, Key::Down)))
 		{
-			const auto blurAmount = GetBlurAmount() + k_blurModulationRate * elapsedTime;
 			SetBlurAmount(blurAmount);
 		}
 
-		if (m_keyboard->IsKeyDown(Key::K) && GetBlurAmount() > 0.f)
-		{
-			auto blurAmount = GetBlurAmount() - k_blurModulationRate * elapsedTime;
-			blurAmount = math::Max(1e-10f, blurAmount);
-			SetBlurAmount(blurAmount);
-		}
 	}
 }

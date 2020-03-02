@@ -44,11 +44,11 @@ private:
 		};
 	};
 
-	void UpdateOptions();
+	void UpdateOptions(const library::KeyboardComponent& keyboard);
 
-	void UpdateAmbientLight(const library::Time& time);
-	void UpdatePointLight(const library::Time& time);
-	void UpdateSpecularLight(const library::Time& time);
+	void UpdateAmbientLight(const library::Time& time, const library::KeyboardComponent& keyboard);
+	void UpdatePointLight(const library::Time& time, const library::KeyboardComponent& keyboard);
+	void UpdateSpecularLight(const library::Time& time, const library::KeyboardComponent& keyboard);
 
 	std::unique_ptr<library::TextComponent> m_text;
 	std::unique_ptr<library::PointLightComponent> m_pointLight;

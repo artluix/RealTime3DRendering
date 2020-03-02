@@ -5,7 +5,7 @@
 using namespace library;
 
 ProjectiveTextureMappingMaterial::ProjectiveTextureMappingMaterial(Effect& effect)
-	: LightMaterial(effect, "project_texture")
+	: LightsMaterial(effect, "project_texture")
 
 	, m_projectedTexture(effect.GetVariable("ProjectedTexture"))
 	, m_projectiveTextureMatrix(effect.GetVariable("ProjectiveTextureMatrix"))
@@ -17,7 +17,7 @@ ProjectiveTextureMappingMaterial::ProjectiveTextureMappingMaterial(Effect& effec
 
 void ProjectiveTextureMappingMaterial::InitializeInternal()
 {
-	LightMaterial::InitializeInternal();
+	LightsMaterial::InitializeInternal();
 
 	const auto& inputElementDescriptions = GetCurrentPass().GetInputElementDescriptions();
 

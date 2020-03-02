@@ -1,5 +1,7 @@
 #include "InstancingDemo.h"
 
+#include "DemoUtils.h"
+
 #include <library/Components/TextComponent.h>
 #include <library/Components/CameraComponent.h>
 #include <library/Components/KeyboardComponent.h>
@@ -107,8 +109,13 @@ void InstancingDemo::InitializeInternal()
 
 void InstancingDemo::Update(const Time& time)
 {
-	UpdateAmbientLight(time);
-	UpdatePointLight(time);
+	if (!!m_keyboard)
+	{
+		const auto& keyboard = *m_keyboard;
+
+		UpdateAmbientLight(time, keyboard);
+		UpdatePointLight(time, keyboard);
+	}
 
 	m_text->Update(time);
 	m_proxyModel->Update(time);
@@ -116,78 +123,51 @@ void InstancingDemo::Update(const Time& time)
 	PrimitiveComponent::Update(time);
 }
 
-void InstancingDemo::UpdateAmbientLight(const Time& time)
+void InstancingDemo::UpdateAmbientLight(const Time& time, const KeyboardComponent& keyboard)
 {
-	static float ambientLightIntensity = m_ambientColor.a;
-
-	if (!!m_keyboard)
-	{
-		if (m_keyboard->IsKeyDown(Key::PageUp) && ambientLightIntensity < k_byteMax)
-		{
-			ambientLightIntensity += k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Min(ambientLightIntensity, k_byteMax);
-		}
-
-		if (m_keyboard->IsKeyDown(Key::PageDown) && ambientLightIntensity > 0)
-		{
-			ambientLightIntensity -= k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Max(ambientLightIntensity, 0.f);
-		}
-	}
+	const float stepValue = time.elapsed.GetSeconds() * k_lightModulationRate;
+	::utils::UpdateValue(m_ambientColor.a, stepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::PageUp, Key::PageDown));
 }
 
-void InstancingDemo::UpdatePointLight(const Time& time)
+void InstancingDemo::UpdatePointLight(const Time& time, const KeyboardComponent& keyboard)
 {
-	static float pointLightIntensity = m_pointLight->GetColor().a;
+	const auto elapsedTime = time.elapsed.GetSeconds();
 
-	if (!!m_keyboard)
+	// update light color intensity
 	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
+		const float modulationStepValue = elapsedTime * k_lightModulationRate;
 
-		// update directional light intensity
-		if (m_keyboard->IsKeyDown(Key::Home) && pointLightIntensity < k_byteMax)
+		auto lightColor = m_pointLight->GetColor();
+		if (::utils::UpdateValue(lightColor.a, modulationStepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::Home, Key::End)))
 		{
-			pointLightIntensity += k_lightModulationRate * elapsedTime;
-
-			auto pointLightColor = m_pointLight->GetColor();
-			pointLightColor.a = math::Min(pointLightIntensity, k_byteMax);
-			m_pointLight->SetColor(pointLightColor);
+			m_pointLight->SetColor(lightColor);
 		}
+	}
 
-		if (m_keyboard->IsKeyDown(Key::End) && pointLightIntensity > 0)
-		{
-			pointLightIntensity -= k_lightModulationRate * elapsedTime;
+	math::Vector3i movementAmount;
 
-			auto pointLightColor = m_pointLight->GetColor();
-			pointLightColor.a = math::Max(pointLightIntensity, 0.f);
-			m_pointLight->SetColor(pointLightColor);
-		}
+	if (keyboard.IsKeyDown(Key::Num_4))
+		movementAmount.x--;
+	if (keyboard.IsKeyDown(Key::Num_6))
+		movementAmount.x++;
 
-		math::Vector3i movementAmount;
+	if (keyboard.IsKeyDown(Key::Num_9))
+		movementAmount.y++;
+	if (keyboard.IsKeyDown(Key::Num_3))
+		movementAmount.y--;
 
-		if (m_keyboard->IsKeyDown(Key::Num_4))
-			movementAmount.x--;
-		if (m_keyboard->IsKeyDown(Key::Num_6))
-			movementAmount.x++;
+	if (keyboard.IsKeyDown(Key::Num_8))
+		movementAmount.z--;
+	if (keyboard.IsKeyDown(Key::Num_2))
+		movementAmount.z++;
 
-		if (m_keyboard->IsKeyDown(Key::Num_9))
-			movementAmount.y++;
-		if (m_keyboard->IsKeyDown(Key::Num_3))
-			movementAmount.y--;
+	if (movementAmount)
+	{
+		const auto movement = movementAmount * k_lightMovementRate * elapsedTime;
+		const auto position = m_pointLight->GetPosition() + movement;
 
-		if (m_keyboard->IsKeyDown(Key::Num_8))
-			movementAmount.z--;
-		if (m_keyboard->IsKeyDown(Key::Num_2))
-			movementAmount.z++;
-
-		if (movementAmount)
-		{
-			const auto movement = movementAmount * k_lightMovementRate * elapsedTime;
-			const auto position = m_pointLight->GetPosition() + movement;
-
-			m_pointLight->SetPosition(position);
-			m_proxyModel->SetPosition(position);
-		}
+		m_pointLight->SetPosition(position);
+		m_proxyModel->SetPosition(position);
 	}
 }
 

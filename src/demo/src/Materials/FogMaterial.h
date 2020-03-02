@@ -1,9 +1,9 @@
 #pragma once
-#include "Materials/LightMaterial.h"
+#include "Materials/LightsMaterial.h"
 
-class FogMaterial : public LightMaterial
+class FogMaterial : public LightsMaterial
 {
-	RTTI_CLASS(FogMaterial, LightMaterial)
+	RTTI_CLASS(FogMaterial, LightsMaterial)
 
 public:
 	explicit FogMaterial(library::Effect& effect);

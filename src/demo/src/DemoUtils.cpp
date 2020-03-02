@@ -1,32 +1,33 @@
 #include "DemoUtils.h"
 
-#include <library/Time.h>
 #include <library/Components/KeyboardComponent.h>
 
 namespace utils
 {
-	void UpdateValue(
-		const library::Time& time,
+	bool UpdateValue(
 		float& value, // out
+		const float stepValue,
 		const library::math::Interval& interval,
-		const float modulationRate,
-		const library::KeyboardComponent* keyboard,
-		const library::Pair<library::Key>& keys
+		const library::KeyboardComponent& keyboard,
+		const library::KeyPair& keys
 	)
 	{
-		if (keyboard)
-		{
-			if (keyboard->IsKeyDown(keys.first) && value < interval.max)
-			{
-				value += modulationRate * time.elapsed.GetSeconds();
-				value = library::math::Min(value, interval.max);
-			}
+		bool updated = false;
 
-			if (keyboard->IsKeyDown(keys.second) && value > interval.min)
-			{
-				value -= modulationRate * time.elapsed.GetSeconds();
-				value = library::math::Max(value, interval.min);
-			}
+		if (keyboard.IsKeyDown(keys.first) && value < interval.max)
+		{
+			value += stepValue;
+			value = library::math::Min(value, interval.max);
+			updated = true;
 		}
+
+		if (keyboard.IsKeyDown(keys.second) && value > interval.min)
+		{
+			value -= stepValue;
+			value = library::math::Max(value, interval.min);
+			updated = true;
+		}
+
+		return updated;
 	}
 } // namespace utils

@@ -1,5 +1,7 @@
 #include "PointLightDemo.h"
 
+#include "DemoUtils.h"
+
 #include <library/Components/CameraComponent.h>
 #include <library/Components/KeyboardComponent.h>
 #include <library/Components/PointLightComponent.h>
@@ -43,7 +45,7 @@ void PointLightDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
-	CreateMaterialWithEffect("PointLight");
+	CreateMaterialWithEffect("Lights");
 
 	// load model
 	{
@@ -78,9 +80,14 @@ void PointLightDemo::InitializeInternal()
 
 void PointLightDemo::Update(const Time& time)
 {
-	UpdateAmbientLight(time);
-	UpdatePointLight(time);
-	UpdateSpecularLight(time);
+	if (!!m_keyboard)
+	{
+		const auto& keyboard = *m_keyboard;
+
+		UpdateAmbientLight(time, keyboard);
+		UpdatePointLight(time, keyboard);
+		UpdateSpecularLight(time, keyboard);
+	}
 
 	m_text->Update(time);
 	m_proxyModel->Update(time);
@@ -88,105 +95,58 @@ void PointLightDemo::Update(const Time& time)
 	PrimitiveComponent::Update(time);
 }
 
-void PointLightDemo::UpdateAmbientLight(const Time& time)
+void PointLightDemo::UpdateAmbientLight(const Time& time, const KeyboardComponent& keyboard)
 {
-	static float ambientLightIntensity = m_ambientColor.a;
+	const float stepValue = time.elapsed.GetSeconds() * k_lightModulationRate;
+	::utils::UpdateValue(m_ambientColor.a, stepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::PageUp, Key::PageDown));
+}
 
-	if (!!m_keyboard)
+void PointLightDemo::UpdatePointLight(const Time& time, const KeyboardComponent& keyboard)
+{
+	const auto elapsedTime = time.elapsed.GetSeconds();
+
+	// update light color intensity
 	{
-		if (m_keyboard->IsKeyDown(Key::PageUp) && ambientLightIntensity < k_byteMax)
-		{
-			ambientLightIntensity += k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Min(ambientLightIntensity, k_byteMax);
-		}
+		const float modulationStepValue = elapsedTime * k_lightModulationRate;
 
-		if (m_keyboard->IsKeyDown(Key::PageDown) && ambientLightIntensity > 0)
+		auto lightColor = m_pointLight->GetColor();
+		if (::utils::UpdateValue(lightColor.a, modulationStepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::Home, Key::End)))
 		{
-			ambientLightIntensity -= k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Max(ambientLightIntensity, 0.f);
+			m_pointLight->SetColor(lightColor);
 		}
+	}
+
+	math::Vector3i movementAmount;
+
+	if (keyboard.IsKeyDown(Key::Num_4))
+		movementAmount.x--;
+	if (keyboard.IsKeyDown(Key::Num_6))
+		movementAmount.x++;
+
+	if (keyboard.IsKeyDown(Key::Num_9))
+		movementAmount.y++;
+	if (keyboard.IsKeyDown(Key::Num_3))
+		movementAmount.y--;
+
+	if (keyboard.IsKeyDown(Key::Num_8))
+		movementAmount.z--;
+	if (keyboard.IsKeyDown(Key::Num_2))
+		movementAmount.z++;
+
+	if (movementAmount)
+	{
+		const auto movement = movementAmount * k_lightMovementRate * elapsedTime;
+		const auto position = m_pointLight->GetPosition() + movement;
+
+		m_pointLight->SetPosition(position);
+		m_proxyModel->SetPosition(position);
 	}
 }
 
-void PointLightDemo::UpdatePointLight(const Time& time)
+void PointLightDemo::UpdateSpecularLight(const Time& time, const KeyboardComponent& keyboard)
 {
-	static float pointLightIntensity = m_pointLight->GetColor().a;
-
-	if (!!m_keyboard)
-	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
-
-		// update light intensity
-		if (m_keyboard->IsKeyDown(Key::Home) && pointLightIntensity < k_byteMax)
-		{
-			pointLightIntensity += k_lightModulationRate * elapsedTime;
-
-			auto pointLightColor = m_pointLight->GetColor();
-			pointLightColor.a = math::Min(pointLightIntensity, k_byteMax);
-			m_pointLight->SetColor(pointLightColor);
-		}
-
-		if (m_keyboard->IsKeyDown(Key::End) && pointLightIntensity > 0)
-		{
-			pointLightIntensity -= k_lightModulationRate * elapsedTime;
-
-			auto pointLightColor = m_pointLight->GetColor();
-			pointLightColor.a = math::Max(pointLightIntensity, 0.f);
-			m_pointLight->SetColor(pointLightColor);
-		}
-
-		math::Vector3i movementAmount;
-
-		if (m_keyboard->IsKeyDown(Key::Num_4))
-			movementAmount.x--;
-		if (m_keyboard->IsKeyDown(Key::Num_6))
-			movementAmount.x++;
-
-		if (m_keyboard->IsKeyDown(Key::Num_9))
-			movementAmount.y++;
-		if (m_keyboard->IsKeyDown(Key::Num_3))
-			movementAmount.y--;
-
-		if (m_keyboard->IsKeyDown(Key::Num_8))
-			movementAmount.z--;
-		if (m_keyboard->IsKeyDown(Key::Num_2))
-			movementAmount.z++;
-
-		if (movementAmount)
-		{
-			const auto movement = movementAmount * k_lightMovementRate * elapsedTime;
-			const auto position = m_pointLight->GetPosition() + movement;
-
-			m_pointLight->SetPosition(position);
-			m_proxyModel->SetPosition(position);
-		}
-	}
-}
-
-void PointLightDemo::UpdateSpecularLight(const Time& time)
-{
-	static float specularLightIntensity = m_specularPower;
-
-	if (!!m_keyboard)
-	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
-
-		if (m_keyboard->IsKeyDown(Key::Insert) && specularLightIntensity < k_byteMax)
-		{
-			specularLightIntensity += k_lightModulationRate * elapsedTime;
-			specularLightIntensity = math::Min(specularLightIntensity, k_byteMax);
-
-			m_specularPower = specularLightIntensity;
-		}
-
-		if (m_keyboard->IsKeyDown(Key::Delete) && specularLightIntensity > 0)
-		{
-			specularLightIntensity -= k_lightModulationRate * elapsedTime;
-			specularLightIntensity = math::Max(specularLightIntensity, 0.f);
-
-			m_specularPower = specularLightIntensity;
-		}
-	}
+	const float stepValue = time.elapsed.GetSeconds() * k_lightModulationRate;
+	::utils::UpdateValue(m_specularPower, stepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::Insert, Key::Delete));
 }
 
 void PointLightDemo::Draw_SetData(const PrimitiveData& primitiveData)

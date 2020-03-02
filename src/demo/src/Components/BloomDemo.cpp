@@ -1,5 +1,7 @@
 #include "BloomDemo.h"
 
+#include "DemoUtils.h"
+
 #include <library/Components/TextComponent.h>
 #include <library/Components/KeyboardComponent.h>
 
@@ -15,6 +17,7 @@ using namespace library;
 namespace
 {
 constexpr float k_modulationRate = 1.0f;
+constexpr float k_maxInf = 100.f;
 }
 
 //-------------------------------------------------------------------------
@@ -32,7 +35,7 @@ void BloomDemo::InitializeInternal()
 
 		std::wostringstream woss;
 		woss << std::setprecision(2) << L"Draw Mode (Enter): "
-			 << utils::ToWideString(BloomDrawModeToString(GetDrawMode())) << "\n"
+			 << library::utils::ToWideString(BloomDrawModeToString(GetDrawMode())) << "\n"
 
 			 << L"Bloom Threshold (+U/-I): " << settings.bloomThreshold << "\n"
 			 << L"Blur Amount (+J/-K): " << settings.blurAmount << "\n"
@@ -60,67 +63,20 @@ void BloomDemo::Update(const Time& time)
 
 void BloomDemo::UpdateSettings(const Time& time)
 {
-	static auto settings = GetSettings();
-
 	if (!!m_keyboard)
 	{
 		const auto elapsedTime = time.elapsed.GetSeconds();
+		const float stepValue = elapsedTime * k_modulationRate;
 
-		// blur
-		if (m_keyboard->IsKeyDown(Key::J))
-		{
-			settings.blurAmount += k_modulationRate * elapsedTime;
-			SetSettings(settings);
-		}
+		auto settings = GetSettings();
 
-		if (m_keyboard->IsKeyDown(Key::K) && settings.blurAmount > 0.f)
-		{
-			settings.blurAmount -= k_modulationRate * elapsedTime;
-			settings.blurAmount = math::Max(settings.blurAmount, 0.f);
-			SetSettings(settings);
-		}
+		bool settingsUpdated = false;
+		settingsUpdated |= ::utils::UpdateValue(settings.blurAmount, stepValue, math::Interval(.0f, k_maxInf), *m_keyboard, KeyPair(Key::J, Key::K));
+		settingsUpdated |= ::utils::UpdateValue(settings.bloomThreshold, stepValue, math::UnitInterval, *m_keyboard, KeyPair(Key::U, Key::I));
+		settingsUpdated |= ::utils::UpdateValue(settings.bloomIntensity, stepValue, math::Interval(.0f, k_maxInf), *m_keyboard, KeyPair(Key::N, Key::M));
+		settingsUpdated |= ::utils::UpdateValue(settings.bloomSaturation, stepValue, math::Interval(.0f, k_maxInf), *m_keyboard, KeyPair(Key::F, Key::H));
 
-		// bloom threshold
-		if (m_keyboard->IsKeyDown(Key::U) && settings.bloomThreshold < 1.f)
-		{
-			settings.bloomThreshold += k_modulationRate * elapsedTime;
-			settings.bloomThreshold = math::Min(settings.bloomThreshold, 1.f);
+		if (settingsUpdated)
 			SetSettings(settings);
-		}
-
-		if (m_keyboard->IsKeyDown(Key::I) && settings.bloomThreshold > 0.f)
-		{
-			settings.bloomThreshold -= k_modulationRate * elapsedTime;
-			settings.bloomThreshold = math::Max(settings.bloomThreshold, 0.f);
-			SetSettings(settings);
-		}
-
-		// bloom intensity
-		if (m_keyboard->IsKeyDown(Key::N))
-		{
-			settings.bloomIntensity += k_modulationRate * elapsedTime;
-			SetSettings(settings);
-		}
-
-		if (m_keyboard->IsKeyDown(Key::M) && settings.bloomIntensity > 0.f)
-		{
-			settings.bloomIntensity -= k_modulationRate * elapsedTime;
-			settings.bloomIntensity = math::Max(settings.bloomIntensity, 0.f);
-			SetSettings(settings);
-		}
-
-		// bloom saturation
-		if (m_keyboard->IsKeyDown(Key::F))
-		{
-			settings.bloomSaturation += k_modulationRate * elapsedTime;
-			SetSettings(settings);
-		}
-
-		if (m_keyboard->IsKeyDown(Key::H) && settings.bloomSaturation > 0.f)
-		{
-			settings.bloomSaturation -= k_modulationRate * elapsedTime;
-			settings.bloomSaturation = math::Max(settings.bloomSaturation, 0.f);
-			SetSettings(settings);
-		}
 	}
 }

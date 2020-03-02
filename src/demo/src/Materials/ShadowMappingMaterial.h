@@ -1,10 +1,10 @@
 #pragma once
-#include "Materials/LightMaterial.h"
+#include "Materials/LightsMaterial.h"
 #include "Materials/DepthMapMaterial.h"
 
-class ShadowMappingMaterial : public LightMaterial
+class ShadowMappingMaterial : public LightsMaterial
 {
-	RTTI_CLASS(ShadowMappingMaterial, LightMaterial)
+	RTTI_CLASS(ShadowMappingMaterial, LightsMaterial)
 
 public:
 	explicit ShadowMappingMaterial(library::Effect& effect);

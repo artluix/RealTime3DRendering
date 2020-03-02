@@ -1,5 +1,7 @@
 #include "QuadHeightMapTessellationDemo.h"
 
+#include "DemoUtils.h"
+
 #include <library/Components/TextComponent.h>
 #include <library/Components/UIComponent.h>
 #include <library/Components/KeyboardComponent.h>
@@ -152,17 +154,8 @@ void QuadHeightMapTessellationDemo::UpdateDisplacementScale(const Time& time)
 {
 	if (!!m_keyboard)
 	{
-		if (m_keyboard->IsKeyDown(Key::Right) && m_displacementScale < k_byteMax)
-		{
-			m_displacementScale += time.elapsed.GetSeconds();
-			m_displacementScale = math::Min(m_displacementScale, k_byteMax);
-		}
-
-		if (m_keyboard->IsKeyDown(Key::Left))
-		{
-			m_displacementScale -= time.elapsed.GetSeconds();
-			m_displacementScale = math::Max(m_displacementScale, -k_byteMax);
-		}
+		const auto elapsedTime = time.elapsed.GetSeconds();
+		::utils::UpdateValue(m_displacementScale, elapsedTime, math::Interval(-k_byteMax, k_byteMax), *m_keyboard, KeyPair(Key::Right, Key::Left));
 	}
 }
 

@@ -1,5 +1,7 @@
 #include "SpotlightDemo.h"
 
+#include "DemoUtils.h"
+
 #include <library/Components/CameraComponent.h>
 #include <library/Components/KeyboardComponent.h>
 #include <library/Components/SpotlightComponent.h>
@@ -50,7 +52,7 @@ void SpotlightDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
-	CreateMaterialWithEffect("Spotlight");
+	CreateMaterialWithEffect("Lights");
 
 	// load model
 	{
@@ -94,9 +96,13 @@ void SpotlightDemo::InitializeInternal()
 
 void SpotlightDemo::Update(const Time& time)
 {
-	UpdateAmbientLight(time);
-	UpdateSpotlight(time);
-	UpdateSpecularLight(time);
+	if (!!m_keyboard)
+	{
+		const auto& keyboard = *m_keyboard;
+		UpdateAmbientLight(time, keyboard);
+		UpdateSpotlight(time, keyboard);
+		UpdateSpecularLight(time, keyboard);
+	}
 
 	m_text->Update(time);
 	m_proxyModel->Update(time);
@@ -104,181 +110,110 @@ void SpotlightDemo::Update(const Time& time)
 	PrimitiveComponent::Update(time);
 }
 
-void SpotlightDemo::UpdateAmbientLight(const Time& time)
+void SpotlightDemo::UpdateAmbientLight(const Time& time, const library::KeyboardComponent& keyboard)
 {
-	static float ambientLightIntensity = m_ambientColor.a;
+	const float stepValue = time.elapsed.GetSeconds() * k_lightModulationRate;
+	::utils::UpdateValue(m_ambientColor.a, stepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::PageUp, Key::PageDown));
+}
 
-	if (!!m_keyboard)
+void SpotlightDemo::UpdateSpotlight(const Time& time, const library::KeyboardComponent& keyboard)
+{
+	const auto elapsedTime = time.elapsed.GetSeconds();
+	const float modulationStepValue = elapsedTime * k_lightModulationRate;
+
+	// update light color intensity
 	{
-		if (m_keyboard->IsKeyDown(Key::PageUp) && ambientLightIntensity < k_byteMax)
+		auto lightColor = m_spotlight->GetColor();
+		if (::utils::UpdateValue(lightColor.a, modulationStepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::Home, Key::End)))
 		{
-			ambientLightIntensity += k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Min(ambientLightIntensity, k_byteMax);
+			m_spotlight->SetColor(lightColor);
+		}
+	}
+
+	// move
+	{
+		math::Vector3i movementAmount;
+
+		if (keyboard.IsKeyDown(Key::Num_4))
+			movementAmount.x--;
+		if (keyboard.IsKeyDown(Key::Num_6))
+			movementAmount.x++;
+
+		if (keyboard.IsKeyDown(Key::Num_9))
+			movementAmount.y++;
+		if (keyboard.IsKeyDown(Key::Num_3))
+			movementAmount.y--;
+
+		if (keyboard.IsKeyDown(Key::Num_8))
+			movementAmount.z--;
+		if (keyboard.IsKeyDown(Key::Num_2))
+			movementAmount.z++;
+
+		if (movementAmount)
+		{
+			auto movement = movementAmount * k_lightMovementRate * elapsedTime;
+
+			const auto rotationMatrix = math::Matrix4::RotationQuaternion(m_proxyModel->GetRotation());
+			movement = movement.Transform(rotationMatrix);
+
+			m_spotlight->SetPosition(m_spotlight->GetPosition() + movement);
+			m_proxyModel->SetPosition(m_spotlight->GetPosition() + movement);
+		}
+	}
+
+	// rotate
+	{
+		math::Vector2 rotationAmount;
+
+		if (keyboard.IsKeyDown(Key::Left))
+			rotationAmount.x += k_lightRotationRate.x * elapsedTime;
+
+		if (keyboard.IsKeyDown(Key::Right))
+			rotationAmount.x -= k_lightRotationRate.x * elapsedTime;
+
+		if (keyboard.IsKeyDown(Key::Up))
+			rotationAmount.y += k_lightRotationRate.y * elapsedTime;
+
+		if (keyboard.IsKeyDown(Key::Down))
+			rotationAmount.y -= k_lightRotationRate.y * elapsedTime;
+
+		if (rotationAmount)
+		{
+			const auto rotation = math::Quaternion::RotationPitchYawRoll(rotationAmount.y, rotationAmount.x, 0.f);
+			m_spotlight->Rotate(rotation);
+			m_proxyModel->Rotate(rotation);
+		}
+	}
+
+	// radius
+	{
+		auto radius = m_spotlight->GetRadius();
+		if (::utils::UpdateValue(radius, modulationStepValue, math::Interval(0.f, 50.f), keyboard, KeyPair(Key::B, Key::N)))
+		{
+			m_spotlight->SetRadius(radius);
+		}
+	}
+
+	// inner and outer angles
+	{
+		auto innerAngle = m_spotlight->GetInnerAngle();
+		if (::utils::UpdateValue(innerAngle, elapsedTime, math::Interval(.5f, 1.f), keyboard, KeyPair(Key::Z, Key::X)))
+		{
+			m_spotlight->SetInnerAngle(innerAngle);
 		}
 
-		if (m_keyboard->IsKeyDown(Key::PageDown) && ambientLightIntensity > 0)
+		auto outerAngle = m_spotlight->GetOuterAngle();
+		if (::utils::UpdateValue(outerAngle, elapsedTime, math::Interval(.0f, .5f), keyboard, KeyPair(Key::C, Key::V)))
 		{
-			ambientLightIntensity -= k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Max(ambientLightIntensity, 0.f);
+			m_spotlight->SetOuterAngle(outerAngle);
 		}
 	}
 }
 
-void SpotlightDemo::UpdateSpotlight(const Time& time)
+void SpotlightDemo::UpdateSpecularLight(const Time& time, const library::KeyboardComponent& keyboard)
 {
-	static float spotlightIntensity = m_spotlight->GetColor().a;
-
-	if (!!m_keyboard)
-	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
-
-		// update directional light intensity
-		if (m_keyboard->IsKeyDown(Key::Home) && spotlightIntensity < k_byteMax)
-		{
-			spotlightIntensity += k_lightModulationRate * elapsedTime;
-
-			auto spotlightColor = m_spotlight->GetColor();
-			spotlightColor.a = math::Min(spotlightIntensity, k_byteMax);
-			m_spotlight->SetColor(spotlightColor);
-		}
-
-		if (m_keyboard->IsKeyDown(Key::End) && spotlightIntensity > 0)
-		{
-			spotlightIntensity -= k_lightModulationRate * elapsedTime;
-
-			auto spotlightColor = m_spotlight->GetColor();
-			spotlightColor.a = math::Max(spotlightIntensity, 0.f);
-			m_spotlight->SetColor(spotlightColor);
-		}
-
-		// move
-		{
-			math::Vector3i movementAmount;
-
-			if (m_keyboard->IsKeyDown(Key::Num_4))
-				movementAmount.x--;
-			if (m_keyboard->IsKeyDown(Key::Num_6))
-				movementAmount.x++;
-
-			if (m_keyboard->IsKeyDown(Key::Num_9))
-				movementAmount.y++;
-			if (m_keyboard->IsKeyDown(Key::Num_3))
-				movementAmount.y--;
-
-			if (m_keyboard->IsKeyDown(Key::Num_8))
-				movementAmount.z--;
-			if (m_keyboard->IsKeyDown(Key::Num_2))
-				movementAmount.z++;
-
-			if (movementAmount)
-			{
-				auto movement = movementAmount * k_lightMovementRate * elapsedTime;
-
-				const auto rotationMatrix = math::Matrix4::RotationQuaternion(m_proxyModel->GetRotation());
-				movement = movement.Transform(rotationMatrix);
-
-				m_spotlight->SetPosition(m_spotlight->GetPosition() + movement);
-				m_proxyModel->SetPosition(m_spotlight->GetPosition() + movement);
-			}
-		}
-
-		// rotate
-		{
-			math::Vector2 rotationAmount;
-
-			if (m_keyboard->IsKeyDown(Key::Left))
-				rotationAmount.x += k_lightRotationRate.x * elapsedTime;
-
-			if (m_keyboard->IsKeyDown(Key::Right))
-				rotationAmount.x -= k_lightRotationRate.x * elapsedTime;
-
-			if (m_keyboard->IsKeyDown(Key::Up))
-				rotationAmount.y += k_lightRotationRate.y * elapsedTime;
-
-			if (m_keyboard->IsKeyDown(Key::Down))
-				rotationAmount.y -= k_lightRotationRate.y * elapsedTime;
-
-			if (rotationAmount)
-			{
-				const auto rotation = math::Quaternion::RotationPitchYawRoll(rotationAmount.y, rotationAmount.x, 0.f);
-				m_spotlight->Rotate(rotation);
-				m_proxyModel->Rotate(rotation);
-			}
-		}
-
-		// radius
-		{
-			if (m_keyboard->IsKeyDown(Key::B))
-			{
-				float radius = m_spotlight->GetRadius() + k_lightModulationRate * elapsedTime;
-				m_spotlight->SetRadius(radius);
-			}
-
-			if (m_keyboard->IsKeyDown(Key::N))
-			{
-				float radius = m_spotlight->GetRadius() - k_lightModulationRate * elapsedTime;
-				radius = math::Max(radius, 0.0f);
-				m_spotlight->SetRadius(radius);
-			}
-		}
-
-		// inner and outer angles
-		{
-			static float innerAngle = m_spotlight->GetInnerAngle();
-			if (m_keyboard->IsKeyDown(Key::Z) && innerAngle < 1.0f)
-			{
-				innerAngle += elapsedTime;
-				innerAngle = math::Min(innerAngle, 1.0f);
-				m_spotlight->SetInnerAngle(innerAngle);
-			}
-			if (m_keyboard->IsKeyDown(Key::X) && innerAngle > 0.5f)
-			{
-				innerAngle -= elapsedTime;
-				innerAngle = math::Max(innerAngle, 0.5f);
-				m_spotlight->SetInnerAngle(innerAngle);
-			}
-
-			static float outerAngle = m_spotlight->GetOuterAngle();
-			if (m_keyboard->IsKeyDown(Key::C) && outerAngle < 0.5f)
-			{
-				outerAngle += elapsedTime;
-				outerAngle = math::Min(outerAngle, 0.5f);
-				m_spotlight->SetOuterAngle(outerAngle);
-			}
-			if (m_keyboard->IsKeyDown(Key::V) && outerAngle > 0.0f)
-			{
-				outerAngle -= elapsedTime;
-				outerAngle = math::Max(outerAngle, 0.0f);
-				m_spotlight->SetOuterAngle(outerAngle);
-			}
-		}
-	}
-}
-
-void SpotlightDemo::UpdateSpecularLight(const Time& time)
-{
-	static float specularLightIntensity = m_specularPower;
-
-	if (!!m_keyboard)
-	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
-
-		if (m_keyboard->IsKeyDown(Key::Insert) && specularLightIntensity < k_byteMax)
-		{
-			specularLightIntensity += k_lightModulationRate * elapsedTime;
-			specularLightIntensity = math::Min(specularLightIntensity, k_byteMax);
-
-			m_specularPower = specularLightIntensity;
-		}
-
-		if (m_keyboard->IsKeyDown(Key::Delete) && specularLightIntensity > 0.f)
-		{
-			specularLightIntensity -= k_lightModulationRate * elapsedTime;
-			specularLightIntensity = math::Max(specularLightIntensity, 0.f);
-
-			m_specularPower = specularLightIntensity;
-		}
-	}
+	const float stepValue = time.elapsed.GetSeconds() * k_lightModulationRate;
+	::utils::UpdateValue(m_specularPower, stepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::Insert, Key::Delete));
 }
 
 void SpotlightDemo::Draw_SetData(const PrimitiveData& primitiveData)
@@ -300,9 +235,9 @@ void SpotlightDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
 
 	const auto isLightVisible = m_spotlight->IsVisibleFrom(GetPosition());
-	m_material->GetPointLightsCount() << unsigned(isLightVisible);
+	m_material->GetSpotlightsCount() << unsigned(isLightVisible);
 	if (isLightVisible)
-		m_material->GetPointLights() << SpotlightData(*m_spotlight);
+		m_material->GetSpotlights() << SpotlightData(*m_spotlight);
 
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 

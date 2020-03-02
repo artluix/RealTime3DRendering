@@ -1,5 +1,7 @@
 #include "Components/AnimationDemo.h"
 
+#include "DemoUtils.h"
+
 #include <library/Components/CameraComponent.h>
 #include <library/Components/KeyboardComponent.h>
 
@@ -119,11 +121,15 @@ void AnimationDemo::InitializeInternal()
 
 void AnimationDemo::Update(const Time& time)
 {
-	UpdateOptions();
+	if (!!m_keyboard)
+	{
+		const auto& keyboard = *m_keyboard;
 
-	UpdateAmbientLight(time);
-	UpdatePointLight(time);
-	UpdateSpecularLight(time);
+		UpdateOptions(keyboard);
+		UpdateAmbientLight(time, keyboard);
+		UpdatePointLight(time, keyboard);
+		UpdateSpecularLight(time, keyboard);
+	}
 
 	m_text->Update(time);
 	m_proxyModel->Update(time);
@@ -169,149 +175,99 @@ void AnimationDemo::Draw_SetData(const PrimitiveData& primitiveData)
 
 //-------------------------------------------------------------------------
 
-void AnimationDemo::UpdateOptions()
+void AnimationDemo::UpdateOptions(const KeyboardComponent& keyboard)
 {
-	if (!!m_keyboard)
+	if (keyboard.WasKeyPressed(Key::Pause))
 	{
-		if (m_keyboard->WasKeyPressed(Key::Pause))
-		{
-			if (m_animationPlayer->IsPlaying())
-				m_animationPlayer->Pause();
-			else
-				m_animationPlayer->Resume();
-		}
+		if (m_animationPlayer->IsPlaying())
+			m_animationPlayer->Pause();
+		else
+			m_animationPlayer->Resume();
+	}
 
-		if (m_keyboard->WasKeyPressed(Key::B))
-		{
-			// Reset animation to the bind pose
-			m_animationPlayer->Play(m_model->GetAnimation(0));
-		}
+	if (keyboard.WasKeyPressed(Key::B))
+	{
+		// Reset animation to the bind pose
+		m_animationPlayer->Play(m_model->GetAnimation(0));
+	}
 
-		if (m_keyboard->WasKeyPressed(Key::I))
-		{
-			// Switch interpolation (on/off)
-			m_animationPlayer->SetInterpolationEnabled(!m_animationPlayer->IsInterpolationEnabled());
-		}
+	if (keyboard.WasKeyPressed(Key::I))
+	{
+		// Switch interpolation (on/off)
+		m_animationPlayer->SetInterpolationEnabled(!m_animationPlayer->IsInterpolationEnabled());
+	}
 
-		if (m_keyboard->WasKeyPressed(Key::Enter))
-		{
-			// Turn on/off manual advance mode
-			m_manualAdvanceMode = !m_manualAdvanceMode;
-			m_animationPlayer->SetCurrentKeyframe(0);
-		}
+	if (keyboard.WasKeyPressed(Key::Enter))
+	{
+		// Turn on/off manual advance mode
+		m_manualAdvanceMode = !m_manualAdvanceMode;
+		m_animationPlayer->SetCurrentKeyframe(0);
+	}
 
-		if (m_manualAdvanceMode && m_keyboard->WasKeyPressed(Key::Space))
-		{
-			// Advance current keyframe
-			const auto keyframesCount = m_animationPlayer->GetAnimation()->GetKeyframesCount();
-			const auto keyframe = (m_animationPlayer->GetCurrentKeyframe() + 1) % keyframesCount;
-			m_animationPlayer->SetCurrentKeyframe(keyframe);
-		}
+	if (m_manualAdvanceMode && keyboard.WasKeyPressed(Key::Space))
+	{
+		// Advance current keyframe
+		const auto keyframesCount = m_animationPlayer->GetAnimation()->GetKeyframesCount();
+		const auto keyframe = (m_animationPlayer->GetCurrentKeyframe() + 1) % keyframesCount;
+		m_animationPlayer->SetCurrentKeyframe(keyframe);
 	}
 }
 
 //-------------------------------------------------------------------------
 
-void AnimationDemo::UpdateAmbientLight(const Time& time)
+void AnimationDemo::UpdateAmbientLight(const Time& time, const KeyboardComponent& keyboard)
 {
-	static float ambientLightIntensity = m_ambientColor.a;
+	const float stepValue = time.elapsed.GetSeconds() * k_lightModulationRate;
+	::utils::UpdateValue(m_ambientColor.a, stepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::PageUp, Key::PageDown));
+}
 
-	if (!!m_keyboard)
+void AnimationDemo::UpdatePointLight(const Time& time, const KeyboardComponent& keyboard)
+{
+	const auto elapsedTime = time.elapsed.GetSeconds();
+
+	// update light color intensity
 	{
-		if (m_keyboard->IsKeyDown(Key::PageUp) && ambientLightIntensity < k_byteMax)
-		{
-			ambientLightIntensity += k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Min(ambientLightIntensity, k_byteMax);
-		}
+		const float modulationStepValue = elapsedTime * k_lightModulationRate;
 
-		if (m_keyboard->IsKeyDown(Key::PageDown) && ambientLightIntensity > 0)
+		auto lightColor = m_pointLight->GetColor();
+		if (::utils::UpdateValue(lightColor.a, modulationStepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::Home, Key::End)))
 		{
-			ambientLightIntensity -= k_lightModulationRate * time.elapsed.GetSeconds();
-			m_ambientColor.a = math::Max(ambientLightIntensity, 0.f);
+			m_pointLight->SetColor(lightColor);
+		}
+	}
+
+	// move
+	{
+		math::Vector3i movementAmount;
+
+		if (keyboard.IsKeyDown(Key::Num_4))
+			movementAmount.x--;
+		if (keyboard.IsKeyDown(Key::Num_6))
+			movementAmount.x++;
+
+		if (keyboard.IsKeyDown(Key::Num_9))
+			movementAmount.y++;
+		if (keyboard.IsKeyDown(Key::Num_3))
+			movementAmount.y--;
+
+		if (keyboard.IsKeyDown(Key::Num_8))
+			movementAmount.z--;
+		if (keyboard.IsKeyDown(Key::Num_2))
+			movementAmount.z++;
+
+		if (movementAmount)
+		{
+			const auto movement = movementAmount * k_lightMovementRate * elapsedTime;
+			const auto position = m_pointLight->GetPosition() + movement;
+
+			m_pointLight->SetPosition(position);
+			m_proxyModel->SetPosition(position);
 		}
 	}
 }
 
-void AnimationDemo::UpdatePointLight(const Time& time)
+void AnimationDemo::UpdateSpecularLight(const Time& time, const KeyboardComponent& keyboard)
 {
-	static float pointLightIntensity = m_pointLight->GetColor().a;
-
-	if (!!m_keyboard)
-	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
-
-		// update directional light intensity
-		if (m_keyboard->IsKeyDown(Key::Home) && pointLightIntensity < k_byteMax)
-		{
-			pointLightIntensity += k_lightModulationRate * elapsedTime;
-
-			auto pointLightColor = m_pointLight->GetColor();
-			pointLightColor.a = math::Min(pointLightIntensity, k_byteMax);
-			m_pointLight->SetColor(pointLightColor);
-		}
-
-		if (m_keyboard->IsKeyDown(Key::End) && pointLightIntensity > 0)
-		{
-			pointLightIntensity -= k_lightModulationRate * elapsedTime;
-
-			auto pointLightColor = m_pointLight->GetColor();
-			pointLightColor.a = math::Max(pointLightIntensity, 0.f);
-			m_pointLight->SetColor(pointLightColor);
-		}
-
-		// move
-		{
-			math::Vector3i movementAmount;
-
-			if (m_keyboard->IsKeyDown(Key::Num_4))
-				movementAmount.x--;
-			if (m_keyboard->IsKeyDown(Key::Num_6))
-				movementAmount.x++;
-
-			if (m_keyboard->IsKeyDown(Key::Num_9))
-				movementAmount.y++;
-			if (m_keyboard->IsKeyDown(Key::Num_3))
-				movementAmount.y--;
-
-			if (m_keyboard->IsKeyDown(Key::Num_8))
-				movementAmount.z--;
-			if (m_keyboard->IsKeyDown(Key::Num_2))
-				movementAmount.z++;
-
-			if (movementAmount)
-			{
-				const auto movement = movementAmount * k_lightMovementRate * elapsedTime;
-				const auto position = m_pointLight->GetPosition() + movement;
-
-				m_pointLight->SetPosition(position);
-				m_proxyModel->SetPosition(position);
-			}
-		}
-	}
-}
-
-void AnimationDemo::UpdateSpecularLight(const Time& time)
-{
-	static float specularLightIntensity = m_specularPower;
-
-	if (!!m_keyboard)
-	{
-		const auto elapsedTime = time.elapsed.GetSeconds();
-
-		if (m_keyboard->IsKeyDown(Key::Insert) && specularLightIntensity < k_byteMax)
-		{
-			specularLightIntensity += k_lightModulationRate * elapsedTime;
-			specularLightIntensity = math::Min(specularLightIntensity, k_byteMax);
-
-			m_specularPower = specularLightIntensity;;
-		}
-
-		if (m_keyboard->IsKeyDown(Key::Delete) && specularLightIntensity > 0)
-		{
-			specularLightIntensity -= k_lightModulationRate * elapsedTime;
-			specularLightIntensity = math::Max(specularLightIntensity, 0.f);
-
-			m_specularPower = specularLightIntensity;
-		}
-	}
+	const float stepValue = time.elapsed.GetSeconds() * k_lightModulationRate;
+	::utils::UpdateValue(m_specularPower, stepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::Insert, Key::Delete));
 }

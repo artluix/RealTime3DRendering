@@ -1,5 +1,5 @@
 #pragma once
-#include "Materials/LightMaterial.h"
+#include "Materials/LightsMaterial.h"
 
 #include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
@@ -13,7 +13,7 @@ class TextComponent;
 } // namespace library
 
 class PointLightDemo
-	: public library::ConcreteMaterialPrimitiveComponent<LightMaterial>
+	: public library::ConcreteMaterialPrimitiveComponent<LightsMaterial>
 	, public library::InputReceivableComponent
 {
 	RTTI_CLASS(PointLightDemo, library::PrimitiveComponent, library::InputReceivableComponent)
@@ -40,9 +40,9 @@ private:
 		};
 	};
 
-	void UpdateAmbientLight(const library::Time& time);
-	void UpdatePointLight(const library::Time& time);
-	void UpdateSpecularLight(const library::Time& time);
+	void UpdateAmbientLight(const library::Time& time, const library::KeyboardComponent& keyboard);
+	void UpdatePointLight(const library::Time& time, const library::KeyboardComponent& keyboard);
+	void UpdateSpecularLight(const library::Time& time, const library::KeyboardComponent& keyboard);
 
 	float m_specularPower;
 	library::math::Color m_specularColor;

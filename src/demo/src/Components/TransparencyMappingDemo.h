@@ -42,9 +42,9 @@ private:
 		};
 	};
 
-	void UpdateAmbientLight(const library::Time& time);
-	void UpdatePointLight(const library::Time& time);
-	void UpdateSpecularLight(const library::Time& time);
+	void UpdateAmbientLight(const library::Time& time, const library::KeyboardComponent& keyboard);
+	void UpdatePointLight(const library::Time& time, const library::KeyboardComponent& keyboard);
+	void UpdateSpecularLight(const library::Time& time, const library::KeyboardComponent& keyboard);
 
 	library::ComPtr<ID3D11ShaderResourceView> m_transparencyMapTexture;
 
