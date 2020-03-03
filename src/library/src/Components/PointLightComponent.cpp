@@ -3,6 +3,7 @@
 
 #ifdef USE_LIGHT_PROXY_MODEL
 #include "library/Components/ProxyModelComponent.h"
+#include "library/Components/CameraComponent.h"
 #endif
 
 namespace library
@@ -50,7 +51,7 @@ void PointLightComponent::SetupProxyModel(const CameraComponent& camera)
 {
 	m_proxyModel = std::make_unique<ProxyModelComponent>("PointLightProxy", 0.5f);
 	m_proxyModel->SetCamera(camera);
-	m_proxyModel->Initialize(GetApp());
+	m_proxyModel->Initialize(camera.GetApp());
 }
 #endif
 

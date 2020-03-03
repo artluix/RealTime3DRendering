@@ -3,7 +3,7 @@
 Texture2D SceneTexture;
 Texture2D BloomTexture;
 
-cbuffer CBufferPerObject
+cbuffer CBufferPerFrame
 {
     float BloomThreshold = 0.45f;
     float BloomIntensity = 1.25f;

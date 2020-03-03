@@ -8,4 +8,9 @@ class ToneMappingMaterial : public library::PostProcessingMaterial
 public:
 	explicit ToneMappingMaterial(library::Effect& effect);
 	~ToneMappingMaterial();
+
+	library::EffectVariable& GetExposure() { return m_exposure; }
+
+private:
+	library::EffectVariable& m_exposure;
 };

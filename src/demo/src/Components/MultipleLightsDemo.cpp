@@ -38,6 +38,7 @@ constexpr auto k_backgroundColor = math::Color(0.f);
 
 MultipleLightsDemo::MultipleLightsDemo()
 	: m_lightsCount(1)
+	, m_lightColor(colors::White)
 
 	, m_specularPower(25.f)
 	, m_specularColor(1.f, 1.f, 1.f, 1.f)
@@ -49,7 +50,7 @@ void MultipleLightsDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
-	CreateMaterialWithEffect("MultiplePointLights");
+	CreateMaterialWithEffect("Lights");
 
 	// load model
 	{
@@ -72,6 +73,7 @@ void MultipleLightsDemo::InitializeInternal()
 
 	// set position for lights
 	m_lights[0]->SetPosition(math::Vector3(0.f, -10.f, 10.f));
+	m_lights[0]->SetColor(math::Color(30.f, 30.f, 30.f, 1.f));
 	m_lights[1]->SetPosition(math::Vector3(0.f, 10.f, 10.f));
 	m_lights[2]->SetPosition(math::Vector3(-10.f, 0.f, 0.f));
 	m_lights[3]->SetPosition(math::Vector3(10.f, 0.f, 0.f));
@@ -115,8 +117,7 @@ void MultipleLightsDemo::Update(const Time& time)
 		m_lights[i]->Update(time);
 	}
 
-	SceneComponent::Update(time);
-	//PrimitiveComponent::Update(time);
+	PrimitiveComponent::Update(time);
 }
 
 void MultipleLightsDemo::UpdateAmbientLight(const Time& time, const KeyboardComponent& keyboard)
@@ -208,7 +209,7 @@ void MultipleLightsDemo::Draw_SetData(const PrimitiveData& primitiveData)
 			pointLightsData.emplace_back(PointLightData(light));
 	}
 	m_material->GetPointLightsCount() << unsigned(pointLightsData.size());
-	m_material->GetPointLights() << pointLightsData.data();
+	m_material->GetPointLights() << pointLightsData;
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);
 }

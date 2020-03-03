@@ -67,6 +67,5 @@ void GaussianBlurDemo::UpdateBlurAmount(const Time& time)
 		{
 			SetBlurAmount(blurAmount);
 		}
-
 	}
 }

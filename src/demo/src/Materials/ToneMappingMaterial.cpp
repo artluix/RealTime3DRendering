@@ -4,6 +4,7 @@
 
 ToneMappingMaterial::ToneMappingMaterial(library::Effect& effect)
 	: PostProcessingMaterial(effect)
+	, m_exposure(effect.GetVariable("Exposure"))
 {
 }
 

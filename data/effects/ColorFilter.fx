@@ -49,10 +49,10 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 
 float4 grayscale_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
-    static const float3 k_grayScaleIntensity = { 0.299f, 0.587f, 0.114f };
+    static const float3 k_colorIntensity = { 0.299f, 0.587f, 0.114f };
 
     float4 color = SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate);
-    float intensity = dot(color.rgb, k_grayScaleIntensity);
+    float intensity = dot(color.rgb, k_colorIntensity);
 
     return float4(intensity.rrr, color.a);
 }

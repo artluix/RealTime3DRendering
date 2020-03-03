@@ -24,6 +24,7 @@
 #include "Components/GaussianBlurDemo.h"
 #include "Components/BloomDemo.h"
 #include "Components/DistortionMappingDemo.h"
+#include "Components/HdrDemo.h"
 
 #include "Components/ProjectiveTextureMappingDemo.h"
 #include "Components/ProjectiveTextureMappingDepthMapDemo.h"
@@ -73,7 +74,7 @@ using namespace library;
 namespace
 {
 constexpr auto k_mrtBackgroundColor = colors::Color();
-constexpr auto k_backgroundColor = colors::CornFlower;
+constexpr auto k_backgroundColor = colors::Black;
 } // namespace
 
 DemoApplication::DemoApplication(
@@ -234,9 +235,11 @@ void DemoApplication::Initialize()
 		m_sceneRenderTarget = std::make_unique<FullScreenRenderTarget>(*this);
 
 		// auto postProcessing = new ColorFilterDemo();
-		auto postProcessing = new GaussianBlurDemo();
+		// auto postProcessing = new GaussianBlurDemo();
 		// auto postProcessing = new BloomDemo();
 		// auto postProcessing = new DistortionMappingDemo();
+		auto postProcessing = new HdrDemo();
+
 		postProcessing->SetKeyboard(*m_keyboard);
 		// postProcessing->SetCamera(*camera);
 		postProcessing->SetSceneTexture(*(m_sceneRenderTarget->GetOutputTexture()));
@@ -327,10 +330,10 @@ void DemoApplication::Initialize()
 	// m_components.push_back(basic);
 	// m_components.push_back(textureMapping);
 	// m_components.push_back(diffuseLighting);
-	//m_components.push_back(pointLight);
-	// m_components.push_back(multiplePointLights);
-	m_components.push_back(spotlight);
-	//m_components.push_back(normalMapping);
+	// m_components.push_back(pointLight);
+	m_components.push_back(multipleLights);
+	// m_components.push_back(spotlight);
+	// m_components.push_back(normalMapping);
 	// m_components.push_back(environmentMapping);
 	// m_components.push_back(transparencyMapping);
 	// m_components.push_back(displacementMapping);
@@ -388,7 +391,7 @@ void DemoApplication::Update(const Time& time)
 		if (m_keyboard->WasKeyPressed(Key::Tab))
 			m_postProcessingEnabled = !m_postProcessingEnabled;
 
-		if (m_keyboard->WasKeyPressed(Key::Space))
+		if (m_keyboard->WasKeyPressed(Key::Left_Ctrl))
 		{
 			m_deferredLightingEnabled = !m_deferredLightingEnabled;
 
