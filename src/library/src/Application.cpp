@@ -12,7 +12,7 @@
 #include "library/BlendStates.h"
 #include "library/SamplerStates.h"
 
-#include <DDSTextureLoader.h>
+#include <DirectXTex/DirectXTex.h>
 #include <thread>
 
 namespace library
@@ -144,31 +144,114 @@ void Application::UnbindPixelShaderResources(const unsigned startIdx, const unsi
 
 //-------------------------------------------------------------------------
 
-ComPtr<ID3D11ShaderResourceView> Application::LoadTexture(const std::string& textureName) const
+namespace
 {
-	ComPtr<ID3D11ShaderResourceView> texture;
+void LoadTexture(const Path& texturePath, DirectX::ScratchImage& image)
+{
+	if (texturePath)
+		return;
 
-	if (textureName.empty())
-		return texture;
-
-	// texture name must be without extension
-	assert(!Path(textureName).GetExt());
-
-	const auto texturePath = GetTexturesPath() + Path(textureName + ".dds");
+	const auto ext = texturePath.GetExt();
+	assert(!!ext);
 
 	std::vector<std::byte> textureData;
 	utils::LoadBinaryFile(texturePath, textureData);
 	assert("Load texture failed." && !textureData.empty());
 
-	auto hr = DirectX::CreateDDSTextureFromMemory(
-		m_device.Get(),
-		m_deviceContext.Get(),
-		reinterpret_cast<const std::uint8_t*>(textureData.data()),
-		textureData.size(),
-		nullptr,
-		&texture
-	);
-	assert("CreateDDSTextureFromMemory() failed." && SUCCEEDED(hr));
+	DirectX::ScratchImage image;
+
+	const auto& extStr = ext.GetString();
+	if (extStr == ".dds")
+	{
+		auto hr = DirectX::LoadFromDDSMemory(
+			textureData.data(), textureData.size(),
+			DirectX::DDS_FLAGS_NONE,
+			nullptr,
+			image
+		);
+		assert("LoadFromDDSMemory() failed." && SUCCEEDED(hr));
+	}
+	else if (extStr == "tga")
+	{
+		auto hr = DirectX::LoadFromTGAMemory(textureData.data(), textureData.size(), nullptr, image);
+		assert("LoadFromTGAMemory() failed." && SUCCEEDED(hr));
+	}
+	else if (extStr == "png" || extStr == "jpg")
+	{
+		auto hr = DirectX::LoadFromWICMemory(
+			textureData.data(), textureData.size(),
+			DirectX::WIC_FLAGS_NONE,
+			nullptr,
+			image
+		);
+		assert("LoadFromWICMemory() failed." && SUCCEEDED(hr));
+	}
+	else if (extStr == "hdr")
+	{
+		auto hr = DirectX::LoadFromHDRMemory(textureData.data(), textureData.size(), nullptr, image);
+		assert("LoadFromHDRMemory() failed." && SUCCEEDED(hr));
+	}
+	else
+	{
+		assert("Format not supported." && !extStr.c_str());
+	}
+}
+}
+
+//-------------------------------------------------------------------------
+
+ComPtr<ID3D11ShaderResourceView> Application::CreateCubeTextureSRV(const std::string& textureFilenameStr) const
+{
+	ComPtr<ID3D11ShaderResourceView> cubeTexture;
+
+	const auto texturePath = GetTexturesPath() + Path(textureFilenameStr);
+
+	DirectX::ScratchImage image;
+	LoadTexture(texturePath, image);
+
+	/*		hr = cubeImage.InitializeCube(DXGI_FORMAT_R32G32B32A32_FLOAT, 1024, 1024, 1, image.GetMetadata().mipLevels);
+
+		//DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(1024, 0, 1024, 1024), *cubeImage.GetImage(0, 0, 0), 0, 0, 0);
+		//DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(0, 1024, 1024, 1024), *cubeImage.GetImage(0, 1, 0), 0, 0, 0);
+		//DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(1024, 1024, 1024, 1024), *cubeImage.GetImage(0, 2, 0), 0, 0, 0);
+		//DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(2048, 1024, 1024, 1024), *cubeImage.GetImage(0, 3, 0), 0, 0, 0);
+		//DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(3072, 1024, 1024, 1024), *cubeImage.GetImage(0, 4, 0), 0, 0, 0);
+		//DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(1024, 2048, 1024, 1024), *cubeImage.GetImage(0, 5, 0), 0, 0, 0);
+
+		// directx uses such order for cube maps: (+X, -X, +Y, -Y, +Z, -Z)
+
+		DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(2048, 1024, 1024, 1024), *cubeImage.GetImage(0, 0, 0), 0, 0, 0);
+		DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(0, 1024, 1024, 1024), *cubeImage.GetImage(0, 1, 0), 0, 0, 0);
+		DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(1024, 0, 1024, 1024), *cubeImage.GetImage(0, 2, 0), 0, 0, 0);
+		DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(1024, 2048, 1024, 1024), *cubeImage.GetImage(0, 3, 0), 0, 0, 0);
+		DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(1024, 1024, 1024, 1024), *cubeImage.GetImage(0, 4, 0), 0, 0, 0);
+		DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(3072, 1024, 1024, 1024), *cubeImage.GetImage(0, 5, 0), 0, 0, 0);*/
+
+
+	return cubeTexture;
+}
+
+//-------------------------------------------------------------------------
+
+ComPtr<ID3D11ShaderResourceView> Application::CreateTexture2DSRV(const std::string& textureFilenameStr) const
+{
+	ComPtr<ID3D11ShaderResourceView> texture;
+
+	const auto texturePath = GetTexturesPath() + Path(textureFilenameStr);
+
+	DirectX::ScratchImage image;
+	LoadTexture(texturePath, image);
+
+	if (image.GetImageCount())
+	{
+		auto hr = DirectX::CreateShaderResourceView(
+			m_device.Get(),
+			image.GetImages(), image.GetImageCount(),
+			image.GetMetadata(),
+			&texture
+		);
+		assert("CreateShaderResourceView() failed." && SUCCEEDED(hr));
+	}
 
 	return texture;
 }

@@ -185,7 +185,7 @@ std::vector<ComPtr<ID3D11ShaderResourceView>> Mesh::LoadTextures(const TextureTy
 	for (const auto& textureName : textureNames)
 	{
 		Path texturePath(textureName);
-		auto texture = m_model.GetApp().LoadTexture(texturePath.GetBaseName().SplitExt().first.GetString());
+		auto texture = m_model.GetApp().CreateTexture2DSRV(texturePath.GetBaseName().SplitExt().first.GetString());
 
 		textures.emplace_back(std::move(texture));
 	}

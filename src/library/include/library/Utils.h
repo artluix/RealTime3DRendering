@@ -11,6 +11,8 @@ std::wstring ToWideString(const std::string& str);
 Path GetCurrentDirectory();
 Path GetExecutableDirectory();
 
+void WriteBinaryFile(const Path& path, const std::vector<std::byte>& data);
+void WriteBinaryFile(const Path& path, const void* data, const std::size_t size);
 void LoadBinaryFile(const Path& path, std::vector<std::byte>& data);
 
 //-------------------------------------------------------------------------

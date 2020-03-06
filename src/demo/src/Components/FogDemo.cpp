@@ -62,7 +62,7 @@ void FogDemo::InitializeInternal()
 	}
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture("EarthComposite");
+	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("EarthComposite,jpg");
 
 	m_directionalLight = std::make_unique<DirectionalLightComponent>();
 	m_directionalLight->SetupProxyModel(*GetCamera());

@@ -59,7 +59,7 @@ void SpotlightDemo::InitializeInternal()
 	}
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture("Checkerboard");
+	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("Checkerboard.png");
 
 	m_spotlight = std::make_unique<SpotlightComponent>();
 	m_spotlight->SetupProxyModel(*GetCamera());

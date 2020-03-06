@@ -33,7 +33,7 @@ void GeometryShaderDemo::InitializeInternal()
 	CreateMaterialWithEffect("PointSprite");
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture("BookCover");
+	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("BookCover.png");
 
 	InitializeRandomPoints();
 

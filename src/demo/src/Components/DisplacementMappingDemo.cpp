@@ -56,8 +56,8 @@ void DisplacementMappingDemo::InitializeInternal()
 	}
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture("Blocks_COLOR_RGB");
-	m_textures[Texture::DisplacementMap] = GetApp().LoadTexture("Blocks_DISP");
+	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("Blocks_COLOR_RGB.tga");
+	m_textures[Texture::DisplacementMap] = GetApp().CreateTexture2DSRV("Blocks_DISP.tga");
 
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetupProxyModel(*GetCamera());

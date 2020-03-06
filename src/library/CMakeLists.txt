@@ -216,7 +216,7 @@ if(APPLICATION)
             src
     )
 
-    target_link_libraries(library effects11 directxtk assimp d3d11 d3dcompiler dxguid dinput8)
+    target_link_libraries(library effects11 directxtk directxtex assimp d3d11 d3dcompiler dxguid dinput8)
 
     target_compile_options(library
         PRIVATE

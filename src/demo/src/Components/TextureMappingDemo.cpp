@@ -30,7 +30,7 @@ void TextureMappingDemo::InitializeInternal()
 	m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture("EarthComposite");
+	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("EarthComposite.jpg");
 }
 
 void TextureMappingDemo::Update(const Time& time)

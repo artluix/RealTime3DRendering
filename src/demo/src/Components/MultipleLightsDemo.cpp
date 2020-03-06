@@ -59,7 +59,7 @@ void MultipleLightsDemo::InitializeInternal()
 	}
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture("EarthAtDay");
+	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("EarthAtDay.tga");
 
 	m_lights.reserve(k_maxLightsCount);
 	for (unsigned i = 0; i < k_maxLightsCount; i++)

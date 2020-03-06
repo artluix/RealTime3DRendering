@@ -55,7 +55,7 @@ float4 reinhard_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float3 color = SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate).rgb;
 
-    color /= (color + float3(1.f, 1.f, 1.f));
+    color /= (color + 1.f);
     // gamma correction (do I need it?)
     color = pow(color, float3(k_invGamma, k_invGamma, k_invGamma));
 

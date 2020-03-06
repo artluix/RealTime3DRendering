@@ -57,7 +57,8 @@ public:
 	virtual void ResetRenderTargets() const;
 	virtual void UnbindPixelShaderResources(const unsigned startIdx, const unsigned count) const;
 
-	virtual ComPtr<ID3D11ShaderResourceView> LoadTexture(const std::string& textureName) const;
+	virtual ComPtr<ID3D11ShaderResourceView> CreateCubeTextureSRV(const std::string& textureFilenameStr) const;
+	virtual ComPtr<ID3D11ShaderResourceView> CreateTexture2DSRV(const std::string& textureFilenameStr) const;
 
 	virtual const Path& GetDataPath() const = 0;
 	virtual const Path& GetTexturesPath() const;

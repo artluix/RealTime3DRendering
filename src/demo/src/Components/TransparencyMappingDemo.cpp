@@ -72,8 +72,8 @@ void TransparencyMappingDemo::InitializeInternal()
 	}
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture("Checkerboard");
-	m_textures[Texture::TransparencyMap] = GetApp().LoadTexture("AlphaMask_32bpp");
+	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("Checkerboard.png");
+	m_textures[Texture::TransparencyMap] = GetApp().CreateTexture2DSRV("AlphaMask_32bpp.tga");
 
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetupProxyModel(*GetCamera());

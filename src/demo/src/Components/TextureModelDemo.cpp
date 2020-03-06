@@ -111,7 +111,7 @@ void TextureModelDemo::InitializeInternal()
 	CreatePrimitivesData(GetApp().GetDevice(), mesh);
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture("EarthComposite");
+	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("EarthComposite.jpg");
 }
 
 void TextureModelDemo::Update(const Time& time)

@@ -54,7 +54,7 @@ void PointLightDemo::InitializeInternal()
 	}
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture("EarthAtDay");
+	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("EarthAtDay.tga");
 
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetupProxyModel(*GetCamera());

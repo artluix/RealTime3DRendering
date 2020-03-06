@@ -48,7 +48,7 @@ void ModelTessellationDemo::InitializeInternal()
 	}
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture("EarthComposite");
+	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("EarthComposite.jpg");
 
 	m_tessEdgeFactors.fill(2.f);
 
@@ -60,7 +60,7 @@ void ModelTessellationDemo::InitializeInternal()
 			std::wostringstream woss;
 			woss << "Wireframe visible (Enter): " << (m_isWireframeVisible ? "True" : "False")
 				 << "\nTessellation Mode (Space): " << (m_isDistanceModeEnabled ? "Distance" : "Manual");
-		
+
 			if (m_isDistanceModeEnabled)
 			{
 				woss << "\nMax Tessellation Factor (+I/-J): " << m_maxTessFactor

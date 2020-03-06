@@ -73,7 +73,7 @@ void AnimationDemo::InitializeInternal()
 				modelMaterial.GetTextureNames(TextureType::Diffuse).front()
 			);
 			const auto textureName = diffuseTexturePath.GetBaseName().SplitExt().first.GetString();
-			m_textures[Texture::Default] = GetApp().LoadTexture(textureName);
+			m_textures[Texture::Default] = GetApp().CreateTexture2DSRV(textureName);
 		}
 	}
 

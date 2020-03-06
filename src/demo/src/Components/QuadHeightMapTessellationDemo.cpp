@@ -66,7 +66,7 @@ void QuadHeightMapTessellationDemo::InitializeInternal()
 	}
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::HeightMap] = GetApp().LoadTexture("HeightMap");
+	m_textures[Texture::HeightMap] = GetApp().CreateTexture2DSRV("HeightMap.jpg");
 
 	m_tessEdgeFactors.fill(10);
 	m_tessInsideFactors.fill(10);

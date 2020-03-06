@@ -132,7 +132,8 @@ set TEX_PATH=%1
 set TEX_NAME=%2
 set TEX_EXT=%3
 
-set TEX_DEST_PATH=%TEXTURES_DEST_PATH%\%TEX_NAME%.dds
+rem set TEX_DEST_PATH=%TEXTURES_DEST_PATH%\%TEX_NAME%.dds
+set TEX_DEST_PATH=%TEXTURES_DEST_PATH%\%TEX_NAME%%TEX_EXT%
 set TEX_HASH_PATH=%TEXTURES_DEST_PATH%\%TEX_NAME%%TEX_EXT%.hash
 
 for /f %%i in ('certutil -hashfile %TEX_PATH% ^| findstr /V ":"') do set TEX_HASH=%%i
@@ -159,13 +160,13 @@ if "%HASH_CHANGED%"=="True" (
 )
 
 if "%NEED_EXPORT_TEX%"=="True" (
-    if /i "%TEX_EXT%" == ".dds" (
+    rem if /i "%TEX_EXT%" == ".dds" (
         copy %TEX_PATH% %TEX_DEST_PATH%
-    ) else (
-        echo Export texture %TEX_PATH%
-        %TEXCONV_TOOL% -m 1 -ft dds %TEX_PATH% -o %TEXTURES_DEST_PATH% -nologo
-        echo.
-    )
+    rem ) else (
+    rem     echo Export texture %TEX_PATH%
+    rem     %TEXCONV_TOOL% -m 1 -ft dds %TEX_PATH% -o %TEXTURES_DEST_PATH% -nologo
+    rem     echo.
+    rem )
 )
 
 exit /b 0

@@ -74,7 +74,7 @@ using namespace library;
 namespace
 {
 constexpr auto k_mrtBackgroundColor = colors::Color();
-constexpr auto k_backgroundColor = colors::Black;
+constexpr auto k_backgroundColor = colors::CornFlower;
 } // namespace
 
 DemoApplication::DemoApplication(
@@ -148,7 +148,8 @@ void DemoApplication::Initialize()
 	auto fps = std::make_shared<FpsComponent>();
 
 	// skybox
-	auto skybox = std::make_shared<SkyboxComponent>("Maskonaive2_1024", 100.f);
+	//auto skybox = std::make_shared<SkyboxComponent>("spiaggia_di_mondello.hdr", 100.f);
+	auto skybox = std::make_shared<SkyboxComponent>("StandardCubeMap.hdr", 50.f);
 	skybox->SetCamera(*camera);
 
 	// grid
@@ -326,12 +327,12 @@ void DemoApplication::Initialize()
 	// m_components.push_back(cube);
 	// m_components.push_back(model);
 	// m_components.push_back(textureModel);
-	// m_components.push_back(skybox);
+	m_components.push_back(skybox);
 	// m_components.push_back(basic);
 	// m_components.push_back(textureMapping);
 	// m_components.push_back(diffuseLighting);
 	// m_components.push_back(pointLight);
-	m_components.push_back(multipleLights);
+	//m_components.push_back(multipleLights);
 	// m_components.push_back(spotlight);
 	// m_components.push_back(normalMapping);
 	// m_components.push_back(environmentMapping);

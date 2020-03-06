@@ -75,8 +75,8 @@ void ProjectiveTextureMappingDemo::InitializeInternal()
 
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture("Checkerboard");
-	m_textures[Texture::Projected] = GetApp().LoadTexture("ProjectedTexture");
+	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("Checkerboard.png");
+	m_textures[Texture::Projected] = GetApp().CreateTexture2DSRV("ProjectedTexture.png");
 
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetupProxyModel(*GetCamera());

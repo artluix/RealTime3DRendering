@@ -75,8 +75,8 @@ void NormalMappingDemo::InitializeInternal()
 	}
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture("Blocks_COLOR_RGB");
-	m_textures[Texture::NormalMap] = GetApp().LoadTexture("Blocks_NORM");
+	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("Blocks_COLOR_RGB.tga");
+	m_textures[Texture::NormalMap] = GetApp().CreateTexture2DSRV("Blocks_NORM.tga");
 
 	m_directionalLight = std::make_unique<DirectionalLightComponent>();
 	m_directionalLight->SetupProxyModel(*GetCamera());

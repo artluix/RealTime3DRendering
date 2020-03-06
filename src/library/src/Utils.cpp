@@ -32,6 +32,20 @@ Path GetExecutableDirectory()
 	return Path(buffer.data()).GetDirName();
 }
 
+//-------------------------------------------------------------------------
+
+void WriteBinaryFile(const Path& path, const std::vector<std::byte>& data)
+{
+	WriteBinaryFile(path, data.data(), data.size());
+}
+
+void WriteBinaryFile(const Path& path, const void* data, const std::size_t size)
+{
+	std::ofstream file(path.GetWideString(), std::ios::binary);
+	file.write(reinterpret_cast<const char*>(data), size);
+	file.close();
+}
+
 void LoadBinaryFile(const Path& path, std::vector<std::byte>& data)
 {
 	std::ifstream file(path.GetWideString(), std::ios::binary);

@@ -10,8 +10,8 @@
 
 namespace library
 {
-SkyboxComponent::SkyboxComponent(const std::string& cubeMapName, const float scale)
-	: m_cubeMapName(cubeMapName)
+SkyboxComponent::SkyboxComponent(const std::string& cubeMapFilename, const float scale)
+	: m_cubeMapFilename(cubeMapFilename)
 {
 	SetScaling(math::Vector3(scale));
 }
@@ -26,7 +26,7 @@ void SkyboxComponent::InitializeInternal()
 	m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Skybox] = GetApp().LoadTexture(m_cubeMapName);
+	m_textures[Texture::Skybox] = GetApp().CreateCubeTextureSRV(m_cubeMapFilename);
 }
 
 void SkyboxComponent::Update(const Time& time)

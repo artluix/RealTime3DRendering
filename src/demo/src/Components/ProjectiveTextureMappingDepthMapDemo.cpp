@@ -97,8 +97,8 @@ void ProjectiveTextureMappingDepthMapDemo::InitializeInternal()
 
 	// textures
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture("Checkerboard");
-	m_textures[Texture::Projected] = GetApp().LoadTexture("ProjectedTexture");
+	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("Checkerboard.png");
+	m_textures[Texture::Projected] = GetApp().CreateTexture2DSRV("ProjectedTexture.png");
 
 	CreateMaterialWithEffect("ProjectiveTextureMapping");
 	m_material->SetCurrentTechnique("project_texture_depth_map");

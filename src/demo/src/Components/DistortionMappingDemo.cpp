@@ -56,8 +56,8 @@ void DistortionMappingDemo::InitializeInternal()
 	}
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::DistortionMap] = GetApp().LoadTexture("DistortionGlass");
-	//m_textures[Texture::DistortionMap] = GetApp().LoadTexture("TextDistortionMap");
+	m_textures[Texture::DistortionMap] = GetApp().CreateTexture2DSRV("DistortionGlass.png");
+	//m_textures[Texture::DistortionMap] = GetApp().LoadTexture("TextDistortionMap.png");
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetTextUpdateFunction(

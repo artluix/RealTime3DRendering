@@ -11,7 +11,7 @@ class SkyboxComponent : public ConcreteMaterialPrimitiveComponent<SkyboxMaterial
 	RTTI_CLASS(SkyboxComponent, PrimitiveComponent)
 
 public:
-	SkyboxComponent(const std::string& cubeMapName, const float scale);
+	SkyboxComponent(const std::string& cubeMapFilename, const float scale);
 	~SkyboxComponent() = default;
 
 	void Update(const Time& time) override;
@@ -31,6 +31,6 @@ protected:
 	void InitializeInternal() override;
 	void Draw_SetData(const PrimitiveData& primitiveData) override;
 
-	std::string m_cubeMapName;
+	std::string m_cubeMapFilename;
 };
 } // namespace library

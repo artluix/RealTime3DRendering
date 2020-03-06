@@ -98,7 +98,7 @@ void ShadowMappingDemo::InitializeInternal()
 
 	// textures
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture("Checkerboard");
+	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("Checkerboard.png");
 
 	CreateMaterialWithEffect("ShadowMapping");
 

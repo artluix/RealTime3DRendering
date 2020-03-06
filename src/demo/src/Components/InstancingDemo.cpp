@@ -52,7 +52,7 @@ void InstancingDemo::InitializeInternal()
 	}
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture("EarthComposite");
+	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("EarthComposite.jpg");
 
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetupProxyModel(*GetCamera());

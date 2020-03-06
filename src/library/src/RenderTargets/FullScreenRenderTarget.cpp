@@ -20,7 +20,8 @@ FullScreenRenderTarget::FullScreenRenderTarget(const Application& app) : m_app(a
 		fullScreenTextureDesc.ArraySize = 1;
 		//fullScreenTextureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
 		//fullScreenTextureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM_SRGB;
-		 fullScreenTextureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+		//fullScreenTextureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+		fullScreenTextureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
 		fullScreenTextureDesc.SampleDesc.Count = 1;
 		fullScreenTextureDesc.SampleDesc.Quality = 0;
 		fullScreenTextureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;

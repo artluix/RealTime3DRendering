@@ -47,8 +47,8 @@ void EnvironmentMappingDemo::InitializeInternal()
 	}
 
 	m_textures.resize(Texture::Count);
-	m_textures[Texture::Default] = GetApp().LoadTexture("Checkerboard");
-	m_textures[Texture::EnvironmentMap] = GetApp().LoadTexture("Maskonaive2_1024");
+	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("Checkerboard.png");
+	m_textures[Texture::EnvironmentMap] = GetApp().CreateTexture2DSRV("Maskonaive2_1024.dds");
 
 	m_text = std::make_unique<TextComponent>();
 	m_text->SetPosition(math::Vector2(0.f, 100.f));
