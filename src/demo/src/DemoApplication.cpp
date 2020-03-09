@@ -148,8 +148,7 @@ void DemoApplication::Initialize()
 	auto fps = std::make_shared<FpsComponent>();
 
 	// skybox
-	//auto skybox = std::make_shared<SkyboxComponent>("spiaggia_di_mondello.hdr", 100.f);
-	auto skybox = std::make_shared<SkyboxComponent>("StandardCubeMap.hdr", 50.f);
+	auto skybox = std::make_shared<SkyboxComponent>("spiaggia_di_mondello.hdr", 100.f);
 	skybox->SetCamera(*camera);
 
 	// grid

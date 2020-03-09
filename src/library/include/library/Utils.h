@@ -1,6 +1,7 @@
 #pragma once
 #include "library/Common.h"
 #include "library/Path.h"
+#include "library/Math/MathUtils.h"
 
 #include <Unknwn.h>
 
@@ -43,6 +44,22 @@ std::array<U, Count> ToArray(const std::array<T, Count>& arrT)
 
 	return arrU;
 }
+
+//-------------------------------------------------------------------------
+
+constexpr unsigned GetMipMapLevelsCount(unsigned width, unsigned height)
+{
+	unsigned levelsCount = 1;
+	while (width > 1 || height > 1)
+	{
+		width = math::Max(width >> 1, 1u);
+		height = math::Max(height >> 1, 1u);
+		levelsCount++;
+	}
+
+	return levelsCount;
+}
+
 } // namespace library::utils
 
 //-------------------------------------------------------------------------

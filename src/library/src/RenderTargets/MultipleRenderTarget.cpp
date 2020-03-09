@@ -12,20 +12,20 @@ MultipleRenderTarget::MultipleRenderTarget(const Application& app, const unsigne
 
 	// output texture & render target view
 	{
+		D3D11_TEXTURE2D_DESC textureDesc{};
+		textureDesc.Width = app.GetScreenWidth();
+		textureDesc.Height = app.GetScreenHeight();
+		textureDesc.MipLevels = 1;
+		textureDesc.ArraySize = 1;
+		textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
+		textureDesc.SampleDesc.Count = 1;
+		textureDesc.SampleDesc.Quality = 0;
+		textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+		textureDesc.Usage = D3D11_USAGE_DEFAULT;
+
 		for (unsigned i = 0; i < size; i++)
 		{
 			ComPtr<ID3D11Texture2D> texture;
-
-			D3D11_TEXTURE2D_DESC textureDesc{};
-			textureDesc.Width = app.GetScreenWidth();
-			textureDesc.Height = app.GetScreenHeight();
-			textureDesc.MipLevels = 1;
-			textureDesc.ArraySize = 1;
-			textureDesc.Format = DXGI_FORMAT_R32G32B32A32_FLOAT;
-			textureDesc.SampleDesc.Count = 1;
-			textureDesc.SampleDesc.Quality = 0;
-			textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
-			textureDesc.Usage = D3D11_USAGE_DEFAULT;
 
 			auto hr = device->CreateTexture2D(&textureDesc, nullptr, &texture);
 			assert("ID3D11::CreateTexture2D() failed." && SUCCEEDED(hr));

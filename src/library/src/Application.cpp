@@ -11,9 +11,11 @@
 #include "library/RasterizerStates.h"
 #include "library/BlendStates.h"
 #include "library/SamplerStates.h"
+#include "library/Math/Vector.h"
 
 #include <DirectXTex/DirectXTex.h>
 #include <thread>
+#include <ratio>
 
 namespace library
 {
@@ -148,7 +150,7 @@ namespace
 {
 void LoadTexture(const Path& texturePath, DirectX::ScratchImage& image)
 {
-	if (texturePath)
+	if (!texturePath)
 		return;
 
 	const auto ext = texturePath.GetExt();
@@ -158,10 +160,8 @@ void LoadTexture(const Path& texturePath, DirectX::ScratchImage& image)
 	utils::LoadBinaryFile(texturePath, textureData);
 	assert("Load texture failed." && !textureData.empty());
 
-	DirectX::ScratchImage image;
-
 	const auto& extStr = ext.GetString();
-	if (extStr == ".dds")
+	if (extStr == "dds")
 	{
 		auto hr = DirectX::LoadFromDDSMemory(
 			textureData.data(), textureData.size(),
@@ -196,10 +196,26 @@ void LoadTexture(const Path& texturePath, DirectX::ScratchImage& image)
 		assert("Format not supported." && !extStr.c_str());
 	}
 }
+
+void CreateSrv(const DirectX::ScratchImage& image, ID3D11Device* device, ComPtr<ID3D11ShaderResourceView>& srv)
+{
+	if (image.GetImageCount())
+	{
+		auto hr = DirectX::CreateShaderResourceView(
+			device,
+			image.GetImages(), image.GetImageCount(),
+			image.GetMetadata(),
+			&srv
+		);
+		assert("CreateShaderResourceView() failed." && SUCCEEDED(hr));
+	}
+}
 }
 
 //-------------------------------------------------------------------------
 
+// supports only h-cross layout
+// directx uses such order for cube maps: (+X, -X, +Y, -Y, +Z, -Z)
 ComPtr<ID3D11ShaderResourceView> Application::CreateCubeTextureSRV(const std::string& textureFilenameStr) const
 {
 	ComPtr<ID3D11ShaderResourceView> cubeTexture;
@@ -209,24 +225,40 @@ ComPtr<ID3D11ShaderResourceView> Application::CreateCubeTextureSRV(const std::st
 	DirectX::ScratchImage image;
 	LoadTexture(texturePath, image);
 
-	/*		hr = cubeImage.InitializeCube(DXGI_FORMAT_R32G32B32A32_FLOAT, 1024, 1024, 1, image.GetMetadata().mipLevels);
+	const auto& metadata = image.GetMetadata();
+	assert("Wrong size of cubemap texture." && (metadata.width * 3 == metadata.height * 4));
 
-		//DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(1024, 0, 1024, 1024), *cubeImage.GetImage(0, 0, 0), 0, 0, 0);
-		//DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(0, 1024, 1024, 1024), *cubeImage.GetImage(0, 1, 0), 0, 0, 0);
-		//DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(1024, 1024, 1024, 1024), *cubeImage.GetImage(0, 2, 0), 0, 0, 0);
-		//DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(2048, 1024, 1024, 1024), *cubeImage.GetImage(0, 3, 0), 0, 0, 0);
-		//DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(3072, 1024, 1024, 1024), *cubeImage.GetImage(0, 4, 0), 0, 0, 0);
-		//DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(1024, 2048, 1024, 1024), *cubeImage.GetImage(0, 5, 0), 0, 0, 0);
+	const auto tileSize = metadata.width / 4;
 
-		// directx uses such order for cube maps: (+X, -X, +Y, -Y, +Z, -Z)
+	DirectX::ScratchImage cubeImage;
+	auto hr = cubeImage.InitializeCube(DXGI_FORMAT_R32G32B32A32_FLOAT, tileSize, tileSize, 1, metadata.mipLevels);
+	assert("InitializeCube() failed." && SUCCEEDED(hr));
 
-		DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(2048, 1024, 1024, 1024), *cubeImage.GetImage(0, 0, 0), 0, 0, 0);
-		DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(0, 1024, 1024, 1024), *cubeImage.GetImage(0, 1, 0), 0, 0, 0);
-		DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(1024, 0, 1024, 1024), *cubeImage.GetImage(0, 2, 0), 0, 0, 0);
-		DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(1024, 2048, 1024, 1024), *cubeImage.GetImage(0, 3, 0), 0, 0, 0);
-		DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(1024, 1024, 1024, 1024), *cubeImage.GetImage(0, 4, 0), 0, 0, 0);
-		DirectX::CopyRectangle(*image.GetImage(0, 0, 0), DirectX::Rect(3072, 1024, 1024, 1024), *cubeImage.GetImage(0, 5, 0), 0, 0, 0);*/
+	constexpr unsigned tilesCount = 6;
+	constexpr std::array<math::Vector2u, 6> tileCoords =
+	{
+		math::Vector2u(2, 1),
+		math::Vector2u(0, 1),
+		math::Vector2u(1, 0),
+		math::Vector2u(1, 2),
+		math::Vector2u(1, 1),
+		math::Vector2u(3, 1),
+	};
 
+	const auto& texImg = *image.GetImage(0, 0, 0);
+	DirectX::Rect tileRect;
+	tileRect.h = tileRect.w = tileSize;
+
+	for (unsigned i = 0; i < tilesCount; i++)
+	{
+		tileRect.x = tileCoords[i].x * tileSize;
+		tileRect.y = tileCoords[i].y * tileSize;
+
+		const auto& tileImg = *cubeImage.GetImage(0, i, 0);
+		DirectX::CopyRectangle(texImg, tileRect, tileImg, 0, 0, 0);
+	}
+
+	CreateSrv(cubeImage, m_device.Get(), cubeTexture);
 
 	return cubeTexture;
 }
@@ -241,17 +273,7 @@ ComPtr<ID3D11ShaderResourceView> Application::CreateTexture2DSRV(const std::stri
 
 	DirectX::ScratchImage image;
 	LoadTexture(texturePath, image);
-
-	if (image.GetImageCount())
-	{
-		auto hr = DirectX::CreateShaderResourceView(
-			m_device.Get(),
-			image.GetImages(), image.GetImageCount(),
-			image.GetMetadata(),
-			&texture
-		);
-		assert("CreateShaderResourceView() failed." && SUCCEEDED(hr));
-	}
+	CreateSrv(image, m_device.Get(), texture);
 
 	return texture;
 }

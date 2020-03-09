@@ -94,6 +94,7 @@ if(APPLICATION)
 
                 include/library/RenderTargets/DepthMapRenderTarget.h
                 include/library/RenderTargets/FullScreenRenderTarget.h
+                include/library/RenderTargets/HdrRenderTarget.h
                 include/library/RenderTargets/MultipleRenderTarget.h
 
             include/library/Application.h
@@ -189,6 +190,7 @@ if(APPLICATION)
 
                 src/RenderTargets/DepthMapRenderTarget.cpp
                 src/RenderTargets/FullScreenRenderTarget.cpp
+                src/RenderTargets/HdrRenderTarget.cpp
                 src/RenderTargets/MultipleRenderTarget.cpp
 
             src/Application.cpp

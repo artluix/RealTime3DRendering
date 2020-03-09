@@ -49,28 +49,19 @@ float4 default_pixel_shader(VS_OUTPUT IN) : SV_Target
 }
 
 static const float3 k_colorIntensity = { 0.299f, 0.587f, 0.114f };
-static const float k_invGamma = 0.4545f; // = (1 / 2.2f)
+// static const float k_invGamma = 0.4545f; // = (1 / 2.2f)
 
 float4 reinhard_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float3 color = SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate).rgb;
-
     color /= (color + 1.f);
-    // gamma correction (do I need it?)
-    color = pow(color, float3(k_invGamma, k_invGamma, k_invGamma));
-
     return float4(color, 1.f);
 }
 
-float4 gamma_pixel_shader(VS_OUTPUT IN) : SV_Target
+float4 exposure_pixel_shader(VS_OUTPUT IN) : SV_Target
 {
     float3 color = SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate).rgb;
-
-    // exposure tone mapping
-    color = float3(1.f, 1.f, 1.f) - exp(-color * Exposure);
-    // gamma correction (do I need it?)
-    color = pow(color, float3(k_invGamma, k_invGamma, k_invGamma));
-
+    color = 1.f - exp(-color * Exposure);
     return float4(color, 1.f);
 }
 
@@ -102,6 +93,6 @@ technique11 tone_mapping_gamma
     {
         SetVertexShader(CompileShader(vs_5_0, vertex_shader()));
         SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_5_0, gamma_pixel_shader()));
+        SetPixelShader(CompileShader(ps_5_0, exposure_pixel_shader()));
     }
 }
