@@ -99,16 +99,7 @@ void DistortionMappingDemo::Draw(const Time& time)
 		case Mode::Masking:
 		{
 			m_cutoutRenderTarget->Begin();
-
-			deviceContext->ClearRenderTargetView(
-				m_cutoutRenderTarget->GetRenderTargetView(),
-				static_cast<const float*>(k_emptyColor)
-			);
-			deviceContext->ClearDepthStencilView(
-				m_cutoutRenderTarget->GetDepthStencilView(),
-				D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-				1.f, 0
-			);
+			m_cutoutRenderTarget->Clear(k_emptyColor);
 
 			DrawMeshForDistortionCutout();
 

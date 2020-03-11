@@ -536,12 +536,16 @@ void Application::Shutdown()
 	UnregisterClass(m_windowClass.c_str(), m_instanceHandle);
 }
 
+void Application::Clear(const ClearParams& cp)
+{
+	RenderTarget::Clear(m_deviceContext.Get(), cp);
+}
+
 //-------------------------------------------------------------------------
 
 void Application::Begin()
 {
-	RenderTarget::
-		Begin(m_deviceContext.Get(), Data(&m_renderTargetView, 1, m_depthStencilView.Get(), m_viewport));
+	RenderTarget::Begin(m_deviceContext.Get(), ViewData(&m_renderTargetView, 1, m_depthStencilView.Get(), m_viewport));
 }
 
 void Application::End()

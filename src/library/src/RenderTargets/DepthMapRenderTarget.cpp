@@ -61,12 +61,15 @@ DepthMapRenderTarget::~DepthMapRenderTarget() = default;
 
 //-------------------------------------------------------------------------
 
+void DepthMapRenderTarget::Clear(const ClearParams& cp)
+{
+	RenderTarget::Clear(m_app.GetDeviceContext(), cp);
+}
+
 void DepthMapRenderTarget::Begin()
 {
 	static ID3D11RenderTargetView* nullRenderTargetView = nullptr;
-
-	RenderTarget::
-		Begin(m_app.GetDeviceContext(), Data(&nullRenderTargetView, 1, m_depthStencilView.Get(), m_viewport));
+	RenderTarget::Begin(m_app.GetDeviceContext(), ViewData(&nullRenderTargetView, 1, m_depthStencilView.Get(), m_viewport));
 }
 
 void DepthMapRenderTarget::End()

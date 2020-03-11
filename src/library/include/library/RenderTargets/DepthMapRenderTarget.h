@@ -18,6 +18,7 @@ public:
 	ID3D11ShaderResourceView* GetOutputTexture() const { return m_outputTexture.Get(); }
 	const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
 
+	void Clear(const ClearParams& cp);
 	void Begin() override;
 	void End() override;
 

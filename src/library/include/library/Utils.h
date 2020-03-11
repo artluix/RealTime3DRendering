@@ -47,7 +47,7 @@ std::array<U, Count> ToArray(const std::array<T, Count>& arrT)
 
 //-------------------------------------------------------------------------
 
-constexpr unsigned GetMipMapLevelsCount(unsigned width, unsigned height)
+constexpr unsigned GetMipLevelsCount(unsigned width, unsigned height)
 {
 	unsigned levelsCount = 1;
 	while (width > 1 || height > 1)

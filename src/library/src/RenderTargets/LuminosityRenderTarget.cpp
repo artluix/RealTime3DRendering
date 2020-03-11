@@ -1,13 +1,15 @@
 #include "StdAfx.h"
-#include "library/RenderTargets/FullScreenRenderTarget.h"
+#include "library/RenderTargets/LuminosityRenderTarget.h"
 
-#include "library/Math/Color.h"
+#include "library/Utils.h"
 #include "library/Application.h"
 
 namespace library
 {
-FullScreenRenderTarget::FullScreenRenderTarget(const Application& app) : m_app(app)
+LuminosityRenderTarget::LuminosityRenderTarget(const Application& app) : m_app(app)
 {
+	m_mipLevelsCount = utils::GetMipLevelsCount(m_app.GetScreenWidth(), m_app.GetScreenHeight());
+
 	auto device = app.GetDevice();
 
 	// output texture & render target view
@@ -17,13 +19,14 @@ FullScreenRenderTarget::FullScreenRenderTarget(const Application& app) : m_app(a
 		D3D11_TEXTURE2D_DESC fullScreenTextureDesc{};
 		fullScreenTextureDesc.Width = app.GetScreenWidth();
 		fullScreenTextureDesc.Height = app.GetScreenHeight();
-		fullScreenTextureDesc.MipLevels = 1;
+		fullScreenTextureDesc.MipLevels = m_mipLevelsCount;
 		fullScreenTextureDesc.ArraySize = 1;
-		fullScreenTextureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		fullScreenTextureDesc.Format = DXGI_FORMAT_R32_FLOAT; // need only 1 float value
 		fullScreenTextureDesc.SampleDesc.Count = 1;
 		fullScreenTextureDesc.SampleDesc.Quality = 0;
 		fullScreenTextureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
 		fullScreenTextureDesc.Usage = D3D11_USAGE_DEFAULT;
+		fullScreenTextureDesc.MiscFlags = D3D11_RESOURCE_MISC_GENERATE_MIPS;
 
 		auto hr = device->CreateTexture2D(&fullScreenTextureDesc, nullptr, &fullScreenTexture);
 		assert("ID3D11::CreateTexture2D() failed." && SUCCEEDED(hr));
@@ -36,16 +39,16 @@ FullScreenRenderTarget::FullScreenRenderTarget(const Application& app) : m_app(a
 	}
 }
 
-FullScreenRenderTarget::~FullScreenRenderTarget() = default;
+LuminosityRenderTarget::~LuminosityRenderTarget() = default;
 
 //-------------------------------------------------------------------------
 
-void FullScreenRenderTarget::Clear(const ClearParams& cp)
+void LuminosityRenderTarget::Clear(const ClearParams& cp)
 {
 	RenderTarget::Clear(m_app.GetDeviceContext(), cp);
 }
 
-void FullScreenRenderTarget::Begin()
+void LuminosityRenderTarget::Begin()
 {
 	RenderTarget::Begin(
 		m_app.GetDeviceContext(),
@@ -53,7 +56,7 @@ void FullScreenRenderTarget::Begin()
 	);
 }
 
-void FullScreenRenderTarget::End()
+void LuminosityRenderTarget::End()
 {
 	RenderTarget::End(m_app.GetDeviceContext());
 }

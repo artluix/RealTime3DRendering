@@ -119,9 +119,7 @@ void BloomComponent::DrawNormal(const Time& time)
 
 	// Extract bright spots in the scene
 	m_renderTarget->Begin();
-
-	deviceContext->ClearRenderTargetView(m_renderTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
-	deviceContext->ClearDepthStencilView(m_renderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	m_renderTarget->Clear(k_backgroundColor);
 
 	m_fullScreenQuad->SetActiveTechnique("bloom_extract", "p0");
 	m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&BloomComponent::UpdateExtractMaterial, this, std::ref(*m_material)));
@@ -155,9 +153,7 @@ void BloomComponent::DrawBlurredTexture(const Time& time)
 
 	// Extract bright spots in the scene
 	m_renderTarget->Begin();
-
-	deviceContext->ClearRenderTargetView(m_renderTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
-	deviceContext->ClearDepthStencilView(m_renderTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	m_renderTarget->Clear(k_backgroundColor);
 
 	m_fullScreenQuad->SetActiveTechnique("bloom_extract", "p0");
 	m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&BloomComponent::UpdateExtractMaterial, this, std::ref(*m_material)));

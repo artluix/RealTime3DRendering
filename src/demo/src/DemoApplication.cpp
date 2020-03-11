@@ -426,32 +426,13 @@ void DemoApplication::Update(const Time& time)
 void DemoApplication::Draw(const Time& time)
 {
 	// clear main RT
-	m_deviceContext->ClearRenderTargetView(
-		m_renderTargetView.Get(),
-		static_cast<const float*>(k_backgroundColor)
-	);
-	m_deviceContext->ClearDepthStencilView(
-		m_depthStencilView.Get(),
-		D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-		1.0f,
-		0
-	);
+	Clear(k_backgroundColor);
 
 	// push post-processing RT
 	if (m_postProcessingEnabled)
 	{
 		m_sceneRenderTarget->Begin();
-
-		m_deviceContext->ClearRenderTargetView(
-			m_sceneRenderTarget->GetRenderTargetView(),
-			static_cast<const float*>(k_backgroundColor)
-		);
-		m_deviceContext->ClearDepthStencilView(
-			m_sceneRenderTarget->GetDepthStencilView(),
-			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-			1.0f,
-			0
-		);
+		m_sceneRenderTarget->Clear(k_backgroundColor);
 	}
 
 	// push deferred lighting RT
@@ -459,21 +440,7 @@ void DemoApplication::Draw(const Time& time)
 	{
 		// Render the scene to an off-screen texture
 		m_multipleRenderTarget->Begin();
-
-		for (unsigned i = 0, count = m_multipleRenderTarget->GetCount(); i < count; i++)
-		{
-			m_deviceContext->ClearRenderTargetView(
-				m_multipleRenderTarget->GetRenderTargetView(i),
-				static_cast<const float*>(k_mrtBackgroundColor)
-			);
-		}
-
-		m_deviceContext->ClearDepthStencilView(
-			m_multipleRenderTarget->GetDepthStencilView(),
-			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-			1.0f,
-			0
-		);
+		m_multipleRenderTarget->Clear(k_mrtBackgroundColor);
 	}
 
 	//m_multiplePointLights->Draw(time);

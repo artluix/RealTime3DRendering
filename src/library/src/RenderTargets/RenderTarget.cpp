@@ -3,45 +3,56 @@
 
 namespace library
 {
-std::stack<library::RenderTarget::Data> RenderTarget::s_renderTargetsData;
+std::stack<library::RenderTarget::ViewData> RenderTarget::s_viewsData;
 
 //-------------------------------------------------------------------------
 
-RenderTarget::Data::Data(ID3D11RenderTargetView* const *rtvs, const unsigned rtvsCount, ID3D11DepthStencilView* dsv, const D3D11_VIEWPORT& vp)
-	: renderTargetViews(rtvs)
-	, renderTargetViewsCount(rtvsCount)
-	, depthStencilView(dsv)
-	, viewport(vp)
+void RenderTarget::Clear(ID3D11DeviceContext* const deviceContext, const ClearParams& cp)
 {
-}
-
-//-------------------------------------------------------------------------
-
-void RenderTarget::Begin(ID3D11DeviceContext* const deviceContext, const Data& data)
-{
-	s_renderTargetsData.push(data);
-	SetRenderTargetData(deviceContext, data);
-}
-
-void RenderTarget::End(ID3D11DeviceContext* const deviceContext)
-{
-	s_renderTargetsData.pop();
-
-	if (!s_renderTargetsData.empty())
+	// we will take views from data, because it must be already pushed
+	if (!s_viewsData.empty())
 	{
-		SetRenderTargetData(deviceContext, s_renderTargetsData.top());
+		const auto& viewData = s_viewsData.top();
+
+		for (unsigned i = 0; i < viewData.rtvsCount; i++)
+		{
+			deviceContext->ClearRenderTargetView(viewData.rtvs[i],  static_cast<const float*>(cp.rtvColor));
+		}
+
+		if (!!viewData.dsv)
+		{
+			deviceContext->ClearDepthStencilView(viewData.dsv, cp.dsvFlags, cp.dsvDepth, cp.dsvStencil);
+		}
 	}
 }
 
 //-------------------------------------------------------------------------
 
-void RenderTarget::SetRenderTargetData(ID3D11DeviceContext* const deviceContext, const Data& data)
+void RenderTarget::Begin(ID3D11DeviceContext* const deviceContext, const ViewData& data)
+{
+	s_viewsData.push(data);
+	SetViewData(deviceContext, data);
+}
+
+void RenderTarget::End(ID3D11DeviceContext* const deviceContext)
+{
+	s_viewsData.pop();
+
+	if (!s_viewsData.empty())
+	{
+		SetViewData(deviceContext, s_viewsData.top());
+	}
+}
+
+//-------------------------------------------------------------------------
+
+void RenderTarget::SetViewData(ID3D11DeviceContext* const deviceContext, const ViewData& viewData)
 {
 	deviceContext->OMSetRenderTargets(
-		data.renderTargetViewsCount,
-		data.renderTargetViews,
-		data.depthStencilView
+		viewData.rtvsCount,
+		viewData.rtvs,
+		viewData.dsv
 	);
-	deviceContext->RSSetViewports(1, &data.viewport);
+	deviceContext->RSSetViewports(1, &viewData.viewport);
 }
 } // namespace library

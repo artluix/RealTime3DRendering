@@ -113,8 +113,7 @@ void GaussianBlurComponent::Draw(const Time& time)
 
 	// Horizontal Blur
 	m_horizontalBlurTarget->Begin();
-	deviceContext->ClearRenderTargetView(m_horizontalBlurTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
-	deviceContext->ClearDepthStencilView(m_horizontalBlurTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	m_horizontalBlurTarget->Clear(k_backgroundColor);
 
 	m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&GaussianBlurComponent::UpdateHorizontalOffsets, this, std::ref(*m_material)));
 	m_fullScreenQuad->Draw(time);
@@ -131,8 +130,7 @@ void GaussianBlurComponent::DrawToTexture(const Time& time)
 
 	// Horizontal Blur
 	m_horizontalBlurTarget->Begin();
-	deviceContext->ClearRenderTargetView(m_horizontalBlurTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
-	deviceContext->ClearDepthStencilView(m_horizontalBlurTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	m_horizontalBlurTarget->Clear(k_backgroundColor);
 
 	m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&GaussianBlurComponent::UpdateHorizontalOffsets, this, std::ref(*m_material)));
 	m_fullScreenQuad->Draw(time);
@@ -141,8 +139,7 @@ void GaussianBlurComponent::DrawToTexture(const Time& time)
 
 	// Vertical Blur
 	m_verticalBlurTarget->Begin();
-	deviceContext->ClearRenderTargetView(m_verticalBlurTarget->GetRenderTargetView(), static_cast<const float*>(k_backgroundColor));
-	deviceContext->ClearDepthStencilView(m_verticalBlurTarget->GetDepthStencilView(), D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL, 1.0f, 0);
+	m_verticalBlurTarget->Clear(k_backgroundColor);
 
 	m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&GaussianBlurComponent::UpdateVerticalOffsets, this, std::ref(*m_material)));
 	m_fullScreenQuad->Draw(time);

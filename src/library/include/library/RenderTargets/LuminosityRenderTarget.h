@@ -6,26 +6,29 @@ namespace library
 {
 class Application;
 
-class HdrRenderTarget : public RenderTarget
+class LuminosityRenderTarget : public RenderTarget
 {
-	RTTI_CLASS(FullScreenRenderTarget, RenderTarget)
+	RTTI_CLASS(LuminosityRenderTarget, RenderTarget)
 
 public:
-	explicit HdrRenderTarget(const Application& app);
-	~HdrRenderTarget();
+	explicit LuminosityRenderTarget(const Application& app);
+	~LuminosityRenderTarget();
 
 	ID3D11RenderTargetView* GetRenderTargetView() const { return m_renderTargetView.Get(); }
-	ID3D11DepthStencilView* GetDepthStencilView() const { return m_depthStencilView.Get(); }
 	ID3D11ShaderResourceView* GetOutputTexture() const { return m_outputTexture.Get(); }
 
+	unsigned GetMipMapLevelsCount() const { m_mipLevelsCount; }
+
+	void Clear(const ClearParams& cp) override;
 	void Begin() override;
 	void End() override;
 
 private:
 	const Application& m_app;
 
+	unsigned m_mipLevelsCount;
+
 	ComPtr<ID3D11RenderTargetView> m_renderTargetView;
-	ComPtr<ID3D11DepthStencilView> m_depthStencilView;
 	ComPtr<ID3D11ShaderResourceView> m_outputTexture;
 };
 } // namespace library

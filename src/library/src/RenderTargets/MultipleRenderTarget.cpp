@@ -1,6 +1,7 @@
 #include "StdAfx.h"
 #include "library/RenderTargets/MultipleRenderTarget.h"
 
+#include "library/Math/Color.h"
 #include "library/Application.h"
 
 namespace library
@@ -83,6 +84,11 @@ MultipleRenderTarget::~MultipleRenderTarget() = default;
 
 //-------------------------------------------------------------------------
 
+void MultipleRenderTarget::Clear(const ClearParams& cp)
+{
+	RenderTarget::Clear(m_app.GetDeviceContext(), cp);
+}
+
 void MultipleRenderTarget::Begin()
 {
 	// avoid reinterpret_cast from std::vector<ComPtr<ID3D11RenderTargetView>> to ID3D11RenderTargetView**
@@ -96,7 +102,7 @@ void MultipleRenderTarget::Begin()
 
 	RenderTarget::Begin(
 		m_app.GetDeviceContext(),
-		Data(
+		ViewData(
 			rtvs.data(), unsigned(m_renderTargetViews.size()),
 			m_depthStencilView.Get(),
 			m_app.GetViewport()

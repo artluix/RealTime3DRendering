@@ -37,11 +37,15 @@ public:
 
 	ID3D11Device1* GetDevice() const { return m_device.Get(); }
 	ID3D11DeviceContext1* GetDeviceContext() const { return m_deviceContext.Get(); }
+
+	ID3D11RenderTargetView* GetRenderTargetView() const { return m_renderTargetView.Get(); }
+	ID3D11DepthStencilView* GetDepthStencilView() const { return m_depthStencilView.Get(); }
+	const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
+
 	bool IsDepthBufferEnabled() const { return m_depthStencilBufferEnabled; }
 	float GetAspectRatio() const;
 	bool IsFullScreen() const { return m_isFullScreen; }
 	const D3D11_TEXTURE2D_DESC& GetBackBufferDesc() const { return m_backBufferDesc; }
-	const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
 
 	const std::vector<ComponentPtr>& GetComponents() const { return m_components; }
 
@@ -71,6 +75,7 @@ protected:
 
 	virtual void Shutdown();
 
+	void Clear(const ClearParams& cp) override;
 	void Begin() override;
 	void End() override;
 

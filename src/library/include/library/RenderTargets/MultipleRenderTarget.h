@@ -16,7 +16,7 @@ public:
 	explicit MultipleRenderTarget(const Application& app, const unsigned size);
 	~MultipleRenderTarget();
 
-	unsigned GetCount() const { return unsigned(m_renderTargetViews.size()); }
+	unsigned GetRenderTargetViewsCount() const { return unsigned(m_renderTargetViews.size()); }
 
 	ID3D11RenderTargetView* GetRenderTargetView(const unsigned idx) const;
 	ID3D11ShaderResourceView* GetOutputTexture(const unsigned idx) const;
@@ -24,6 +24,7 @@ public:
 	ID3D11DepthStencilView* GetDepthStencilView() const { return m_depthStencilView.Get(); }
 	ID3D11ShaderResourceView* GetDepthOutputTexture() const { return m_depthOutputTexture.Get(); }
 
+	void Clear(const ClearParams& cp) override;
 	void Begin() override;
 	void End() override;
 
