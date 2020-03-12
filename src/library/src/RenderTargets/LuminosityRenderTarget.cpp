@@ -6,13 +6,14 @@
 
 namespace library
 {
-LuminosityRenderTarget::LuminosityRenderTarget(const Application& app) : m_app(app)
+LuminosityRenderTarget::LuminosityRenderTarget(const Application& app)
+	: m_app(app)
 {
 	m_mipLevelsCount = utils::GetMipLevelsCount(m_app.GetScreenWidth(), m_app.GetScreenHeight());
 
 	auto device = app.GetDevice();
 
-	// output texture & render target view
+	// setup and create texture, SRV and RTV
 	{
 		ComPtr<ID3D11Texture2D> fullScreenTexture;
 

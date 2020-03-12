@@ -12,7 +12,7 @@ DepthMapRenderTarget::DepthMapRenderTarget(const Application& app, const unsigne
 
 	ComPtr<ID3D11Texture2D> texture;
 
-	// output texture
+	// setup and create texture
 	{
 		D3D11_TEXTURE2D_DESC textureDesc{};
 		textureDesc.Width = width;
@@ -26,16 +26,19 @@ DepthMapRenderTarget::DepthMapRenderTarget(const Application& app, const unsigne
 		auto hr = device->CreateTexture2D(&textureDesc, nullptr, &texture);
 		assert("ID3D11::CreateTexture2D() failed." && SUCCEEDED(hr));
 
-		D3D11_SHADER_RESOURCE_VIEW_DESC resourceViewDesc{};
-		resourceViewDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
-		resourceViewDesc.ViewDimension = D3D_SRV_DIMENSION_TEXTURE2D;
-		resourceViewDesc.Texture2D.MipLevels = 1;
+		// setup and create SRV
+		{
+			D3D11_SHADER_RESOURCE_VIEW_DESC resourceViewDesc{};
+			resourceViewDesc.Format = DXGI_FORMAT_R24_UNORM_X8_TYPELESS;
+			resourceViewDesc.ViewDimension = D3D_SRV_DIMENSION_TEXTURE2D;
+			resourceViewDesc.Texture2D.MipLevels = 1;
 
-		hr = device->CreateShaderResourceView(texture.Get(), &resourceViewDesc, &m_outputTexture);
-		assert("ID3D11::CreateShaderResourceView() failed." && SUCCEEDED(hr));
+			hr = device->CreateShaderResourceView(texture.Get(), &resourceViewDesc, &m_outputTexture);
+			assert("ID3D11::CreateShaderResourceView() failed." && SUCCEEDED(hr));
+		}
 	}
 
-	// depth stencil view
+	// setup and create DSV
 	{
 		D3D11_DEPTH_STENCIL_VIEW_DESC depthStencilViewDesc{};
 		depthStencilViewDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;

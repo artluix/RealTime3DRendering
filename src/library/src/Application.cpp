@@ -466,17 +466,7 @@ void Application::InitializeDirectX()
 			depthStencilBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 			depthStencilBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
 			depthStencilBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-
-			if (m_multiSamplingEnabled)
-			{
-				depthStencilBufferDesc.SampleDesc.Count = m_multiSamplingCount;
-				depthStencilBufferDesc.SampleDesc.Quality = m_multiSamplingQualityLevels - 1;
-			}
-			else
-			{
-				depthStencilBufferDesc.SampleDesc.Count = 1;
-				depthStencilBufferDesc.SampleDesc.Quality = 0;
-			}
+			depthStencilBufferDesc.SampleDesc = swapChainDesc.SampleDesc; // we need to use same sampling as in RT
 
 			hr = m_device->CreateTexture2D(&depthStencilBufferDesc, nullptr, &m_depthStencilBuffer);
 			assert("IDXGIDevice::CreateTexture2D() failed." && SUCCEEDED(hr));

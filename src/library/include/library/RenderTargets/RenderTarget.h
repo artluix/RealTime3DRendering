@@ -77,5 +77,7 @@ private:
 	static void SetViewData(ID3D11DeviceContext* const deviceContext, const ViewData& viewData);
 
 	static std::stack<ViewData> s_viewsData;
+
+
 };
 } // namespace library
