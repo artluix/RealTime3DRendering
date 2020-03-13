@@ -38,9 +38,10 @@ public:
 	ID3D11Device1* GetDevice() const { return m_device.Get(); }
 	ID3D11DeviceContext1* GetDeviceContext() const { return m_deviceContext.Get(); }
 
-	ID3D11RenderTargetView* GetRenderTargetView() const { return m_renderTargetView.Get(); }
-	ID3D11DepthStencilView* GetDepthStencilView() const { return m_depthStencilView.Get(); }
-	const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
+	const Application& GetApp() const override final { return *this; }
+	RenderTargetViewArray GetRenderTargetViews() const override final { return { m_renderTargetView.Get() }; }
+	ID3D11DepthStencilView* GetDepthStencilView() const override final { return m_depthStencilView.Get(); }
+	const D3D11_VIEWPORT& GetViewport() const override final { return m_viewport; }
 
 	bool IsDepthBufferEnabled() const { return m_depthStencilBufferEnabled; }
 	float GetAspectRatio() const;
@@ -74,10 +75,6 @@ protected:
 	virtual void InitializeDirectX();
 
 	virtual void Shutdown();
-
-	void Clear(const ClearParams& cp) override;
-	void Begin() override;
-	void End() override;
 
 	HINSTANCE m_instanceHandle;
 	std::wstring m_windowClass;

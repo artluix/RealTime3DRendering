@@ -1,32 +1,24 @@
 #pragma once
-#include "library/RenderTargets/RenderTarget.h"
+#include "library/RenderTargets/SecondaryRenderTarget.h"
 #include "library/Common.h"
-
-#include <vector>
 
 namespace library
 {
-class Application;
-
-class MultipleRenderTarget : public RenderTarget
+class MultipleRenderTarget : public SecondaryRenderTarget
 {
-	RTTI_CLASS(MultipleRenderTarget, RenderTarget)
+	RTTI_CLASS(MultipleRenderTarget, SecondaryRenderTarget)
 
 public:
 	explicit MultipleRenderTarget(const Application& app, const unsigned size);
 	~MultipleRenderTarget();
 
-	unsigned GetRenderTargetViewsCount() const { return unsigned(m_renderTargetViews.size()); }
+	RenderTargetViewArray GetRenderTargetViews() const override final;
+	ID3D11DepthStencilView* GetDepthStencilView() const override final { return m_depthStencilView.Get(); }
 
 	ID3D11RenderTargetView* GetRenderTargetView(const unsigned idx) const;
 	ID3D11ShaderResourceView* GetOutputTexture(const unsigned idx) const;
 
-	ID3D11DepthStencilView* GetDepthStencilView() const { return m_depthStencilView.Get(); }
 	ID3D11ShaderResourceView* GetDepthOutputTexture() const { return m_depthOutputTexture.Get(); }
-
-	void Clear(const ClearParams& cp) override;
-	void Begin() override;
-	void End() override;
 
 private:
 	std::vector<ComPtr<ID3D11RenderTargetView>> m_renderTargetViews;
@@ -34,8 +26,6 @@ private:
 
 	ComPtr<ID3D11DepthStencilView> m_depthStencilView;
 	ComPtr<ID3D11ShaderResourceView> m_depthOutputTexture;
-
-	const Application& m_app;
 };
 
 //-------------------------------------------------------------------------

@@ -6,7 +6,7 @@
 namespace library
 {
 DepthMapRenderTarget::DepthMapRenderTarget(const Application& app, const unsigned width, const unsigned height)
-	: m_app(app)
+	: SecondaryRenderTarget(app)
 {
 	auto device = app.GetDevice();
 
@@ -62,21 +62,4 @@ DepthMapRenderTarget::DepthMapRenderTarget(const Application& app, const unsigne
 
 DepthMapRenderTarget::~DepthMapRenderTarget() = default;
 
-//-------------------------------------------------------------------------
-
-void DepthMapRenderTarget::Clear(const ClearParams& cp)
-{
-	RenderTarget::Clear(m_app.GetDeviceContext(), cp);
-}
-
-void DepthMapRenderTarget::Begin()
-{
-	static ID3D11RenderTargetView* nullRenderTargetView = nullptr;
-	RenderTarget::Begin(m_app.GetDeviceContext(), ViewData(&nullRenderTargetView, 1, m_depthStencilView.Get(), m_viewport));
-}
-
-void DepthMapRenderTarget::End()
-{
-	RenderTarget::End(m_app.GetDeviceContext());
-}
 } // namespace library

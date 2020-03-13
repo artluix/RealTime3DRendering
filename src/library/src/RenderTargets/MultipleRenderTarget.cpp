@@ -7,7 +7,7 @@
 namespace library
 {
 MultipleRenderTarget::MultipleRenderTarget(const Application& app, const unsigned size)
-	: m_app(app)
+	: SecondaryRenderTarget(app)
 {
 	auto device = app.GetDevice();
 
@@ -80,34 +80,17 @@ MultipleRenderTarget::~MultipleRenderTarget() = default;
 
 //-------------------------------------------------------------------------
 
-void MultipleRenderTarget::Clear(const ClearParams& cp)
+RenderTargetViewArray MultipleRenderTarget::GetRenderTargetViews() const
 {
-	RenderTarget::Clear(m_app.GetDeviceContext(), cp);
-}
-
-void MultipleRenderTarget::Begin()
-{
-	// avoid reinterpret_cast from std::vector<ComPtr<ID3D11RenderTargetView>> to ID3D11RenderTargetView**
-	std::vector<ID3D11RenderTargetView*> rtvs;
+	RenderTargetViewArray rtvs;
 	rtvs.reserve(m_renderTargetViews.size());
 
 	for (const auto& rtv : m_renderTargetViews)
 	{
 		rtvs.push_back(rtv.Get());
-	}
+	};
 
-	RenderTarget::Begin(
-		m_app.GetDeviceContext(),
-		ViewData(
-			rtvs.data(), unsigned(m_renderTargetViews.size()),
-			m_depthStencilView.Get(),
-			m_app.GetViewport()
-		)
-	);
+	return rtvs;
 }
 
-void MultipleRenderTarget::End()
-{
-	RenderTarget::End(m_app.GetDeviceContext());
-}
 } // namespace library

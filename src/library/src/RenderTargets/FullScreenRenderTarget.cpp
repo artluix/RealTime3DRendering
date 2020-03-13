@@ -1,13 +1,12 @@
 #include "StdAfx.h"
 #include "library/RenderTargets/FullScreenRenderTarget.h"
 
-#include "library/Math/Color.h"
 #include "library/Application.h"
 
 namespace library
 {
 FullScreenRenderTarget::FullScreenRenderTarget(const Application& app)
-	: m_app(app)
+	: SecondaryRenderTarget(app)
 {
 	auto device = app.GetDevice();
 
@@ -39,6 +38,8 @@ FullScreenRenderTarget::FullScreenRenderTarget(const Application& app)
 		assert("ID3D11::CreateRenderTargetView() failed." && SUCCEEDED(hr));
 	}
 
+	// we don't need multisampling, so we need to create another DSV
+
 	// modify texture desc for DSV
 	textureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
 	textureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
@@ -58,23 +59,4 @@ FullScreenRenderTarget::FullScreenRenderTarget(const Application& app)
 
 FullScreenRenderTarget::~FullScreenRenderTarget() = default;
 
-//-------------------------------------------------------------------------
-
-void FullScreenRenderTarget::Clear(const ClearParams& cp)
-{
-	RenderTarget::Clear(m_app.GetDeviceContext(), cp);
-}
-
-void FullScreenRenderTarget::Begin()
-{
-	RenderTarget::Begin(
-		m_app.GetDeviceContext(),
-		ViewData(&m_renderTargetView, 1, m_depthStencilView.Get(), m_app.GetViewport())
-	);
-}
-
-void FullScreenRenderTarget::End()
-{
-	RenderTarget::End(m_app.GetDeviceContext());
-}
 } // namespace library

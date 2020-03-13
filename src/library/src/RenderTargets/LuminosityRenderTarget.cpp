@@ -7,7 +7,7 @@
 namespace library
 {
 LuminosityRenderTarget::LuminosityRenderTarget(const Application& app)
-	: m_app(app)
+	: SecondaryRenderTarget(app)
 {
 	m_mipLevelsCount = utils::GetMipLevelsCount(m_app.GetScreenWidth(), m_app.GetScreenHeight());
 
@@ -42,23 +42,4 @@ LuminosityRenderTarget::LuminosityRenderTarget(const Application& app)
 
 LuminosityRenderTarget::~LuminosityRenderTarget() = default;
 
-//-------------------------------------------------------------------------
-
-void LuminosityRenderTarget::Clear(const ClearParams& cp)
-{
-	RenderTarget::Clear(m_app.GetDeviceContext(), cp);
-}
-
-void LuminosityRenderTarget::Begin()
-{
-	RenderTarget::Begin(
-		m_app.GetDeviceContext(),
-		ViewData(&m_renderTargetView, 1, nullptr, m_app.GetViewport())
-	);
-}
-
-void LuminosityRenderTarget::End()
-{
-	RenderTarget::End(m_app.GetDeviceContext());
-}
 } // namespace library

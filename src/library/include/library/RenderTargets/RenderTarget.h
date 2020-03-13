@@ -8,6 +8,9 @@
 
 namespace library
 {
+class Application;
+using RenderTargetViewArray = std::vector<ID3D11RenderTargetView*>;
+
 class RenderTarget : public NonCopyable<RenderTarget>
 {
 	RTTI_CLASS_BASE(RenderTarget)
@@ -49,35 +52,33 @@ public:
 	RenderTarget() = default;
 	~RenderTarget() = default;
 
-	virtual void Clear(const ClearParams& cp) = 0;
-	virtual void Begin() = 0;
-	virtual void End() = 0;
+	void Clear(const ClearParams& cp);
+	void Begin();
+	void End();
+
+	virtual const Application& GetApp() const = 0;
+
+	virtual RenderTargetViewArray GetRenderTargetViews() const { return {}; };
+	virtual ID3D11DepthStencilView* GetDepthStencilView() const { return nullptr; }
+	virtual const D3D11_VIEWPORT& GetViewport() const = 0;
 
 protected:
 	struct ViewData
 	{
-		ID3D11RenderTargetView* const *rtvs = nullptr;
-		unsigned rtvsCount;
+		RenderTargetViewArray rtvs;
 		ID3D11DepthStencilView* dsv = nullptr;
 		D3D11_VIEWPORT viewport;
 
-		ViewData(ID3D11RenderTargetView* const *rtvs, const unsigned rtvsCount, ID3D11DepthStencilView* dsv, const D3D11_VIEWPORT& vp)
-			: rtvs(rtvs)
-			, rtvsCount(rtvsCount)
-			, dsv(dsv)
-			, viewport(vp)
+		ViewData(const RenderTarget& rt)
+			: rtvs(rt.GetRenderTargetViews())
+			, dsv(rt.GetDepthStencilView())
+			, viewport(rt.GetViewport())
 		{}
 	};
 
-	static void Clear(ID3D11DeviceContext* const deviceContext, const ClearParams& cp);
-	static void Begin(ID3D11DeviceContext* const deviceContext, const ViewData& viewData);
-	static void End(ID3D11DeviceContext* const deviceContext);
-
 private:
-	static void SetViewData(ID3D11DeviceContext* const deviceContext, const ViewData& viewData);
+	void SetViewData(const ViewData& viewData);
 
 	static std::stack<ViewData> s_viewsData;
-
-
 };
 } // namespace library

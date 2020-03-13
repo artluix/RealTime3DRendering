@@ -1,22 +1,25 @@
 #include "StdAfx.h"
 #include "library/RenderTargets/RenderTarget.h"
 
+#include "library/Application.h"
+
 namespace library
 {
 std::stack<library::RenderTarget::ViewData> RenderTarget::s_viewsData;
 
 //-------------------------------------------------------------------------
 
-void RenderTarget::Clear(ID3D11DeviceContext* const deviceContext, const ClearParams& cp)
+void RenderTarget::Clear(const ClearParams& cp)
 {
 	// we will take views from data, because it must be already pushed
 	if (!s_viewsData.empty())
 	{
+		auto deviceContext = GetApp().GetDeviceContext();
 		const auto& viewData = s_viewsData.top();
 
-		for (unsigned i = 0; i < viewData.rtvsCount; i++)
+		for (auto& rtv : viewData.rtvs)
 		{
-			deviceContext->ClearRenderTargetView(viewData.rtvs[i],  static_cast<const float*>(cp.rtvColor));
+			deviceContext->ClearRenderTargetView(rtv, static_cast<const float*>(cp.rtvColor));
 		}
 
 		if (!!viewData.dsv)
@@ -28,29 +31,32 @@ void RenderTarget::Clear(ID3D11DeviceContext* const deviceContext, const ClearPa
 
 //-------------------------------------------------------------------------
 
-void RenderTarget::Begin(ID3D11DeviceContext* const deviceContext, const ViewData& data)
+void RenderTarget::Begin()
 {
+	ViewData data(*this);
 	s_viewsData.push(data);
-	SetViewData(deviceContext, data);
+	SetViewData(data);
 }
 
-void RenderTarget::End(ID3D11DeviceContext* const deviceContext)
+void RenderTarget::End()
 {
 	s_viewsData.pop();
 
 	if (!s_viewsData.empty())
 	{
-		SetViewData(deviceContext, s_viewsData.top());
+		SetViewData(s_viewsData.top());
 	}
 }
 
 //-------------------------------------------------------------------------
 
-void RenderTarget::SetViewData(ID3D11DeviceContext* const deviceContext, const ViewData& viewData)
+void RenderTarget::SetViewData(const ViewData& viewData)
 {
+	auto deviceContext = GetApp().GetDeviceContext();
+
 	deviceContext->OMSetRenderTargets(
-		viewData.rtvsCount,
-		viewData.rtvs,
+		unsigned(viewData.rtvs.size()),
+		viewData.rtvs.data(),
 		viewData.dsv
 	);
 	deviceContext->RSSetViewports(1, &viewData.viewport);

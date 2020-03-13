@@ -92,10 +92,12 @@ if(APPLICATION)
             # RenderTargets
                 include/library/RenderTargets/RenderTarget.h
 
+                include/library/RenderTargets/CombinedRenderTarget.h
                 include/library/RenderTargets/DepthMapRenderTarget.h
                 include/library/RenderTargets/FullScreenRenderTarget.h
-                include/library/RenderTargets/HdrRenderTarget.h
+                include/library/RenderTargets/LuminosityRenderTarget.h
                 include/library/RenderTargets/MultipleRenderTarget.h
+                include/library/RenderTargets/SecondaryRenderTarget.h
 
             include/library/Application.h
             include/library/BlendStates.h
@@ -190,8 +192,9 @@ if(APPLICATION)
 
                 src/RenderTargets/DepthMapRenderTarget.cpp
                 src/RenderTargets/FullScreenRenderTarget.cpp
-                src/RenderTargets/HdrRenderTarget.cpp
+                src/RenderTargets/LuminosityRenderTarget.cpp
                 src/RenderTargets/MultipleRenderTarget.cpp
+                src/RenderTargets/SecondaryRenderTarget.cpp
 
             src/Application.cpp
             src/BlendStates.cpp
