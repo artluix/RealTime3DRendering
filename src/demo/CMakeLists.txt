@@ -166,9 +166,6 @@ if(APPLICATION)
             src/Materials/TextureMappingMaterial.h
             src/Materials/TessellationMaterial.cpp
 
-            src/Materials/ToneMappingMaterial.h
-            src/Materials/ToneMappingMaterial.cpp
-
             src/Materials/TransparencyMappingMaterial.h
             src/Materials/TransparencyMappingMaterial.cpp
     )

@@ -1,7 +1,5 @@
 #pragma once
-#include "Materials/ToneMappingMaterial.h"
-
-#include <library/Components/ConcreteMaterialPostProcessingComponent.hpp>
+#include <library/Components/ToneMappingComponent.h>
 #include <library/Components/InputReceivableComponent.h>
 
 namespace library
@@ -10,10 +8,10 @@ class TextComponent;
 } // namespace library
 
 class HdrDemo
-	: public library::ConcreteMaterialPostProcessingComponent<ToneMappingMaterial>
+	: public library::ToneMappingComponent
 	, public library::InputReceivableComponent
 {
-	RTTI_CLASS(HdrDemo, library::PostProcessingComponent, library::InputReceivableComponent)
+	RTTI_CLASS(HdrDemo, library::ToneMappingComponent, library::InputReceivableComponent)
 
 public:
 	enum class ToneMappingType
@@ -40,6 +38,4 @@ private:
 
 	std::unique_ptr<library::TextComponent> m_text;
 	ToneMappingType m_toneMappingType = ToneMappingType::No;
-
-	float m_exposure;
 };

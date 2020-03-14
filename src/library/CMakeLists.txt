@@ -36,6 +36,7 @@ if(APPLICATION)
                 include/library/Components/SkyboxComponent.h
                 include/library/Components/SpotlightComponent.h
                 include/library/Components/TextComponent.h
+                include/library/Components/ToneMappingComponent.h
                 include/library/Components/UIComponent.h
 
             # Effect
@@ -54,6 +55,7 @@ if(APPLICATION)
                 include/library/Materials/GaussianBlurMaterial.h
                 include/library/Materials/PostProcessingMaterial.h
                 include/library/Materials/SkyboxMaterial.h
+                include/library/Materials/ToneMappingMaterial.h
 
             # Math
                 include/library/Math/Math.h
@@ -150,6 +152,7 @@ if(APPLICATION)
                 src/Components/SkyboxComponent.cpp
                 src/Components/SpotlightComponent.cpp
                 src/Components/TextComponent.cpp
+                src/Components/ToneMappingComponent.cpp
                 src/Components/UIComponent.cpp
 
             # Effect
@@ -167,6 +170,7 @@ if(APPLICATION)
                 src/Materials/GaussianBlurMaterial.cpp
                 src/Materials/PostProcessingMaterial.cpp
                 src/Materials/SkyboxMaterial.cpp
+                src/Materials/ToneMappingMaterial.cpp
 
             # Math
                 src/Math/Color.cpp

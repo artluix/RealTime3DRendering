@@ -57,8 +57,11 @@ void GaussianBlurComponent::InitializeSampleOffsets()
 	auto& offsets = m_sample.offsets;
 
 	const unsigned sampleOffsetsCount = m_material->GetSampleOffsets().GetTypeDesc().Elements;
-	offsets.vertical.resize(sampleOffsetsCount);
-	offsets.horizontal.resize(sampleOffsetsCount);
+	if (sampleOffsetsCount != unsigned(offsets.horizontal.size()))
+	{
+		offsets.horizontal.resize(sampleOffsetsCount);
+		offsets.vertical.resize(sampleOffsetsCount);
+	}
 
 	offsets.vertical.front() = offsets.horizontal.front() = math::Vector2::Zero;
 
@@ -82,7 +85,8 @@ void GaussianBlurComponent::InitializeSampleWeights()
 	auto& weights = m_sample.weights;
 
 	const unsigned sampleWeightsCount = m_material->GetSampleWeights().GetTypeDesc().Elements;
-	weights.resize(sampleWeightsCount);
+	if (sampleWeightsCount != unsigned(weights.size()))
+		weights.resize(sampleWeightsCount);
 
 	float totalWeight = weights.front() = GetWeight(0.f);
 
@@ -107,10 +111,6 @@ void GaussianBlurComponent::InitializeSampleWeights()
 
 void GaussianBlurComponent::Draw(const Time& time)
 {
-	m_outputTexture = nullptr;
-
-	auto deviceContext = GetApp().GetDeviceContext();
-
 	// Horizontal Blur
 	m_horizontalBlurTarget->Begin();
 	m_horizontalBlurTarget->Clear(k_backgroundColor);
@@ -124,10 +124,8 @@ void GaussianBlurComponent::Draw(const Time& time)
 	m_fullScreenQuad->Draw(time);
 }
 
-void GaussianBlurComponent::DrawToTexture(const Time& time)
+void GaussianBlurComponent::DrawToTexture(const Time& time, ID3D11ShaderResourceView*& outTexture)
 {
-	auto deviceContext = GetApp().GetDeviceContext();
-
 	// Horizontal Blur
 	m_horizontalBlurTarget->Begin();
 	m_horizontalBlurTarget->Clear(k_backgroundColor);
@@ -146,7 +144,7 @@ void GaussianBlurComponent::DrawToTexture(const Time& time)
 	m_verticalBlurTarget->End();
 	GetApp().UnbindPixelShaderResources(0, 1);
 
-	m_outputTexture = m_verticalBlurTarget->GetOutputTexture();
+	outTexture = m_verticalBlurTarget->GetOutputTexture();
 }
 
 //-------------------------------------------------------------------------
@@ -164,7 +162,7 @@ void GaussianBlurComponent::SetBlurAmount(const float blurAmount)
 
 void GaussianBlurComponent::UpdateHorizontalOffsets(Material& material)
 {
-	material.GetSceneTexture() << GetSceneTexture();
+	material.GetSceneTexture() << m_sceneTexture;
 	material.GetSampleWeights() << m_sample.weights;
 	material.GetSampleOffsets() << m_sample.offsets.horizontal;
 }
@@ -178,7 +176,7 @@ void GaussianBlurComponent::UpdateVerticalOffsets(Material& material)
 
 //-------------------------------------------------------------------------
 
-float GaussianBlurComponent::GetWeight(const float x)
+float GaussianBlurComponent::GetWeight(const float x) const
 {
 	return exp(-(x * x) / (2 * m_blurAmount * m_blurAmount));
 }

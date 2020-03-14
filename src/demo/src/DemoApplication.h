@@ -47,13 +47,11 @@ private:
 
 	std::shared_ptr<library::GridComponent> m_grid;
 
-	std::unique_ptr<library::FullScreenRenderTarget> m_sceneRenderTarget;
 	std::unique_ptr<library::PostProcessingComponent> m_postProcessing;
 	bool m_postProcessingEnabled;
 
-	std::unique_ptr<library::MultipleRenderTarget> m_multipleRenderTarget;
-	std::unique_ptr<library::FullScreenQuadComponent> m_fullScreenQuad;
-	bool m_deferredLightingEnabled;
+	//std::unique_ptr<library::FullScreenQuadComponent> m_fullScreenQuad;
+	//bool m_deferredLightingEnabled;
 
 	library::ComPtr<IDirectInput8> m_directInput;
 };

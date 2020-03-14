@@ -92,8 +92,6 @@ void DistortionMappingDemo::Update(const Time& time)
 
 void DistortionMappingDemo::Draw(const Time& time)
 {
-	auto deviceContext = GetApp().GetDeviceContext();
-
 	switch (m_mode)
 	{
 		case Mode::Masking:

@@ -84,8 +84,7 @@ DemoApplication::DemoApplication(
 	const int showCmd
 )
 	: Application(instanceHandle, windowClass, windowTitle, showCmd)
-	, m_postProcessingEnabled(false)
-	, m_deferredLightingEnabled(false)
+	//, m_deferredLightingEnabled(false)
 {
 	m_depthStencilBufferEnabled = true;
 	m_multiSamplingEnabled = true;
@@ -232,8 +231,6 @@ void DemoApplication::Initialize()
 
 	// post-processing
 	{
-		m_sceneRenderTarget = std::make_unique<FullScreenRenderTarget>(*this);
-
 		// auto postProcessing = new ColorFilterDemo();
 		// auto postProcessing = new GaussianBlurDemo();
 		// auto postProcessing = new BloomDemo();
@@ -242,7 +239,6 @@ void DemoApplication::Initialize()
 
 		postProcessing->SetKeyboard(*m_keyboard);
 		// postProcessing->SetCamera(*camera);
-		postProcessing->SetSceneTexture(*(m_sceneRenderTarget->GetOutputTexture()));
 
 		m_postProcessing = std::unique_ptr<PostProcessingComponent>(postProcessing);
 
@@ -258,7 +254,7 @@ void DemoApplication::Initialize()
 	}
 
 	// deferred lighting
-	{
+	/*{
 		m_multipleRenderTarget = std::make_unique<MultipleRenderTarget>(*this, 3);
 
 		auto deferredLightingText = std::make_shared<TextComponent>();
@@ -270,7 +266,7 @@ void DemoApplication::Initialize()
 		deferredLightingText->SetPosition(math::Vector2(0.f, 280.f));
 
 		m_components.push_back(deferredLightingText);
-	}
+	}*/
 
 	// projection
 	auto projectiveTextureMapping = std::make_shared<ProjectiveTextureMappingDemo>();
@@ -391,7 +387,7 @@ void DemoApplication::Update(const Time& time)
 		if (m_keyboard->WasKeyPressed(Key::Tab))
 			m_postProcessingEnabled = !m_postProcessingEnabled;
 
-		if (m_keyboard->WasKeyPressed(Key::Left_Ctrl))
+		/*if (m_keyboard->WasKeyPressed(Key::Left_Ctrl))
 		{
 			m_deferredLightingEnabled = !m_deferredLightingEnabled;
 
@@ -411,11 +407,11 @@ void DemoApplication::Update(const Time& time)
 					}
 				}
 			}
-		}
+		}*/
 	}
 
-	if (m_deferredLightingEnabled)
-		m_fullScreenQuad->Update(time);
+	//if (m_deferredLightingEnabled)
+	//	m_fullScreenQuad->Update(time);
 
 	if (m_postProcessingEnabled)
 		m_postProcessing->Update(time);
@@ -428,41 +424,7 @@ void DemoApplication::Draw(const Time& time)
 	// clear main RT
 	Clear(k_backgroundColor);
 
-	// push post-processing RT
-	if (m_postProcessingEnabled)
-	{
-		m_sceneRenderTarget->Begin();
-		m_sceneRenderTarget->Clear(k_backgroundColor);
-	}
-
-	// push deferred lighting RT
-	if (m_deferredLightingEnabled)
-	{
-		// Render the scene to an off-screen texture
-		m_multipleRenderTarget->Begin();
-		m_multipleRenderTarget->Clear(k_mrtBackgroundColor);
-	}
-
-	//m_multiplePointLights->Draw(time);
-
-	// pop deferred lighting RT
-	if (m_deferredLightingEnabled)
-	{
-		m_multipleRenderTarget->End();
-		m_fullScreenQuad->Draw(time);
-		UnbindPixelShaderResources(0, 4);
-	}
-
-	m_renderer->RenderScene(time);
-
-	// pop post-processing RT
-	if (m_postProcessingEnabled)
-	{
-		m_sceneRenderTarget->End();
-		m_postProcessing->Draw(time);
-	}
-
-	m_renderer->RenderUI(time);
+	m_renderer->Render(time);
 
 	HRESULT hr = m_swapChain->Present(0, 0);
 	assert("IDXGISwapChain::Present() failed." && SUCCEEDED(hr));

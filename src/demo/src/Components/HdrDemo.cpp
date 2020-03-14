@@ -48,7 +48,6 @@ std::string HdrDemo::ToString(const ToneMappingType t)
 //-------------------------------------------------------------------------
 
 HdrDemo::HdrDemo()
-	: m_exposure(0.5f)
 {
 }
 
@@ -63,7 +62,6 @@ void HdrDemo::InitializeInternal()
 
 	m_fullScreenQuad->SetMaterialUpdateFunction([this]() {
 		m_material->GetSceneTexture() << GetSceneTexture();
-		m_material->GetExposure() << m_exposure;
 	});
 
 	m_text = std::make_unique<TextComponent>();
@@ -73,7 +71,7 @@ void HdrDemo::InitializeInternal()
 		oss << "Tone Mapping (Space Bar): " << ToString(m_toneMappingType);
 
 		if (m_toneMappingType == ToneMappingType::Gamma)
-			oss << ", Exposure (+Up/-Down): " << m_exposure;
+			//oss << ", Exposure (+Up/-Down): " << m_exposure;
 
 		oss << '\n';
 
@@ -117,6 +115,11 @@ void HdrDemo::UpdateExposure(const library::Time& time)
 	if (!!m_keyboard)
 	{
 		const auto stepValue = time.elapsed.GetSeconds() * k_modulationRate;
-		::utils::UpdateValue(m_exposure, stepValue, math::Interval(0.f, 50.f), *m_keyboard, KeyPair(Key::Up, Key::Down));
+
+		auto exposure = GetExposure();
+		if (::utils::UpdateValue(exposure, stepValue, math::Interval(0.f, 50.f), *m_keyboard, KeyPair(Key::Up, Key::Down)))
+		{
+			SetExposure(exposure);
+		}
 	}
 }

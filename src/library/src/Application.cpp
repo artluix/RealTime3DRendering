@@ -125,12 +125,6 @@ void Application::Update(const Time& time)
 	}
 }
 
-void Application::Draw(const Time& time)
-{
-	m_renderer->RenderScene(time);
-	m_renderer->RenderUI(time);
-}
-
 //-------------------------------------------------------------------------
 
 void Application::ResetRenderTargets() const
@@ -475,7 +469,7 @@ void Application::InitializeDirectX()
 			assert("IDXGIDevice::CreateDepthStencilView() failed." && SUCCEEDED(hr));
 		}
 
-		m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView.Get());
+		//m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView.Get());
 
 		m_viewport.TopLeftX = 0.0f;
 		m_viewport.TopLeftY = 0.0f;
@@ -484,7 +478,7 @@ void Application::InitializeDirectX()
 		m_viewport.MinDepth = 0.0f;
 		m_viewport.MaxDepth = 1.0f;
 
-		m_deviceContext->RSSetViewports(1, &m_viewport);
+		//m_deviceContext->RSSetViewports(1, &m_viewport);
 	}
 
 	// Set render targets and viewport through render target stack

@@ -57,7 +57,7 @@ public:
 	virtual void Exit();
 
 	virtual void Update(const Time& time);
-	virtual void Draw(const Time& time);
+	virtual void Draw(const Time& time) = 0;
 
 	virtual void ResetRenderTargets() const;
 	virtual void UnbindPixelShaderResources(const unsigned startIdx, const unsigned count) const;

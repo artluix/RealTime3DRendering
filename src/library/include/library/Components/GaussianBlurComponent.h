@@ -17,9 +17,7 @@ public:
 	void SetBlurAmount(const float blurAmount);
 
 	void Draw(const Time& time) override;
-
-	void DrawToTexture(const Time& time);
-	ID3D11ShaderResourceView* GetOutputTexture() const { return m_outputTexture; }
+	void DrawToTexture(const Time& time, ID3D11ShaderResourceView*& outTexture);
 
 protected:
 	void InitializeInternal() override;
@@ -31,14 +29,12 @@ private:
 	void UpdateHorizontalOffsets(Material& material);
 	void UpdateVerticalOffsets(Material& material);
 
-	float GetWeight(const float x);
+	float GetWeight(const float x) const;
 
 	std::unique_ptr<FullScreenRenderTarget> m_horizontalBlurTarget;
 	std::unique_ptr<FullScreenRenderTarget> m_verticalBlurTarget;
 
 	float m_blurAmount;
-
-	ID3D11ShaderResourceView* m_outputTexture = nullptr;
 
 	struct
 	{

@@ -25,6 +25,8 @@ class Application;
 struct Time;
 class PrimitiveComponent;
 class UIComponent;
+class PostProcessingComponent;
+class FullScreenRenderTarget;
 
 class Renderer : public NonCopyable<Renderer>
 {
@@ -33,11 +35,17 @@ public:
 
 	void AddDrawable(PrimitiveComponent& primitiveDrawable);
 	void RemoveDrawable(PrimitiveComponent& primitiveDrawable);
-	void RenderScene(const Time& time);
+
+	void SetPostProcessing(PostProcessingComponent* pp);
+
+	ID3D11ShaderResourceView* GetSceneTexture() const;
 
 	void AddDrawable(UIComponent& uiDrawable);
 	void RemoveDrawable(UIComponent& uiDrawable);
+
+	void RenderScene(const Time& time);
 	void RenderUI(const Time& time);
+	void Render(const Time& time);
 
 	void ResetRenderState(const RenderState rs = RenderState::All);
 	void SaveRenderState(const RenderState rs = RenderState::All);
@@ -50,6 +58,9 @@ public:
 private:
 	std::vector<std::reference_wrapper<PrimitiveComponent>> m_primitiveDrawables;
 	std::vector<std::reference_wrapper<UIComponent>> m_uiDrawables;
+
+	std::unique_ptr<FullScreenRenderTarget> m_sceneRenderTarget;
+	PostProcessingComponent* m_postProcessing = nullptr;
 
 	const Application& m_app;
 

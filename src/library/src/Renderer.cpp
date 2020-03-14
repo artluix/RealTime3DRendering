@@ -3,10 +3,12 @@
 
 #include "library/Components/UIComponent.h"
 #include "library/Components/PrimitiveComponent.h"
+#include "library/Components/PostProcessingComponent.h"
 
 #include "library/Effect/Effect.h"
 #include "library/Materials/Material.h"
 
+#include "library/RenderTargets/FullScreenRenderTarget.h"
 #include "library/Application.h"
 #include "library/Time.h"
 
@@ -18,6 +20,8 @@ namespace library
 
 namespace
 {
+constexpr auto k_backgroundColor = colors::Black;
+
 constexpr auto k_defaultSampleMask = unsigned(-1);
 constexpr auto k_defaultStencilRef = unsigned(-1);
 
@@ -46,6 +50,8 @@ Renderer::Renderer(const Application& app)
 	// reserve some memory for drawables
 	m_primitiveDrawables.reserve(20);
 	m_uiDrawables.reserve(20);
+
+	m_sceneRenderTarget = std::make_unique<FullScreenRenderTarget>(app);
 }
 
 //-------------------------------------------------------------------------
@@ -73,25 +79,22 @@ void Renderer::RemoveDrawable(PrimitiveComponent& primitiveDrawable)
 	m_primitiveDrawables.erase(it);
 }
 
-void Renderer::RenderScene(const Time& time)
+//-------------------------------------------------------------------------
+
+void Renderer::SetPostProcessing(PostProcessingComponent* pp)
 {
-	auto effectComp = [](const PrimitiveComponent& lhs, const PrimitiveComponent& rhs) {
-		if (const auto lhsMat = lhs.GetMaterial())
-			if (const auto rhsMat = rhs.GetMaterial())
-				return lhsMat->GetEffect().GetName() < rhsMat->GetEffect().GetName();
+	m_postProcessing = pp;
+	if (!!m_postProcessing)
+	{
+		m_postProcessing->SetSceneTexture(*(m_sceneRenderTarget->GetOutputTexture()));
+	}
+}
 
-		return false;
-	};
+//-------------------------------------------------------------------------
 
-	auto drawPred = [&time](PrimitiveComponent& primitiveDrawable) {
-		primitiveDrawable.Draw(time);
-	};
-
-	auto drawables = m_primitiveDrawables;
-	m_primitiveDrawables.clear();
-
-	std::sort(drawables.begin(), drawables.end(), effectComp);
-	std::for_each(drawables.begin(), drawables.end(), drawPred);
+ID3D11ShaderResourceView* Renderer::GetSceneTexture() const
+{
+	return m_sceneRenderTarget->GetOutputTexture();
 }
 
 //-------------------------------------------------------------------------
@@ -117,6 +120,39 @@ void Renderer::RemoveDrawable(UIComponent& uiDrawable)
 	m_uiDrawables.erase(it);
 }
 
+//-------------------------------------------------------------------------
+
+void Renderer::RenderScene(const Time& time)
+{
+	auto effectComp = [](const PrimitiveComponent& lhs, const PrimitiveComponent& rhs) {
+		if (const auto lhsMat = lhs.GetMaterial())
+			if (const auto rhsMat = rhs.GetMaterial())
+				return lhsMat->GetEffect().GetName() < rhsMat->GetEffect().GetName();
+
+		return false;
+	};
+
+	auto drawPred = [&time](PrimitiveComponent& primitiveDrawable) {
+		primitiveDrawable.Draw(time);
+	};
+
+	auto drawables = m_primitiveDrawables;
+	m_primitiveDrawables.clear();
+
+	std::sort(drawables.begin(), drawables.end(), effectComp);
+
+	if (!!m_postProcessing)
+	{
+		m_sceneRenderTarget->Begin();
+		m_sceneRenderTarget->Clear(k_backgroundColor);
+	}
+
+	std::for_each(drawables.begin(), drawables.end(), drawPred);
+
+	if (!!m_postProcessing)
+		m_sceneRenderTarget->End();
+}
+
 void Renderer::RenderUI(const Time& time)
 {
 	auto drawPred = [&time](UIComponent& uiDrawable) {
@@ -129,6 +165,17 @@ void Renderer::RenderUI(const Time& time)
 	SaveRenderState(RenderState::All);
 	std::for_each(drawables.begin(), drawables.end(), drawPred);
 	RestoreRenderState(RenderState::All);
+}
+
+void Renderer::Render(const Time& time)
+{
+	RenderScene(time);
+	RenderUI(time);
+
+	if (!!m_postProcessing)
+	{
+		m_postProcessing->Draw(time);
+	}
 }
 
 //-------------------------------------------------------------------------

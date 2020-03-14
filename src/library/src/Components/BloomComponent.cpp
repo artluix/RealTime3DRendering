@@ -104,7 +104,7 @@ void BloomComponent::UpdateExtractMaterial(Material& material) const
 void BloomComponent::UpdateCompositeMaterial(Material& material) const
 {
 	material.GetSceneTexture() << GetSceneTexture();
-	material.GetBloomTexture() << m_gaussianBlur->GetOutputTexture();
+	material.GetBloomTexture() << m_bloomTexture;
 	material.GetBloomIntensity() << m_settings.bloomIntensity;
 	material.GetBloomSaturation() << m_settings.bloomSaturation;
 	material.GetSceneIntensity() << m_settings.sceneIntensity;
@@ -115,8 +115,6 @@ void BloomComponent::UpdateCompositeMaterial(Material& material) const
 
 void BloomComponent::DrawNormal(const Time& time)
 {
-	auto deviceContext = GetApp().GetDeviceContext();
-
 	// Extract bright spots in the scene
 	m_renderTarget->Begin();
 	m_renderTarget->Clear(k_backgroundColor);
@@ -129,7 +127,7 @@ void BloomComponent::DrawNormal(const Time& time)
 	GetApp().UnbindPixelShaderResources(0, 1);
 
 	// Blur the bright spots in the scene
-	m_gaussianBlur->DrawToTexture(time);
+	m_gaussianBlur->DrawToTexture(time, m_bloomTexture);
 	GetApp().UnbindPixelShaderResources(0, 1);
 
 	// Combine the original scene with the blurred bright spot image
@@ -149,8 +147,6 @@ void BloomComponent::DrawExtractedTexture(const Time& time)
 
 void BloomComponent::DrawBlurredTexture(const Time& time)
 {
-	auto deviceContext = GetApp().GetDeviceContext();
-
 	// Extract bright spots in the scene
 	m_renderTarget->Begin();
 	m_renderTarget->Clear(k_backgroundColor);

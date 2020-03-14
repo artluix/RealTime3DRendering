@@ -6,8 +6,8 @@ namespace library
 {
 struct BloomSettings
 {
-	float bloomThreshold;
 	float blurAmount;
+	float bloomThreshold;
 	float bloomIntensity;
 	float bloomSaturation;
 	float sceneIntensity;
@@ -62,6 +62,8 @@ private:
 	BloomSettings m_settings;
 
 	std::unique_ptr<FullScreenRenderTarget> m_renderTarget;
+
 	std::unique_ptr<GaussianBlurComponent> m_gaussianBlur;
+	ID3D11ShaderResourceView* m_bloomTexture = nullptr;
 };
 } // namespace library
