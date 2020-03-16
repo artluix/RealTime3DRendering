@@ -47,16 +47,19 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 
 // 1. Pass - Calc log of luminance of the screen point
 
-float4 ps_calc_luminance_log(VS_OUTPUT IN) : SV_Target
+float ps_calc_luminance_log(VS_OUTPUT IN) : SV_Target
 {
     float3 color = SceneTexture.Sample(TrilinearSampler, IN.textureCoordinate).rgb;
-    float lumLog = log(get_luminance(color))
-    return float4(lumLog, lumgLog, lumgLog, 1.f);
+    return log(get_luminance(color));
 }
 
 // 2. Pass - Downsample log luminances
 
+
+
 // 3. Pass - calculate average luminance, apply exposure, apply tone mapping operator and optional gamma correction
+
+
 
 /************* Pixel Shaders *************/
 
@@ -95,13 +98,13 @@ float4 ps_calc_luminance_log(VS_OUTPUT IN) : SV_Target
 //     }
 // }
 
-technique11 tone_mapping_reinhard
+technique11 calc_luminance_log
 {
-    pass calc_luminance_log
+    pass p0
     {
         SetVertexShader(CompileShader(vs_5_0, vertex_shader()));
         SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(vs_5_0, ps_calc_luminance_log()));
+        SetPixelShader(CompileShader(ps_5_0, ps_calc_luminance_log()));
     }
 }
 

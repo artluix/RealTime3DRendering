@@ -104,9 +104,9 @@ if(APPLICATION)
             # RenderTargets
                 include/library/RenderTargets/RenderTarget.h
 
+                include/library/RenderTargets/DeferredLightingRenderTarget.h
                 include/library/RenderTargets/DepthMapRenderTarget.h
                 include/library/RenderTargets/FullScreenRenderTarget.h
-                include/library/RenderTargets/MultipleRenderTarget.h
                 include/library/RenderTargets/SingleRenderTarget.h
 
             include/library/Application.h
@@ -202,9 +202,9 @@ if(APPLICATION)
             # RenderTargets
                 src/RenderTargets/RenderTarget.cpp
 
+                src/RenderTargets/DeferredLightingRenderTarget.cpp
                 src/RenderTargets/DepthMapRenderTarget.cpp
                 src/RenderTargets/FullScreenRenderTarget.cpp
-                src/RenderTargets/MultipleRenderTarget.cpp
                 src/RenderTargets/SingleRenderTarget.cpp
 
             src/Application.cpp
