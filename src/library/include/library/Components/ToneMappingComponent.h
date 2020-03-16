@@ -4,6 +4,8 @@
 
 namespace library
 {
+class SingleRenderTarget;
+
 class ToneMappingComponent : public ConcreteMaterialPostProcessingComponent<ToneMappingMaterial>
 {
 	RTTI_CLASS(ToneMappingComponent, PostProcessingComponent)
@@ -18,7 +20,13 @@ public:
 	bool IsGammaCorrectionEnabled() const { return m_gammaCorrectionEnabled; }
 	void SetGammaCorrection(const bool enabled);
 
+	void Draw(const Time& time);
+
 private:
+	void InitializeInternal();
+
+	std::unique_ptr<SingleRenderTarget> m_luminosityRT;
+
 	float m_exposure;
 	bool m_gammaCorrectionEnabled;
 };

@@ -3,7 +3,7 @@
 
 #include <library/Components/ConcreteMaterialPostProcessingComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
-#include <library/PrimitiveData.h>
+#include <library/Render/PrimitiveData.h>
 
 namespace library
 {

@@ -8,9 +8,11 @@
 
 #include "library/Effect/Effect.h"
 
-#include "library/RasterizerStates.h"
-#include "library/BlendStates.h"
-#include "library/SamplerStates.h"
+#include "library/Render/Renderer.h"
+#include "library/Render/RasterizerStates.h"
+#include "library/Render/BlendStates.h"
+#include "library/Render/SamplerStates.h"
+
 #include "library/Math/Vector.h"
 
 #include <DirectXTex/DirectXTex.h>
@@ -60,6 +62,24 @@ Application::~Application() = default;
 float Application::GetAspectRatio() const
 {
 	return static_cast<float>(m_screenWidth) / m_screenHeight;
+}
+
+//-------------------------------------------------------------------------
+
+void Application::Begin()
+{
+	ViewData viewData;
+
+	viewData.rtvsCount = 1;
+	viewData.rtvs = &m_rtBuffer->GetView();
+
+	if (m_depthStencilBufferEnabled)
+		viewData.dsv = m_dsBuffer->GetView();
+
+	viewData.vpsCount = 1;
+	viewData.vps = &m_viewport;
+
+	RenderTarget::Begin(viewData);
 }
 
 //-------------------------------------------------------------------------
@@ -123,19 +143,6 @@ void Application::Update(const Time& time)
 			component->Update(time);
 		}
 	}
-}
-
-//-------------------------------------------------------------------------
-
-void Application::ResetRenderTargets() const
-{
-	m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView.Get());
-}
-
-void Application::UnbindPixelShaderResources(const unsigned startIdx, const unsigned count) const
-{
-	std::vector<ID3D11ShaderResourceView*> emptySrv(count, nullptr);
-	m_deviceContext->PSSetShaderResources(startIdx, count, emptySrv.data());
 }
 
 //-------------------------------------------------------------------------
@@ -447,26 +454,21 @@ void Application::InitializeDirectX()
 
 		backBuffer->GetDesc(&m_backBufferDesc);
 
-		hr = m_device->CreateRenderTargetView(backBuffer.Get(), nullptr, &m_renderTargetView);
-		assert("IDXGI::CreateRenderTargetView() failed." && SUCCEEDED(hr));
+		m_rtBuffer = RenderTargetBuffer::Create(m_device.Get(), std::move(backBuffer));
 
 		if (m_depthStencilBufferEnabled)
 		{
-			D3D11_TEXTURE2D_DESC depthStencilBufferDesc{};
-			depthStencilBufferDesc.Width = m_screenWidth;
-			depthStencilBufferDesc.Height = m_screenHeight;
-			depthStencilBufferDesc.MipLevels = 1;
-			depthStencilBufferDesc.ArraySize = 1;
-			depthStencilBufferDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
-			depthStencilBufferDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
-			depthStencilBufferDesc.Usage = D3D11_USAGE_DEFAULT;
-			depthStencilBufferDesc.SampleDesc = swapChainDesc.SampleDesc; // we need to use same sampling as in RT
+			D3D11_TEXTURE2D_DESC textureDesc{};
+			textureDesc.Width = m_screenWidth;
+			textureDesc.Height = m_screenHeight;
+			textureDesc.MipLevels = 1;
+			textureDesc.ArraySize = 1;
+			textureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+			textureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+			textureDesc.Usage = D3D11_USAGE_DEFAULT;
+			textureDesc.SampleDesc = swapChainDesc.SampleDesc; // we need to use same sampling as in RT
 
-			hr = m_device->CreateTexture2D(&depthStencilBufferDesc, nullptr, &m_depthStencilBuffer);
-			assert("IDXGIDevice::CreateTexture2D() failed." && SUCCEEDED(hr));
-
-			hr = m_device->CreateDepthStencilView(m_depthStencilBuffer.Get(), nullptr, &m_depthStencilView);
-			assert("IDXGIDevice::CreateDepthStencilView() failed." && SUCCEEDED(hr));
+			m_dsBuffer = DepthStencilBuffer::Create(m_device.Get(), textureDesc);
 		}
 
 		//m_deviceContext->OMSetRenderTargets(1, &m_renderTargetView, m_depthStencilView.Get());
@@ -504,10 +506,9 @@ void Application::Shutdown()
 	m_components.clear();
 	m_renderer.reset();
 
-	m_renderTargetView.Reset();
-	m_depthStencilView.Reset();
+	m_rtBuffer.reset();
+	m_dsBuffer.reset();
 	m_swapChain.Reset();
-	m_depthStencilBuffer.Reset();
 
 	if (!!m_deviceContext)
 	{

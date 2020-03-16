@@ -1,7 +1,7 @@
 #pragma once
 #include "library/Components/DrawableComponent.h"
 #include "library/Components/SceneComponent.h"
-#include "library/PrimitiveData.h"
+#include "library/Render/PrimitiveData.h"
 #include "library/DxForward.h"
 
 #include <vector>

@@ -29,4 +29,10 @@ float2 get_corrected_texture_coordinate(float2 textureCoordinate)
 #endif
 }
 
+float get_luminance(float3 color)
+{
+    // return max(dot(color, float3(0.299f, 0.587f, 0.114f)), 0.0001f);
+    return max(dot(color, float3(0.2125f, 0.7154f, 0.0721f)), 0.0001f);
+}
+
 #endif

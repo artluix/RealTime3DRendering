@@ -91,39 +91,39 @@ if(APPLICATION)
                 include/library/Model/SceneNode.h
                 include/library/Model/TextureType.h
 
+            # Render
+                include/library/Render/BlendStates.h
+                include/library/Render/BufferData.h
+                include/library/Render/PrimitiveData.h
+                include/library/Render/RenderBuffers.h
+                include/library/Render/Renderer.h
+                include/library/Render/RasterizerStates.h
+                include/library/Render/SamplerStates.h
+                include/library/Render/VertexTypes.h
+
             # RenderTargets
                 include/library/RenderTargets/RenderTarget.h
 
-                include/library/RenderTargets/CombinedRenderTarget.h
                 include/library/RenderTargets/DepthMapRenderTarget.h
                 include/library/RenderTargets/FullScreenRenderTarget.h
-                include/library/RenderTargets/LuminosityRenderTarget.h
                 include/library/RenderTargets/MultipleRenderTarget.h
-                include/library/RenderTargets/SecondaryRenderTarget.h
+                include/library/RenderTargets/SingleRenderTarget.h
 
             include/library/Application.h
-            include/library/BlendStates.h
-            include/library/BufferData.h
             include/library/Common.h
             include/library/ComPtr.hpp
             include/library/DxForward.h
             include/library/FxForward.h
-            include/library/InstanceData.h
             include/library/Key.h
             include/library/Logger.h
             include/library/NonCopyable.hpp
             include/library/NonConstructible.hpp
             include/library/Path.h
-            include/library/PrimitiveData.h
-            include/library/Renderer.h
-            include/library/RasterizerStates.h
             include/library/RTTI.hpp
-            include/library/SamplerStates.h
             include/library/ServiceContainer.h
             include/library/Stopwatch.h
             include/library/Time.h
             include/library/Utils.h
-            include/library/VertexTypes.h
 
         # src
             # Components
@@ -191,23 +191,25 @@ if(APPLICATION)
                 src/Model/ModelMaterial.cpp
                 src/Model/SceneNode.cpp
 
+            # Render
+                src/Render/BlendStates.cpp
+                src/Render/BufferData.cpp
+                src/Render/RasterizerStates.cpp
+                src/Render/RenderBuffers.cpp
+                src/Render/Renderer.cpp
+                src/Render/SamplerStates.cpp
+
             # RenderTargets
                 src/RenderTargets/RenderTarget.cpp
 
                 src/RenderTargets/DepthMapRenderTarget.cpp
                 src/RenderTargets/FullScreenRenderTarget.cpp
-                src/RenderTargets/LuminosityRenderTarget.cpp
                 src/RenderTargets/MultipleRenderTarget.cpp
-                src/RenderTargets/SecondaryRenderTarget.cpp
+                src/RenderTargets/SingleRenderTarget.cpp
 
             src/Application.cpp
-            src/BlendStates.cpp
-            src/BufferData.cpp
             src/Logger.cpp
             src/Path.cpp
-            src/RasterizerStates.cpp
-            src/Renderer.cpp
-            src/SamplerStates.cpp
             src/ServiceContainer.cpp
             src/Stopwatch.cpp
             src/Utils.cpp

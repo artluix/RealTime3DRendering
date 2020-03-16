@@ -8,7 +8,7 @@
 #include <library/Components/CameraComponent.h>
 
 #include <library/Application.h>
-#include <library/RasterizerStates.h>
+#include <library/Render/RasterizerStates.h>
 
 #include <library/Effect/EffectVariable.h>
 
@@ -94,7 +94,7 @@ void QuadHeightMapTessellationDemo::InitializeInternal()
 
 	m_uiHeightMap = std::make_unique<UIComponent>();
 	m_uiHeightMap->SetDestinationRect(k_heightMapDestRect);
-	m_uiHeightMap->SetTexture(m_textures[Texture::HeightMap].Get());
+	m_uiHeightMap->SetTextureSRV(m_textures[Texture::HeightMap].Get());
 	m_uiHeightMap->Initialize(GetApp());
 }
 

@@ -9,9 +9,9 @@ PostProcessingComponent::~PostProcessingComponent() = default;
 
 //-------------------------------------------------------------------------
 
-void PostProcessingComponent::SetSceneTexture(ID3D11ShaderResourceView& sceneTexture)
+void PostProcessingComponent::SetSceneTextureSRV(ID3D11ShaderResourceView* const sceneTextureSRV)
 {
-	m_sceneTexture = &sceneTexture;
+	m_sceneTextureSRV = sceneTextureSRV;
 }
 
 //-------------------------------------------------------------------------

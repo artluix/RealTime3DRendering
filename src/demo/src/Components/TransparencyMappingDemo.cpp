@@ -11,7 +11,7 @@
 #include <library/Application.h>
 #include <library/Utils.h>
 #include <library/Path.h>
-#include <library/Renderer.h>
+#include <library/Render/Renderer.h>
 
 #include <library/Math/Math.h>
 
@@ -20,7 +20,7 @@
 #include <library/Effect/EffectTechnique.h>
 #include <library/Effect/EffectVariable.h>
 
-#include <library/BlendStates.h>
+#include <library/Render/BlendStates.h>
 
 #include <sstream>
 #include <array>

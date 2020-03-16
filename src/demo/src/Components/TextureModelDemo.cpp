@@ -4,7 +4,7 @@
 #include <library/Components/KeyboardComponent.h>
 #include <library/Components/MouseComponent.h>
 
-#include <library/VertexTypes.h>
+#include <library/Render/VertexTypes.h>
 #include <library/Application.h>
 #include <library/Utils.h>
 

@@ -1,5 +1,5 @@
 #include "StdAfx.h"
-#include "library/Renderer.h"
+#include "library/Render/Renderer.h"
 
 #include "library/Components/UIComponent.h"
 #include "library/Components/PrimitiveComponent.h"
@@ -8,7 +8,7 @@
 #include "library/Effect/Effect.h"
 #include "library/Materials/Material.h"
 
-#include "library/RenderTargets/FullScreenRenderTarget.h"
+#include "library/RenderTargets/SingleRenderTarget.h"
 #include "library/Application.h"
 #include "library/Time.h"
 
@@ -51,7 +51,32 @@ Renderer::Renderer(const Application& app)
 	m_primitiveDrawables.reserve(20);
 	m_uiDrawables.reserve(20);
 
-	m_sceneRenderTarget = std::make_unique<FullScreenRenderTarget>(app);
+	// setup scene render target
+	{
+		// setup render target buffer
+		D3D11_TEXTURE2D_DESC textureDesc{};
+		textureDesc.Width = app.GetScreenWidth();
+		textureDesc.Height = app.GetScreenHeight();
+		textureDesc.MipLevels = 1;
+		textureDesc.ArraySize = 1;
+		//textureDesc.Format = DXGI_FORMAT_R8G8B8A8_UNORM;
+		textureDesc.Format = DXGI_FORMAT_R16G16B16A16_FLOAT;
+		textureDesc.SampleDesc.Count = 1;
+		textureDesc.SampleDesc.Quality = 0;
+		textureDesc.BindFlags = D3D11_BIND_RENDER_TARGET | D3D11_BIND_SHADER_RESOURCE;
+		textureDesc.Usage = D3D11_USAGE_DEFAULT;
+
+		auto rtBuffer = RenderTargetBuffer::Create(app.GetDevice(), textureDesc);
+
+		// setup depth stencil buffer
+		textureDesc.Format = DXGI_FORMAT_D24_UNORM_S8_UINT;
+		textureDesc.BindFlags = D3D11_BIND_DEPTH_STENCIL;
+		//textureDesc.Usage = D3D11_USAGE_DEFAULT;
+
+		auto dsBuffer = DepthStencilBuffer::Create(app.GetDevice(), textureDesc);
+
+		m_sceneRT = std::make_unique<SingleRenderTarget>(app, std::move(rtBuffer), std::move(dsBuffer));
+	}
 }
 
 //-------------------------------------------------------------------------
@@ -86,15 +111,15 @@ void Renderer::SetPostProcessing(PostProcessingComponent* pp)
 	m_postProcessing = pp;
 	if (!!m_postProcessing)
 	{
-		m_postProcessing->SetSceneTexture(*(m_sceneRenderTarget->GetOutputTexture()));
+		m_postProcessing->SetSceneTextureSRV(m_sceneRT->GetRenderTargetBuffer()->GetSRV());
 	}
 }
 
 //-------------------------------------------------------------------------
 
-ID3D11ShaderResourceView* Renderer::GetSceneTexture() const
+ID3D11ShaderResourceView* Renderer::GetSceneTextureSRV() const
 {
-	return m_sceneRenderTarget->GetOutputTexture();
+	return m_sceneRT->GetRenderTargetBuffer()->GetSRV();
 }
 
 //-------------------------------------------------------------------------
@@ -143,14 +168,14 @@ void Renderer::RenderScene(const Time& time)
 
 	if (!!m_postProcessing)
 	{
-		m_sceneRenderTarget->Begin();
-		m_sceneRenderTarget->Clear(k_backgroundColor);
+		m_sceneRT->Begin();
+		m_sceneRT->Clear(k_backgroundColor);
 	}
 
 	std::for_each(drawables.begin(), drawables.end(), drawPred);
 
 	if (!!m_postProcessing)
-		m_sceneRenderTarget->End();
+		m_sceneRT->End();
 }
 
 void Renderer::RenderUI(const Time& time)
@@ -176,6 +201,13 @@ void Renderer::Render(const Time& time)
 	{
 		m_postProcessing->Draw(time);
 	}
+}
+
+
+void Renderer::UnbindPSResources(const unsigned startIdx, const unsigned count)
+{
+	std::vector<ID3D11ShaderResourceView*> emptySrv(count, nullptr);
+	m_app.GetDeviceContext()->PSSetShaderResources(startIdx, count, emptySrv.data());
 }
 
 //-------------------------------------------------------------------------

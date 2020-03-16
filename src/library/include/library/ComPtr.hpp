@@ -33,6 +33,7 @@ public:
 	//-------------------------------------------------------------------------
 
 	T* Get() const noexcept { return m_ptr; }
+	T*& Get() noexcept { return m_ptr; }
 
 	void Reset(T* ptr = nullptr) noexcept
 	{

@@ -23,7 +23,7 @@
 #include <library/Model/Mesh.h>
 #include <library/Model/ModelMaterial.h>
 
-#include <library/RasterizerStates.h>
+#include <library/Render/RasterizerStates.h>
 
 #include <sstream>
 #include <iomanip>

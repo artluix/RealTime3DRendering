@@ -7,7 +7,7 @@
 
 #include "library/Materials/Material.h"
 
-#include "library/VertexTypes.h"
+#include "library/Render/VertexTypes.h"
 #include "library/Application.h"
 
 #include <array>

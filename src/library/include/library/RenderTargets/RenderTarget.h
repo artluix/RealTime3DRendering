@@ -9,7 +9,6 @@
 namespace library
 {
 class Application;
-using RenderTargetViewArray = std::vector<ID3D11RenderTargetView*>;
 
 class RenderTarget : public NonCopyable<RenderTarget>
 {
@@ -18,12 +17,13 @@ class RenderTarget : public NonCopyable<RenderTarget>
 public:
 	struct ClearParams
 	{
-		math::Color rtvColor;
+		math::Color rtvColor = colors::Black;
 
 		UINT dsvFlags = D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL;
 		float dsvDepth = 1.f;
 		UINT8 dsvStencil = 0;
 
+		ClearParams() = default;
 		ClearParams(const math::Color& rtvColor) : rtvColor(rtvColor) {} // no dsv
 		ClearParams( // no rtvs
 			const UINT dsvFlags,
@@ -52,29 +52,25 @@ public:
 	RenderTarget() = default;
 	~RenderTarget() = default;
 
-	void Clear(const ClearParams& cp);
-	void Begin();
+	virtual void Begin() = 0;
+	void Clear(const ClearParams& cp = ClearParams());
 	void End();
-
-	virtual const Application& GetApp() const = 0;
-
-	virtual RenderTargetViewArray GetRenderTargetViews() const { return {}; };
-	virtual ID3D11DepthStencilView* GetDepthStencilView() const { return nullptr; }
-	virtual const D3D11_VIEWPORT& GetViewport() const = 0;
 
 protected:
 	struct ViewData
 	{
-		RenderTargetViewArray rtvs;
-		ID3D11DepthStencilView* dsv = nullptr;
-		D3D11_VIEWPORT viewport;
+		ID3D11RenderTargetView**rtvs = nullptr;
+		unsigned rtvsCount = 0;
 
-		ViewData(const RenderTarget& rt)
-			: rtvs(rt.GetRenderTargetViews())
-			, dsv(rt.GetDepthStencilView())
-			, viewport(rt.GetViewport())
-		{}
+		ID3D11DepthStencilView* dsv = nullptr;
+
+		const D3D11_VIEWPORT* vps = nullptr;
+		unsigned vpsCount = 0;
 	};
+
+	void Begin(const ViewData& viewData);
+
+	virtual const Application& GetApp() const = 0;
 
 private:
 	void SetViewData(const ViewData& viewData);

@@ -12,6 +12,7 @@
 #include <library/Time.h>
 
 #include <library/RenderTargets/FullScreenRenderTarget.h>
+#include <library/Render/Renderer.h>
 
 #include <library/Model/Model.h>
 #include <library/Model/Mesh.h>
@@ -128,7 +129,7 @@ void DistortionMappingDemo::Draw(const Time& time)
 
 	m_fullScreenQuad->Draw(time);
 
-	GetApp().UnbindPixelShaderResources(0, 2);
+	GetApp().GetRenderer()->UnbindPSResources(0, 2);
 }
 
 //-------------------------------------------------------------------------
@@ -197,15 +198,15 @@ void DistortionMappingDemo::UpdateDistortion()
 	if (m_mode == Mode::Fullscreen)
 		m_material->GetDistortionMapTexture() << m_textures[Texture::DistortionMap].Get();
 	else if (m_mode == Mode::Masking)
-		m_material->GetDistortionMapTexture() << m_cutoutRenderTarget->GetOutputTexture();
+		m_material->GetDistortionMapTexture() << m_cutoutRenderTarget->GetRenderTargetBuffer()->GetSRV();
 
-	m_material->GetSceneTexture() << GetSceneTexture();
+	m_material->GetSceneTexture() << GetSceneTextureSRV();
 	m_material->GetDisplacementScale() << m_displacementScale;
 }
 
 void DistortionMappingDemo::UpdateDistortionMask()
 {
-	m_material->GetSceneTexture() << m_cutoutRenderTarget->GetOutputTexture();
+	m_material->GetSceneTexture() << m_cutoutRenderTarget->GetRenderTargetBuffer()->GetSRV();
 }
 
 //-------------------------------------------------------------------------

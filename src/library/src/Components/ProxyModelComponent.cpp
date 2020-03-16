@@ -7,7 +7,7 @@
 #include "library/Effect/EffectVariable.h"
 
 #include "library/Application.h"
-#include "library/RasterizerStates.h"
+#include "library/Render/RasterizerStates.h"
 
 #include "library/Model/Model.h"
 

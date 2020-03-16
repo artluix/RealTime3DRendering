@@ -20,8 +20,8 @@
 #include <library/Effect/EffectVariable.h>
 
 #include <library/Application.h>
-#include <library/Renderer.h>
-#include <library/VertexTypes.h>
+#include <library/Render/Renderer.h>
+#include <library/Render/VertexTypes.h>
 
 #include <library/Model/Model.h>
 #include <library/Model/Mesh.h>
@@ -152,7 +152,7 @@ void ShadowMappingDemo::InitializeInternal()
 
 	m_uiDepthMap = std::make_unique<UIComponent>();
 	m_uiDepthMap->SetDestinationRect(k_depthMapDestinationRect);
-	m_uiDepthMap->SetTexture(m_depthMapRenderTarget->GetOutputTexture());
+	m_uiDepthMap->SetTextureSRV(m_depthMapRenderTarget->GetDepthStencilBuffer()->GetSRV());
 	m_uiDepthMap->Initialize(GetApp());
 
 	m_text = std::make_unique<TextComponent>();
@@ -200,12 +200,7 @@ void ShadowMappingDemo::Draw(const library::Time& time)
 		m_depthMapRenderTarget->Begin();
 
 		deviceContext->IASetPrimitiveTopology(modelData.primitiveTopology);
-		deviceContext->ClearDepthStencilView(
-			m_depthMapRenderTarget->GetDepthStencilView(),
-			D3D11_CLEAR_DEPTH | D3D11_CLEAR_STENCIL,
-			1.0f,
-			0
-		);
+		m_depthMapRenderTarget->Clear();
 
 		auto& pass = m_depthMapMaterial->GetCurrentTechnique().GetPass(0);
 		auto inputLayout = m_depthMapMaterial->GetInputLayout(pass);
@@ -247,13 +242,13 @@ void ShadowMappingDemo::Draw(const library::Time& time)
 		Draw_SetIA(planeData);
 		Draw_SetData(GetWorldMatrix(), planeData);
 		Draw_Render(planeData);
-		GetApp().UnbindPixelShaderResources(0, 3);
+		GetApp().GetRenderer()->UnbindPSResources(0, 3);
 
 		// Draw teapot model
 		Draw_SetIA(modelData);
 		Draw_SetData(m_modelWorldMatrix, modelData);
 		Draw_Render(modelData);
-		GetApp().UnbindPixelShaderResources(0, 3);
+		GetApp().GetRenderer()->UnbindPSResources(0, 3);
 	}
 }
 
@@ -286,7 +281,7 @@ void ShadowMappingDemo::Draw_SetData(
 		m_material->GetPointLights() << PointLightData(*m_pointLight);
 
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
-	m_material->GetShadowMapTexture() << m_depthMapRenderTarget->GetOutputTexture();
+	m_material->GetShadowMapTexture() << m_depthMapRenderTarget->GetDepthStencilBuffer()->GetSRV();
 
 	m_material->GetProjectiveTextureMatrix() << projectiveTextureMatrix;
 

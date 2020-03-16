@@ -5,7 +5,7 @@
 
 #include "library/Application.h"
 #include "library/Utils.h"
-#include "library/VertexTypes.h"
+#include "library/Render/VertexTypes.h"
 
 #include "library/Effect/Effect.h"
 #include "library/Effect/EffectTechnique.h"

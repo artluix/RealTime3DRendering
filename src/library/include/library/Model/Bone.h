@@ -1,6 +1,6 @@
 #pragma once
 #include "library/Model/SceneNode.h"
-#include "library/VertexTypes.h"
+//#include "library/Render/VertexTypes.h"
 
 namespace library
 {

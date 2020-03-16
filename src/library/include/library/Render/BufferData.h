@@ -1,8 +1,7 @@
 #pragma once
 #include "library/Common.h"
-#include "library/VertexTypes.h"
 #include "library/DxForward.h"
-#include "library/InstanceData.h"
+#include "library/Render/VertexTypes.h"
 
 namespace library
 {
@@ -77,11 +76,7 @@ struct VertexBufferData : BufferData
 			"BufferData can be created from std::array or std::vector only."
 		);
 
-		static_assert(
-			std::is_base_of_v<Vertex, ElementType> ||
-			std::is_same_v<InstanceData, ElementType>,
-			"VertexBuffer type must be derived from Vertex"
-		);
+		static_assert(std::is_base_of_v<Vertex, ElementType>, "VertexBuffer type must be derived from Vertex");
 
 		elementsCount = static_cast<unsigned>(elements.size());
 

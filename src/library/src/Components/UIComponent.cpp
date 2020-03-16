@@ -2,12 +2,12 @@
 #include "library/Components/UIComponent.h"
 
 #include "library/Application.h"
-#include "library/Renderer.h"
+#include "library/Render/Renderer.h"
 
 namespace library
 {
 UIComponent::UIComponent()
-	: m_texture(nullptr)
+	: m_textureSRV(nullptr)
 	, m_color(colors::White)
 {}
 
@@ -27,19 +27,19 @@ void UIComponent::Update(const Time& time)
 
 void UIComponent::Draw(const Time& time)
 {
-	if (!m_texture || !m_destinationRect)
+	if (!m_textureSRV || !m_destinationRect)
 		return;
 
 	Begin();
-	m_spriteBatch->Draw(m_texture, m_destinationRect.value(), dx::VECTOR(m_color));
+	m_spriteBatch->Draw(m_textureSRV, m_destinationRect.value(), dx::VECTOR(m_color));
 	End();
 }
 
 //-------------------------------------------------------------------------
 
-void UIComponent::SetTexture(ID3D11ShaderResourceView* const texture)
+void UIComponent::SetTextureSRV(ID3D11ShaderResourceView* const textureSRV)
 {
-	m_texture = texture;
+	m_textureSRV = textureSRV;
 }
 
 void UIComponent::SetColor(const math::Color& color)

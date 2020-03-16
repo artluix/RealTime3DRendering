@@ -24,8 +24,8 @@ public:
 	void Update(const Time& time) override;
 	void Draw(const Time& time) override;
 
-	void SetTexture(ID3D11ShaderResourceView* const texture);
-	ID3D11ShaderResourceView* GetTexture() { return m_texture; }
+	void SetTextureSRV(ID3D11ShaderResourceView* const textureSRV);
+	ID3D11ShaderResourceView* GetTextureSRV() { return m_textureSRV; }
 
 	void SetColor(const math::Color& color);
 	const math::Color& GetColor() const { return m_color; }
@@ -42,7 +42,7 @@ protected:
 	math::Color m_color;
 
 private:
-	ID3D11ShaderResourceView* m_texture;
+	ID3D11ShaderResourceView* m_textureSRV;
 	std::optional<RECT> m_destinationRect;
 };
 } // namespace library

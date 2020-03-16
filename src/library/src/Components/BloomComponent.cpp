@@ -7,6 +7,7 @@
 #include "library/Effect/EffectVariable.h"
 
 #include "library/Application.h"
+#include "library/Render/Renderer.h"
 #include "library/RenderTargets/FullScreenRenderTarget.h"
 #include "library/Math/Color.h"
 
@@ -77,7 +78,7 @@ void BloomComponent::InitializeInternal()
 	m_renderTarget = std::make_unique<FullScreenRenderTarget>(GetApp());
 
 	m_gaussianBlur = std::make_unique<GaussianBlurComponent>();
-	m_gaussianBlur->SetSceneTexture(*m_renderTarget->GetOutputTexture());
+	m_gaussianBlur->SetSceneTextureSRV(m_renderTarget->GetRenderTargetBuffer()->GetSRV());
 	m_gaussianBlur->Initialize(GetApp());
 	m_gaussianBlur->SetBlurAmount(m_settings.blurAmount);
 }
@@ -97,14 +98,14 @@ void BloomComponent::Draw(const Time& time)
 
 void BloomComponent::UpdateExtractMaterial(Material& material) const
 {
-	material.GetSceneTexture() << GetSceneTexture();
+	material.GetSceneTexture() << GetSceneTextureSRV();
 	material.GetBloomThreshold() << m_settings.bloomThreshold;
 }
 
 void BloomComponent::UpdateCompositeMaterial(Material& material) const
 {
-	material.GetSceneTexture() << GetSceneTexture();
-	material.GetBloomTexture() << m_bloomTexture;
+	material.GetSceneTexture() << GetSceneTextureSRV();
+	material.GetBloomTexture() << m_gaussianBlurRT->GetRenderTargetBuffer()->GetSRV();
 	material.GetBloomIntensity() << m_settings.bloomIntensity;
 	material.GetBloomSaturation() << m_settings.bloomSaturation;
 	material.GetSceneIntensity() << m_settings.sceneIntensity;
@@ -124,17 +125,20 @@ void BloomComponent::DrawNormal(const Time& time)
 	m_fullScreenQuad->Draw(time);
 
 	m_renderTarget->End();
-	GetApp().UnbindPixelShaderResources(0, 1);
+	GetApp().GetRenderer()->UnbindPSResources(0, 1);
 
 	// Blur the bright spots in the scene
-	m_gaussianBlur->DrawToTexture(time, m_bloomTexture);
-	GetApp().UnbindPixelShaderResources(0, 1);
+	m_gaussianBlurRT->Begin();
+	m_gaussianBlurRT->Clear(k_backgroundColor);
+	m_gaussianBlur->Draw(time);
+	m_gaussianBlurRT->End();
+	GetApp().GetRenderer()->UnbindPSResources(0, 1);
 
 	// Combine the original scene with the blurred bright spot image
 	m_fullScreenQuad->SetActiveTechnique("bloom_composite", "p0");
 	m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&BloomComponent::UpdateCompositeMaterial, this, std::ref(*m_material)));
 	m_fullScreenQuad->Draw(time);
-	GetApp().UnbindPixelShaderResources(0, 2);
+	GetApp().GetRenderer()->UnbindPSResources(0, 2);
 }
 
 void BloomComponent::DrawExtractedTexture(const Time& time)
@@ -157,7 +161,7 @@ void BloomComponent::DrawBlurredTexture(const Time& time)
 
 	m_renderTarget->End();
 
-	GetApp().UnbindPixelShaderResources(0, 1);
+	GetApp().GetRenderer()->UnbindPSResources(0, 1);
 
 	m_gaussianBlur->Draw(time);
 }

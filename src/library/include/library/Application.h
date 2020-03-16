@@ -1,9 +1,9 @@
 #pragma once
 #include "library/RenderTargets/RenderTarget.h"
+#include "library/Render/RenderBuffers.h"
 
 #include "library/Stopwatch.h"
 #include "library/Common.h"
-#include "library/Renderer.h"
 
 #include <Windows.h>
 #include <vector>
@@ -11,6 +11,7 @@
 
 namespace library
 {
+class Renderer;
 class Path;
 
 class Component;
@@ -38,19 +39,18 @@ public:
 	ID3D11Device1* GetDevice() const { return m_device.Get(); }
 	ID3D11DeviceContext1* GetDeviceContext() const { return m_deviceContext.Get(); }
 
-	const Application& GetApp() const override final { return *this; }
-	RenderTargetViewArray GetRenderTargetViews() const override final { return { m_renderTargetView.Get() }; }
-	ID3D11DepthStencilView* GetDepthStencilView() const override final { return m_depthStencilView.Get(); }
-	const D3D11_VIEWPORT& GetViewport() const override final { return m_viewport; }
-
 	bool IsDepthBufferEnabled() const { return m_depthStencilBufferEnabled; }
 	float GetAspectRatio() const;
 	bool IsFullScreen() const { return m_isFullScreen; }
 	const D3D11_TEXTURE2D_DESC& GetBackBufferDesc() const { return m_backBufferDesc; }
 
+	const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
+
 	const std::vector<ComponentPtr>& GetComponents() const { return m_components; }
 
 	Renderer* GetRenderer() const { return m_renderer.get(); }
+
+	virtual void Begin() override final;
 
 	virtual void Initialize();
 	virtual void Run();
@@ -58,9 +58,6 @@ public:
 
 	virtual void Update(const Time& time);
 	virtual void Draw(const Time& time) = 0;
-
-	virtual void ResetRenderTargets() const;
-	virtual void UnbindPixelShaderResources(const unsigned startIdx, const unsigned count) const;
 
 	virtual ComPtr<ID3D11ShaderResourceView> CreateCubeTextureSRV(const std::string& textureFilenameStr) const;
 	virtual ComPtr<ID3D11ShaderResourceView> CreateTexture2DSRV(const std::string& textureFilenameStr) const;
@@ -75,6 +72,8 @@ protected:
 	virtual void InitializeDirectX();
 
 	virtual void Shutdown();
+
+	const Application& GetApp() const { return *this; }
 
 	HINSTANCE m_instanceHandle;
 	std::wstring m_windowClass;
@@ -103,17 +102,18 @@ protected:
 
 	unsigned m_frameRate;
 	bool m_isFullScreen;
-	bool m_depthStencilBufferEnabled;
+
 	bool m_multiSamplingEnabled;
 	unsigned m_multiSamplingCount;
 	unsigned m_multiSamplingQualityLevels;
 
-	ComPtr<ID3D11Texture2D> m_depthStencilBuffer;
-	D3D11_TEXTURE2D_DESC m_backBufferDesc;
 	D3D11_VIEWPORT m_viewport;
 
-	mutable ComPtr<ID3D11RenderTargetView> m_renderTargetView;
-	mutable ComPtr<ID3D11DepthStencilView> m_depthStencilView;
+	D3D11_TEXTURE2D_DESC m_backBufferDesc;
+	RenderTargetBufferPtr m_rtBuffer;
+
+	bool m_depthStencilBufferEnabled;
+	DepthStencilBufferPtr m_dsBuffer;
 
 private:
 	POINT CenterWindow(const unsigned windowWidth, const unsigned windowHeight);

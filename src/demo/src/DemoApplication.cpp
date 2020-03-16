@@ -49,10 +49,10 @@
 #include <library/Components/GridComponent.h>
 #include <library/Components/FirstPersonCameraComponent.h>
 #include <library/Components/SkyboxComponent.h>
-#include <library/Components/FullScreenQuadComponent.h>
 
-#include <library/RenderTargets/FullScreenRenderTarget.h>
-#include <library/RenderTargets/MultipleRenderTarget.h>
+//#include <library/Components/FullScreenQuadComponent.h>
+//#include <library/RenderTargets/FullScreenRenderTarget.h>
+//#include <library/RenderTargets/MultipleRenderTarget.h>
 
 //-------------------------------------------------------------------------
 
@@ -60,6 +60,8 @@
 #include <library/Effect/EffectVariable.h>
 #include <library/Effect/EffectPass.h>
 #include <library/Effect/EffectTechnique.h>
+
+#include <library/Render/Renderer.h>
 
 #include <library/Path.h>
 #include <library/Utils.h>

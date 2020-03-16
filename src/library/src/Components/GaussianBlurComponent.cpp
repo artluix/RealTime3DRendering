@@ -41,7 +41,6 @@ void GaussianBlurComponent::InitializeInternal()
 	InitializeQuad("blur");
 
 	m_horizontalBlurTarget = std::make_unique<FullScreenRenderTarget>(GetApp());
-	m_verticalBlurTarget = std::make_unique<FullScreenRenderTarget>(GetApp());
 
 	InitializeSampleOffsets();
 	InitializeSampleWeights();
@@ -124,29 +123,6 @@ void GaussianBlurComponent::Draw(const Time& time)
 	m_fullScreenQuad->Draw(time);
 }
 
-void GaussianBlurComponent::DrawToTexture(const Time& time, ID3D11ShaderResourceView*& outTexture)
-{
-	// Horizontal Blur
-	m_horizontalBlurTarget->Begin();
-	m_horizontalBlurTarget->Clear(k_backgroundColor);
-
-	m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&GaussianBlurComponent::UpdateHorizontalOffsets, this, std::ref(*m_material)));
-	m_fullScreenQuad->Draw(time);
-	m_horizontalBlurTarget->End();
-	GetApp().UnbindPixelShaderResources(0, 1);
-
-	// Vertical Blur
-	m_verticalBlurTarget->Begin();
-	m_verticalBlurTarget->Clear(k_backgroundColor);
-
-	m_fullScreenQuad->SetMaterialUpdateFunction(std::bind(&GaussianBlurComponent::UpdateVerticalOffsets, this, std::ref(*m_material)));
-	m_fullScreenQuad->Draw(time);
-	m_verticalBlurTarget->End();
-	GetApp().UnbindPixelShaderResources(0, 1);
-
-	outTexture = m_verticalBlurTarget->GetOutputTexture();
-}
-
 //-------------------------------------------------------------------------
 
 void GaussianBlurComponent::SetBlurAmount(const float blurAmount)
@@ -162,14 +138,14 @@ void GaussianBlurComponent::SetBlurAmount(const float blurAmount)
 
 void GaussianBlurComponent::UpdateHorizontalOffsets(Material& material)
 {
-	material.GetSceneTexture() << m_sceneTexture;
+	material.GetSceneTexture() << m_sceneTextureSRV;
 	material.GetSampleWeights() << m_sample.weights;
 	material.GetSampleOffsets() << m_sample.offsets.horizontal;
 }
 
 void GaussianBlurComponent::UpdateVerticalOffsets(Material& material)
 {
-	material.GetSceneTexture() << m_horizontalBlurTarget->GetOutputTexture();
+	material.GetSceneTexture() << m_horizontalBlurTarget->GetRenderTargetBuffer()->GetSRV();
 	material.GetSampleWeights() << m_sample.weights;
 	material.GetSampleOffsets() << m_sample.offsets.vertical;
 }

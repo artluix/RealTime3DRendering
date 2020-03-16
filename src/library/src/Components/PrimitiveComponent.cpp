@@ -1,7 +1,7 @@
 #include "StdAfx.h"
 #include "library/components/PrimitiveComponent.h"
 
-#include "library/Renderer.h"
+#include "library/Render/Renderer.h"
 #include "library/Application.h"
 
 #include "library/Materials/Material.h"

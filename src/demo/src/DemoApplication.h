@@ -12,11 +12,10 @@ class MouseComponent;
 
 class GridComponent;
 
-class FullScreenRenderTarget;
 class PostProcessingComponent;
 
-class MultipleRenderTarget;
-class FullScreenQuadComponent;
+//class MultipleRenderTarget;
+//class FullScreenQuadComponent;
 } // namespace library
 
 class MultipleLightsDemo;

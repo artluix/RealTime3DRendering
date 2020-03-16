@@ -15,11 +15,12 @@ void RenderTarget::Clear(const ClearParams& cp)
 	if (!s_viewsData.empty())
 	{
 		auto deviceContext = GetApp().GetDeviceContext();
+
 		const auto& viewData = s_viewsData.top();
 
-		for (auto& rtv : viewData.rtvs)
+		for (unsigned i = 0; i < viewData.rtvsCount; i++)
 		{
-			deviceContext->ClearRenderTargetView(rtv, static_cast<const float*>(cp.rtvColor));
+			deviceContext->ClearRenderTargetView(viewData.rtvs[i], static_cast<const float*>(cp.rtvColor));
 		}
 
 		if (!!viewData.dsv)
@@ -31,13 +32,6 @@ void RenderTarget::Clear(const ClearParams& cp)
 
 //-------------------------------------------------------------------------
 
-void RenderTarget::Begin()
-{
-	ViewData data(*this);
-	s_viewsData.push(data);
-	SetViewData(data);
-}
-
 void RenderTarget::End()
 {
 	s_viewsData.pop();
@@ -48,6 +42,17 @@ void RenderTarget::End()
 	}
 }
 
+void RenderTarget::Begin(const ViewData& viewData)
+{
+	SetViewData(viewData);
+
+	auto vd = viewData;
+
+	auto deviceContext = GetApp().GetDeviceContext();
+	deviceContext->OMGetRenderTargets(vd.rtvsCount, vd.rtvs, &vd.dsv);
+	s_viewsData.push(vd);
+}
+
 //-------------------------------------------------------------------------
 
 void RenderTarget::SetViewData(const ViewData& viewData)
@@ -55,10 +60,10 @@ void RenderTarget::SetViewData(const ViewData& viewData)
 	auto deviceContext = GetApp().GetDeviceContext();
 
 	deviceContext->OMSetRenderTargets(
-		unsigned(viewData.rtvs.size()),
-		viewData.rtvs.data(),
+		viewData.rtvsCount,
+		viewData.rtvs,
 		viewData.dsv
 	);
-	deviceContext->RSSetViewports(1, &viewData.viewport);
+	deviceContext->RSSetViewports(viewData.vpsCount, viewData.vps);
 }
 } // namespace library

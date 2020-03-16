@@ -61,7 +61,7 @@ void HdrDemo::InitializeInternal()
 	InitializeQuad(ToTechniqueName(ToneMappingType::No));
 
 	m_fullScreenQuad->SetMaterialUpdateFunction([this]() {
-		m_material->GetSceneTexture() << GetSceneTexture();
+		m_material->GetSceneTexture() << GetSceneTextureSRV();
 	});
 
 	m_text = std::make_unique<TextComponent>();

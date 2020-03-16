@@ -4,6 +4,7 @@
 #include <library/Components/FullScreenQuadComponent.h>
 
 #include <library/Application.h>
+#include <library/Render/Renderer.h>
 
 #include <library/Effect/EffectVariable.h>
 
@@ -135,6 +136,6 @@ void ComputeShaderDemo::Draw(const Time& time)
 
 	// Draw the texture written by the compute shader
 	m_fullScreenQuad->Draw(time);
-	GetApp().UnbindPixelShaderResources(0, 1);
+	GetApp().GetRenderer()->UnbindPSResources(0, 1);
 }
 

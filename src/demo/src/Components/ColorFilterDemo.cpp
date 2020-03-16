@@ -72,7 +72,7 @@ void ColorFilterDemo::InitializeInternal()
 	InitializeQuad("grayscale_filter");
 
 	m_fullScreenQuad->SetMaterialUpdateFunction([this]() {
-		m_material->GetSceneTexture() << GetSceneTexture();
+		m_material->GetSceneTexture() << GetSceneTextureSRV();
 		m_material->GetColorFilter() << m_genericFilter;
 	});
 

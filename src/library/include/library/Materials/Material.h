@@ -2,8 +2,8 @@
 #include "library/RTTI.hpp"
 #include "library/NonCopyable.hpp"
 #include "library/Common.h"
-#include "library/PrimitiveData.h"
-#include "library/VertexTypes.h"
+#include "library/Render/PrimitiveData.h"
+#include "library/Render/VertexTypes.h"
 #include "library/DxForward.h"
 
 #include "library/Effect/EffectPass.h" // due to EffectPass::InputElementsDescArray

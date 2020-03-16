@@ -9,7 +9,7 @@
 #include <library/Components/ProxyModelComponent.h>
 
 #include <library/Application.h>
-#include <library/RasterizerStates.h>
+#include <library/Render/RasterizerStates.h>
 
 #include <library/Math/Math.h>
 #include <library/Model/Model.h>
@@ -20,6 +20,22 @@
 #include <iomanip>
 
 using namespace library;
+
+//-------------------------------------------------------------------------
+
+struct VertexInstanceSpecular : VertexInstance
+{
+	VertexInstanceSpecular(const math::Matrix4& world, const math::Color& specularColor, const float specularPower)
+		: VertexInstance(world)
+		, specularColor(specularColor)
+		, specularPower(specularPower)
+	{}
+
+	math::Color specularColor;
+	float specularPower;
+};
+
+//-------------------------------------------------------------------------
 
 namespace
 {
@@ -72,7 +88,7 @@ void InstancingDemo::InitializeInternal()
 
 	// instances data
 	{
-		std::vector<InstanceData> instancesData;
+		std::vector<VertexInstanceSpecular> instancesData;
 		instancesData.reserve(k_instancesCount);
 
 		// generate grid of object positions

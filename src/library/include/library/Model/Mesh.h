@@ -3,7 +3,7 @@
 #include "library/Model/Bone.h"
 #include "library/Model/TextureType.h"
 #include "library/Common.h"
-#include "library/BufferData.h"
+#include "library/Render/BufferData.h"
 #include "library/DxForward.h"
 
 #include <d3dcommon.h>
