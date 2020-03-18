@@ -195,12 +195,13 @@ void Renderer::RenderUI(const Time& time)
 void Renderer::Render(const Time& time)
 {
 	RenderScene(time);
-	RenderUI(time);
 
 	if (!!m_postProcessing)
 	{
 		m_postProcessing->Draw(time);
 	}
+
+	RenderUI(time);
 }
 
 

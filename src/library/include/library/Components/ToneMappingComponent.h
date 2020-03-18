@@ -14,20 +14,27 @@ public:
 	ToneMappingComponent();
 	~ToneMappingComponent();
 
-	float GetExposure() const { return m_exposure; }
-	void SetExposure(const float exposure);
-
 	bool IsGammaCorrectionEnabled() const { return m_gammaCorrectionEnabled; }
 	void SetGammaCorrection(const bool enabled);
 
+	unsigned GetLuminanceSamplingStepsCount() const { return m_luminanceSamplingStepsCount; }
+	void SetLuminanceSamplingStepsCount(const unsigned stepsCount);
+
+	unsigned GetLuminanceSamplingMipsCount() const { return m_luminanceSamplingMipsCount; }
+
 	void Draw(const Time& time);
 
+protected:
+	void InitializeInternal() override;
+
 private:
-	void InitializeInternal();
+	void UpdateLuminanceMaterial(Material& material);
+	void UpdateTonemapMaterial(Material& material);
 
-	std::unique_ptr<SingleRenderTarget> m_luminosityRT;
+	std::unique_ptr<SingleRenderTarget> m_luminanceLogRT;
+	unsigned m_luminanceSamplingStepsCount;
+	unsigned m_luminanceSamplingMipsCount;
 
-	float m_exposure;
 	bool m_gammaCorrectionEnabled;
 };
 } // namespace library

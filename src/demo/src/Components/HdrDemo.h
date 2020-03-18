@@ -14,28 +14,14 @@ class HdrDemo
 	RTTI_CLASS(HdrDemo, library::ToneMappingComponent, library::InputReceivableComponent)
 
 public:
-	enum class ToneMappingType
-	{
-		No,
-		Reinhard,
-		Gamma
-	};
-
-	HdrDemo();
-	~HdrDemo();
+	HdrDemo() = default;
+	~HdrDemo() = default;
 
 	void Update(const library::Time& time) override;
-	void Draw(const library::Time& time) override;
-
-	static std::string ToTechniqueName(const ToneMappingType t);
-	static std::string ToString(const ToneMappingType t);
 
 protected:
 	void InitializeInternal() override;
 
 private:
-	void UpdateExposure(const library::Time& time);
-
 	std::unique_ptr<library::TextComponent> m_text;
-	ToneMappingType m_toneMappingType = ToneMappingType::No;
 };

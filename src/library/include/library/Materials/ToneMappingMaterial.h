@@ -11,9 +11,13 @@ public:
 	explicit ToneMappingMaterial(Effect& effect);
 	~ToneMappingMaterial();
 
-	EffectVariable& GetExposure() { return m_exposure; }
+	EffectVariable& GetLuminanceLogTexture() { return m_luminanceLogTexture; }
+	EffectVariable& GetLuminanceSamplingStepsCount() { return m_luminanceSamplingStepsCount; }
+	EffectVariable& GetLuminanceSamplingMipsCount() { return m_luminanceSamplingMipsCount; }
 
 private:
-	EffectVariable& m_exposure;
+	EffectVariable& m_luminanceLogTexture;
+	EffectVariable& m_luminanceSamplingStepsCount;
+	EffectVariable& m_luminanceSamplingMipsCount;
 };
 } // namespace library

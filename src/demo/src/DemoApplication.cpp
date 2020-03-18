@@ -17,6 +17,7 @@
 #include "Components/EnvironmentMappingDemo.h"
 #include "Components/TransparencyMappingDemo.h"
 #include "Components/DisplacementMappingDemo.h"
+#include "Components/HdrDemo.h"
 
 #include "Components/FogDemo.h"
 
@@ -24,7 +25,6 @@
 #include "Components/GaussianBlurDemo.h"
 #include "Components/BloomDemo.h"
 #include "Components/DistortionMappingDemo.h"
-#include "Components/HdrDemo.h"
 
 #include "Components/ProjectiveTextureMappingDemo.h"
 #include "Components/ProjectiveTextureMappingDepthMapDemo.h"
@@ -86,6 +86,7 @@ DemoApplication::DemoApplication(
 	const int showCmd
 )
 	: Application(instanceHandle, windowClass, windowTitle, showCmd)
+	, m_postProcessingEnabled(false)
 	//, m_deferredLightingEnabled(false)
 {
 	m_depthStencilBufferEnabled = true;
@@ -324,12 +325,12 @@ void DemoApplication::Initialize()
 	// m_components.push_back(cube);
 	// m_components.push_back(model);
 	// m_components.push_back(textureModel);
-	// m_components.push_back(skybox);
+	m_components.push_back(skybox);
 	// m_components.push_back(basic);
 	// m_components.push_back(textureMapping);
 	// m_components.push_back(diffuseLighting);
 	// m_components.push_back(pointLight);
-	m_components.push_back(multipleLights);
+	// m_components.push_back(multipleLights);
 	// m_components.push_back(spotlight);
 	// m_components.push_back(normalMapping);
 	// m_components.push_back(environmentMapping);
@@ -387,7 +388,10 @@ void DemoApplication::Update(const Time& time)
 			m_grid->SetVisible(!m_grid->IsVisible());
 
 		if (m_keyboard->WasKeyPressed(Key::Tab))
+		{
 			m_postProcessingEnabled = !m_postProcessingEnabled;
+			m_renderer->SetPostProcessing(m_postProcessingEnabled ? m_postProcessing.get() : nullptr);
+		}
 
 		/*if (m_keyboard->WasKeyPressed(Key::Left_Ctrl))
 		{
