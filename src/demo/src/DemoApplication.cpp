@@ -325,12 +325,12 @@ void DemoApplication::Initialize()
 	// m_components.push_back(cube);
 	// m_components.push_back(model);
 	// m_components.push_back(textureModel);
-	m_components.push_back(skybox);
+	// m_components.push_back(skybox);
 	// m_components.push_back(basic);
 	// m_components.push_back(textureMapping);
 	// m_components.push_back(diffuseLighting);
 	// m_components.push_back(pointLight);
-	// m_components.push_back(multipleLights);
+	m_components.push_back(multipleLights);
 	// m_components.push_back(spotlight);
 	// m_components.push_back(normalMapping);
 	// m_components.push_back(environmentMapping);
