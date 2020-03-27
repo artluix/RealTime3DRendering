@@ -1,7 +1,6 @@
+#include "include/Common.fxh"
+
 // Resources
-
-#define FLIP_TEXTURE_Y true
-
 cbuffer CBufferPerFrame
 {
     float4 AmbientColor : AMBIENT;
@@ -11,11 +10,6 @@ cbuffer CBufferPerObject
 {
     float4x4 WVP : WORLDVIEWPROJECTION;
 }
-
-RasterizerState DisableCulling
-{
-    CullMode = None;
-};
 
 Texture2D ColorTexture;
 SamplerState ColorSampler

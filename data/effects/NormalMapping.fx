@@ -1,5 +1,5 @@
 #include "include/Common.fxh"
-#include "include/Lights.fxh"
+#include "include/PhongLighting.fxh"
 
 // Resources
 cbuffer CBufferPerFrame
@@ -20,11 +20,6 @@ SamplerState TrilinearSampler
     Filter = MIN_MAG_MIP_LINEAR;
     AddressU = WRAP;
     AddressV = WRAP;
-};
-
-RasterizerState DisableCulling
-{
-    CullMode = None;
 };
 
 // Data Structures
@@ -76,14 +71,10 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     sampledNormal = mul(sampledNormal, tbn);
 
     float4 color = ColorTexture.Sample(TrilinearSampler, IN.textureCoordinate);
+    float3 normal = sampledNormal;
+    float3 viewDirection = normalize(IN.viewDirection);
 
-    LIGHT_OBJECT_PARAMS lightObjectParams;
-    lightObjectParams.normal = sampledNormal;
-    lightObjectParams.viewDirection = normalize(IN.viewDirection);
-    lightObjectParams.worldPosition = IN.worldPosition;
-    lightObjectParams.color = color;
-
-    OUT.rgb = get_light_contribution(lightObjectParams);
+    OUT.rgb = get_light_contribution(phong_lighting_create_object_params(color, normal, viewDirection, IN.worldPosition));
     OUT.a = 1.0f;
 
     return OUT;

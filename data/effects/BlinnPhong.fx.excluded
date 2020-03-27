@@ -19,11 +19,6 @@ cbuffer CBufferPerObject
     float SpecularPower : SPECULARPOWER;
 }
 
-RasterizerState DisableCulling
-{
-    CullMode = None;
-};
-
 Texture2D ColorTexture;
 SamplerState ColorSampler
 {
@@ -45,7 +40,7 @@ struct VS_OUTPUT
     float4 position: SV_Position;
     float3 normal : NORMAL;
     float2 textureCoordinate : TEXCOORD0;
-    float3 LightDirection : TEXCOORD1;
+    float3 lightDirection : TEXCOORD1;
     float3 viewDirection : TEXCOORD2;
 };
 
@@ -57,7 +52,7 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
     OUT.position = mul(IN.objectPosition, WVP);
     OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
     OUT.normal = normalize(mul(float4(IN.normal, 0), World).xyz);
-    OUT.LightDirection = normalize(-LightDirection);
+    OUT.lightDirection = normalize(-LightDirection);
 
     float3 worldPosition = mul(IN.objectPosition, World).xyz;
     OUT.viewDirection = normalize(CameraPosition - worldPosition);
@@ -71,9 +66,9 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     float4 OUT = (float4)0;
 
     float3 normal = normalize(IN.normal);
-    float3 LightDirection = normalize(IN.LightDirection);
+    float3 lightDirection = normalize(IN.lightDirection);
     float3 viewDirection = normalize(IN.viewDirection);
-    float n_dot_l = dot(LightDirection, normal);
+    float n_dot_l = dot(lightDirection, normal);
 
     float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
     float3 ambient = AmbientColor.rgb * AmbientColor.a * color.rgb;
@@ -85,7 +80,7 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     {
         diffuse = LightColor.rgb * LightColor.a * saturate(n_dot_l) * color.rgb;
 
-        float3 halfVector = normalize(LightDirection + viewDirection);
+        float3 halfVector = normalize(lightDirection + viewDirection);
 
         // specular = (N dot H)^S with gloss map in color texture's alpha channel
         specular = SpecularColor.rgb * SpecularColor.a * min(pow(saturate(dot(normal, halfVector)), SpecularPower), color.w);

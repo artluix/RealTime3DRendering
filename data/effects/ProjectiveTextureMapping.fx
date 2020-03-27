@@ -1,5 +1,5 @@
 #include "include/Common.fxh"
-#include "include/Lights.fxh"
+#include "include/PhongLighting.fxh"
 
 /************* Resources *************/
 static const float4 WhiteColor = { 1.f, 1.f, 1.f, 1.f };
@@ -92,14 +92,10 @@ float4 compute_light(VS_OUTPUT IN)
     float4 OUT = (float4)0;
 
     float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
+    float3 normal = normalize(IN.normal);
+    float3 viewDirection = normalize(IN.viewDirection);
 
-    LIGHT_OBJECT_PARAMS lightObjectParams;
-    lightObjectParams.normal = normalize(IN.normal);
-    lightObjectParams.viewDirection = normalize(IN.viewDirection);
-    lightObjectParams.worldPosition = IN.worldPosition;
-    lightObjectParams.color = color;
-
-    OUT.rgb = get_light_contribution(lightObjectParams);
+    OUT.rgb = get_light_contribution(phong_lighting_create_object_params(color, normal, viewDirection, IN.worldPosition));
     OUT.a = 1.0f;
 
     return OUT;

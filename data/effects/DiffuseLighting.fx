@@ -1,5 +1,5 @@
 #include "include/Common.fxh"
-#include "include/Lights.fxh"
+#include "include/PhongLighting.fxh"
 
 // legacy, just for learning
 // Resources
@@ -13,11 +13,6 @@ cbuffer CBufferPerObject
     float4x4 WVP;
     float4x4 World;
 }
-
-RasterizerState DisableCulling
-{
-    CullMode = None;
-};
 
 Texture2D ColorTexture;
 SamplerState ColorSampler

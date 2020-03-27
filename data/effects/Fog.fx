@@ -1,5 +1,5 @@
 #include "include/Common.fxh"
-#include "include/Lights.fxh"
+#include "include/PhongLighting.fxh"
 
 // Resources
 cbuffer CBufferPerFrame
@@ -23,11 +23,6 @@ SamplerState ColorSampler
     Filter = MIN_MAG_MIP_LINEAR;
     AddressU = WRAP;
     AddressV = WRAP;
-};
-
-RasterizerState DisableCulling
-{
-    CullMode = None;
 };
 
 // Data Structures
@@ -76,14 +71,10 @@ float4 pixel_shader(VS_OUTPUT IN, uniform bool fogEnabled) : SV_Target
     float4 OUT = (float4)0;
 
     float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
+    float3 normal = normalize(IN.normal);
+    float3 viewDirection = normalize(IN.viewDirection);
 
-    LIGHT_OBJECT_PARAMS lightObjectParams;
-    lightObjectParams.normal = normalize(IN.normal);
-    lightObjectParams.viewDirection = normalize(IN.viewDirection);
-    lightObjectParams.worldPosition = IN.worldPosition;
-    lightObjectParams.color = color;
-
-    OUT.rgb = get_light_contribution(lightObjectParams);
+    OUT.rgb = get_light_contribution(phong_lighting_create_object_params(color, normal, viewDirection, IN.worldPosition));
     OUT.a = 1.0f;
 
     if (fogEnabled)

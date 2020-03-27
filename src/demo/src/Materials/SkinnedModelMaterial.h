@@ -1,9 +1,9 @@
 #pragma once
-#include "Materials/LightsMaterial.h"
+#include "Materials/PhongLightingMaterial.h"
 
-class SkinnedModelMaterial : public LightsMaterial
+class SkinnedModelMaterial : public PhongLightingMaterial
 {
-	RTTI_CLASS(SkinnedModelMaterial, LightsMaterial)
+	RTTI_CLASS(SkinnedModelMaterial, PhongLightingMaterial)
 
 public:
 	using Vertex = library::VertexPositionTextureNormalSkinned;

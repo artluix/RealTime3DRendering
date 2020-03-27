@@ -1,5 +1,5 @@
 #include "include/Common.fxh"
-#include "include/Lights.fxh"
+#include "include/PhongLighting.fxh"
 
 #define MaxBones 60
 
@@ -84,14 +84,10 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     float4 OUT = (float4)0;
 
     float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
+    float3 normal = normalize(IN.normal);
+    float3 viewDirection = normalize(IN.viewDirection);
 
-    LIGHT_OBJECT_PARAMS lightObjectParams;
-    lightObjectParams.normal = normalize(IN.normal);
-    lightObjectParams.viewDirection = normalize(IN.viewDirection);
-    lightObjectParams.worldPosition = IN.worldPosition;
-    lightObjectParams.color = color;
-
-    OUT.rgb = get_light_contribution(lightObjectParams);
+    OUT.rgb = get_light_contribution(phong_lighting_create_object_params(color, normal, viewDirection, IN.worldPosition));
     OUT.a = 1.0f;
 
     return OUT;

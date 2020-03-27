@@ -1,3 +1,5 @@
+#include "include/Common.fxh"
+
 /************* Resources *************/
 
 cbuffer CBufferPerObject
@@ -10,11 +12,6 @@ TextureCube SkyboxTexture;
 SamplerState TrilinearSampler
 {
     Filter = MIN_MAG_MIP_LINEAR;
-};
-
-RasterizerState DisableCulling
-{
-    CullMode = NONE;
 };
 
 /************* Data Structures *************/

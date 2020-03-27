@@ -5,7 +5,7 @@
 using namespace library;
 
 ShadowMappingMaterial::ShadowMappingMaterial(Effect& effect)
-	: LightsMaterial(effect, "shadow_mapping")
+	: PhongLightingMaterial(effect, "shadow_mapping")
 
 	, m_projectiveTextureMatrix(effect.GetVariable("ProjectiveTextureMatrix"))
 	, m_shadowMapTexture(effect.GetVariable("ShadowMapTexture"))
@@ -16,7 +16,7 @@ ShadowMappingMaterial::ShadowMappingMaterial(Effect& effect)
 
 void ShadowMappingMaterial::InitializeInternal()
 {
-	LightsMaterial::InitializeInternal();
+	PhongLightingMaterial::InitializeInternal();
 
 	const auto& inputElementDescriptions = GetCurrentPass().GetInputElementDescriptions();
 

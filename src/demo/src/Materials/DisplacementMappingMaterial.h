@@ -1,9 +1,9 @@
 #pragma once
-#include "Materials/LightsMaterial.h"
+#include "Materials/PhongLightingMaterial.h"
 
-class DisplacementMappingMaterial : public LightsMaterial
+class DisplacementMappingMaterial : public PhongLightingMaterial
 {
-	RTTI_CLASS(DisplacementMappingMaterial, LightsMaterial)
+	RTTI_CLASS(DisplacementMappingMaterial, PhongLightingMaterial)
 
 public:
 	explicit DisplacementMappingMaterial(library::Effect& effect);

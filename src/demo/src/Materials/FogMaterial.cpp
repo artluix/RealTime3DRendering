@@ -5,7 +5,7 @@
 using namespace library;
 
 FogMaterial::FogMaterial(Effect& effect)
-	: LightsMaterial(effect, "fogEnabled")
+	: PhongLightingMaterial(effect, "fogEnabled")
 
 	, m_fogColor(effect.GetVariable("FogColor"))
 	, m_fogStart(effect.GetVariable("FogStart"))
@@ -18,7 +18,7 @@ FogMaterial::~FogMaterial() = default;
 
 void FogMaterial::InitializeInternal()
 {
-	LightsMaterial::InitializeInternal();
+	PhongLightingMaterial::InitializeInternal();
 
 	const auto& inputElementDescriptions = GetCurrentPass().GetInputElementDescriptions();
 

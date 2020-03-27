@@ -1,5 +1,5 @@
 #pragma once
-#include "Materials/LightsMaterial.h"
+#include "Materials/PhongLightingMaterial.h"
 
 #include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
 #include <library/Components/InputReceivableComponent.h>
@@ -12,7 +12,7 @@ class TextComponent;
 } // namespace library
 
 class SpotlightDemo
-	: public library::ConcreteMaterialPrimitiveComponent<LightsMaterial>
+	: public library::ConcreteMaterialPrimitiveComponent<PhongLightingMaterial>
 	, public library::InputReceivableComponent
 {
 	RTTI_CLASS(SpotlightDemo, library::PrimitiveComponent, library::InputReceivableComponent)

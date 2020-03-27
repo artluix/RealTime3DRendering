@@ -1,5 +1,5 @@
 #include "include/Common.fxh"
-#include "include/Lights.fxh"
+#include "include/PhongLighting.fxh"
 
 // Resources
 cbuffer CBufferPerFrame
@@ -21,11 +21,6 @@ TextureCube EnvironmentMap;
 SamplerState TrilinearSampler
 {
     Filter = MIN_MAG_MIP_LINEAR;
-};
-
-RasterizerState DisableCulling
-{
-    CullMode = None;
 };
 
 // Data Structures

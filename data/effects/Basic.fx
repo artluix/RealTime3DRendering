@@ -1,3 +1,5 @@
+#include "include/Common.fxh"
+
 /************* Resources *************/
 
 cbuffer CBufferPerObject
@@ -17,11 +19,6 @@ struct VS_OUTPUT
 {
     float4 Position: SV_Position;
     float4 Color : COLOR;
-};
-
-RasterizerState DisableCulling
-{
-    CullMode = NONE;
 };
 
 /************* Vertex Shader *************/

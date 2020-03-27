@@ -1,5 +1,5 @@
 #include "include/Common.fxh"
-#include "include/Lights.fxh"
+#include "include/PhongLighting.fxh"
 
 /************* Resources *************/
 
@@ -70,16 +70,11 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     float4 OUT = (float4)0;
 
     float4 color = ColorTexture.Sample(ColorSampler, IN.textureCoordinate);
+    float3 normal = normalize(IN.normal);
+    float3 viewDirection = normalize(IN.viewDirection);
 
-    LIGHT_OBJECT_PARAMS_EX lightObjectParamsEx;
-    lightObjectParamsEx.normal = normalize(IN.normal);
-    lightObjectParamsEx.viewDirection = normalize(IN.viewDirection);
-    lightObjectParamsEx.worldPosition = IN.worldPosition;
-    lightObjectParamsEx.color = color;
-    lightObjectParamsEx.specularColor = IN.specularColor;
-    lightObjectParamsEx.specularPower = IN.specularPower;
-
-    OUT.rgb = get_light_contribution(lightObjectParamsEx);
+    OUT.rgb = get_light_contribution(phong_lighting_create_object_params(
+        color, normal, viewDirection, IN.worldPosition, IN.specularPower, IN.specularColor));
     OUT.a = 1.0f;
 
     return OUT;

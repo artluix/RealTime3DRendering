@@ -1,5 +1,5 @@
 #include "include/Common.fxh"
-#include "include/Lights.fxh"
+#include "include/PhongLighting.fxh"
 
 /************* Resources *************/
 static const float4 WhiteColor = { 1.f, 1.f, 1.f, 1.f };
@@ -92,13 +92,10 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 
 float3 compute_specular_diffuse(VS_OUTPUT IN, float4 color)
 {
-    LIGHT_OBJECT_PARAMS lightObjectParams;
-    lightObjectParams.normal = normalize(IN.normal);
-    lightObjectParams.viewDirection = normalize(IN.viewDirection);
-    lightObjectParams.worldPosition = IN.worldPosition;
-    lightObjectParams.color = color;
+    float3 normal = normalize(IN.normal);
+    float3 viewDirection = normalize(IN.viewDirection);
 
-    return get_specular_diffuse(lightObjectParams);
+    return get_specular_diffuse(phong_lighting_create_object_params(color, normal, viewDirection, IN.worldPosition));
 }
 
 float4 pixel_shader(VS_OUTPUT IN) : SV_Target

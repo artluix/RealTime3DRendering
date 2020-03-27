@@ -19,11 +19,6 @@ cbuffer CBufferPerObject
     float specularPower : SPECULARPOWER;
 }
 
-RasterizerState DisableCulling
-{
-    CullMode = None;
-};
-
 Texture2D ColorTexture;
 SamplerState ColorSampler
 {

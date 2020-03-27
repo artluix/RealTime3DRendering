@@ -64,8 +64,6 @@ float ps_calc_luminance_log(VS_OUTPUT IN) : SV_Target
 
 // 2. Pass - calculate average luminance, apply exposure, apply tone mapping operator and optional gamma correction
 
-static const float k_invGamma = 0.4545f; // = (1 / 2.2f)
-
 float4 ps_tone_mapping(VS_OUTPUT IN, uniform bool gammaCorrectionEnabled) : SV_Target
 {
     float lumTotal = 0.f;
@@ -92,7 +90,7 @@ float4 ps_tone_mapping(VS_OUTPUT IN, uniform bool gammaCorrectionEnabled) : SV_T
     // gamma correction (if needed)
     if (gammaCorrectionEnabled)
     {
-        color = pow(color, k_invGamma);
+        color = gamma_correction(color);
     }
 
     return float4(color, 1.f);
