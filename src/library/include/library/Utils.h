@@ -12,16 +12,16 @@ std::wstring ToWideString(const std::string& str);
 Path GetCurrentDirectory();
 Path GetExecutableDirectory();
 
-void WriteBinaryFile(const Path& path, const std::vector<std::byte>& data);
+void WriteBinaryFile(const Path& path, const DynArray<std::byte>& data);
 void WriteBinaryFile(const Path& path, const void* data, const std::size_t size);
-void LoadBinaryFile(const Path& path, std::vector<std::byte>& data);
+void LoadBinaryFile(const Path& path, DynArray<std::byte>& data);
 
 //-------------------------------------------------------------------------
 
 template <typename U, typename T, typename = std::enable_if_t<std::is_explicit_convertible_v<T, U>>>
-std::vector<U> ToArray(const std::vector<T>& vecT)
+DynArray<U> ToArray(const DynArray<T>& vecT)
 {
-	std::vector<U> vecU;
+	DynArray<U> vecU;
 	vecU.reserve(vecT.size());
 
 	for (const auto& v : vecT)
@@ -33,9 +33,9 @@ std::vector<U> ToArray(const std::vector<T>& vecT)
 }
 
 template <typename U, typename T, std::size_t Count, typename = std::enable_if_t<std::is_explicit_convertible_v<T, U>>>
-std::array<U, Count> ToArray(const std::array<T, Count>& arrT)
+Array<U, Count> ToArray(const Array<T, Count>& arrT)
 {
-	std::array<U, Count> arrU;
+	Array<U, Count> arrU;
 
 	for (std::size_t i = 0; i < Count; i++)
 	{

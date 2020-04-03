@@ -1,6 +1,7 @@
 #include "InstancingDemo.h"
 
 #include "DemoUtils.h"
+#include "VertexTypes.h"
 
 #include <library/Components/TextComponent.h>
 #include <library/Components/CameraComponent.h>
@@ -20,20 +21,6 @@
 #include <iomanip>
 
 using namespace library;
-
-//-------------------------------------------------------------------------
-
-struct VertexInstanceSpecular : VertexInstance
-{
-	VertexInstanceSpecular(const math::Matrix4& world, const math::Color& specularColor, const float specularPower)
-		: VertexInstance(world)
-		, specularColor(specularColor)
-		, specularPower(specularPower)
-	{}
-
-	math::Color specularColor;
-	float specularPower;
-};
 
 //-------------------------------------------------------------------------
 
@@ -64,7 +51,7 @@ void InstancingDemo::InitializeInternal()
 	// load model
 	{
 		Model model(GetApp(), "Sphere", true);
-		m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);
+		CreatePrimitivesData(model);
 	}
 
 	m_textures.resize(Texture::Count);
@@ -88,7 +75,7 @@ void InstancingDemo::InitializeInternal()
 
 	// instances data
 	{
-		std::vector<VertexInstanceSpecular> instancesData;
+		DynArray<VertexInstanceSpecular> instancesData;
 		instancesData.reserve(k_instancesCount);
 
 		// generate grid of object positions
@@ -113,7 +100,7 @@ void InstancingDemo::InitializeInternal()
 			}
 		}
 
-		m_instanceVertexBuffer = VertexBufferData(GetApp().GetDevice(), instancesData);
+		m_instanceVertexBuffer = VertexBufferData(GetApp().GetDevice(), MakeArrayBuffer(instancesData));
 	}
 }
 
@@ -195,17 +182,17 @@ void InstancingDemo::Draw_SetIA(const PrimitiveData& primitiveData)
 	{
 		constexpr unsigned vertexBufferCount = 2;
 
-		const std::array<ID3D11Buffer*, vertexBufferCount> vertexBuffers =
+		const Array<ID3D11Buffer*, vertexBufferCount> vertexBuffers =
 		{
 			primitiveData.vertexBuffer.buffer.Get(),
 			m_instanceVertexBuffer.buffer.Get()
 		};
-		const std::array<unsigned, vertexBufferCount> strides =
+		const Array<unsigned, vertexBufferCount> strides =
 		{
 			primitiveData.vertexBuffer.stride,
 			m_instanceVertexBuffer.stride
 		};
-		const std::array<unsigned, vertexBufferCount> offsets =
+		const Array<unsigned, vertexBufferCount> offsets =
 		{
 			primitiveData.vertexBuffer.offset,
 			m_instanceVertexBuffer.offset
@@ -239,7 +226,10 @@ void InstancingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 
 	m_material->GetViewProjection() << vp;
 	m_material->GetAmbientColor() <<  m_ambientColor.ToVector4();
-	m_material->GetLightData() << m_pointLight->GetColor().ToVector4();
+
+	m_material->GetPointLights() << PointLightData(*m_pointLight);
+	m_material->GetPointLightsCount() << 1;
+
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 
 	ConcreteMaterialPrimitiveComponent::Draw_SetData(primitiveData);

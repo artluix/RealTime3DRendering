@@ -6,9 +6,6 @@
 #include "library/Effect/EffectVariable.h"
 #include "library/Effect/EffectPass.h"
 
-#include "library/Model/Model.h"
-#include "library/Model/Mesh.h"
-
 namespace library
 {
 Material::Material(Effect& effect, const std::string& defaultTechniqueName /* = "" */)
@@ -73,51 +70,21 @@ void Material::Initialize()
 //-------------------------------------------------------------------------
 
 void Material::CreateInputLayout(
-	const EffectPass::InputElementDescArray& inputElementDescriptions,
+	const InputElementDescArrayBuffer& descriptionsBuffer,
 	const std::string& techniqueName,
 	const std::string& passName /*= "p0"*/
 )
 {
 	auto& technique = m_effect.GetTechnique(techniqueName);
 	auto& pass = technique.GetPass(passName);
-	auto inputLayout = pass.CreateInputLayout(inputElementDescriptions);
 
+	CreateInputLayout(descriptionsBuffer, pass);
+}
+
+void Material::CreateInputLayout(const InputElementDescArrayBuffer& descriptionsBuffer, EffectPass& pass)
+{
+	auto inputLayout = pass.CreateInputLayout(descriptionsBuffer);
 	m_inputLayouts.emplace(&pass, std::move(inputLayout));
 }
 
-void Material::CreateInputLayout(
-	const EffectPass::InputElementDescArray& inputElementDescriptions,
-	EffectPass& pass
-)
-{
-	auto inputLayout = pass.CreateInputLayout(inputElementDescriptions);
-	m_inputLayouts.emplace(&pass, std::move(inputLayout));
-}
-
-//-------------------------------------------------------------------------
-
-PrimitiveData Material::CreatePrimitiveData(ID3D11Device* const device, const Mesh& mesh) const
-{
-	return PrimitiveData(
-		mesh.GetPrimitiveTopology(),
-		CreateVertexBufferData(device, mesh),
-		mesh.CreateIndexBufferData()
-	);
-}
-
-std::vector<PrimitiveData> Material::CreatePrimitivesData(ID3D11Device* const device, const Model& model) const
-{
-	std::vector<PrimitiveData> primitivesData;
-
-	const auto meshesCount = model.GetMeshesCount();
-	primitivesData.reserve(meshesCount);
-
-	for (unsigned i = 0; i < meshesCount; i++)
-	{
-		const auto& mesh = model.GetMesh(i);
-		primitivesData.push_back(CreatePrimitiveData(device, mesh));
-	}
-
-	return primitivesData;
-}
 } // namespace library

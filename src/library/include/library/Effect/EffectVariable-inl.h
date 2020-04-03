@@ -193,7 +193,7 @@ EffectVariable::operator<<(const T& value)
 
 template<typename T>
 inline std::enable_if_t<!is_hlsl_scalar<T>, EffectVariable&>
-EffectVariable::operator<<(const std::vector<T>& value)
+EffectVariable::operator<<(const DynArray<T>& value)
 {
 	SetRawArray(m_variable.Get(), value.data(), value.size());
 	return *this;
@@ -201,7 +201,7 @@ EffectVariable::operator<<(const std::vector<T>& value)
 
 template <typename T, std::size_t Count>
 inline std::enable_if_t<!is_hlsl_scalar<T>, EffectVariable&>
-EffectVariable::operator<<(const std::array<T, Count>& value)
+EffectVariable::operator<<(const Array<T, Count>& value)
 {
 	SetRawArray(m_variable.Get(), value.data(), Count);
 	return *this;
@@ -221,7 +221,7 @@ EffectVariable::operator<<(const T value)
 
 template<typename T>
 inline std::enable_if_t<is_hlsl_scalar<T>, EffectVariable&>
-EffectVariable::operator<<(const std::vector<T>& value)
+EffectVariable::operator<<(const DynArray<T>& value)
 {
 	if (auto scalarVariable = ToScalarVariable())
 		SetScalarArray(scalarVariable, value.data(), value.size());
@@ -231,7 +231,7 @@ EffectVariable::operator<<(const std::vector<T>& value)
 
 template <typename T, std::size_t Count>
 inline std::enable_if_t<is_hlsl_scalar<T>, EffectVariable&>
-EffectVariable::operator<<(const std::array<T, Count>& value)
+EffectVariable::operator<<(const Array<T, Count>& value)
 {
 	if (auto scalarVariable = ToScalarVariable())
 		SetScalarArray(scalarVariable, value.data(), Count);
@@ -251,7 +251,7 @@ inline EffectVariable& EffectVariable::operator<<(const math::VectorType<T, Size
 }
 
 template<typename T, unsigned Size>
-inline EffectVariable& EffectVariable::operator<<(const math::VectorArray<T, Size>& value)
+inline EffectVariable& EffectVariable::operator<<(const math::VectorDynArray<T, Size>& value)
 {
 	if (auto vectorVariable = ToVectorVariable())
 		SetVectorArray(vectorVariable, reinterpret_cast<const T*>(value.data()), value.size());
@@ -260,7 +260,7 @@ inline EffectVariable& EffectVariable::operator<<(const math::VectorArray<T, Siz
 }
 
 template <typename T, unsigned Size, std::size_t Count>
-inline EffectVariable& EffectVariable::operator<<(const math::VectorFixedArray<T, Size, Count>& value)
+inline EffectVariable& EffectVariable::operator<<(const math::VectorArray<T, Size, Count>& value)
 {
 	if (auto vectorVariable = ToVectorVariable())
 		SetVectorArray(vectorVariable, reinterpret_cast<const T*>(value.data()), Count);
@@ -280,7 +280,7 @@ inline EffectVariable& EffectVariable::operator<<(const math::Matrix<Size>& valu
 }
 
 template<unsigned Size>
-inline EffectVariable& EffectVariable::operator<<(const math::MatrixArray<Size>& value)
+inline EffectVariable& EffectVariable::operator<<(const math::MatrixDynArray<Size>& value)
 {
 	if (auto matrixVariable = ToMatrixVariable())
 		SetMatrixArray(matrixVariable, reinterpret_cast<const float*>(value.data()), value.size());
@@ -289,7 +289,7 @@ inline EffectVariable& EffectVariable::operator<<(const math::MatrixArray<Size>&
 }
 
 template<unsigned Size, std::size_t Count>
-inline EffectVariable& EffectVariable::operator<<(const math::MatrixFixedArray<Size, Count>& value)
+inline EffectVariable& EffectVariable::operator<<(const math::MatrixArray<Size, Count>& value)
 {
 	if (auto matrixVariable = ToMatrixVariable())
 		SetMatrixArray(matrixVariable, reinterpret_cast<const float*>(value.data()), Count);

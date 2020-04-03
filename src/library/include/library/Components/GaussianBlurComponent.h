@@ -1,5 +1,5 @@
 #pragma once
-#include "library/Components/ConcreteMaterialPostProcessingComponent.hpp"
+#include "library/Components/ConcreteMaterialPostProcessingComponent.h"
 #include "library/Materials/GaussianBlurMaterial.h"
 #include "library/Math/Vector.h"
 
@@ -39,11 +39,11 @@ private:
 	{
 		struct
 		{
-			std::vector<math::Vector2> horizontal;
-			std::vector<math::Vector2> vertical;
+			DynArray<math::Vector2> horizontal;
+			DynArray<math::Vector2> vertical;
 		} offsets;
 
-		std::vector<float> weights;
+		DynArray<float> weights;
 	} m_sample;
 };
 } // namespace library

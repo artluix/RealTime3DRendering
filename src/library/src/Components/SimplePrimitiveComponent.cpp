@@ -56,7 +56,7 @@ void SimplePrimitiveComponent::InitializeEffect(const std::string& effectName, c
 	{
 		const auto path = GetApp().GetEffectsPath() + Path(effectName + ".fxc");
 
-		std::vector<std::byte> effectData;
+		DynArray<std::byte> effectData;
 		utils::LoadBinaryFile(path, effectData);
 		assert("Load compiled effect failed." && !effectData.empty());
 

@@ -1,7 +1,7 @@
 #pragma once
 #include "Materials/ColorFilterMaterial.h"
 
-#include <library/Components/ConcreteMaterialPostProcessingComponent.hpp>
+#include <library/Components/ConcreteMaterialPostProcessingComponent.h>
 #include <library/Components/InputReceivableComponent.h>
 #include <library/Math/Matrix.h>
 

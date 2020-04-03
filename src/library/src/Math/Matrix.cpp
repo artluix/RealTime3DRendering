@@ -3,6 +3,9 @@
 
 #include "library/Math/Quaternion.h"
 
+#include <sstream>
+#include <iomanip>
+
 namespace library::math
 {
 //-------------------------------------------------------------------------

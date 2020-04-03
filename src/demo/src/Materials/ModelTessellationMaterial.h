@@ -18,11 +18,6 @@ public:
 	library::EffectVariable& GetMinTessDistance() { return m_minTessDistance; }
 	library::EffectVariable& GetMaxTessDistance() { return m_maxTessDistance; }
 
-	library::VertexBufferData CreateVertexBufferData(
-		ID3D11Device* const device,
-		const library::Mesh& mesh
-	) const override;
-
 protected:
 	void InitializeInternal() override;
 

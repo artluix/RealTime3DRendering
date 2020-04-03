@@ -1,6 +1,6 @@
 #pragma once
 #include "library/Materials/BloomMaterial.h"
-#include "library/Components/ConcreteMaterialPostProcessingComponent.hpp"
+#include "library/Components/ConcreteMaterialPostProcessingComponent.h"
 
 namespace library
 {

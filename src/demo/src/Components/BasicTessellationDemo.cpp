@@ -89,14 +89,13 @@ void BasicTessellationDemo::InitializeInternal()
 		{
 			auto& trianglePrimitive = m_primitivesData[Topology::Triangle];
 
-			constexpr std::array<Vertex, 3> triangleVertices =
-			{
+			constexpr auto triangleVertices = MakeArray(
 				Vertex(math::Vector4(-5.f, 1.f, 0.f, 1.f)),
 				Vertex(math::Vector4(0.f, 6.f, 0.f, 1.f)),
 				Vertex(math::Vector4(5.f, 1.f, 0.f, 1.f))
-			};
+			);
 
-			trianglePrimitive.vertexBuffer = VertexBufferData(GetApp().GetDevice(), triangleVertices);
+			trianglePrimitive.vertexBuffer = VertexBufferData(GetApp().GetDevice(), MakeArrayBuffer(triangleVertices));
 			trianglePrimitive.primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST;
 		}
 
@@ -104,15 +103,14 @@ void BasicTessellationDemo::InitializeInternal()
 		{
 			auto& quadPrimitive = m_primitivesData[Topology::Quad];
 
-			constexpr std::array<Vertex, 4> quadVertices =
-			{
+			constexpr auto quadVertices = MakeArray(
 				Vertex(math::Vector4(-5.f, 6.f, 0.f, 1.f)),
 				Vertex(math::Vector4(5.f, 6.f, 0.f, 1.f)),
 				Vertex(math::Vector4(-5.f, 1.f, 0.f, 1.f)),
 				Vertex(math::Vector4(5.f, 1.f, 0.f, 1.f))
-			};
+			);
 
-			quadPrimitive.vertexBuffer = VertexBufferData(GetApp().GetDevice(), quadVertices);
+			quadPrimitive.vertexBuffer = VertexBufferData(GetApp().GetDevice(), MakeArrayBuffer(quadVertices));
 			quadPrimitive.primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST;
 		}
 	}

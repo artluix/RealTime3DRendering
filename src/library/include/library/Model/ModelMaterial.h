@@ -1,14 +1,13 @@
 #pragma once
-#include "library/NonCopyable.hpp"
+#include "library/Common.h"
 #include "library/Model/TextureType.h"
 
 #include <string>
-#include <vector>
 #include <map>
 
 namespace library
 {
-using TextureNameVector = std::vector<std::string>;
+using TextureNameVector = DynArray<std::string>;
 using TextureNamesMap = std::map<TextureType::Type, TextureNameVector>;
 
 class ModelMaterial : public NonCopyable<ModelMaterial>

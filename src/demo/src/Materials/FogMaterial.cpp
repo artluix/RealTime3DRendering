@@ -5,12 +5,22 @@
 using namespace library;
 
 FogMaterial::FogMaterial(Effect& effect)
-	: PhongLightingMaterial(effect, "fogEnabled")
+	: FogMaterial(effect, "fogEnabled")
+{}
+
+FogMaterial::FogMaterial(library::Effect& effect, const std::string& defaultTechniqueName)
+	: PhongLightingMaterial(effect, defaultTechniqueName)
 
 	, m_fogColor(effect.GetVariable("FogColor"))
 	, m_fogStart(effect.GetVariable("FogStart"))
 	, m_fogRange(effect.GetVariable("FogRange"))
-{}
+
+	, m_cameraPosition(effect.GetVariable("CameraPosition"))
+	, m_wvp(effect.GetVariable("WVP"))
+	, m_world(effect.GetVariable("World"))
+	, m_colorTexture(effect.GetVariable("ColorTexture"))
+{
+}
 
 FogMaterial::~FogMaterial() = default;
 
@@ -18,9 +28,6 @@ FogMaterial::~FogMaterial() = default;
 
 void FogMaterial::InitializeInternal()
 {
-	PhongLightingMaterial::InitializeInternal();
-
-	const auto& inputElementDescriptions = GetCurrentPass().GetInputElementDescriptions();
-
-	CreateInputLayout(inputElementDescriptions, "fogDisabled");
+	CreateInputLayout(MakeArrayBuffer(Vertex::ElementDescriptions), GetDefaultTechniqueName());
+	CreateInputLayout(MakeArrayBuffer(Vertex::ElementDescriptions), "fogDisabled");
 }

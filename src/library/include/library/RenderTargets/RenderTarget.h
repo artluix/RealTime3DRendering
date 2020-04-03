@@ -1,6 +1,6 @@
 #pragma once
-#include "library/RTTI.hpp"
-#include "library/NonCopyable.hpp"
+#include "library/RTTI.h"
+#include "library/NonCopyable.h"
 #include "library/Math/Color.h"
 
 #include <stack>

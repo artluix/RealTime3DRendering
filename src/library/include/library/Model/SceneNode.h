@@ -1,10 +1,9 @@
 #pragma once
-#include "library/NonCopyable.hpp"
-#include "library/RTTI.hpp"
+#include "library/NonCopyable.h"
+#include "library/RTTI.h"
 #include "library/Math/Matrix.h"
 
 #include <string>
-#include <vector>
 #include <memory>
 
 namespace library
@@ -42,6 +41,6 @@ protected:
 	math::Matrix4 m_transform;
 
 	const SceneNode* m_parent = nullptr;
-	std::vector<SceneNodePtr> m_children;
+	DynArray<SceneNodePtr> m_children;
 };
 } // namespace library

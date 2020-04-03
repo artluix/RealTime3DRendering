@@ -22,10 +22,12 @@ struct PrimitiveData
 		VertexBufferData&& vertexBuffer,
 		IndexBufferData&& indexBuffer = {}
 	)
-		: vertexBuffer(std::move(vertexBuffer))
+		: primitiveTopology(primitiveTopology)
+		, vertexBuffer(std::move(vertexBuffer))
 		, indexBuffer(std::move(indexBuffer))
-		, primitiveTopology(primitiveTopology)
 	{}
+
+
 
 	PrimitiveData(PrimitiveData&&) = default;
 	PrimitiveData& operator=(PrimitiveData&&) = default;

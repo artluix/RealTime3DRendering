@@ -1,7 +1,7 @@
 #pragma once
 #include "Materials/DiffuseLightingMaterial.h"
 
-#include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
+#include <library/Components/ConcreteMaterialPrimitiveComponent.h>
 #include <library/Components/InputReceivableComponent.h>
 #include <library/Math/Color.h>
 

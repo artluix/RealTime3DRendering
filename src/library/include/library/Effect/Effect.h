@@ -1,10 +1,9 @@
 #pragma once
 #include "library/Common.h"
-#include "library/NonCopyable.hpp"
+#include "library/NonCopyable.h"
 #include "library/Path.h"
 
 #include <d3dx11effect.h>
-#include <vector>
 #include <map>
 #include <string>
 #include <memory>
@@ -90,10 +89,10 @@ private:
 
 	bool m_initialized = false;
 
-	std::vector<TechniquePtr> m_techniques;
+	DynArray<TechniquePtr> m_techniques;
 	std::map<std::string, unsigned> m_techniquesMapping;
 
-	std::vector<VariablePtr> m_variables;
+	DynArray<VariablePtr> m_variables;
 	std::map<std::string, unsigned> m_variablesMapping;
 };
 } // namespace library

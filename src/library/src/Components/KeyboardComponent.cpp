@@ -11,6 +11,7 @@ constexpr BYTE k_keyDownMask = 0x80;
 
 KeyboardComponent::KeyboardComponent(IDirectInput8& directInput)
 	: InputComponent(directInput, c_dfDIKeyboard, GUID_SysKeyboard, DISCL_FOREGROUND | DISCL_NONEXCLUSIVE)
+	, m_keysState()
 {
 	m_keysState.fill(0);
 	m_previousKeysState.fill(0);

@@ -1,5 +1,5 @@
 #pragma once
-#include "library/NonConstructible.hpp"
+#include "library/NonConstructible.h"
 #include "library/DxForward.h"
 
 namespace library

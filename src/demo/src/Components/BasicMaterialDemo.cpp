@@ -25,7 +25,7 @@ void BasicMaterialDemo::InitializeInternal()
 	CreateMaterialWithEffect("Basic");
 
 	Model model(GetApp(), "Sphere", true);
-	m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);
+	CreatePrimitivesData(model);
 }
 
 void BasicMaterialDemo::Update(const Time& time)

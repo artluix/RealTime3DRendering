@@ -60,7 +60,7 @@ void AnimationDemo::InitializeInternal()
 	CreateMaterialWithEffect("SkinnedModel");
 
 	m_model = std::make_unique<Model>(GetApp(), "RunningSoldier.dae", true);
-	m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), *m_model);
+	CreatePrimitivesData(*m_model);
 
 	m_textures.resize(Texture::Count);
 	// extract diffuse texture name from ModelMaterial
@@ -72,7 +72,7 @@ void AnimationDemo::InitializeInternal()
 			const auto& diffuseTexturePath = Path(
 				modelMaterial.GetTextureNames(TextureType::Diffuse).front()
 			);
-			const auto textureName = diffuseTexturePath.GetBaseName().SplitExt().first.GetString();
+			const auto textureName = diffuseTexturePath.GetBaseName().SplitExt()[0].GetString();
 			m_textures[Texture::Default] = GetApp().CreateTexture2DSRV(textureName);
 		}
 	}

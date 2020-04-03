@@ -14,11 +14,6 @@ public:
 	library::EffectVariable& GetHeightMapTexture() { return m_heightMapTexture; }
 	library::EffectVariable& GetDisplacementScale() { return m_displacementScale; }
 
-	library::VertexBufferData CreateVertexBufferData(
-		ID3D11Device* const device,
-		const library::Mesh& mesh
-	) const override;
-
 protected:
 	void InitializeInternal() override;
 

@@ -1,6 +1,6 @@
 #pragma once
 #include "library/Materials/BasicMaterial.h"
-#include "library/Components/ConcreteMaterialPrimitiveComponent.hpp"
+#include "library/Components/ConcreteMaterialPrimitiveComponent.h"
 #include "library/Math/Color.h"
 #include "library/DxForward.h"
 

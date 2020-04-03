@@ -1,8 +1,7 @@
 #pragma once
-#include "library/NonCopyable.hpp"
+#include "library/Common.h"
 
 #include <string>
-#include <vector>
 #include <map>
 #include <memory>
 
@@ -78,13 +77,13 @@ private:
 
 	const Application& m_app;
 
-	std::vector<MeshPtr> m_meshes;
-	std::vector<MaterialPtr> m_materials;
+	DynArray<MeshPtr> m_meshes;
+	DynArray<MaterialPtr> m_materials;
 
-	std::vector<BonePtr> m_bones;
+	DynArray<BonePtr> m_bones;
 	std::map<std::string, unsigned> m_bonesMapping;
 
-	std::vector<AnimationClipPtr> m_animations;
+	DynArray<AnimationClipPtr> m_animations;
 	std::map<std::string, unsigned> m_animationsMapping;
 
 	SceneNodePtr m_rootNode;

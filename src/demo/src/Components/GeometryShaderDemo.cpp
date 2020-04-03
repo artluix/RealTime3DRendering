@@ -119,7 +119,7 @@ void GeometryShaderDemo::InitializeRandomPoints()
 	std::uniform_real_distribution<float> distanceDistribution(-k_maxDistance, k_maxDistance);
 	std::uniform_real_distribution<float> sizeDistribution(k_minSize, k_maxSize);
 
-	std::vector<VertexPositionSize> vertices;
+	DynArray<VertexPositionSize> vertices;
 	vertices.reserve(k_maxPointsCount);
 
 	for (unsigned i = 0; i < k_maxPointsCount; i++)
@@ -134,7 +134,7 @@ void GeometryShaderDemo::InitializeRandomPoints()
 	}
 
 	auto& pd = m_primitivesData.front();
-	pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
+	pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), MakeArrayBuffer(vertices));
 }
 
 void GeometryShaderDemo::InitializeFixedPoints()
@@ -142,7 +142,7 @@ void GeometryShaderDemo::InitializeFixedPoints()
 	constexpr unsigned k_maxPointsCount = 10;
 	constexpr float k_horizontalOffset = 3.f;
 
-	std::vector<VertexPositionSize> vertices;
+	DynArray<VertexPositionSize> vertices;
 	vertices.reserve(k_maxPointsCount);
 
 	for (unsigned i = 0; i < k_maxPointsCount; i++)
@@ -154,5 +154,5 @@ void GeometryShaderDemo::InitializeFixedPoints()
 	}
 
 	auto& pd = m_primitivesData.front();
-	pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
+	pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), MakeArrayBuffer(vertices));
 }

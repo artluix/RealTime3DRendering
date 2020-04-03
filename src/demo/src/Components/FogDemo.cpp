@@ -58,7 +58,7 @@ void FogDemo::InitializeInternal()
 	// load model
 	{
 		Model model(GetApp(), "Sphere", true);
-		m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);
+		CreatePrimitivesData(model);
 	}
 
 	m_textures.resize(Texture::Count);
@@ -153,7 +153,7 @@ void FogDemo::UpdateDirectionalLight(const Time& time, const KeyboardComponent& 
 
 void FogDemo::SetActiveTechnique()
 {
-	static const std::array<std::string, 2> techniques = {"fogDisabled", "fogEnabled"};
+	static const Array<std::string, 2> techniques = {"fogDisabled", "fogEnabled"};
 	const auto& techniqueName = techniques[unsigned(m_fogEnabled)];
 
 	m_material->SetCurrentTechnique(techniqueName);

@@ -5,7 +5,7 @@
 
 #include "library/Application.h"
 #include "library/Utils.h"
-#include "library/Render/VertexTypes.h"
+#include "library/Render/Vertex.h"
 
 #include "library/Effect/Effect.h"
 #include "library/Effect/EffectTechnique.h"
@@ -99,7 +99,7 @@ void GridComponent::Build()
 
 	const auto size = sizeof(VertexPositionColor) * verticesCount;
 
-	std::vector<VertexPositionColor> vertices;
+	DynArray<VertexPositionColor> vertices;
 	vertices.reserve(verticesCount);
 
 	for (unsigned i = 0; i < m_size + 1; i++)
@@ -115,6 +115,6 @@ void GridComponent::Build()
 		vertices.emplace_back(math::Vector4(-maxPosition, position, 0.0f, 1.0f), m_color);
 	}
 
-	pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
+	pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), MakeArrayBuffer(vertices));
 }
 } // namespace library

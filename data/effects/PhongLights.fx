@@ -22,19 +22,6 @@ SamplerState ColorSampler
     AddressV = CLAMP;
 };
 
-/* deferred */
-
-Texture2D ColorBufferTexture;
-Texture2D NormalBufferTexture;
-Texture2D WorldPositionBufferTexture;
-Texture2D DepthBufferTexture;
-SamplerState PointSampler
-{
-    Filter = MIN_MAG_MIP_POINT;
-    AddressU = WRAP;
-    AddressV = WRAP;
-};
-
 /************* Data Structures *************/
 
 struct VS_INPUT

@@ -3,7 +3,7 @@
 #include <library/Components/CameraComponent.h>
 #include <library/Components/KeyboardComponent.h>
 
-#include <library/Render/VertexTypes.h>
+#include "VertexTypes.h"
 #include <library/Application.h>
 #include <library/Utils.h>
 
@@ -48,36 +48,16 @@ void ModelDemo::InitializeInternal()
 		assert("ID3DX11Effect::GetVariableByName() could not find the specified variable." && false);
 	}
 
+	using Vertex = VertexPositionColor;
+
 	// Create the input layout
 	{
 		D3DX11_PASS_DESC passDesc;
 		m_pass->GetDesc(&passDesc);
 
-		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
-		{
-			{
-				"POSITION",
-				0,
-				DXGI_FORMAT_R32G32B32A32_FLOAT,
-				0,
-				0,
-				D3D11_INPUT_PER_VERTEX_DATA,
-				0
-			},
-			{
-				"COLOR",
-				0,
-				DXGI_FORMAT_R32G32B32A32_FLOAT,
-				0,
-				D3D11_APPEND_ALIGNED_ELEMENT,
-				D3D11_INPUT_PER_VERTEX_DATA,
-				0
-			},
-		};
-
 		auto hr = GetApp().GetDevice()->CreateInputLayout(
-			inputElementDescriptions.data(),
-			unsigned(inputElementDescriptions.size()),
+			Vertex::ElementDescriptions.data(),
+			unsigned(Vertex::ElementDescriptions.size()),
 			passDesc.pIAInputSignature,
 			passDesc.IAInputSignatureSize,
 			&m_inputLayout
@@ -87,10 +67,11 @@ void ModelDemo::InitializeInternal()
 
 	// Load the model
 	Model model(GetApp(), "Sphere", true);
+	auto& mesh = model.GetMesh(0);
+	mesh.Visualize(true);
 
-	// Create vertex and index buffers
-	const auto& mesh = model.GetMesh(0);
-	CreatePrimitivesData(GetApp().GetDevice(), mesh);
+	m_primitivesData.clear();
+	m_primitivesData.emplace_back(mesh.CreatePrimitiveData<Vertex>());
 }
 
 void ModelDemo::Update(const Time& time)
@@ -136,48 +117,4 @@ void ModelDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_wvpVariable->SetMatrix(static_cast<const float*>(wvp));
 
 	SimplePrimitiveComponent::Draw_SetData(primitiveData);
-}
-
-void ModelDemo::CreatePrimitivesData(ID3D11Device* const device, const Mesh& mesh)
-{
-	using VertexType = VertexPositionColor;
-
-	if (mesh.HasVertices())
-	{
-		std::vector<VertexType> vertices;
-
-		const auto& meshVertices = mesh.GetVertices();
-		const auto verticesCount = meshVertices.size();
-
-		vertices.reserve(verticesCount);
-
-		if (mesh.HasVerticesColors())
-		{
-			const auto& vertexColors = mesh.GetVertexColors(0);
-
-			for (unsigned i = 0; i < verticesCount; i++)
-			{
-				const auto& position = meshVertices[i];
-				const auto& color = vertexColors[i];
-				vertices.emplace_back(math::Vector4(position, 1.0f), color);
-			}
-		}
-		else
-		{
-			for (unsigned i = 0; i < verticesCount; i++)
-			{
-				const auto& position = meshVertices[i];
-				const auto& color = math::Color::Random();
-				vertices.emplace_back(math::Vector4(position, 1.0f), color);
-			}
-		}
-
-		m_primitivesData.clear();
-		auto& pd = m_primitivesData.emplace_back(PrimitiveData());
-
-		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
-
-		if (mesh.HasIndices())
-			pd.indexBuffer = mesh.CreateIndexBufferData();
-	}
 }

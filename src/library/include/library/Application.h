@@ -6,7 +6,6 @@
 #include "library/Common.h"
 
 #include <Windows.h>
-#include <vector>
 #include <string>
 
 namespace library
@@ -46,7 +45,7 @@ public:
 
 	const D3D11_VIEWPORT& GetViewport() const { return m_viewport; }
 
-	const std::vector<ComponentPtr>& GetComponents() const { return m_components; }
+	const DynArray<ComponentPtr>& GetComponents() const { return m_components; }
 
 	Renderer* GetRenderer() const { return m_renderer.get(); }
 
@@ -89,7 +88,7 @@ protected:
 	Stopwatch m_stopwatch;
 	Time m_time;
 
-	std::vector<ComponentPtr> m_components;
+	DynArray<ComponentPtr> m_components;
 
 	std::unique_ptr<Renderer> m_renderer;
 

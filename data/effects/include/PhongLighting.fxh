@@ -7,7 +7,7 @@
 // Constant buffers
 //-------------------------------------------------------------------------
 
-cbuffer CBuffer_PerFrame_PhongLighting // MAX_LIGHTS_COUNT * (128) + 12 bytes
+cbuffer CBuffer_PerFrame_PhongLighting
 {
     float4 AmbientColor = { 1.0f, 1.0f, 1.0f, 0.0f };
 }
@@ -17,6 +17,22 @@ cbuffer CBuffer_PerObject_PhongLighting
     float4 SpecularColor = { 1.0f, 1.0f, 1.0f, 1.0f };
     float SpecularPower = 25.0f;
 }
+
+//-------------------------------------------------------------------------
+// Deferred lighting buffers
+//-------------------------------------------------------------------------
+
+Texture2D ColorBufferTexture;
+Texture2D NormalBufferTexture;
+Texture2D WorldPositionBufferTexture;
+Texture2D DepthBufferTexture;
+
+SamplerState PointSampler
+{
+    Filter = MIN_MAG_MIP_POINT;
+    AddressU = WRAP;
+    AddressV = WRAP;
+};
 
 //-------------------------------------------------------------------------
 // Params

@@ -34,8 +34,6 @@ private:
 		};
 	};
 
-	void CreatePrimitivesData(ID3D11Device* const device, const library::Mesh& mesh);
-
 	library::ComPtr<ID3DX11EffectMatrixVariable> m_wvpVariable;
 	library::ComPtr<ID3DX11EffectShaderResourceVariable> m_colorTextureVariable;
 

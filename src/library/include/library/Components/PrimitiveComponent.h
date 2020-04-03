@@ -4,8 +4,6 @@
 #include "library/Render/PrimitiveData.h"
 #include "library/DxForward.h"
 
-#include <vector>
-
 namespace library
 {
 class CameraComponent;
@@ -35,8 +33,8 @@ protected:
 	virtual void Draw_SetData(const PrimitiveData& primitiveData) = 0;
 	virtual void Draw_Render(const PrimitiveData& primitiveData);
 
-	std::vector<PrimitiveData> m_primitivesData;
-	std::vector<ComPtr<ID3D11ShaderResourceView>> m_textures;
+	DynArray<PrimitiveData> m_primitivesData;
+	DynArray<ComPtr<ID3D11ShaderResourceView>> m_textures;
 
 private:
 	const CameraComponent* m_camera = nullptr;

@@ -3,7 +3,7 @@
 #include <library/Components/CameraComponent.h>
 #include <library/Components/KeyboardComponent.h>
 
-#include <library/Render/VertexTypes.h>
+#include "VertexTypes.h"
 #include <library/Application.h>
 #include <library/Utils.h>
 #include <library/Math/Math.h>
@@ -48,7 +48,7 @@ void CubeDemo::InitializeInternal()
 		D3DX11_PASS_DESC passDesc;
 		m_pass->GetDesc(&passDesc);
 
-		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
+		DynArray<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{
 			{
 				"POSITION",
@@ -85,8 +85,7 @@ void CubeDemo::InitializeInternal()
 
 	// index buffer
 	{
-		constexpr std::array<unsigned, 2 * 3 * 6> indices =
-		{
+		constexpr auto indices = MakeArray(
 			0, 1, 2,
 			0, 2, 3,
 
@@ -104,9 +103,9 @@ void CubeDemo::InitializeInternal()
 
 			1, 5, 6,
 			1, 6, 2
-		};
+		);
 
-		pd.indexBuffer = IndexBufferData(GetApp().GetDevice(), indices);
+		pd.indexBuffer = IndexBufferData(GetApp().GetDevice(), MakeArrayBuffer(indices));
 	}
 
 	// vertex buffer
@@ -114,7 +113,7 @@ void CubeDemo::InitializeInternal()
 		using math::Vector4;
 		using math::Color;
 
-		constexpr std::array<VertexPositionColor, 8> vertices = {
+		constexpr auto vertices = MakeArray(
 			// bottom
 			VertexPositionColor(Vector4(-1.0f, -1.0f, -1.0f, 1.0f), Color(0.5f, 0.5f, 0.5f, 1.0f)),
 			VertexPositionColor(Vector4(-1.0f, 1.0f, -1.0f, 1.0f), Color(0.5f, 1.0f, 0.5f, 1.0f)),
@@ -125,10 +124,10 @@ void CubeDemo::InitializeInternal()
 			VertexPositionColor(Vector4(-1.0f, -1.0f, 1.0f, 1.0f), Color(0.5f, 0.5f, 1.0f, 1.0f)),
 			VertexPositionColor(Vector4(-1.0f, 1.0f, 1.0f, 1.0f), Color(0.5f, 1.0f, 1.0f, 1.0f)),
 			VertexPositionColor(Vector4(1.0f, 1.0f, 1.0f, 1.0f), Color(1.0f, 1.0f, 1.0f, 1.0f)),
-			VertexPositionColor(Vector4(1.0f, -1.0f, 1.0f, 1.0f), Color(1.0f, 0.5f, 1.0f, 1.0f)),
-		};
+			VertexPositionColor(Vector4(1.0f, -1.0f, 1.0f, 1.0f), Color(1.0f, 0.5f, 1.0f, 1.0f))
+		);
 
-		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
+		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), MakeArrayBuffer(vertices));
 	}
 }
 

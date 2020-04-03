@@ -1,6 +1,6 @@
 #pragma once
 #include "library/Materials/SkyboxMaterial.h"
-#include "library/Components/ConcreteMaterialPrimitiveComponent.hpp"
+#include "library/Components/ConcreteMaterialPrimitiveComponent.h"
 
 #include <string>
 

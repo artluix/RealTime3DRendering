@@ -11,8 +11,8 @@ if(APPLICATION)
                 include/library/Components/AnimationPlayerComponent.h
                 include/library/Components/BloomComponent.h
                 include/library/Components/CameraComponent.h
-                include/library/Components/ConcreteMaterialPostProcessingComponent.hpp
-                include/library/Components/ConcreteMaterialPrimitiveComponent.hpp
+                include/library/Components/ConcreteMaterialPostProcessingComponent.h
+                include/library/Components/ConcreteMaterialPrimitiveComponent.h
                 include/library/Components/DirectionalLightComponent.h
                 include/library/Components/DrawableComponent.h
                 include/library/Components/FirstPersonCameraComponent.h
@@ -94,12 +94,14 @@ if(APPLICATION)
             # Render
                 include/library/Render/BlendStates.h
                 include/library/Render/BufferData.h
+                include/library/Render/Misc.h
                 include/library/Render/PrimitiveData.h
                 include/library/Render/RenderBuffers.h
                 include/library/Render/Renderer.h
                 include/library/Render/RasterizerStates.h
                 include/library/Render/SamplerStates.h
-                include/library/Render/VertexTypes.h
+                include/library/Render/Vertex.h
+                include/library/Render/VertexElement.h
 
             # RenderTargets
                 include/library/RenderTargets/RenderTarget.h
@@ -110,19 +112,24 @@ if(APPLICATION)
                 include/library/RenderTargets/SingleRenderTarget.h
 
             include/library/Application.h
+            include/library/Array.h
+            include/library/ArrayBuffer.h
             include/library/Common.h
-            include/library/ComPtr.hpp
+            include/library/ComPtr.h
             include/library/DxForward.h
+            include/library/DynArray.h
             include/library/FxForward.h
             include/library/Key.h
             include/library/Logger.h
-            include/library/NonCopyable.hpp
-            include/library/NonConstructible.hpp
+            include/library/NonCopyable.h
+            include/library/NonConstructible.h
+            include/library/Pair.h
             include/library/Path.h
-            include/library/RTTI.hpp
+            include/library/RTTI.h
             include/library/ServiceContainer.h
             include/library/Stopwatch.h
             include/library/Time.h
+            include/library/TypeTraits.h
             include/library/Utils.h
 
         # src
@@ -198,6 +205,7 @@ if(APPLICATION)
                 src/Render/RenderBuffers.cpp
                 src/Render/Renderer.cpp
                 src/Render/SamplerStates.cpp
+                src/Render/Vertex.cpp
 
             # RenderTargets
                 src/RenderTargets/RenderTarget.cpp

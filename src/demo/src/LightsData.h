@@ -92,12 +92,12 @@ struct SpotlightData
 
 struct LightsData
 {
-	std::vector<DirectionalLightData> dirLights;
+	library::DynArray<DirectionalLightData> dirLights;
 	unsigned dirLightsCount;
 
-	std::vector<PointLightData> pointLights;
+	library::DynArray<PointLightData> pointLights;
 	unsigned pointLightsCount;
 
-	std::vector<DirectionalLightData> spotlights;
+	library::DynArray<DirectionalLightData> spotlights;
 	unsigned spotlightsCount;
 };

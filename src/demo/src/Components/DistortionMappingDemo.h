@@ -1,7 +1,7 @@
 #pragma once
 #include "Materials/DistortionMappingMaterial.h"
 
-#include <library/Components/ConcreteMaterialPostProcessingComponent.hpp>
+#include <library/Components/ConcreteMaterialPostProcessingComponent.h>
 #include <library/Components/InputReceivableComponent.h>
 #include <library/Render/PrimitiveData.h>
 
@@ -67,7 +67,7 @@ private:
 	library::EffectPass* m_cutoutPass;
 
 	library::PrimitiveData m_primitiveData;
-	std::vector<library::ComPtr<ID3D11ShaderResourceView>> m_textures;
+	library::DynArray<library::ComPtr<ID3D11ShaderResourceView>> m_textures;
 
 	float m_displacementScale;
 	Mode m_mode;

@@ -3,7 +3,8 @@
 
 namespace library
 {
-class BasicMaterial : public Material
+class BasicMaterial
+	: public Material
 {
 	RTTI_CLASS(BasicMaterial, Material)
 
@@ -14,8 +15,6 @@ public:
 	~BasicMaterial();
 
 	EffectVariable& GetWorldViewProjection() { return m_worldViewProjection; }
-
-	VertexBufferData CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh) const override;
 
 protected:
 	void InitializeInternal() override;

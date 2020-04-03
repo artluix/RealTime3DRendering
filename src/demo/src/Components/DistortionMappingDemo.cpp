@@ -53,7 +53,8 @@ void DistortionMappingDemo::InitializeInternal()
 	// Load model
 	{
 		Model model(GetApp(), "Sphere", true);
-		m_primitiveData = m_material->CreatePrimitiveData(GetApp().GetDevice(), model.GetMesh(0));
+		const auto& mesh = model.GetMesh(0);
+		m_primitiveData = mesh.CreatePrimitiveData<Material::Vertex>();
 	}
 
 	m_textures.resize(Texture::Count);

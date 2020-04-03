@@ -197,7 +197,7 @@ struct VectorType<T, 4>
 };
 
 //-------------------------------------------------------------------------
-// extern template instantiation
+// extern template declaration
 //-------------------------------------------------------------------------
 
 extern template struct VectorType<float, 2>;
@@ -251,5 +251,13 @@ inline VectorType<T, Size> Abs(const VectorType<T, Size>& vec)
 }
 
 } // namespace library::math
+
+//-------------------------------------------------------------------------
+
+namespace dx::math
+{
+template<typename T, unsigned Size>
+constexpr inline auto DXGI_FORMAT<library::math::VectorType<T, Size>> = StaticVector<T, Size>::DXGI_FORMAT;
+} // namespace dx::math
 
 #include "library/Math/Vector-inl.h"

@@ -26,7 +26,7 @@ public:
 	const Duration& GetTime() const { return m_time; }
 
 	const math::Matrix4& GetBoneTransform(const unsigned boneIdx) const;
-	const std::vector<math::Matrix4>& GetBoneTransforms() const { return m_finalTransforms; }
+	const DynArray<math::Matrix4>& GetBoneTransforms() const { return m_finalTransforms; }
 
 	bool IsPlaying() const { return m_isPlaying; }
 
@@ -81,7 +81,7 @@ private:
 	Duration m_time;
 	unsigned m_currentKeyframe = 0;
 
-	std::vector<math::Matrix4> m_finalTransforms;
+	DynArray<math::Matrix4> m_finalTransforms;
 	math::Matrix4 m_inverseRootTransform;
 
 	bool m_isInterpolationEnabled;

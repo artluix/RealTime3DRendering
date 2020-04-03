@@ -1,7 +1,7 @@
 #pragma once
-#include "Materials/PhongLightingMaterial.h"
+#include "Materials/PhongLightsMaterial.h"
 
-#include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
+#include <library/Components/ConcreteMaterialPrimitiveComponent.h>
 #include <library/Components/InputReceivableComponent.h>
 
 namespace library
@@ -11,7 +11,7 @@ class PointLightComponent;
 } // namespace library
 
 class MultipleLightsDemo
-	: public library::ConcreteMaterialPrimitiveComponent<PhongLightingMaterial>
+	: public library::ConcreteMaterialPrimitiveComponent<PhongLightsMaterial>
 	, public library::InputReceivableComponent
 {
 	RTTI_CLASS(MultipleLightsDemo, library::PrimitiveComponent, library::InputReceivableComponent)
@@ -48,7 +48,7 @@ private:
 	library::math::Color m_specularColor;
 	library::math::Color m_ambientColor;
 
-	std::vector<std::unique_ptr<library::PointLightComponent>> m_lights;
+	library::DynArray<std::unique_ptr<library::PointLightComponent>> m_lights;
 	std::unique_ptr<library::TextComponent> m_text;
 
 	library::math::Color m_lightColor; // use common color

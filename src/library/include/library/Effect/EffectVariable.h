@@ -1,6 +1,6 @@
 #pragma once
 #include "library/Common.h"
-#include "library/NonCopyable.hpp"
+#include "library/NonCopyable.h"
 #include "library/Math/Vector.h"
 #include "library/Math/Matrix.h"
 
@@ -47,11 +47,11 @@ public:
 
 	template<typename T>
 	std::enable_if_t<!is_hlsl_scalar<T>, EffectVariable&>
-	operator<<(const std::vector<T>& value);
+	operator<<(const DynArray<T>& value);
 
 	template <typename T, std::size_t Count>
 	std::enable_if_t<!is_hlsl_scalar<T>, EffectVariable&>
-	operator<<(const std::array<T, Count>& value);
+	operator<<(const Array<T, Count>& value);
 
 	// scalar
 	template<typename T>
@@ -60,27 +60,27 @@ public:
 
 	template<typename T>
 	std::enable_if_t<is_hlsl_scalar<T>, EffectVariable&>
-	operator<<(const std::vector<T>& value);
+	operator<<(const DynArray<T>& value);
 
 	template <typename T, std::size_t Count>
 	std::enable_if_t<is_hlsl_scalar<T>, EffectVariable&>
-	operator<<(const std::array<T, Count>& value);
+	operator<<(const Array<T, Count>& value);
 
 	// vector
 	template<typename T, unsigned Size>
 	EffectVariable& operator<<(const math::VectorType<T, Size>& value);
 	template<typename T, unsigned Size>
-	EffectVariable& operator<<(const math::VectorArray<T, Size>& value);
+	EffectVariable& operator<<(const math::VectorDynArray<T, Size>& value);
 	template <typename T, unsigned Size, std::size_t Count>
-	EffectVariable& operator<<(const math::VectorFixedArray<T, Size, Count>& value);
+	EffectVariable& operator<<(const math::VectorArray<T, Size, Count>& value);
 
 	// matrix
 	template<unsigned Size>
 	EffectVariable& operator<<(const math::Matrix<Size>& value);
 	template<unsigned Size>
-	EffectVariable& operator<<(const math::MatrixArray<Size>& value);
+	EffectVariable& operator<<(const math::MatrixDynArray<Size>& value);
 	template <unsigned Size, std::size_t Count>
-	EffectVariable& operator<<(const math::MatrixFixedArray<Size, Count>& value);
+	EffectVariable& operator<<(const math::MatrixArray<Size, Count>& value);
 
 	// textures
 	EffectVariable& operator<<(ID3D11ShaderResourceView* const value);

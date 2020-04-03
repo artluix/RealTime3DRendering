@@ -20,21 +20,21 @@ std::wstring ToWideString(const std::string& str)
 
 Path GetCurrentDirectory()
 {
-	std::array<char, k_maxPathLength> buffer;
+	Array<char, k_maxPathLength> buffer;
 	::GetCurrentDirectoryA(k_maxPathLength, buffer.data());
 	return Path(buffer.data());
 }
 
 Path GetExecutableDirectory()
 {
-	std::array<char, k_maxPathLength> buffer;
+	Array<char, k_maxPathLength> buffer;
 	::GetModuleFileNameA(nullptr, buffer.data(), k_maxPathLength);
 	return Path(buffer.data()).GetDirName();
 }
 
 //-------------------------------------------------------------------------
 
-void WriteBinaryFile(const Path& path, const std::vector<std::byte>& data)
+void WriteBinaryFile(const Path& path, const DynArray<std::byte>& data)
 {
 	WriteBinaryFile(path, data.data(), data.size());
 }
@@ -46,7 +46,7 @@ void WriteBinaryFile(const Path& path, const void* data, const std::size_t size)
 	file.close();
 }
 
-void LoadBinaryFile(const Path& path, std::vector<std::byte>& data)
+void LoadBinaryFile(const Path& path, DynArray<std::byte>& data)
 {
 	std::ifstream file(path.GetWideString(), std::ios::binary);
 	if (file.bad())

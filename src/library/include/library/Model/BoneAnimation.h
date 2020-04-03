@@ -1,9 +1,8 @@
 #pragma once
-#include "library/NonCopyable.hpp"
+#include "library/NonCopyable.h"
 #include "library/Model/AnimationDef.h"
 #include "library/Math/Matrix.h"
 
-#include <vector>
 #include <memory>
 
 struct aiNodeAnim;
@@ -38,6 +37,6 @@ private:
 
 	const Model& m_model;
 	const Bone& m_bone;
-	std::vector<KeyframePtr> m_keyframes;
+	DynArray<KeyframePtr> m_keyframes;
 };
 } // namespace library

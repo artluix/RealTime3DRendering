@@ -58,20 +58,20 @@ void NormalMappingDemo::InitializeInternal()
 		using Vertex = NormalMappingMaterial::Vertex;
 		using namespace library::math;
 
-		constexpr std::array<Vertex, 6> vertices = {
+		constexpr auto vertices = MakeArray(
 			Vertex(Vector4(-0.5f, -0.5f, 0.0f, 1.0f), Vector2(0.0f, 1.0f), Direction::Backward, Direction::Right),
 			Vertex(Vector4(-0.5f, 0.5f, 0.0f, 1.0f), Vector2(0.0f, 0.0f), Direction::Backward, Direction::Right),
 			Vertex(Vector4(0.5f, 0.5f, 0.0f, 1.0f), Vector2(1.0f, 0.0f), Direction::Backward, Direction::Right),
 
 			Vertex(Vector4(-0.5f, -0.5f, 0.0f, 1.0f), Vector2(0.0f, 1.0f), Direction::Backward, Direction::Right),
 			Vertex(Vector4(0.5f, 0.5f, 0.0f, 1.0f), Vector2(1.0f, 0.0f), Direction::Backward, Direction::Right),
-			Vertex(Vector4(0.5f, -0.5f, 0.0f, 1.0f), Vector2(1.0f, 1.0f), Direction::Backward, Direction::Right),
-		};
+			Vertex(Vector4(0.5f, -0.5f, 0.0f, 1.0f), Vector2(1.0f, 1.0f), Direction::Backward, Direction::Right)
+		);
 
 		m_primitivesData.clear();
 		auto& pd = m_primitivesData.emplace_back(PrimitiveData{});
 
-		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
+		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), MakeArrayBuffer(vertices));
 	}
 
 	m_textures.resize(Texture::Count);

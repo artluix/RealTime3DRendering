@@ -207,7 +207,7 @@ void Renderer::Render(const Time& time)
 
 void Renderer::UnbindPSResources(const unsigned startIdx, const unsigned count)
 {
-	std::vector<ID3D11ShaderResourceView*> emptySrv(count, nullptr);
+	DynArray<ID3D11ShaderResourceView*> emptySrv(count, nullptr);
 	m_app.GetDeviceContext()->PSSetShaderResources(startIdx, count, emptySrv.data());
 }
 

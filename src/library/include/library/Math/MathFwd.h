@@ -1,10 +1,6 @@
 #pragma once
 #include "library/Math/DxMathFwd.h"
-
-#include <type_traits>
-#include <cstdint>
-#include <array>
-#include <vector>
+#include "library/Common.h"
 
 // -----------------------------------------------------------------------------
 // math
@@ -59,10 +55,10 @@ using Vector4u = VectorType<u32, 4>;
 //-------------------------------------------------------------------------
 
 template<typename T, unsigned Size, std::size_t Count>
-using VectorFixedArray = std::array<VectorType<T, Size>, Count>;
+using VectorArray = Array<VectorType<T, Size>, Count>;
 
 template<typename T, unsigned Size>
-using VectorArray = std::vector<VectorType<T, Size>>;
+using VectorDynArray = DynArray<VectorType<T, Size>>;
 
 // -----------------------------------------------------------------------------
 // Matrix<T>
@@ -77,10 +73,10 @@ using Matrix4 = Matrix<4>;
 //-------------------------------------------------------------------------
 
 template<unsigned Size, std::size_t Count>
-using MatrixFixedArray = std::array<Matrix<Size>, Count>;
+using MatrixArray = Array<Matrix<Size>, Count>;
 
 template<unsigned Size>
-using MatrixArray = std::vector<Matrix<Size>>;
+using MatrixDynArray = DynArray<Matrix<Size>>;
 
 //-------------------------------------------------------------------------
 // Interval<T>
@@ -98,6 +94,5 @@ using IntervalIntegral = IntervalType<int>;
 
 template<typename U, typename T>
 using enable_if_float_t = std::enable_if_t<std::is_same_v<U, float> && std::is_same_v<U, T>>;
-
 } // namespace math
 } // namespace library

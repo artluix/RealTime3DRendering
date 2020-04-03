@@ -8,8 +8,6 @@
 
 #include "library/Effect/EffectVariable.h"
 
-#include <array>
-
 namespace library
 {
 
@@ -67,7 +65,7 @@ void RenderableFrustumComponent::InitializeVertexBuffer(const math::Frustum& fru
 
 	auto& pd = m_primitivesData.front();
 
-	std::vector<Vertex> vertices;
+	DynArray<Vertex> vertices;
 	vertices.reserve(k_verticesCount);
 
 	const auto& corners = frustum.GetCorners();
@@ -76,7 +74,7 @@ void RenderableFrustumComponent::InitializeVertexBuffer(const math::Frustum& fru
 		vertices.emplace_back(math::Vector4(corner, 1.f), m_color);
 	}
 
-	pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
+	pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), MakeArrayBuffer(vertices));
 }
 
 void RenderableFrustumComponent::InitializeIndexBuffer()
@@ -86,7 +84,7 @@ void RenderableFrustumComponent::InitializeIndexBuffer()
 
 	pd.primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
 
-	constexpr std::array<unsigned, k_indicesCount> k_indices = {
+	constexpr Array<int, k_indicesCount> indices = MakeArray(
 		// Near plane lines
 		0, 1,
 		1, 2,
@@ -104,8 +102,8 @@ void RenderableFrustumComponent::InitializeIndexBuffer()
 		5, 6,
 		6, 7,
 		7, 4
-	};
+	);
 
-	pd.indexBuffer = IndexBufferData(GetApp().GetDevice(), k_indices);
+	pd.indexBuffer = IndexBufferData(GetApp().GetDevice(), MakeArrayBuffer(indices));
 }
 } // namespace library

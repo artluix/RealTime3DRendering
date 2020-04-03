@@ -14,11 +14,6 @@ public:
 	library::EffectVariable& GetTessellationEdgeFactors() { return m_tessellationEdgeFactors; }
 	library::EffectVariable& GetTessellationInsideFactors() { return m_tessellationInsideFactors; }
 
-	library::VertexBufferData CreateVertexBufferData(
-		ID3D11Device* const device,
-		const library::Mesh& mesh
-	) const override;
-
 protected:
 	void InitializeInternal() override;
 

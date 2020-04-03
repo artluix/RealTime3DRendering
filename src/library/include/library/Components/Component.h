@@ -1,6 +1,6 @@
 #pragma once
-#include "library/NonCopyable.hpp"
-#include "library/RTTI.hpp"
+#include "library/NonCopyable.h"
+#include "library/RTTI.h"
 
 namespace library
 {

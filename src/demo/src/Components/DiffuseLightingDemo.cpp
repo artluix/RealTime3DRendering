@@ -53,7 +53,7 @@ void DiffuseLightingDemo::InitializeInternal()
 	// load model
 	{
 		Model model(GetApp(), "Sphere", true);
-		m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);
+		CreatePrimitivesData(model);
 	}
 
 	m_textures.resize(Texture::Count);

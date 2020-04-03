@@ -1,5 +1,5 @@
 #pragma once
-#include "library/Components/ConcreteMaterialPostProcessingComponent.hpp"
+#include "library/Components/ConcreteMaterialPostProcessingComponent.h"
 #include "library/Materials/ToneMappingMaterial.h"
 
 namespace library

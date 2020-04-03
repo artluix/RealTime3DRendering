@@ -2,7 +2,6 @@
 #include "library/Common.h"
 
 #include <string>
-#include <vector>
 
 namespace library
 {
@@ -25,9 +24,9 @@ public:
 	Pair<Path> Split() const;
 
 	Path& Join(const Path& other);
-	Path& Join(const std::vector<Path>& paths);
+	Path& Join(const DynArray<Path>& paths);
 	Path Join(const Path& other) const;
-	Path Join(const std::vector<Path>& paths) const;
+	Path Join(const DynArray<Path>& paths) const;
 
 	Pair<Path> SplitExt() const;
 	Path GetExt() const;

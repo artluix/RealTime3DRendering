@@ -7,11 +7,18 @@ class ShadowMappingMaterial : public PhongLightingMaterial
 	RTTI_CLASS(ShadowMappingMaterial, PhongLightingMaterial)
 
 public:
+	using Vertex = library::VertexPositionTextureNormal;
+
 	explicit ShadowMappingMaterial(library::Effect& effect);
 
 	library::EffectVariable& GetProjectiveTextureMatrix() { return m_projectiveTextureMatrix; }
 	library::EffectVariable& GetShadowMapTexture() { return m_shadowMapTexture; }
 	library::EffectVariable& GetShadowMapSize() { return m_shadowMapSize; }
+
+	library::EffectVariable& GetCameraPosition() { return m_cameraPosition; }
+	library::EffectVariable& GetWVP() { return m_wvp; }
+	library::EffectVariable& GetWorld() { return m_world; }
+	library::EffectVariable& GetColorTexture() { return m_colorTexture; }
 
 protected:
 	void InitializeInternal() override;
@@ -20,6 +27,11 @@ private:
 	library::EffectVariable& m_projectiveTextureMatrix;
 	library::EffectVariable& m_shadowMapTexture;
 	library::EffectVariable& m_shadowMapSize;
+
+	library::EffectVariable& m_cameraPosition;
+	library::EffectVariable& m_wvp;
+	library::EffectVariable& m_world;
+	library::EffectVariable& m_colorTexture;
 };
 
 //-------------------------------------------------------------------------

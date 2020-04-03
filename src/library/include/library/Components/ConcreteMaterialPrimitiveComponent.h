@@ -4,6 +4,10 @@
 
 #include "library/Effect/Effect.h"
 #include "library/Effect/EffectPass.h"
+
+#include "library/Model/Model.h"
+#include "library/Model/Mesh.h"
+
 #include "library/Application.h"
 
 #include <memory>
@@ -39,6 +43,25 @@ protected:
 	{
 		auto& pass = GetMaterial()->GetCurrentPass();
 		pass.Apply(0, GetApp().GetDeviceContext());
+	}
+
+	void AddPrimitiveData(const Mesh& mesh)
+	{
+		m_primitivesData.emplace_back(mesh.CreatePrimitiveData<Material::Vertex>());
+	}
+
+	void CreatePrimitivesData(const Model& model)
+	{
+		if (!m_primitivesData.empty())
+			m_primitivesData.clear();
+
+		const auto meshesCount = model.GetMeshesCount();
+		m_primitivesData.reserve(meshesCount);
+
+		for (unsigned i = 0; i < meshesCount; i++)
+		{
+			AddPrimitiveData(model.GetMesh(i));
+		}
 	}
 
 	std::shared_ptr<Effect> m_effect;

@@ -1,7 +1,7 @@
 #pragma once
 #include "Materials/QuadHeightMapTessellationMaterial.h"
 
-#include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
+#include <library/Components/ConcreteMaterialPrimitiveComponent.h>
 #include <library/Components/InputReceivableComponent.h>
 
 namespace library
@@ -41,8 +41,8 @@ private:
 		};
 	};
 
-	std::array<float, 4> m_tessEdgeFactors;
-	std::array<float, 2> m_tessInsideFactors;
+	library::Array<float, 4> m_tessEdgeFactors;
+	library::Array<float, 2> m_tessInsideFactors;
 
 	float m_displacementScale;
 

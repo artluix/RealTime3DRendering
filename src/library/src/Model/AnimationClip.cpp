@@ -77,9 +77,9 @@ const BoneAnimation& AnimationClip::GetBoneAnimation(const unsigned boneAnimatio
 // transforms
 //-------------------------------------------------------------------------
 
-std::vector<math::Matrix4> AnimationClip::GetTransforms(const TimePoint& timePoint) const
+DynArray<math::Matrix4> AnimationClip::GetTransforms(const TimePoint& timePoint) const
 {
-	std::vector<math::Matrix4> transforms;
+	DynArray<math::Matrix4> transforms;
 	transforms.reserve(m_boneAnimations.size());
 
 	for (const auto& boneAnimation : m_boneAnimations)
@@ -90,9 +90,9 @@ std::vector<math::Matrix4> AnimationClip::GetTransforms(const TimePoint& timePoi
 	return transforms;
 }
 
-std::vector<math::Matrix4> AnimationClip::GetTransforms(const unsigned keyframeIdx) const
+DynArray<math::Matrix4> AnimationClip::GetTransforms(const unsigned keyframeIdx) const
 {
-	std::vector<math::Matrix4> transforms;
+	DynArray<math::Matrix4> transforms;
 	transforms.reserve(m_boneAnimations.size());
 
 	for (const auto& boneAnimation : m_boneAnimations)
@@ -103,9 +103,9 @@ std::vector<math::Matrix4> AnimationClip::GetTransforms(const unsigned keyframeI
 	return transforms;
 }
 
-std::vector<math::Matrix4> AnimationClip::GetInterpolatedTransforms(const TimePoint& timePoint) const
+DynArray<math::Matrix4> AnimationClip::GetInterpolatedTransforms(const TimePoint& timePoint) const
 {
-	std::vector<math::Matrix4> transforms;
+	DynArray<math::Matrix4> transforms;
 	transforms.reserve(m_boneAnimations.size());
 
 	for (const auto& boneAnimation : m_boneAnimations)

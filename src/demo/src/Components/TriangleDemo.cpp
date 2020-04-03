@@ -2,7 +2,7 @@
 
 #include <library/Components/CameraComponent.h>
 
-#include <library/Render/VertexTypes.h>
+#include "VertexTypes.h"
 #include <library/Application.h>
 #include <library/Utils.h>
 
@@ -42,7 +42,7 @@ void TriangleDemo::InitializeInternal()
 		D3DX11_PASS_DESC passDesc;
 		m_pass->GetDesc(&passDesc);
 
-		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
+		DynArray<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
 		{
 			{
 				"POSITION",
@@ -80,19 +80,19 @@ void TriangleDemo::InitializeInternal()
 
 		constexpr float l = 1.73205080757f / 2; // sqrt(3) / 2
 
-		constexpr std::array<Vertex, 3> vertices = {
+		constexpr auto vertices = MakeArray(
 			// left red
 			Vertex(math::Vector4(-l, -0.5f, 0.0f, 1.0f), math::Color(1.0f, 0.0f, 0.0f, 1.0f)),
 			// up green
 			Vertex(math::Vector4(0.0f, 1.0f, 0.0f, 1.0f), math::Color(0.0f, 1.0f, 0.0f, 1.0f)),
 			// right blue
-			Vertex(math::Vector4(l, -0.5f, 0.0f, 1.0f), math::Color(0.0f, 0.0f, 1.0f, 1.0f)),
-		};
+			Vertex(math::Vector4(l, -0.5f, 0.0f, 1.0f), math::Color(0.0f, 0.0f, 1.0f, 1.0f))
+		);
 
 		m_primitivesData.clear();
 		auto& pd = m_primitivesData.emplace_back(PrimitiveData());
 
-		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
+		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), MakeArrayBuffer(vertices));
 	}
 }
 

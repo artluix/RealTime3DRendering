@@ -4,7 +4,7 @@
 #include <library/Components/KeyboardComponent.h>
 #include <library/Components/MouseComponent.h>
 
-#include <library/Render/VertexTypes.h>
+#include "VertexTypes.h"
 #include <library/Application.h>
 #include <library/Utils.h>
 
@@ -66,36 +66,16 @@ void TextureModelDemo::InitializeInternal()
 		assert("ID3DX11Effect::GetVariableByName() could not find the specified variable." && false);
 	}
 
+	using Vertex = VertexPositionTexture;
+
 	// Create the input layout
 	{
 		D3DX11_PASS_DESC passDesc;
 		m_pass->GetDesc(&passDesc);
 
-		std::vector<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
-		{
-			{
-				"POSITION",
-				0,
-				DXGI_FORMAT_R32G32B32A32_FLOAT,
-				0,
-				0,
-				D3D11_INPUT_PER_VERTEX_DATA,
-				0
-			},
-			{
-				"TEXCOORD",
-				0,
-				DXGI_FORMAT_R32G32_FLOAT,
-				0,
-				D3D11_APPEND_ALIGNED_ELEMENT,
-				D3D11_INPUT_PER_VERTEX_DATA,
-				0
-			},
-		};
-
 		auto hr = GetApp().GetDevice()->CreateInputLayout(
-			inputElementDescriptions.data(),
-			unsigned(inputElementDescriptions.size()),
+			Vertex::ElementDescriptions.data(),
+			unsigned(Vertex::ElementDescriptions.size()),
 			passDesc.pIAInputSignature,
 			passDesc.IAInputSignatureSize,
 			&m_inputLayout
@@ -105,10 +85,10 @@ void TextureModelDemo::InitializeInternal()
 
 	// Load the model
 	Model model(GetApp(), "Sphere", true);
-
-	// Create the vertex and index buffers
 	const auto& mesh = model.GetMesh(0);
-	CreatePrimitivesData(GetApp().GetDevice(), mesh);
+
+	m_primitivesData.clear();
+	m_primitivesData.emplace_back(mesh.CreatePrimitiveData<Vertex>());
 
 	m_textures.resize(Texture::Count);
 	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("EarthComposite.jpg");
@@ -175,38 +155,4 @@ void TextureModelDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_colorTextureVariable->SetResource(m_textures[Texture::Default].Get());
 
 	SimplePrimitiveComponent::Draw_SetData(primitiveData);
-}
-
-void TextureModelDemo::CreatePrimitivesData(ID3D11Device* const device, const Mesh& mesh)
-{
-	using VertexType = VertexPositionTexture;
-
-	if (mesh.HasVertices())
-	{
-		std::vector<VertexType> vertices;
-
-		const auto& meshVertices = mesh.GetVertices();
-		const auto& textureCoordinates = mesh.GetTextureCoordinates(0);
-		const auto verticesCount = meshVertices.size();
-
-		vertices.reserve(verticesCount);
-
-		for (unsigned i = 0; i < verticesCount; i++)
-		{
-			const auto& position = meshVertices[i];
-			const auto& uv = textureCoordinates[i];
-			vertices.emplace_back(
-				math::Vector4(position, 1.0f),
-				uv.xy
-			);
-		}
-
-		m_primitivesData.clear();
-		auto& pd = m_primitivesData.emplace_back(PrimitiveData{});
-
-		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
-
-		if (mesh.HasIndices())
-			pd.indexBuffer = mesh.CreateIndexBufferData();
-	}
 }

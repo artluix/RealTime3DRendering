@@ -10,16 +10,18 @@ ShadowMappingMaterial::ShadowMappingMaterial(Effect& effect)
 	, m_projectiveTextureMatrix(effect.GetVariable("ProjectiveTextureMatrix"))
 	, m_shadowMapTexture(effect.GetVariable("ShadowMapTexture"))
 	, m_shadowMapSize(effect.GetVariable("ShadowMapSize"))
+
+	, m_cameraPosition(effect.GetVariable("CameraPosition"))
+	, m_wvp(effect.GetVariable("WVP"))
+	, m_world(effect.GetVariable("World"))
+	, m_colorTexture(effect.GetVariable("ColorTexture"))
 {}
 
 //-------------------------------------------------------------------------
 
 void ShadowMappingMaterial::InitializeInternal()
 {
-	PhongLightingMaterial::InitializeInternal();
-
-	const auto& inputElementDescriptions = GetCurrentPass().GetInputElementDescriptions();
-
-	CreateInputLayout(inputElementDescriptions, "shadow_mapping_manual_pcf");
-	CreateInputLayout(inputElementDescriptions, "shadow_mapping_pcf");
+	CreateInputLayout(MakeArrayBuffer(Vertex::ElementDescriptions), GetDefaultTechniqueName());
+	CreateInputLayout(MakeArrayBuffer(Vertex::ElementDescriptions), "shadow_mapping_manual_pcf");
+	CreateInputLayout(MakeArrayBuffer(Vertex::ElementDescriptions), "shadow_mapping_pcf");
 }

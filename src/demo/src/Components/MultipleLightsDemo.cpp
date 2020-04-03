@@ -50,12 +50,12 @@ void MultipleLightsDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
-	CreateMaterialWithEffect("Lights");
+	CreateMaterialWithEffect("PhongLights");
 
 	// load model
 	{
 		Model model(GetApp(), "Sphere", true);
-		m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);
+		CreatePrimitivesData(model);
 	}
 
 	m_textures.resize(Texture::Count);
@@ -200,7 +200,7 @@ void MultipleLightsDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 
-	std::vector<PointLightData> pointLightsData;
+	DynArray<PointLightData> pointLightsData;
 	for (unsigned i = 0; i < m_lightsCount; i++)
 	{
 		const auto& light = *m_lights[i];

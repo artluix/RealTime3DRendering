@@ -14,6 +14,9 @@ if(APPLICATION)
 
             src/LightsData.h
 
+            src/VertexInstance.h
+            src/VertexInstance.cpp
+
         # components
 
         # without materials
@@ -136,8 +139,8 @@ if(APPLICATION)
             src/Materials/FogMaterial.h
             src/Materials/FogMaterial.cpp
 
-            src/Materials/InstancingPointLightMaterial.h
-            src/Materials/InstancingPointLightMaterial.cpp
+            src/Materials/InstancingMaterial.h
+            src/Materials/InstancingMaterial.cpp
 
             src/Materials/LightsMaterial.h
             src/Materials/LightsMaterial.cpp
@@ -153,6 +156,9 @@ if(APPLICATION)
 
             src/Materials/PhongLightingMaterial.h
             src/Materials/PhongLightingMaterial.cpp
+
+            src/Materials/PhongLightsMaterial.h
+            src/Materials/PhongLightsMaterial.cpp
 
             src/Materials/PointSpriteMaterial.h
             src/Materials/PointSpriteMaterial.cpp

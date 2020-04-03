@@ -1,6 +1,6 @@
 #pragma once
-#include "library/NonConstructible.hpp"
-#include "library/RTTI.hpp"
+#include "library/NonConstructible.h"
+#include "library/RTTI.h"
 
 #include <unordered_map>
 

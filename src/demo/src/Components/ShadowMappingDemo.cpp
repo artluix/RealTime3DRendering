@@ -21,7 +21,7 @@
 
 #include <library/Application.h>
 #include <library/Render/Renderer.h>
-#include <library/Render/VertexTypes.h>
+#include "VertexTypes.h"
 
 #include <library/Model/Model.h>
 #include <library/Model/Mesh.h>
@@ -79,21 +79,20 @@ void ShadowMappingDemo::InitializeInternal()
 		using Vertex = Material::Vertex;
 		using namespace library::math;
 
-		constexpr std::array<Vertex, 6> vertices =
-		{
+		constexpr auto vertices = MakeArray(
 			Vertex(Vector4(-0.5f, -0.5f, 0.0f, 1.0f), Vector2(0.0f, 1.0f), Direction::Backward),
 			Vertex(Vector4(-0.5f, 0.5f, 0.0f, 1.0f), Vector2(0.0f, 0.0f), Direction::Backward),
 			Vertex(Vector4(0.5f, 0.5f, 0.0f, 1.0f), Vector2(1.0f, 0.0f), Direction::Backward),
 
 			Vertex(Vector4(-0.5f, -0.5f, 0.0f, 1.0f), Vector2(0.0f, 1.0f), Direction::Backward),
 			Vertex(Vector4(0.5f, 0.5f, 0.0f, 1.0f), Vector2(1.0f, 0.0f), Direction::Backward),
-			Vertex(Vector4(0.5f, -0.5f, 0.0f, 1.0f), Vector2(1.0f, 1.0f), Direction::Backward),
-		};
+			Vertex(Vector4(0.5f, -0.5f, 0.0f, 1.0f), Vector2(1.0f, 1.0f), Direction::Backward)
+		);
 
 		m_primitivesData.clear();
 		auto& pd = m_primitivesData.emplace_back(PrimitiveData{});
 
-		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
+		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), MakeArrayBuffer(vertices));
 	}
 
 	// textures
@@ -138,10 +137,10 @@ void ShadowMappingDemo::InitializeInternal()
 		const auto& mesh = model.GetMesh(0);
 
 		// depth map vertex buffer
-		m_modelPositionVertexBuffer = m_depthMapMaterial->CreateVertexBufferData(GetApp().GetDevice(), mesh);
+		m_modelPositionVertexBuffer = mesh.CreateVertexBufferData<DepthMapMaterial::Vertex>();
 
-		auto& pd = m_primitivesData.emplace_back(PrimitiveData{});
-		pd = m_material->CreatePrimitiveData(GetApp().GetDevice(), mesh);
+		// own buffers
+		CreatePrimitivesData(model);
 
 		m_modelWorldMatrix = Matrix4::Scaling(Vector3(0.1f)) * Matrix4::Translation(Vector3(0.f, 0.f, 5.f));
 	}

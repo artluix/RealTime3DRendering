@@ -7,10 +7,9 @@
 
 #include "library/Materials/Material.h"
 
-#include "library/Render/VertexTypes.h"
+#include "library/Render/Vertex.h"
 #include "library/Application.h"
 
-#include <array>
 #include <cassert>
 
 namespace library
@@ -64,23 +63,23 @@ void FullScreenQuadComponent::InitializeInternal()
 	{
 		using Vertex = VertexPositionTexture;
 
-		constexpr std::array<Vertex, 4> vertices = {
+		constexpr auto vertices = MakeArray(
 			Vertex(math::Vector4(-1.0f, -1.0f, 0.0f, 1.0f), math::Vector2(0.0f, 1.0f)),
 			Vertex(math::Vector4(-1.0f, 1.0f, 0.0f, 1.0f), math::Vector2(0.0f, 0.0f)),
 			Vertex(math::Vector4(1.0f, 1.0f, 0.0f, 1.0f), math::Vector2(1.0f, 0.0f)),
-			Vertex(math::Vector4(1.0f, -1.0f, 0.0f, 1.0f), math::Vector2(1.0f, 1.0f)),
-		};
+			Vertex(math::Vector4(1.0f, -1.0f, 0.0f, 1.0f), math::Vector2(1.0f, 1.0f))
+		);
 
-		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
+		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), MakeArrayBuffer(vertices));
 	}
 
 	// index buffer
 	{
-		const std::array<unsigned, 6> indices = {
+		constexpr auto indices = MakeArray(
 			0, 1, 2,
 			0, 2, 3
-		};
-		pd.indexBuffer = IndexBufferData(GetApp().GetDevice(), indices);
+		);
+		pd.indexBuffer = IndexBufferData(GetApp().GetDevice(), MakeArrayBuffer(indices));
 	}
 }
 

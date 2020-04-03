@@ -42,7 +42,7 @@ void ModelTessellationDemo::InitializeInternal()
 	{
 		Model model(GetApp(), "Icosahedron", true);
 		//Model model(GetApp(), "Sphere", true);
-		m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);
+		CreatePrimitivesData(model);
 
 		m_primitivesData.front().primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_3_CONTROL_POINT_PATCHLIST;
 	}

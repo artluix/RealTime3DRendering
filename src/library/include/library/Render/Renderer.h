@@ -1,11 +1,9 @@
 #pragma once
 #include "library/Common.h"
-#include "library/NonCopyable.hpp"
+#include "library/NonCopyable.h"
 #include "library/DxForward.h"
 
-#include <vector>
 #include <functional>
-#include <array>
 
 namespace library
 {
@@ -58,8 +56,8 @@ public:
 	ID3D11DepthStencilState* GetDepthStencilState() { return m_depthStencilState.Get(); }
 
 private:
-	std::vector<std::reference_wrapper<PrimitiveComponent>> m_primitiveDrawables;
-	std::vector<std::reference_wrapper<UIComponent>> m_uiDrawables;
+	DynArray<std::reference_wrapper<PrimitiveComponent>> m_primitiveDrawables;
+	DynArray<std::reference_wrapper<UIComponent>> m_uiDrawables;
 
 	std::unique_ptr<SingleRenderTarget> m_sceneRT;
 	PostProcessingComponent* m_postProcessing = nullptr;
@@ -70,7 +68,7 @@ private:
 	ComPtr<ID3D11BlendState> m_blendState;
 	ComPtr<ID3D11DepthStencilState> m_depthStencilState;
 
-	std::array<float, 4> m_blendFactor;
+	Array<float, 4> m_blendFactor;
 	unsigned m_sampleMask;
 	unsigned m_stencilRef;
 };

@@ -36,7 +36,7 @@ void DeferredLightingRenderTarget::Begin()
 {
 	ViewData viewData;
 
-	std::array<ID3D11RenderTargetView*, 3> rtvs = {
+	Array<ID3D11RenderTargetView*, 3> rtvs = {
 		m_colorBuffer->GetView(),
 		m_normalBuffer->GetView(),
 		m_worldPositionBuffer->GetView()

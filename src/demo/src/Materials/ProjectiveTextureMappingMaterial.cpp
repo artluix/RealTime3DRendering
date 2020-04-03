@@ -11,15 +11,17 @@ ProjectiveTextureMappingMaterial::ProjectiveTextureMappingMaterial(Effect& effec
 	, m_projectiveTextureMatrix(effect.GetVariable("ProjectiveTextureMatrix"))
 	, m_depthMapTextureMatrix(effect.GetVariable("DepthMapTexture"))
 	, m_depthBias(effect.GetVariable("DepthBias"))
+
+	, m_cameraPosition(effect.GetVariable("CameraPosition"))
+	, m_wvp(effect.GetVariable("WVP"))
+	, m_world(effect.GetVariable("World"))
+	, m_colorTexture(effect.GetVariable("ColorTexture"))
 {}
 
 //-------------------------------------------------------------------------
 
 void ProjectiveTextureMappingMaterial::InitializeInternal()
 {
-	PhongLightingMaterial::InitializeInternal();
-
-	const auto& inputElementDescriptions = GetCurrentPass().GetInputElementDescriptions();
-
-	CreateInputLayout(inputElementDescriptions, "project_texture_depth_map");
+	CreateInputLayout(MakeArrayBuffer(Vertex::ElementDescriptions), GetDefaultTechniqueName());
+	CreateInputLayout(MakeArrayBuffer(Vertex::ElementDescriptions), "project_texture_depth_map");
 }

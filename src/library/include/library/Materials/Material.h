@@ -1,17 +1,15 @@
 #pragma once
-#include "library/RTTI.hpp"
-#include "library/NonCopyable.hpp"
+#include "library/RTTI.h"
+#include "library/NonCopyable.h"
 #include "library/Common.h"
 #include "library/Render/PrimitiveData.h"
-#include "library/Render/VertexTypes.h"
+#include "library/Render/Vertex.h"
 #include "library/DxForward.h"
 
 #include "library/Effect/EffectPass.h" // due to EffectPass::InputElementsDescArray
 
 #include <string>
 #include <map>
-#include <vector>
-#include <array>
 #include <functional>
 
 namespace library
@@ -28,8 +26,6 @@ class Material : public NonCopyable<Material>
 	RTTI_CLASS_BASE(Material)
 
 public:
-	using Vertex = Vertex;
-
 	explicit Material(Effect& effect, const std::string& defaultTechniqueName = "");
 	virtual ~Material() = default;
 
@@ -60,23 +56,15 @@ public:
 	void Initialize();
 	bool IsInitialized() const { return m_initialized; }
 
-	virtual VertexBufferData CreateVertexBufferData(ID3D11Device* const device, const Mesh& mesh) const = 0;
-
-	PrimitiveData CreatePrimitiveData(ID3D11Device* const device, const Mesh& mesh) const;
-	std::vector<PrimitiveData> CreatePrimitivesData(ID3D11Device* const device, const Model& model) const;
-
 protected:
 	virtual void InitializeInternal() = 0;
 
 	void CreateInputLayout(
-		const EffectPass::InputElementDescArray& inputElementDescriptions,
+		const InputElementDescArrayBuffer& descriptionsBuffer,
 		const std::string& techniqueName,
 		const std::string& passName = "p0"
 	);
-	void CreateInputLayout(
-		const EffectPass::InputElementDescArray& inputElementDescriptions,
-		EffectPass& pass
-	);
+	void CreateInputLayout(const InputElementDescArrayBuffer& descriptionsBuffer, EffectPass& pass);
 
 	std::map<const EffectPass*, ComPtr<ID3D11InputLayout>> m_inputLayouts;
 
@@ -89,4 +77,5 @@ private:
 	std::string m_defaultTechniqueName;
 	bool m_initialized = false;
 };
+
 } // namespace library

@@ -1,6 +1,5 @@
 #pragma once
 #include "library/Model/SceneNode.h"
-//#include "library/Render/VertexTypes.h"
 
 namespace library
 {
@@ -33,10 +32,10 @@ public:
 
 		const VertexWeight& operator[](const unsigned idx) const;
 
-		static inline constexpr std::size_t MaxPerVertex = 4;
+		static constexpr std::size_t MaxPerVertex = 4;
 
 	private:
-		std::vector<VertexWeight> m_weights;
+		DynArray<VertexWeight> m_weights;
 	};
 
 	//-------------------------------------------------------------------------

@@ -13,6 +13,12 @@
 
 namespace library
 {
+namespace
+{
+// for visualizing
+constexpr math::Color k_defaultColor = colors::White;
+}
+
 Mesh::Mesh(Model& model, const aiMesh& aiMesh)
 	: m_model(model)
 	, m_material(m_model.GetMaterial(aiMesh.mMaterialIndex))
@@ -21,11 +27,11 @@ Mesh::Mesh(Model& model, const aiMesh& aiMesh)
 {
 	// Vertices
 	{
-		m_vertices.reserve(aiMesh.mNumVertices);
+		m_positions.reserve(aiMesh.mNumVertices);
 
 		for (unsigned i = 0; i < aiMesh.mNumVertices; i++)
 		{
-			m_vertices.push_back(reinterpret_cast<const math::Vector3&>(aiMesh.mVertices[i]));
+			m_positions.push_back(reinterpret_cast<const math::Vector3&>(aiMesh.mVertices[i]));
 		}
 	}
 
@@ -60,7 +66,7 @@ Mesh::Mesh(Model& model, const aiMesh& aiMesh)
 
 		for (unsigned i = 0; i < uvChannelsCount; i++)
 		{
-			std::vector<math::Vector3> textureCoordinates;
+			DynArray<math::Vector3> textureCoordinates;
 			textureCoordinates.reserve(aiMesh.mNumVertices);
 
 			const auto aiTextureCoords = aiMesh.mTextureCoords[i];
@@ -81,7 +87,7 @@ Mesh::Mesh(Model& model, const aiMesh& aiMesh)
 
 		for (unsigned i = 0; i < colorChannelsCount; i++)
 		{
-			std::vector<math::Color> vertexColors;
+			DynArray<math::Color> vertexColors;
 			vertexColors.reserve(aiMesh.mNumVertices);
 
 			const auto aiVertexColors = aiMesh.mColors[i];
@@ -161,21 +167,47 @@ Mesh::~Mesh() = default;
 
 //-------------------------------------------------------------------------
 
-const std::vector<math::Vector3>& Mesh::GetTextureCoordinates(const unsigned textureIdx) const
+const DynArray<math::Vector3>& Mesh::GetTextureCoordinates(const unsigned textureIdx) const
 {
 	return m_texturesCoordinates[textureIdx];
 }
 
-const std::vector<math::Color>& Mesh::GetVertexColors(const unsigned vertexIdx) const
+const DynArray<math::Color>& Mesh::GetVertexColors(const unsigned vertexIdx) const
 {
 	return m_verticesColors[vertexIdx];
 }
 
+void Mesh::Visualize(const bool randomColored /*= false*/)
+{
+	if (HasVerticesColors())
+		return;
+
+	const auto verticesCount = GetVerticesCount();
+
+	if (randomColored)
+	{
+		DynArray<math::Color> colors;
+		colors.reserve(verticesCount);
+
+		for (unsigned i = 0; i < verticesCount; i++)
+		{
+			colors.emplace_back(math::Color::Random());
+		}
+
+		m_verticesColors.emplace_back(colors);
+	}
+	else
+	{
+		DynArray<math::Color> colors(verticesCount, k_defaultColor);
+		m_verticesColors.emplace_back(colors);
+	}
+}
+
 //-------------------------------------------------------------------------
 
-std::vector<ComPtr<ID3D11ShaderResourceView>> Mesh::LoadTextures(const TextureType::Type textureType) const
+DynArray<ComPtr<ID3D11ShaderResourceView>> Mesh::LoadTextures(const TextureType::Type textureType) const
 {
-	std::vector<ComPtr<ID3D11ShaderResourceView>> textures;
+	DynArray<ComPtr<ID3D11ShaderResourceView>> textures;
 
 	if (!m_material.HasTextureNames(textureType))
 		return textures;
@@ -185,7 +217,7 @@ std::vector<ComPtr<ID3D11ShaderResourceView>> Mesh::LoadTextures(const TextureTy
 	for (const auto& textureName : textureNames)
 	{
 		Path texturePath(textureName);
-		auto texture = m_model.GetApp().CreateTexture2DSRV(texturePath.GetBaseName().SplitExt().first.GetString());
+		auto texture = m_model.GetApp().CreateTexture2DSRV(texturePath.GetBaseName().SplitExt()[0].GetString());
 
 		textures.emplace_back(std::move(texture));
 	}
@@ -193,8 +225,18 @@ std::vector<ComPtr<ID3D11ShaderResourceView>> Mesh::LoadTextures(const TextureTy
 	return textures;
 }
 
+//-------------------------------------------------------------------------
+
 IndexBufferData Mesh::CreateIndexBufferData() const
 {
-	return IndexBufferData(m_model.GetApp().GetDevice(), m_indices);
+	return IndexBufferData(m_model.GetApp().GetDevice(), MakeArrayBuffer(m_indices));
 }
+
+//-------------------------------------------------------------------------
+
+ID3D11Device1* Mesh::GetDevice() const
+{
+	return m_model.GetApp().GetDevice();
+}
+
 } // namespace library

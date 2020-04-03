@@ -1,7 +1,7 @@
 #pragma once
 #include "Materials/NormalMappingMaterial.h"
 
-#include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
+#include <library/Components/ConcreteMaterialPrimitiveComponent.h>
 #include <library/Components/InputReceivableComponent.h>
 #include <library/Math/Color.h>
 

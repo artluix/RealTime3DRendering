@@ -1,12 +1,11 @@
 #pragma once
-#include "library/NonCopyable.hpp"
+#include "library/Common.h"
 #include "library/Time.h"
 #include "library/Model/AnimationDef.h"
 #include "library/Math/Math.h"
 
 #include <string>
 #include <map>
-#include <vector>
 #include <functional>
 #include <memory>
 
@@ -45,9 +44,9 @@ public:
 	// BoneAnimation& GetBoneAnimation(const unsigned boneAnimationIdx);
 
 	// transforms
-	std::vector<math::Matrix4> GetTransforms(const TimePoint& timePoint) const;
-	std::vector<math::Matrix4> GetTransforms(const unsigned keyframeIdx) const;
-	std::vector<math::Matrix4> GetInterpolatedTransforms(const TimePoint& timePoint) const;
+	DynArray<math::Matrix4> GetTransforms(const TimePoint& timePoint) const;
+	DynArray<math::Matrix4> GetTransforms(const unsigned keyframeIdx) const;
+	DynArray<math::Matrix4> GetInterpolatedTransforms(const TimePoint& timePoint) const;
 
 	// transform wrappers for BoneAnimation
 	unsigned GetKeyframeIdx(const Bone& bone, const TimePoint& timePoint) const;
@@ -69,7 +68,7 @@ private:
 	Duration m_duration;
 	float m_ticksPerSecond;
 
-	std::vector<BoneAnimationPtr> m_boneAnimations;
+	DynArray<BoneAnimationPtr> m_boneAnimations;
 	std::map<std::reference_wrapper<const Bone>, unsigned, BoneLess> m_boneAnimationsMapping;
 	unsigned m_keyframesCount = 0;
 };

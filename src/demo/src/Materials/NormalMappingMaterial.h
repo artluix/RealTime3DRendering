@@ -13,14 +13,19 @@ public:
 
 	library::EffectVariable& GetNormalMap() { return m_normalMap; }
 
-	library::VertexBufferData CreateVertexBufferData(
-		ID3D11Device* const device,
-		const library::Mesh& mesh
-	) const override;
+	library::EffectVariable& GetCameraPosition() { return m_cameraPosition; }
+	library::EffectVariable& GetWVP() { return m_wvp; }
+	library::EffectVariable& GetWorld() { return m_world; }
+	library::EffectVariable& GetColorTexture() { return m_colorTexture; }
 
 protected:
 	void InitializeInternal() override;
 
 private:
 	library::EffectVariable& m_normalMap;
+
+	library::EffectVariable& m_cameraPosition;
+	library::EffectVariable& m_wvp;
+	library::EffectVariable& m_world;
+	library::EffectVariable& m_colorTexture;
 };

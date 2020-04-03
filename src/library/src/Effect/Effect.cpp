@@ -87,7 +87,7 @@ void Effect::LoadCompiled()
 	m_path += Path(m_name + ".fxc");
 #endif
 
-	std::vector<std::byte> effectData;
+	DynArray<std::byte> effectData;
 	utils::LoadBinaryFile(m_path, effectData);
 	assert("Load compiled effect failed." && !effectData.empty());
 

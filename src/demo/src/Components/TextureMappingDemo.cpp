@@ -27,7 +27,7 @@ void TextureMappingDemo::InitializeInternal()
 	CreateMaterialWithEffect("TextureMapping");
 
 	Model model(GetApp(), "Sphere", true);
-	m_primitivesData = m_material->CreatePrimitivesData(GetApp().GetDevice(), model);
+	CreatePrimitivesData(model);
 
 	m_textures.resize(Texture::Count);
 	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("EarthComposite.jpg");

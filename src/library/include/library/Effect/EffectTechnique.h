@@ -1,9 +1,8 @@
 #pragma once
 #include "library/Common.h"
-#include "library/NonCopyable.hpp"
+#include "library/NonCopyable.h"
 
 #include <d3dx11effect.h>
-#include <vector>
 #include <map>
 #include <string>
 #include <memory>
@@ -44,7 +43,7 @@ private:
 	const Effect& m_effect;
 	std::string m_name;
 
-	std::vector<EffectPassPtr> m_passes;
+	DynArray<EffectPassPtr> m_passes;
 	std::map<std::string, EffectPass*> m_passesMap;
 };
 } // namespace library

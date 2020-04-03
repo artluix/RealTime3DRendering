@@ -1,7 +1,7 @@
 #pragma once
 #include "library/Common.h"
 #include "library/DxForward.h"
-#include "library/Render/VertexTypes.h"
+#include "library/Render/Vertex.h"
 
 namespace library
 {
@@ -13,6 +13,8 @@ struct BufferData
 	BufferData() = default;
 
 protected:
+	explicit BufferData(const unsigned elementsCount) : elementsCount(elementsCount) {}
+
 	void CreateBuffer(ID3D11Device* const device,
 		const UINT bindFlags,
 		const void* data, const std::size_t size
@@ -28,26 +30,12 @@ struct IndexBufferData : BufferData
 	IndexBufferData(IndexBufferData&&) = default;
 	IndexBufferData& operator=(IndexBufferData&&) = default;
 
-	template<typename ContainerType>
-	IndexBufferData(ID3D11Device* const device, const ContainerType& elements)
+	template<typename T>
+	IndexBufferData(ID3D11Device* const device, const ArrayBuffer<T>& indicesBuffer)
+		: BufferData(unsigned(indicesBuffer.size))
 	{
-		using ElementType = typename ContainerType::value_type;
-
-		static_assert(
-			is_std_vector<ContainerType> || is_std_array<ContainerType>,
-			"BufferData can be created from std::array or std::vector only."
-		);
-
-		static_assert(std::is_integral_v<ElementType>, "IndexBuffer type must be integral");
-
-		elementsCount = unsigned(elements.size());
-
-		CreateBuffer(
-			device,
-			D3D11_BIND_INDEX_BUFFER,
-			elements.data(),
-			sizeof(ElementType) * elementsCount
-		);
+		static_assert(std::is_integral_v<T>, "IndexBuffer type must be integral");
+		CreateBuffer(device, D3D11_BIND_INDEX_BUFFER, indicesBuffer.data, sizeof(T) * elementsCount);
 	}
 };
 
@@ -63,29 +51,12 @@ struct VertexBufferData : BufferData
 	VertexBufferData(VertexBufferData&&) = default;
 	VertexBufferData& operator=(VertexBufferData&&) = default;
 
-	template<typename ContainerType>
-	VertexBufferData(ID3D11Device* const device, const ContainerType& elements)
+	template<int ... VertexElementTypes>
+	VertexBufferData(ID3D11Device* const device, const ArrayBuffer<Vertex<VertexElementTypes...>>& verticesBuffer)
+		: BufferData(unsigned(verticesBuffer.size))
+		, stride(sizeof(Vertex<VertexElementTypes...>))
 	{
-		using ElementType = typename ContainerType::value_type;
-
-		static_assert(sizeof(ElementType) > 1, "Wrong stride!");
-		stride = sizeof(ElementType);
-
-		static_assert(
-			is_std_vector<ContainerType> || is_std_array<ContainerType>,
-			"BufferData can be created from std::array or std::vector only."
-		);
-
-		static_assert(std::is_base_of_v<Vertex, ElementType>, "VertexBuffer type must be derived from Vertex");
-
-		elementsCount = static_cast<unsigned>(elements.size());
-
-		CreateBuffer(
-			device,
-			D3D11_BIND_VERTEX_BUFFER,
-			elements.data(),
-			sizeof(ElementType) * elements.size()
-		);
+		CreateBuffer(device, D3D11_BIND_VERTEX_BUFFER, verticesBuffer.data, stride * elementsCount);
 	}
 };
 } // namespace library

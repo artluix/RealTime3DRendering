@@ -1,5 +1,5 @@
 #pragma once
-#include "library/NonCopyable.hpp"
+#include "library/NonCopyable.h"
 #include "library/Math/Math.h"
 #include "library/Model/AnimationDef.h"
 

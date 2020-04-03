@@ -1,7 +1,7 @@
 #pragma once
 #include "Materials/TessellationMaterial.h"
 
-#include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
+#include <library/Components/ConcreteMaterialPrimitiveComponent.h>
 #include <library/Components/InputReceivableComponent.h>
 
 namespace library
@@ -58,8 +58,8 @@ private:
 	{
 		union
 		{
-			std::array<float, 3> triangle;
-			std::array<float, 4> quad;
+			library::Array<float, 3> triangle;
+			library::Array<float, 4> quad;
 		};
 	} m_tessEdgeFactors;
 
@@ -68,7 +68,7 @@ private:
 		union
 		{
 			float triangle;
-			std::array<float, 2> quad;
+			library::Array<float, 2> quad;
 		};
 	} m_tessInsideFactors;
 

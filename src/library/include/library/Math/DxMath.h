@@ -1,6 +1,8 @@
 #pragma once
 #include "library/Math/DxMathFwd.h"
 
+#include <dxgiformat.h>
+
 namespace dx
 {
 inline namespace math
@@ -13,6 +15,7 @@ template<>
 struct StaticVector<float, 2>
 {
 	using Type = XMFLOAT2;
+	static constexpr auto DXGI_FORMAT = DXGI_FORMAT_R32G32_FLOAT;
 
 	static VECTOR Load(const Type& type) { return XMLoadFloat2(&type); }
 	static void Store(const VECTOR& VEC, Type& type) { XMStoreFloat2(&type, VEC); }
@@ -25,6 +28,7 @@ template<>
 struct StaticVector<std::int32_t, 2>
 {
 	using Type = XMINT2;
+	static constexpr auto DXGI_FORMAT = DXGI_FORMAT_R32G32_SINT;
 
 	static VECTOR Load(const Type& type) { return XMLoadSInt2(&type); }
 	static void Store(const VECTOR& VEC, Type& type) { XMStoreSInt2(&type, VEC); }
@@ -37,6 +41,7 @@ template<>
 struct StaticVector<std::uint32_t, 2>
 {
 	using Type = XMUINT2;
+	static constexpr auto DXGI_FORMAT = DXGI_FORMAT_R32G32_UINT;
 
 	static VECTOR Load(const Type& type) { return XMLoadUInt2(&type); }
 	static void Store(const VECTOR& VEC, Type& type) { XMStoreUInt2(&type, VEC); }
@@ -51,6 +56,7 @@ template<>
 struct StaticVector<float, 3>
 {
 	using Type = XMFLOAT3;
+	static constexpr auto DXGI_FORMAT = DXGI_FORMAT_R32G32B32_FLOAT;
 
 	static VECTOR Load(const Type& type) { return XMLoadFloat3(&type); }
 	static void Store(const VECTOR& VEC, Type& type) { XMStoreFloat3(&type, VEC); }
@@ -63,6 +69,7 @@ template<>
 struct StaticVector<std::int32_t, 3>
 {
 	using Type = XMINT3;
+	static constexpr auto DXGI_FORMAT = DXGI_FORMAT_R32G32B32_SINT;
 
 	static VECTOR Load(const Type& type) { return XMLoadSInt3(&type); }
 	static void Store(const VECTOR& VEC, Type& type) { XMStoreSInt3(&type, VEC); }
@@ -75,6 +82,7 @@ template<>
 struct StaticVector<std::uint32_t, 3>
 {
 	using Type = XMUINT3;
+	static constexpr auto DXGI_FORMAT = DXGI_FORMAT_R32G32B32_UINT;
 
 	static VECTOR Load(const Type& type) { return XMLoadUInt3(&type); }
 	static void Store(const VECTOR& VEC, Type& type) { XMStoreUInt3(&type, VEC); }
@@ -89,6 +97,7 @@ template<>
 struct StaticVector<float, 4>
 {
 	using Type = XMFLOAT4;
+	static constexpr auto DXGI_FORMAT = DXGI_FORMAT_R32G32B32A32_FLOAT;
 
 	static VECTOR Load(const Type& type) { return XMLoadFloat4(&type); }
 	static void Store(const VECTOR& VEC, Type& type) { XMStoreFloat4(&type, VEC); }
@@ -101,6 +110,7 @@ template<>
 struct StaticVector<std::int32_t, 4>
 {
 	using Type = XMINT4;
+	static constexpr auto DXGI_FORMAT = DXGI_FORMAT_R32G32B32A32_SINT;
 
 	static VECTOR Load(const Type& type) { return XMLoadSInt4(&type); }
 	static void Store(const VECTOR& VEC, Type& type) { XMStoreSInt4(&type, VEC); }
@@ -113,6 +123,7 @@ template<>
 struct StaticVector<std::uint32_t, 4>
 {
 	using Type = XMUINT4;
+	static constexpr auto DXGI_FORMAT = DXGI_FORMAT_R32G32B32A32_UINT;
 
 	static VECTOR Load(const Type& type) { return XMLoadUInt4(&type); }
 	static void Store(const VECTOR& VEC, Type& type) { XMStoreUInt4(&type, VEC); }
@@ -275,6 +286,23 @@ inline bool VectorGreaterOrEqual<4>(const VECTOR& lhs, const VECTOR& rhs) { retu
 // -----------------------------------------------------------------------------
 // Utils
 // -----------------------------------------------------------------------------
+
+//-------------------------------------------------------------------------
+// DXGI_FORMAT for basic types
+//-------------------------------------------------------------------------
+
+template<typename T>
+constexpr inline auto DXGI_FORMAT = DXGI_FORMAT_UNKNOWN;
+
+template<>
+constexpr inline auto DXGI_FORMAT<float> = DXGI_FORMAT_R32_FLOAT;
+
+template<>
+constexpr inline auto DXGI_FORMAT<std::int32_t> = DXGI_FORMAT_R32_SINT;
+
+template<>
+constexpr inline auto DXGI_FORMAT<std::uint32_t> = DXGI_FORMAT_R32_UINT;
+
 
 // template<typename T = float>
 // inline T GetX(const VECTOR& VEC) { return static_cast<T>(XMVectorGetX(VEC)); }

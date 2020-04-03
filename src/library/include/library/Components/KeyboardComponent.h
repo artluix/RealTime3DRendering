@@ -2,8 +2,6 @@
 #include "library/Components/InputComponent.h"
 #include "library/Key.h"
 
-#include <array>
-
 namespace library
 {
 class KeyboardComponent : public InputComponent
@@ -27,7 +25,7 @@ public:
 	bool IsKeyHeldDown(const Key key) const;
 
 private:
-	using KeysStateArray = std::array<BYTE, 256>;
+	using KeysStateArray = Array<BYTE, 256>;
 
 	KeysStateArray m_keysState;
 	KeysStateArray m_previousKeysState;

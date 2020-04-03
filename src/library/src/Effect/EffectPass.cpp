@@ -17,19 +17,17 @@ EffectPass::EffectPass(const Application& app, const EffectTechnique& technique,
 
 EffectPass::~EffectPass() = default;
 
-ComPtr<ID3D11InputLayout> EffectPass::CreateInputLayout(const InputElementDescArray& inputElementDescriptions)
+ComPtr<ID3D11InputLayout> EffectPass::CreateInputLayout(const InputElementDescArrayBuffer& descriptionsBuffer)
 {
-	m_inputElementDescriptions = inputElementDescriptions;
-
 	ComPtr<ID3D11InputLayout> inputLayout;
 
 	auto hr = m_app.GetDevice()->CreateInputLayout(
-		inputElementDescriptions.data(),
-		static_cast<UINT>(inputElementDescriptions.size()),
+		descriptionsBuffer.data,
+		static_cast<UINT>(descriptionsBuffer.size),
 		m_passDesc.pIAInputSignature,
 		m_passDesc.IAInputSignatureSize,
 		&inputLayout
-	);
+		);
 	assert("ID3D11Device::CreateInputLayout() failed." && SUCCEEDED(hr));
 
 	return inputLayout;

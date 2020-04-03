@@ -7,7 +7,7 @@
 // Constant buffers
 //-------------------------------------------------------------------------
 
-cbuffer CBuffer_PerFrame_PbrLighting // MAX_LIGHTS_COUNT * (128) + 12 bytes
+cbuffer CBuffer_PerFrame_PbrLighting
 {
     float3 AmbientColor = { 0.3, 0.3, 0.3 };
 }

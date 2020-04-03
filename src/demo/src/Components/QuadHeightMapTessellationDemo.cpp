@@ -50,18 +50,17 @@ void QuadHeightMapTessellationDemo::InitializeInternal()
 	{
 		using Vertex = VertexPositionTexture;
 
-		constexpr std::array<Vertex, 4> vertices =
-		{
+		constexpr auto vertices = MakeArray(
 			Vertex(math::Vector4(-10.f, 1.f, -10.f, 1.f), math::Vector2(0.f, 0.f)), // upper left
 			Vertex(math::Vector4(10.f, 1.f, -10.f, 1.f), math::Vector2(1.f, 0.f)),  // upper right
 			Vertex(math::Vector4(-10.f, 1.f, 10.f, 1.f), math::Vector2(0.f, 1.f)),  // bottom left
-			Vertex(math::Vector4(10.f, 1.f, 10.f, 1.f), math::Vector2(1.f, 1.f)),   // bottom right
-		};
+			Vertex(math::Vector4(10.f, 1.f, 10.f, 1.f), math::Vector2(1.f, 1.f))    // bottom right
+		);
 
 		m_primitivesData.clear();
 		auto& pd = m_primitivesData.emplace_back(PrimitiveData{});
 
-		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), vertices);
+		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), MakeArrayBuffer(vertices));
 		pd.primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_4_CONTROL_POINT_PATCHLIST;
 	}
 

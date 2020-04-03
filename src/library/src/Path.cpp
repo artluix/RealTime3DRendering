@@ -26,12 +26,12 @@ Path::Path(std::string&& s) : m_string(s)
 
 Path Path::GetBaseName() const
 {
-	return Split().second;
+	return Split()[1];
 }
 
 Path Path::GetDirName() const
 {
-	return Split().first;
+	return Split()[0];
 }
 
 Pair<Path> Path::Split() const
@@ -43,10 +43,10 @@ Pair<Path> Path::Split() const
 	if (lastSlashIdx != std::string::npos)
 	{
 		Pair<Path> result;
-		result.first = Path(m_string.substr(0, lastSlashIdx));
+		result[0] = Path(m_string.substr(0, lastSlashIdx));
 
 		if (lastSlashIdx < m_string.length() - 1)
-			result.second = Path(m_string.substr(lastSlashIdx + 1));
+			result[1] = Path(m_string.substr(lastSlashIdx + 1));
 
 		return result;
 	}
@@ -84,7 +84,7 @@ Path& Path::Join(const Path& other)
 	return *this;
 }
 
-Path& Path::Join(const std::vector<Path>& paths)
+Path& Path::Join(const DynArray<Path>& paths)
 {
 	if (!paths.empty())
 	{
@@ -104,7 +104,7 @@ Path Path::Join(const Path& other) const
 	return path;
 }
 
-Path Path::Join(const std::vector<Path>& paths) const
+Path Path::Join(const DynArray<Path>& paths) const
 {
 	auto path = *this;
 	path.Join(paths);
@@ -122,10 +122,10 @@ Pair<Path> Path::SplitExt() const
 	if (lastDotIdx != std::string::npos)
 	{
 		Pair<Path> result;
-		result.first = Path(m_string.substr(0, lastDotIdx));
+		result[0] = Path(m_string.substr(0, lastDotIdx));
 
 		if (lastDotIdx < m_string.length() - 1)
-			result.second = Path(m_string.substr(lastDotIdx + 1));
+			result[1] = Path(m_string.substr(lastDotIdx + 1));
 
 		return result;
 	}
@@ -137,7 +137,7 @@ Pair<Path> Path::SplitExt() const
 
 Path Path::GetExt() const
 {
-	return SplitExt().second;
+	return SplitExt()[1];
 }
 
 //-------------------------------------------------------------------------

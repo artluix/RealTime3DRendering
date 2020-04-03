@@ -179,13 +179,13 @@ Matrix<Size>& operator*=(Matrix<Size>& lhs, const Matrix<Size>& rhs)
 template<unsigned Size>
 Matrix<Size> operator*(const Matrix<Size>& lhs, const float v)
 {
-	return Matrix<Size>(dx::MATRIX(lhs) * rhs);
+	return Matrix<Size>(dx::MATRIX(lhs) * v);
 }
 
 template<unsigned Size>
 Matrix<Size>& operator *= (Matrix<Size>& lhs, const float v)
 {
-	return lhs = dx::MATRIX(lhs) * rhs;
+	return lhs = dx::MATRIX(lhs) * v;
 }
 
 //-------------------------------------------------------------------------
@@ -199,7 +199,7 @@ VectorType<float, Size> operator*(const VectorType<T, Size>& vec, const Matrix<S
 	const auto dxVec = dx::VECTOR(vec);
 
 	VectorType<float, Size> result;
-	
+
 	for (unsigned i = 0; i < Size; i++)
 	{
 		result.r[i] = dx::VectorDot<Size>(dxVec, dxMatT.r[i]);
@@ -228,7 +228,7 @@ template<unsigned Size>
 VectorType<float, Size>& operator*=(VectorType<float, Size>& vec, const Matrix<Size>& mat)
 {
 	const auto dxMatT = dx::XMMatrixTranspose(dx::MATRIX(mat));
-	const auto dxVec = dx::VECTOR(temp);
+	const auto dxVec = dx::VECTOR(vec);
 
 	for (unsigned i = 0; i < Size; i++)
 	{

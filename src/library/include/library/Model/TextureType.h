@@ -1,6 +1,5 @@
 #pragma once
 #include <assimp/material.h>
-#include <array>
 
 namespace library
 {
@@ -57,9 +56,9 @@ struct TextureType
 		}
 	}
 
-	static constexpr std::array<Type, Count> GetValues()
+	static constexpr Array<Type, Count> GetValues()
 	{
-		return std::array<TextureType::Type, TextureType::Count>{
+		return MakeArray(
 			Diffuse,
 			SpecularMap,
 			Ambient,
@@ -68,8 +67,8 @@ struct TextureType
 			NormalMap,
 			SpecularPowerMap,
 			DisplacementMap,
-			LightMap,
-		};
+			LightMap
+		);
 	}
 };
 } // namespace library

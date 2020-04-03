@@ -22,14 +22,14 @@ bool UpdateValue(
 {
 	bool updated = false;
 
-	if (keyboard.IsKeyDown(keys.first) && value < interval.max)
+	if (keyboard.IsKeyDown(keys[0]) && value < interval.max)
 	{
 		value += stepValue;
 		value = library::math::Min(value, interval.max);
 		updated = true;
 	}
 
-	if (keyboard.IsKeyDown(keys.second) && value > interval.min)
+	if (keyboard.IsKeyDown(keys[1]) && value > interval.min)
 	{
 		value -= stepValue;
 		value = library::math::Max(value, interval.min);
@@ -49,14 +49,14 @@ bool UpdateValueOnce(
 {
 	bool updated = false;
 
-	if (keyboard.WasKeyReleased(keys.first) && value < interval.max)
+	if (keyboard.WasKeyReleased(keys[0]) && value < interval.max)
 	{
 		value += stepValue;
 		value = library::math::Min(value, interval.max);
 		updated = true;
 	}
 
-	if (keyboard.WasKeyReleased(keys.second) && value > interval.min)
+	if (keyboard.WasKeyReleased(keys[1]) && value > interval.min)
 	{
 		value -= stepValue;
 		value = library::math::Max(value, interval.min);

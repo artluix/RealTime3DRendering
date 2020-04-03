@@ -157,7 +157,7 @@ void LoadTexture(const Path& texturePath, DirectX::ScratchImage& image)
 	const auto ext = texturePath.GetExt();
 	assert(!!ext);
 
-	std::vector<std::byte> textureData;
+	DynArray<std::byte> textureData;
 	utils::LoadBinaryFile(texturePath, textureData);
 	assert("Load texture failed." && !textureData.empty());
 
@@ -236,15 +236,14 @@ ComPtr<ID3D11ShaderResourceView> Application::CreateCubeTextureSRV(const std::st
 	assert("InitializeCube() failed." && SUCCEEDED(hr));
 
 	constexpr unsigned tilesCount = 6;
-	constexpr std::array<math::Vector2u, 6> tileCoords =
-	{
+	constexpr Array<math::Vector2u, 6> tileCoords = MakeArray(
 		math::Vector2u(2, 1),
 		math::Vector2u(0, 1),
 		math::Vector2u(1, 0),
 		math::Vector2u(1, 2),
 		math::Vector2u(1, 1),
-		math::Vector2u(3, 1),
-	};
+		math::Vector2u(3, 1)
+	);
 
 	const auto& texImg = *image.GetImage(0, 0, 0);
 	DirectX::Rect tileRect;
@@ -357,7 +356,7 @@ void Application::InitializeDirectX()
 	createDeviceFlags |= D3D11_CREATE_DEVICE_DEBUG;
 #endif
 
-	std::vector<D3D_FEATURE_LEVEL> featureLevels = {
+	DynArray<D3D_FEATURE_LEVEL> featureLevels = {
 		D3D_FEATURE_LEVEL_11_0,
 		D3D_FEATURE_LEVEL_10_1,
 		D3D_FEATURE_LEVEL_10_0,

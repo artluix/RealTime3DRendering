@@ -17,11 +17,6 @@ public:
 
 	library::EffectVariable& GetColorTexture() { return m_colorTexture; }
 
-	library::VertexBufferData CreateVertexBufferData(
-		ID3D11Device* const device,
-		const library::Mesh& mesh
-	) const override;
-
 protected:
 	void InitializeInternal() override;
 

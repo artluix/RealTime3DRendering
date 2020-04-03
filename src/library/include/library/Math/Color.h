@@ -69,3 +69,12 @@ inline constexpr Color White =			Color::FromBytes(255, 255, 255);
 inline constexpr Color CornFlower =		Color::FromBytes(100, 149, 237);
 } // namespace colors
 } // namespace library
+
+//-------------------------------------------------------------------------
+
+namespace dx::math
+{
+template<>
+constexpr inline auto DXGI_FORMAT<library::math::Color> = DXGI_FORMAT_R32G32B32A32_FLOAT;
+} // namespace dx::math
+

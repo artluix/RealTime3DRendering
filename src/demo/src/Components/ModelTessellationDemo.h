@@ -1,6 +1,6 @@
 #pragma once
 #include "Materials/ModelTessellationMaterial.h"
-#include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
+#include <library/Components/ConcreteMaterialPrimitiveComponent.h>
 
 #include <library/Components/InputReceivableComponent.h>
 
@@ -40,7 +40,7 @@ private:
 
 	void UpdateTechnique();
 
-	std::array<float, 3> m_tessEdgeFactors;
+	library::Array<float, 3> m_tessEdgeFactors;
 	float m_tessInsideFactor;
 
 	bool m_isWireframeVisible;

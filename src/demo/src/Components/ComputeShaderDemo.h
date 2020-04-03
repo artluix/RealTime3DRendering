@@ -1,7 +1,7 @@
 #pragma once
 #include "Materials/ComputeShaderMaterial.h"
 
-#include <library/Components/ConcreteMaterialPrimitiveComponent.hpp>
+#include <library/Components/ConcreteMaterialPrimitiveComponent.h>
 
 namespace library
 {
