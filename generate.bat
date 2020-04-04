@@ -34,4 +34,4 @@ echo.
 echo %TARGET% solution generated!
 echo.
 
-pause
+rem pause

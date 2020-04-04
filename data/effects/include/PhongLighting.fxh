@@ -49,7 +49,7 @@ struct PHONG_LIGHTING_OBJECT_PARAMS
     float4 specularColor;
 };
 
-PHONG_LIGHTING_OBJECT_PARAMS phong_lighting_create_object_params(float4 color, float3 normal, float3 worldPosition, float3 viewDirection, float specularPower, float4 specularColor)
+PHONG_LIGHTING_OBJECT_PARAMS phong_lighting_create_object_params(float4 color, float3 normal, float3 viewDirection, float3 worldPosition, float specularPower, float4 specularColor)
 {
     PHONG_LIGHTING_OBJECT_PARAMS objectParams;
 
@@ -63,9 +63,9 @@ PHONG_LIGHTING_OBJECT_PARAMS phong_lighting_create_object_params(float4 color, f
     return objectParams;
 }
 
-PHONG_LIGHTING_OBJECT_PARAMS phong_lighting_create_object_params(float4 color, float3 normal, float3 worldPosition, float3 viewDirection)
+PHONG_LIGHTING_OBJECT_PARAMS phong_lighting_create_object_params(float4 color, float3 normal, float3 viewDirection, float3 worldPosition)
 {
-    return phong_lighting_create_object_params(color, normal, worldPosition, viewDirection, SpecularPower, SpecularColor);
+    return phong_lighting_create_object_params(color, normal, viewDirection, worldPosition, SpecularPower, SpecularColor);
 }
 
 //-------------------------------------------------------------------------

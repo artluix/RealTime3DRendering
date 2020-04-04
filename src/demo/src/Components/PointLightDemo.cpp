@@ -45,7 +45,7 @@ void PointLightDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
-	CreateMaterialWithEffect("Lights");
+	CreateMaterialWithEffect("PhongLights");
 
 	// load model
 	{
@@ -55,6 +55,7 @@ void PointLightDemo::InitializeInternal()
 
 	m_textures.resize(Texture::Count);
 	m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("EarthAtDay.tga");
+	//m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("EarthComposite.jpg");
 
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetupProxyModel(*GetCamera());

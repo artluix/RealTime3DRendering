@@ -45,12 +45,7 @@ void RenderTarget::End()
 void RenderTarget::Begin(const ViewData& viewData)
 {
 	SetViewData(viewData);
-
-	auto vd = viewData;
-
-	auto deviceContext = GetApp().GetDeviceContext();
-	deviceContext->OMGetRenderTargets(vd.rtvsCount, vd.rtvs, &vd.dsv);
-	s_viewsData.push(vd);
+	s_viewsData.push(viewData);
 }
 
 //-------------------------------------------------------------------------

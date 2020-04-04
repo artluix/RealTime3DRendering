@@ -50,8 +50,8 @@ void NormalMappingDemo::InitializeInternal()
 {
 	assert(!!GetCamera());
 
-	//CreateMaterialWithEffect("NormalMapping", false);
-	CreateMaterialWithEffect("NormalMapping", true);
+	CreateMaterialWithEffect("NormalMapping", false);
+	//CreateMaterialWithEffect("NormalMapping", true);
 
 	// build vertices manually
 	{

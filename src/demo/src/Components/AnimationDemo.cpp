@@ -72,8 +72,9 @@ void AnimationDemo::InitializeInternal()
 			const auto& diffuseTexturePath = Path(
 				modelMaterial.GetTextureNames(TextureType::Diffuse).front()
 			);
-			const auto textureName = diffuseTexturePath.GetBaseName().SplitExt()[0].GetString();
-			m_textures[Texture::Default] = GetApp().CreateTexture2DSRV(textureName);
+			const auto textureName = diffuseTexturePath.GetBaseName().GetString();
+			//m_textures[Texture::Default] = GetApp().CreateTexture2DSRV(textureName);
+			m_textures[Texture::Default] = GetApp().CreateTexture2DSRV("Soldier.png");
 		}
 	}
 

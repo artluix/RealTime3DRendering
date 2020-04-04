@@ -73,7 +73,6 @@ void MultipleLightsDemo::InitializeInternal()
 
 	// set position for lights
 	m_lights[0]->SetPosition(math::Vector3(0.f, -10.f, 10.f));
-	m_lights[0]->SetColor(math::Color(30.f, 30.f, 30.f, 1.f));
 	m_lights[1]->SetPosition(math::Vector3(0.f, 10.f, 10.f));
 	m_lights[2]->SetPosition(math::Vector3(-10.f, 0.f, 0.f));
 	m_lights[3]->SetPosition(math::Vector3(10.f, 0.f, 0.f));
