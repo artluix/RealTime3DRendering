@@ -4,7 +4,7 @@
 
 using namespace library;
 
-PbrLightsMaterial::PbrLightsMaterial(Effect& effect, const std::string& defaultTechniqueName /*= "forward"*/)
+PbrLightsMaterial::PbrLightsMaterial(Effect& effect, const std::string& defaultTechniqueName /*= "values"*/)
 	: PbrLightingMaterial(effect, defaultTechniqueName)
 
 	, m_cameraPosition(effect.GetVariable("CameraPosition"))
@@ -26,5 +26,6 @@ PbrLightsMaterial::PbrLightsMaterial(Effect& effect, const std::string& defaultT
 
 void PbrLightsMaterial::InitializeInternal()
 {
-	CreateInputLayout(MakeArrayBuffer(Vertex::ElementDescriptions), GetDefaultTechniqueName());
+	CreateInputLayout(MakeArrayBuffer(Vertex::ElementDescriptions), "values");
+	CreateInputLayout(MakeArrayBuffer(Vertex::ElementDescriptions), "maps");
 }

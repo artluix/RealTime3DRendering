@@ -63,35 +63,70 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 
 /************* Pixel Shader *************/
 
-float4 pixel_shader(VS_OUTPUT IN) : SV_Target
+float4 pixel_shader_values(VS_OUTPUT IN) : SV_Target
 {
     PBR_LIGHTING_OBJECT_PARAMS objectParams;
     objectParams.normal = normalize(IN.normal);
     objectParams.viewDirection = normalize(IN.viewDirection);
     objectParams.worldPosition = IN.worldPosition;
-    // objectParams.albedo = Albedo;
-    // objectParams.metallic = Metallic;
-    // objectParams.roughness = Roughness;
+    objectParams.albedo = Albedo;
+    objectParams.metallic = Metallic;
+    objectParams.roughness = Roughness;
     objectParams.ao = AO;
+
+    float3 color = get_light_contribution(objectParams);
+
+    // HDR tonemapping
+    color = color / (color + 1.0);
+    // gamma correct
+    color = pow(color, 1.0/2.2);
+
+    return float4(color, 1.f);
+}
+
+float4 pixel_shader_maps(VS_OUTPUT IN) : SV_Target
+{
+    PBR_LIGHTING_OBJECT_PARAMS objectParams;
+    objectParams.normal = normalize(IN.normal);
+    objectParams.viewDirection = normalize(IN.viewDirection);
+    objectParams.worldPosition = IN.worldPosition;
     objectParams.albedo = AlbedoMap.Sample(TrilinearSampler, IN.textureCoordinate).rgb;
     objectParams.metallic = MetallicMap.Sample(TrilinearSampler, IN.textureCoordinate).r;
     objectParams.roughness = RoughnessMap.Sample(TrilinearSampler, IN.textureCoordinate).r;
+    objectParams.ao = AO;
     // objectParams.ao = AOMap.Sample(TrilinearSampler, IN.textureCoordinate).r;
 
     float3 color = get_light_contribution(objectParams);
+
+    // HDR tonemapping
+    color = color / (color + 1.0);
+    // gamma correct
+    color = pow(color, 1.0/2.2);
 
     return float4(color, 1.f);
 }
 
 /************* Techniques *************/
 
-technique11 main11
+technique11 values
 {
     pass p0
     {
         SetVertexShader(CompileShader(vs_5_0, vertex_shader()));
         SetGeometryShader(NULL);
-        SetPixelShader(CompileShader(ps_5_0, pixel_shader()));
+        SetPixelShader(CompileShader(ps_5_0, pixel_shader_values()));
+
+        SetRasterizerState(DisableCulling);
+    }
+}
+
+technique11 maps
+{
+    pass p0
+    {
+        SetVertexShader(CompileShader(vs_5_0, vertex_shader()));
+        SetGeometryShader(NULL);
+        SetPixelShader(CompileShader(ps_5_0, pixel_shader_maps()));
 
         SetRasterizerState(DisableCulling);
     }

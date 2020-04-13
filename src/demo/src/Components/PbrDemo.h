@@ -53,6 +53,8 @@ private:
 	float m_roughness;
 	float m_ao;
 
+	bool m_isValuesUsed = true;
+
 	std::unique_ptr<library::PointLightComponent> m_pointLight;
 	std::unique_ptr<library::TextComponent> m_text;
 };

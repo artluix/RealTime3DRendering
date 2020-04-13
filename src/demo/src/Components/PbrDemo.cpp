@@ -36,7 +36,7 @@ PbrDemo::PbrDemo()
 	, m_albedo(colors::Red)
 	, m_metallic(0.5f)
 	, m_roughness(0.5f)
-	, m_ao(0.5f)
+	, m_ao(1.0f)
 {}
 
 PbrDemo::~PbrDemo() = default;
@@ -55,6 +55,8 @@ void PbrDemo::InitializeInternal()
 		CreatePrimitivesData(model);
 	}
 
+	SetScaling(math::Vector3(0.3f));
+
 	m_textures.resize(Texture::Count);
 	m_textures[Texture::Albedo] = GetApp().CreateTexture2DSRV("rustediron2_albedo.png");
 	m_textures[Texture::Metallic] = GetApp().CreateTexture2DSRV("rustediron2_metallic.png");
@@ -63,7 +65,7 @@ void PbrDemo::InitializeInternal()
 	m_pointLight = std::make_unique<PointLightComponent>();
 	m_pointLight->SetupProxyModel(*GetCamera());
 	m_pointLight->SetRadius(500.f);
-	m_pointLight->SetColor(math::Color(30.f, 30.f, 30.f, 30.f));
+	m_pointLight->SetColor(math::Color(300.f));
 	m_pointLight->SetPosition(math::Vector3(0.f, 0.f, 10.f));
 
 	m_text = std::make_unique<TextComponent>();
@@ -72,10 +74,15 @@ void PbrDemo::InitializeInternal()
 		std::wostringstream woss;
 		woss << L"Ambient Intensity (+PageUp/-PageDown): " << m_ambientColor.a << "\n"
 			<< L"Point Light Intensity (+Home/-End): " << m_pointLight->GetColor().a << "\n"
-			<< L"Metallic  (+1/-2): " << m_metallic << "\n"
-			<< L"Roughness  (+3/-4): " << m_roughness << "\n"
-			<< L"Ambient Occlusion  (+5/-6): " << m_ao << "\n"
 			<< L"Move Point Light (Numpad: 8/2, 4/6, 3/9)\n";
+
+		if (m_isValuesUsed)
+		{
+			woss << L"Metallic  (+1/-2): " << m_metallic << "\n"
+				<< L"Roughness  (+3/-4): " << m_roughness << "\n"
+				<< L"Ambient Occlusion  (+5/-6): " << m_ao << "\n";
+		}
+
 		return woss.str();
 	});
 	m_text->Initialize(GetApp());
@@ -110,7 +117,7 @@ void PbrDemo::UpdatePointLight(const Time & time, const KeyboardComponent & keyb
 
 	// update light color intensity
 	{
-		const float modulationStepValue = elapsedTime * k_lightModulationRate;
+		const float modulationStepValue = elapsedTime * k_lightModulationRate * 10;
 
 		auto lightColor = m_pointLight->GetColor();
 		if (::utils::UpdateValue(lightColor.a, modulationStepValue, math::Interval(.0f, k_byteMax), keyboard, KeyPair(Key::Home, Key::End)))
@@ -149,8 +156,26 @@ void PbrDemo::UpdatePbrParameters(const Time & time, const KeyboardComponent & k
 {
 	const float stepValue = time.elapsed.GetSeconds() * k_lightModulationRate;
 
-	::utils::UpdateValue(m_metallic, stepValue, math::UnitInterval, keyboard, KeyPair(Key::_1, Key::_2));
-	::utils::UpdateValue(m_roughness, stepValue, math::UnitInterval, keyboard, KeyPair(Key::_3, Key::_4));
+	if (keyboard.WasKeyPressed(Key::Left_Shift))
+	{
+		if (m_isValuesUsed)
+		{
+			m_isValuesUsed = false;
+			m_material->SetCurrentTechnique("maps");
+		}
+		else
+		{
+			m_isValuesUsed = true;
+			m_material->SetCurrentTechnique("values");
+		}
+	}
+
+	if (m_isValuesUsed)
+	{
+		::utils::UpdateValue(m_metallic, stepValue, math::UnitInterval, keyboard, KeyPair(Key::_1, Key::_2));
+		::utils::UpdateValue(m_roughness, stepValue, math::UnitInterval, keyboard, KeyPair(Key::_3, Key::_4));
+	}
+
 	::utils::UpdateValue(m_ao, stepValue, math::UnitInterval, keyboard, KeyPair(Key::_5, Key::_6));
 }
 
@@ -171,15 +196,21 @@ void PbrDemo::Draw_SetData(const PrimitiveData & primitiveData)
 
 	m_material->GetAmbientColor() << m_ambientColor.ToVector();
 
-	//m_material->GetAlbedo() << m_albedo.ToVector().xyz;
-	//m_material->GetMetallic() << m_metallic;
-	//m_material->GetRoughness() << m_roughness;
-	m_material->GetAO() << m_ao;
-
-	m_material->GetAlbedoMap() << m_textures[Texture::Albedo].Get();
-	m_material->GetMetallicMap() << m_textures[Texture::Metallic].Get();
-	m_material->GetRoughnessMap() << m_textures[Texture::Roughness].Get();
-	//m_material->GetAOMap() << m_textures[Texture::AO].Get();
+	if (m_isValuesUsed)
+	{
+		m_material->GetAlbedo() << m_albedo.ToVector().xyz;
+		m_material->GetMetallic() << m_metallic;
+		m_material->GetRoughness() << m_roughness;
+		m_material->GetAO() << m_ao;
+	}
+	else
+	{
+		m_material->GetAlbedoMap() << m_textures[Texture::Albedo].Get();
+		m_material->GetMetallicMap() << m_textures[Texture::Metallic].Get();
+		m_material->GetRoughnessMap() << m_textures[Texture::Roughness].Get();
+		//m_material->GetAOMap() << m_textures[Texture::AO].Get();
+		m_material->GetAO() << m_ao;
+	}
 
 	const auto isLightVisible = m_pointLight->IsVisibleFrom(GetPosition());
 	m_material->GetPointLightsCount() << unsigned(isLightVisible);

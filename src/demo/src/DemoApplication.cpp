@@ -79,7 +79,8 @@ namespace
 {
 constexpr auto k_mrtBackgroundColor = colors::Color();
 //constexpr auto k_backgroundColor = colors::CornFlower;
-constexpr auto k_backgroundColor = colors::Black;
+//constexpr auto k_backgroundColor = colors::Black;
+constexpr auto k_backgroundColor = math::Color(0.1);
 } // namespace
 
 DemoApplication::DemoApplication(

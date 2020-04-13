@@ -38,6 +38,7 @@ struct PBR_LIGHTING_LIGHT_PARAMS
 struct PBR_LIGHTING_CACHED_PARAMS
 {
     float n_dot_v;
+    float3 F0;
 };
 
 //-------------------------------------------------------------------------
@@ -162,14 +163,11 @@ float3 get_specular_diffuse(PBR_LIGHTING_OBJECT_PARAMS objectParams, PBR_LIGHTIN
 
     float3 radiance = lightParams.color * lightParams.attenuation;
 
-    float3 F0 = float3(0.04, 0.04, 0.04); // for non-metallic surfaces it's constant
-    F0 = lerp(F0, objectParams.albedo, objectParams.metallic);
-    float3 F = fresnel_schlick(udot(H, V), F0);
-
     float NDF = distribution_ggx(N_dot_H, objectParams.roughness);
     float G = geometry_smith(N_dot_V, N_dot_L, objectParams.roughness);
+    float3 F = fresnel_schlick(udot(H, V), cachedParams.F0);
 
-    float3 num = NDF * F * G;
+    float3 num = NDF * G * F;
     float denom = 4.0 * N_dot_V * N_dot_L;
     float3 specular = num / max(denom, 0.001);
 
@@ -188,6 +186,7 @@ float3 get_light_contribution(PBR_LIGHTING_OBJECT_PARAMS objectParams)
 
     PBR_LIGHTING_CACHED_PARAMS cachedParams;
     cachedParams.n_dot_v = udot(N, V);
+    cachedParams.F0 = lerp(float3(0.04, 0.04, 0.04), objectParams.albedo, objectParams.metallic);
 
     float3 L0 = (float3)0;
 

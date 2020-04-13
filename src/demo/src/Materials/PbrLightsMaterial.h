@@ -8,7 +8,7 @@ class PbrLightsMaterial : public PbrLightingMaterial
 public:
 	using Vertex = library::VertexPositionTextureNormal;
 
-	explicit PbrLightsMaterial(library::Effect& effect, const std::string& defaultTechniqueName = "main11");
+	explicit PbrLightsMaterial(library::Effect& effect, const std::string& defaultTechniqueName = "values");
 
 	library::EffectVariable& GetCameraPosition() { return m_cameraPosition; }
 
