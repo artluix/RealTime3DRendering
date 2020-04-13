@@ -76,10 +76,8 @@ float4 pixel_shader_values(VS_OUTPUT IN) : SV_Target
 
     float3 color = get_light_contribution(objectParams);
 
-    // HDR tonemapping
-    color = color / (color + 1.0);
-    // gamma correct
-    color = pow(color, 1.0/2.2);
+    color = tonemap_reinhard(color);
+    color = gamma_correction(color);
 
     return float4(color, 1.f);
 }
@@ -90,7 +88,7 @@ float4 pixel_shader_maps(VS_OUTPUT IN) : SV_Target
     objectParams.normal = normalize(IN.normal);
     objectParams.viewDirection = normalize(IN.viewDirection);
     objectParams.worldPosition = IN.worldPosition;
-    objectParams.albedo = AlbedoMap.Sample(TrilinearSampler, IN.textureCoordinate).rgb;
+    objectParams.albedo = pow(AlbedoMap.Sample(TrilinearSampler, IN.textureCoordinate).rgb, 2.2); // convert to linear space
     objectParams.metallic = MetallicMap.Sample(TrilinearSampler, IN.textureCoordinate).r;
     objectParams.roughness = RoughnessMap.Sample(TrilinearSampler, IN.textureCoordinate).r;
     objectParams.ao = AO;
@@ -98,10 +96,8 @@ float4 pixel_shader_maps(VS_OUTPUT IN) : SV_Target
 
     float3 color = get_light_contribution(objectParams);
 
-    // HDR tonemapping
-    color = color / (color + 1.0);
-    // gamma correct
-    color = pow(color, 1.0/2.2);
+    color = tonemap_reinhard(color);
+    color = gamma_correction(color);
 
     return float4(color, 1.f);
 }

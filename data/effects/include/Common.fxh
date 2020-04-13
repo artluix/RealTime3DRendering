@@ -41,6 +41,11 @@ float get_luminance(float3 color)
     return max(dot(color, float3(0.2125f, 0.7154f, 0.0721f)), 0.0001f);
 }
 
+float3 tonemap_reinhard(float3 color)
+{
+    return color / (color + 1.f);
+}
+
 float3 gamma_correction(float3 color)
 {
     static const float k_invGamma = 0.4545f; // = (1 / 2.2f)

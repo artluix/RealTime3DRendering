@@ -85,7 +85,7 @@ float4 ps_tone_mapping(VS_OUTPUT IN, uniform bool gammaCorrectionEnabled) : SV_T
     color *= exposure;
 
     // reinhard operator
-    color /= (color + 1.f);
+    color = tonemap_reinhard(color);
 
     // gamma correction (if needed)
     if (gammaCorrectionEnabled)
