@@ -41,6 +41,8 @@
 
 #include "Components/ComputeShaderDemo.h"
 
+#include "Components/PbrDemo.h"
+
 //-------------------------------------------------------------------------
 
 #include <library/Components/FpsComponent.h>
@@ -76,7 +78,8 @@ using namespace library;
 namespace
 {
 constexpr auto k_mrtBackgroundColor = colors::Color();
-constexpr auto k_backgroundColor = colors::CornFlower;
+//constexpr auto k_backgroundColor = colors::CornFlower;
+constexpr auto k_backgroundColor = colors::Black;
 } // namespace
 
 DemoApplication::DemoApplication(
@@ -314,6 +317,10 @@ void DemoApplication::Initialize()
 	auto computeShader = std::make_shared<ComputeShaderDemo>();
 	computeShader->SetCamera(*camera);
 
+	auto pbr = std::make_shared<PbrDemo>();
+	pbr->SetCamera(*camera);
+	pbr->SetKeyboard(*m_keyboard);
+
 	// push needed components
 	m_components.push_back(m_keyboard);
 	m_components.push_back(m_mouse);
@@ -326,7 +333,7 @@ void DemoApplication::Initialize()
 	// m_components.push_back(cube);
 	// m_components.push_back(model);
 	// m_components.push_back(textureModel);
-	m_components.push_back(skybox);
+	// m_components.push_back(skybox);
 	// m_components.push_back(basic);
 	// m_components.push_back(textureMapping);
 	// m_components.push_back(diffuseLighting);
@@ -349,6 +356,7 @@ void DemoApplication::Initialize()
 	// m_components.push_back(modelTessellation);
 	// m_components.push_back(instancing);
 	// m_components.push_back(computeShader);
+	m_components.push_back(pbr);
 
 	// hide grid by default
 	m_grid->SetVisible(false);

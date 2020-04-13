@@ -178,8 +178,8 @@ void NormalMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetWVP() << wvp;
 	m_material->GetWorld() << world;
 	m_material->GetSpecularPower() << m_specularPower;
-	m_material->GetSpecularColor() << m_specularColor.ToVector4();
-	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
+	m_material->GetSpecularColor() << m_specularColor.ToVector();
+	m_material->GetAmbientColor() << m_ambientColor.ToVector();
 
 	m_material->GetDirLights() << DirectionalLightData(*m_directionalLight);
 	m_material->GetDirLightsCount() << 1;

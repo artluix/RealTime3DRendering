@@ -19,6 +19,11 @@ cbuffer CBufferPerObject
     float AO;
 }
 
+Texture2D AlbedoMap;
+Texture2D MetallicMap;
+Texture2D RoughnessMap;
+Texture2D AOMap;
+
 SamplerState TrilinearSampler
 {
     Filter = MIN_MAG_MIP_LINEAR;
@@ -47,6 +52,12 @@ VS_OUTPUT vertex_shader(VS_INPUT IN)
 {
     VS_OUTPUT OUT = (VS_OUTPUT)0;
 
+    OUT.position = mul(IN.objectPosition, WVP);
+    OUT.worldPosition = mul(IN.objectPosition, World).xyz;
+    OUT.textureCoordinate = get_corrected_texture_coordinate(IN.textureCoordinate);
+    OUT.normal = normalize(mul(float4(IN.normal, 0), World).xyz);
+    OUT.viewDirection = normalize(CameraPosition - OUT.worldPosition);
+
     return OUT;
 }
 
@@ -58,10 +69,14 @@ float4 pixel_shader(VS_OUTPUT IN) : SV_Target
     objectParams.normal = normalize(IN.normal);
     objectParams.viewDirection = normalize(IN.viewDirection);
     objectParams.worldPosition = IN.worldPosition;
-    objectParams.albedo = Albedo;
-    objectParams.metallic = Metallic;
-    objectParams.roughness = Roughness;
+    // objectParams.albedo = Albedo;
+    // objectParams.metallic = Metallic;
+    // objectParams.roughness = Roughness;
     objectParams.ao = AO;
+    objectParams.albedo = AlbedoMap.Sample(TrilinearSampler, IN.textureCoordinate).rgb;
+    objectParams.metallic = MetallicMap.Sample(TrilinearSampler, IN.textureCoordinate).r;
+    objectParams.roughness = RoughnessMap.Sample(TrilinearSampler, IN.textureCoordinate).r;
+    // objectParams.ao = AOMap.Sample(TrilinearSampler, IN.textureCoordinate).r;
 
     float3 color = get_light_contribution(objectParams);
 

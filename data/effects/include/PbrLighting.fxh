@@ -9,7 +9,7 @@
 
 cbuffer CBuffer_PerFrame_PbrLighting
 {
-    float3 AmbientColor = { 0.3, 0.3, 0.3 };
+    float4 AmbientColor = { 1.0f, 1.0f, 1.0f, 0.0f };
 }
 
 //-------------------------------------------------------------------------
@@ -142,7 +142,7 @@ float geometry_smith(float N_dot_V, float N_dot_L, float roughness)
 
 float3 get_ambient(float3 albedo, float ao)
 {
-    return AmbientColor * albedo * ao;
+    return AmbientColor.rgb * AmbientColor.w * albedo * ao;
 }
 
 float3 get_specular_diffuse(PBR_LIGHTING_OBJECT_PARAMS objectParams, PBR_LIGHTING_LIGHT_PARAMS lightParams, PBR_LIGHTING_CACHED_PARAMS cachedParams)

@@ -87,8 +87,8 @@ if(APPLICATION)
             src/Components/NormalMappingDemo.h
             src/Components/NormalMappingDemo.cpp
 
-            src/Components/PbrLightingDemo.h
-            src/Components/PbrLightingDemo.cpp
+            src/Components/PbrDemo.h
+            src/Components/PbrDemo.cpp
 
             src/Components/PointLightDemo.h
             src/Components/PointLightDemo.cpp
@@ -153,6 +153,9 @@ if(APPLICATION)
 
             src/Materials/PbrLightingMaterial.h
             src/Materials/PbrLightingMaterial.cpp
+
+            src/Materials/PbrLightsMaterial.h
+            src/Materials/PbrLightsMaterial.cpp
 
             src/Materials/PhongLightingMaterial.h
             src/Materials/PhongLightingMaterial.cpp

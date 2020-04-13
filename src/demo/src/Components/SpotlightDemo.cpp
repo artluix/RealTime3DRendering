@@ -219,8 +219,8 @@ void SpotlightDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetWVP() << wvp;
 	m_material->GetWorld() << world;
 	m_material->GetSpecularPower() << m_specularPower;
-	m_material->GetSpecularColor() << m_specularColor.ToVector4();
-	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
+	m_material->GetSpecularColor() << m_specularColor.ToVector();
+	m_material->GetAmbientColor() << m_ambientColor.ToVector();
 
 	const auto isLightVisible = m_spotlight->IsVisibleFrom(GetPosition());
 	m_material->GetSpotlightsCount() << unsigned(isLightVisible);

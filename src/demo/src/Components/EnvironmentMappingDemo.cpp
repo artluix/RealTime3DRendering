@@ -89,8 +89,8 @@ void EnvironmentMappingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	m_material->GetWorld() << world;
 	m_material->GetReflectionAmount() << m_reflectionAmount;
 
-	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
-	m_material->GetEnvironmentColor() << k_environmentColor.ToVector4();
+	m_material->GetAmbientColor() << m_ambientColor.ToVector();
+	m_material->GetEnvironmentColor() << k_environmentColor.ToVector();
 
 	m_material->GetColorTexture() << m_textures[Texture::Default].Get();
 	m_material->GetEnvironmentMap() << m_textures[Texture::EnvironmentMap].Get();

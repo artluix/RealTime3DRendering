@@ -20,6 +20,7 @@ namespace library
 
 namespace
 {
+//constexpr auto k_backgroundColor = colors::CornFlower;
 constexpr auto k_backgroundColor = colors::Black;
 
 constexpr auto k_defaultSampleMask = unsigned(-1);

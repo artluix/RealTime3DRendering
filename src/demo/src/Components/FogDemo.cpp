@@ -171,12 +171,12 @@ void FogDemo::Draw_SetData(const PrimitiveData& primitiveData)
 		m_material->GetCameraPosition() << camera->GetPosition();
 	}
 
-	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
+	m_material->GetAmbientColor() << m_ambientColor.ToVector();
 
 	m_material->GetDirLights() << DirectionalLightData(*m_directionalLight);
 	m_material->GetDirLightsCount() << 1;
 
-	m_material->GetFogColor() << k_fogColor.ToVector4();
+	m_material->GetFogColor() << k_fogColor.ToVector();
 	m_material->GetFogStart() << m_fogStart;
 	m_material->GetFogRange() << m_fogRange;
 

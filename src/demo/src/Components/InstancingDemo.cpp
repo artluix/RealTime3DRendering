@@ -225,7 +225,7 @@ void InstancingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 	}
 
 	m_material->GetViewProjection() << vp;
-	m_material->GetAmbientColor() <<  m_ambientColor.ToVector4();
+	m_material->GetAmbientColor() <<  m_ambientColor.ToVector();
 
 	m_material->GetPointLights() << PointLightData(*m_pointLight);
 	m_material->GetPointLightsCount() << 1;

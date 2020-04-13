@@ -143,7 +143,7 @@ void DiffuseLightingDemo::Draw_SetData(const PrimitiveData& primitiveData)
 
 	m_material->GetWVP() << wvp;
 	m_material->GetWorld() << world;
-	m_material->GetAmbientColor() << m_ambientColor.ToVector4();
+	m_material->GetAmbientColor() << m_ambientColor.ToVector();
 
 	m_material->GetLightData() << DirectionalLightData(*m_directionalLight);
 
