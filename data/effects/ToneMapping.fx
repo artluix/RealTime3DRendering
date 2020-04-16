@@ -96,6 +96,8 @@ float4 ps_tone_mapping(VS_OUTPUT IN, uniform bool gammaCorrectionEnabled) : SV_T
     return float4(color, 1.f);
 }
 
+/************* Techniques *************/
+
 technique11 calc_luminance_log
 {
     pass p0
