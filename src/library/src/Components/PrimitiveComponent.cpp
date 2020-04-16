@@ -18,6 +18,33 @@ PrimitiveComponent::~PrimitiveComponent() = default;
 
 //-------------------------------------------------------------------------
 
+void PrimitiveComponent::SetPrimitiveData(PrimitiveData&& pd, const unsigned idx)
+{
+	assert(idx < m_primitivesData.size());
+	m_primitivesData[idx] = std::move(pd);
+}
+
+const PrimitiveData& PrimitiveComponent::GetPrimitiveData(const unsigned idx) const
+{
+	assert(idx < m_primitivesData.size());
+	return m_primitivesData[idx];
+}
+
+//-------------------------------------------------------------------------
+
+void PrimitiveComponent::AddPrimitiveData(PrimitiveData&& pd)
+{
+	m_primitivesData.emplace_back(std::move(pd));
+}
+
+void PrimitiveComponent::RemovePrimitiveData(const unsigned idx)
+{
+	assert(idx < m_primitivesData.size());
+	m_primitivesData.erase(m_primitivesData.begin() + idx);
+}
+
+//-------------------------------------------------------------------------
+
 ID3D11ShaderResourceView* PrimitiveComponent::GetTexture(const unsigned textureIdx) const
 {
 	assert(textureIdx < m_textures.size());
@@ -82,4 +109,5 @@ void PrimitiveComponent::Draw_Render(const PrimitiveData& primitiveData)
 	else
 		deviceContext->Draw(primitiveData.vertexBuffer.elementsCount, 0);
 }
+
 } // namespace library

@@ -37,36 +37,16 @@ void TriangleDemo::InitializeInternal()
 		assert("ID3DX11Effect::GetVariableByName() could not find the specified variable." && false);
 	}
 
+	using Vertex = VertexPositionColor;
+
 	// Create the input layout
 	{
 		D3DX11_PASS_DESC passDesc;
 		m_pass->GetDesc(&passDesc);
 
-		DynArray<D3D11_INPUT_ELEMENT_DESC> inputElementDescriptions =
-		{
-			{
-				"POSITION",
-				0,
-				DXGI_FORMAT_R32G32B32A32_FLOAT,
-				0,
-				0,
-				D3D11_INPUT_PER_VERTEX_DATA,
-				0
-			},
-			{
-				"COLOR",
-				0,
-				DXGI_FORMAT_R32G32B32A32_FLOAT,
-				0,
-				D3D11_APPEND_ALIGNED_ELEMENT,
-				D3D11_INPUT_PER_VERTEX_DATA,
-				0
-			},
-		};
-
 		auto hr = GetApp().GetDevice()->CreateInputLayout(
-			inputElementDescriptions.data(),
-			unsigned(inputElementDescriptions.size()),
+			Vertex::ElementDescriptions.data(),
+			unsigned(Vertex::ElementDescriptions.size()),
 			passDesc.pIAInputSignature,
 			passDesc.IAInputSignatureSize,
 			&m_inputLayout
@@ -76,8 +56,6 @@ void TriangleDemo::InitializeInternal()
 
 	// vertex buffer
 	{
-		using Vertex = VertexPositionColor;
-
 		constexpr float l = 1.73205080757f / 2; // sqrt(3) / 2
 
 		constexpr auto vertices = MakeArray(

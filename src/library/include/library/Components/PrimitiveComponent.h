@@ -24,6 +24,14 @@ public:
 	void Update(const Time& time) override;
 	void Draw(const Time& time) override;
 
+	unsigned GetPrimitivesDataCount() const { return unsigned(m_primitivesData.size()); }
+
+	void AddPrimitiveData(PrimitiveData&& pd);
+	void RemovePrimitiveData(const unsigned idx);
+
+	void SetPrimitiveData(PrimitiveData&& pd, const unsigned idx);
+	const PrimitiveData& GetPrimitiveData(const unsigned idx) const;
+
 	virtual ID3D11InputLayout* GetInputLayout() const = 0;
 
 	ID3D11ShaderResourceView* GetTexture(const unsigned textureIdx) const;

@@ -23,7 +23,10 @@ constexpr auto k_defaultColor = colors::White;
 } // namespace
 
 GridComponent::GridComponent() : m_size(k_defaultSize), m_scale(k_defaultScale), m_color(k_defaultColor)
-{}
+{
+	auto& pd = m_primitivesData.emplace_back(PrimitiveData());
+	pd.primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+}
 
 GridComponent::GridComponent(const unsigned size, const unsigned scale, const math::Color& color)
 	: m_size(size)
@@ -87,11 +90,6 @@ void GridComponent::Draw_SetData(const PrimitiveData& primitiveData)
 
 void GridComponent::Build()
 {
-	m_primitivesData.clear();
-	auto& pd = m_primitivesData.emplace_back(PrimitiveData());
-
-	pd.primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
-
 	const float adjustedScale = m_scale * 0.1f;
 	const float maxPosition = m_size * adjustedScale / 2;
 
@@ -115,6 +113,6 @@ void GridComponent::Build()
 		vertices.emplace_back(math::Vector4(-maxPosition, position, 0.0f, 1.0f), m_color);
 	}
 
-	pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), MakeArrayBuffer(vertices));
+	m_primitivesData[0].vertexBuffer = VertexBufferData(GetApp().GetDevice(), MakeArrayBuffer(vertices));
 }
 } // namespace library

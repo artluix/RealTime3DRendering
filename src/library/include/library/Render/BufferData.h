@@ -12,6 +12,8 @@ struct BufferData
 
 	BufferData() = default;
 
+	explicit operator bool() const { return !!buffer; }
+
 protected:
 	explicit BufferData(const unsigned elementsCount) : elementsCount(elementsCount) {}
 

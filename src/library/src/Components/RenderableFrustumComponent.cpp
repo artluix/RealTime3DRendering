@@ -30,7 +30,10 @@ RenderableFrustumComponent::RenderableFrustumComponent()
 
 RenderableFrustumComponent::RenderableFrustumComponent(const math::Color& color)
 	: m_color(color)
-{}
+{
+	auto& pd = m_primitivesData.emplace_back(PrimitiveData());
+	pd.primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
+}
 
 //-------------------------------------------------------------------------
 
@@ -79,11 +82,6 @@ void RenderableFrustumComponent::InitializeVertexBuffer(const math::Frustum& fru
 
 void RenderableFrustumComponent::InitializeIndexBuffer()
 {
-	m_primitivesData.clear();
-	auto& pd = m_primitivesData.emplace_back(PrimitiveData());
-
-	pd.primitiveTopology = D3D11_PRIMITIVE_TOPOLOGY_LINELIST;
-
 	constexpr Array<int, k_indicesCount> indices = MakeArray(
 		// Near plane lines
 		0, 1,
@@ -104,6 +102,6 @@ void RenderableFrustumComponent::InitializeIndexBuffer()
 		7, 4
 	);
 
-	pd.indexBuffer = IndexBufferData(GetApp().GetDevice(), MakeArrayBuffer(indices));
+	m_primitivesData[0].indexBuffer = IndexBufferData(GetApp().GetDevice(), MakeArrayBuffer(indices));
 }
 } // namespace library

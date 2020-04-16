@@ -14,7 +14,17 @@
 
 namespace library
 {
-FullScreenQuadComponent::FullScreenQuadComponent() = default;
+
+namespace
+{
+constexpr unsigned k_verticesCount = 4;
+} // namespace
+
+FullScreenQuadComponent::FullScreenQuadComponent()
+{
+	m_primitivesData.resize(1);
+}
+
 FullScreenQuadComponent::~FullScreenQuadComponent() = default;
 
 //-------------------------------------------------------------------------
@@ -56,10 +66,8 @@ void FullScreenQuadComponent::SetMaterialUpdateFunction(const MaterialUpdateFunc
 
 void FullScreenQuadComponent::InitializeInternal()
 {
-	m_primitivesData.clear();
-	auto& pd = m_primitivesData.emplace_back(PrimitiveData());
-
-	// vertex buffer
+	// default initialization of vertex buffer
+	if (!m_primitivesData[0].vertexBuffer)
 	{
 		using Vertex = VertexPositionTexture;
 
@@ -69,8 +77,9 @@ void FullScreenQuadComponent::InitializeInternal()
 			Vertex(math::Vector4(1.0f, 1.0f, 0.0f, 1.0f), math::Vector2(1.0f, 0.0f)),
 			Vertex(math::Vector4(1.0f, -1.0f, 0.0f, 1.0f), math::Vector2(1.0f, 1.0f))
 		);
+		assert(vertices.size() == k_verticesCount);
 
-		pd.vertexBuffer = VertexBufferData(GetApp().GetDevice(), MakeArrayBuffer(vertices));
+		m_primitivesData[0].vertexBuffer = VertexBufferData(GetApp().GetDevice(), MakeArrayBuffer(vertices));
 	}
 
 	// index buffer
@@ -79,8 +88,14 @@ void FullScreenQuadComponent::InitializeInternal()
 			0, 1, 2,
 			0, 2, 3
 		);
-		pd.indexBuffer = IndexBufferData(GetApp().GetDevice(), MakeArrayBuffer(indices));
+		m_primitivesData[0].indexBuffer = IndexBufferData(GetApp().GetDevice(), MakeArrayBuffer(indices));
 	}
+}
+
+void FullScreenQuadComponent::SetVertexBufferData(VertexBufferData&& vbd)
+{
+	assert(!!vbd.buffer && vbd.elementsCount == k_verticesCount);
+	m_primitivesData[0].vertexBuffer = std::move(vbd);
 }
 
 void FullScreenQuadComponent::Update(const Time& time)

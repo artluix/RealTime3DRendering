@@ -1,7 +1,6 @@
 #pragma once
 #include "library/Components/PrimitiveComponent.h"
-
-#include <functional>
+#include "library/Materials/MaterialUpdateFunction.h"
 
 namespace library
 {
@@ -29,6 +28,8 @@ public:
 	Material* GetMaterial() override { return m_material; }
 
 	ID3D11InputLayout* GetInputLayout() const override { return m_inputLayout; }
+
+	void SetVertexBufferData(VertexBufferData&& vbd);
 
 protected:
 	void InitializeInternal() override;

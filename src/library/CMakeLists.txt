@@ -11,6 +11,7 @@ if(APPLICATION)
                 include/library/Components/AnimationPlayerComponent.h
                 include/library/Components/BloomComponent.h
                 include/library/Components/CameraComponent.h
+                include/library/Components/CubeComponent.h
                 include/library/Components/ConcreteMaterialPostProcessingComponent.h
                 include/library/Components/ConcreteMaterialPrimitiveComponent.h
                 include/library/Components/DirectionalLightComponent.h
@@ -49,10 +50,13 @@ if(APPLICATION)
 
             # Materials
                 include/library/Materials/Material.h
+                include/library/Materials/MaterialUpdateFunction.h
 
                 include/library/Materials/BasicMaterial.h
                 include/library/Materials/BloomMaterial.h
+                include/library/Materials/EquirectangularToCubeMapMaterial.h
                 include/library/Materials/GaussianBlurMaterial.h
+                include/library/Materials/IrradianceConvolutionMaterial.h
                 include/library/Materials/PostProcessingMaterial.h
                 include/library/Materials/SkyboxMaterial.h
                 include/library/Materials/ToneMappingMaterial.h
@@ -137,6 +141,7 @@ if(APPLICATION)
                 src/Components/AnimationPlayerComponent.cpp
                 src/Components/BloomComponent.cpp
                 src/Components/CameraComponent.cpp
+                src/Components/CubeComponent.cpp
                 src/Components/DirectionalLightComponent.cpp
                 src/Components/FirstPersonCameraComponent.cpp
                 src/Components/FpsComponent.cpp
@@ -174,7 +179,9 @@ if(APPLICATION)
 
                 src/Materials/BasicMaterial.cpp
                 src/Materials/BloomMaterial.cpp
+                src/Materials/EquirectangularToCubeMapMaterial.cpp
                 src/Materials/GaussianBlurMaterial.cpp
+                src/Materials/IrradianceConvolutionMaterial.cpp
                 src/Materials/PostProcessingMaterial.cpp
                 src/Materials/SkyboxMaterial.cpp
                 src/Materials/ToneMappingMaterial.cpp
