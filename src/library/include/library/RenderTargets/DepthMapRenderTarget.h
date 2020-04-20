@@ -10,10 +10,5 @@ class DepthMapRenderTarget : public SingleRenderTarget
 public:
 	DepthMapRenderTarget(const Application& app, const unsigned width, const unsigned height);
 	~DepthMapRenderTarget();
-
-	void Begin() override final;
-
-private:
-	D3D11_VIEWPORT m_viewport;
 };
 } // namespace library

@@ -1,13 +1,11 @@
 #include "StdAfx.h"
 #include "library/RenderTargets/DeferredLightingRenderTarget.h"
 
-#include "library/Math/Color.h"
 #include "library/Application.h"
 
 namespace library
 {
 DeferredLightingRenderTarget::DeferredLightingRenderTarget(const Application& app)
-	:m_app(app)
 {
 	// setup render target buffers
 	D3D11_TEXTURE2D_DESC textureDesc{};
@@ -23,32 +21,14 @@ DeferredLightingRenderTarget::DeferredLightingRenderTarget(const Application& ap
 
 	auto device = app.GetDevice();
 
-	m_colorBuffer = RenderTargetBuffer::Create(device, textureDesc);
-	m_normalBuffer = RenderTargetBuffer::Create(device, textureDesc);
-	m_worldPositionBuffer = RenderTargetBuffer::Create(device, textureDesc);
+	m_rtBuffers.resize(3);
+	m_rtBuffers[Color] = RenderTargetBuffer::Create(device, textureDesc);
+	m_rtBuffers[Normal] = RenderTargetBuffer::Create(device, textureDesc);
+	m_rtBuffers[WorldPosition] = RenderTargetBuffer::Create(device, textureDesc);
+
+	m_vps.emplace_back(new Viewport(app.GetViewport()));
 }
 
 DeferredLightingRenderTarget::~DeferredLightingRenderTarget() = default;
-
-//-------------------------------------------------------------------------
-
-void DeferredLightingRenderTarget::Begin()
-{
-	ViewData viewData;
-
-	Array<ID3D11RenderTargetView*, 3> rtvs = {
-		m_colorBuffer->GetView(),
-		m_normalBuffer->GetView(),
-		m_worldPositionBuffer->GetView()
-	};
-
-	viewData.rtvsCount = unsigned(rtvs.size());
-	viewData.rtvs = rtvs.data();
-
-	viewData.vpsCount = 1;
-	viewData.vps = &m_app.GetViewport();
-
-	RenderTarget::Begin(viewData);
-}
 
 } // namespace library

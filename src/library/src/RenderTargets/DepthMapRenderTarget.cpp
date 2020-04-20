@@ -35,27 +35,16 @@ DepthMapRenderTarget::DepthMapRenderTarget(const Application& app, const unsigne
 
 	// viewport
 	{
-		m_viewport.TopLeftX = 0.f;
-		m_viewport.TopLeftY = 0.f;
-		m_viewport.Width = static_cast<float>(width);
-		m_viewport.Height = static_cast<float>(height);
-		m_viewport.MinDepth = 0.f;
-		m_viewport.MaxDepth = 1.f;
+		auto& vp = m_vps.emplace_back(new Viewport());
+
+		vp->TopLeftX = 0.f;
+		vp->TopLeftY = 0.f;
+		vp->Width = static_cast<float>(width);
+		vp->Height = static_cast<float>(height);
+		vp->MinDepth = 0.f;
+		vp->MaxDepth = 1.f;
 	}
 }
 
 DepthMapRenderTarget::~DepthMapRenderTarget() = default;
-
-//-------------------------------------------------------------------------
-
-void DepthMapRenderTarget::Begin()
-{
-	ViewData viewData = CreateViewDataFromBuffers();
-
-	viewData.vpsCount = 1;
-	viewData.vps = &m_viewport;
-
-	RenderTarget::Begin(viewData);
-}
-
 } // namespace library

@@ -106,6 +106,7 @@ if(APPLICATION)
                 include/library/Render/SamplerStates.h
                 include/library/Render/Vertex.h
                 include/library/Render/VertexElement.h
+                include/library/Render/Viewport.h
 
             # RenderTargets
                 include/library/RenderTargets/RenderTarget.h
@@ -113,6 +114,7 @@ if(APPLICATION)
                 include/library/RenderTargets/DeferredLightingRenderTarget.h
                 include/library/RenderTargets/DepthMapRenderTarget.h
                 include/library/RenderTargets/FullScreenRenderTarget.h
+                include/library/RenderTargets/MultipleRenderTarget.h
                 include/library/RenderTargets/SingleRenderTarget.h
 
             include/library/Application.h
@@ -220,6 +222,7 @@ if(APPLICATION)
                 src/RenderTargets/DeferredLightingRenderTarget.cpp
                 src/RenderTargets/DepthMapRenderTarget.cpp
                 src/RenderTargets/FullScreenRenderTarget.cpp
+                src/RenderTargets/MultipleRenderTarget.cpp
                 src/RenderTargets/SingleRenderTarget.cpp
 
             src/Application.cpp

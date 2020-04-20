@@ -1,11 +1,9 @@
 #pragma once
-#include "library/RenderTargets/RenderTarget.h"
-#include "library/Render/RenderBuffers.h"
-#include "library/Common.h"
+#include "library/RenderTargets/MultipleRenderTarget.h"
 
 namespace library
 {
-class DeferredLightingRenderTarget : public RenderTarget
+class DeferredLightingRenderTarget : public MultipleRenderTarget
 {
 	RTTI_CLASS(DeferredLightingRenderTarget, RenderTarget)
 
@@ -13,21 +11,16 @@ public:
 	explicit DeferredLightingRenderTarget(const Application& app);
 	~DeferredLightingRenderTarget();
 
-	const RenderTargetBuffer* GetColorBuffer() const { return m_colorBuffer.get(); }
-	const RenderTargetBuffer* GetNormalBuffer() const { return m_normalBuffer.get(); }
-	const RenderTargetBuffer* GetWorldPositionBuffer() const { return m_worldPositionBuffer.get(); }
-
-	void Begin() override final;
-
-protected:
-	const Application& GetApp() const { return m_app; }
+	const RenderTargetBuffer* GetColorBuffer() const { return GetRenderTargetBuffer(Color); }
+	const RenderTargetBuffer* GetNormalBuffer() const { return GetRenderTargetBuffer(Normal); }
+	const RenderTargetBuffer* GetWorldPositionBuffer() const { return GetRenderTargetBuffer(WorldPosition); }
 
 private:
-	const Application& m_app;
-
-	RenderTargetBufferPtr m_colorBuffer;
-	RenderTargetBufferPtr m_normalBuffer;
-	RenderTargetBufferPtr m_worldPositionBuffer;
+	enum BufferIdx : unsigned
+	{
+		Color = 0,
+		Normal,
+		WorldPosition
+	};
 };
-
 } // namespace library

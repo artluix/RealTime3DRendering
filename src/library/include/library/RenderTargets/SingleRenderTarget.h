@@ -1,32 +1,21 @@
 #pragma once
-#include "library/RenderTargets/RenderTarget.h"
-#include "library/Render/RenderBuffers.h"
+#include "library/RenderTargets/MultipleRenderTarget.h"
 
 namespace library
 {
-class SingleRenderTarget : public RenderTarget
+class SingleRenderTarget : public MultipleRenderTarget
 {
-	RTTI_CLASS(SingleRenderTarget, RenderTarget)
+	RTTI_CLASS(SingleRenderTarget, MultipleRenderTarget)
 
 public:
 	explicit SingleRenderTarget(
-		const Application& app,
 		RenderTargetBufferPtr rtBuffer = {},
-		DepthStencilBufferPtr dsBuffer = {});
-	SingleRenderTarget(const Application& app, DepthStencilBufferPtr dsBuffer);
+		DepthStencilBufferPtr dsBuffer = {},
+		ViewportPtr vp = {}
+	);
 
-	const RenderTargetBuffer* GetRenderTargetBuffer() const { return m_rtBuffer.get(); }
+	const RenderTargetBuffer* GetRenderTargetBuffer() const { return m_rtBuffers[0].get(); }
 	const DepthStencilBuffer* GetDepthStencilBuffer() const { return m_dsBuffer.get(); }
-
-	void Begin() override;
-
-protected:
-	const Application& GetApp() const override final { return m_app; }
-
-	ViewData CreateViewDataFromBuffers() const;
-
-	const Application& m_app;
-	RenderTargetBufferPtr m_rtBuffer;
-	DepthStencilBufferPtr m_dsBuffer;
+	const Viewport* GetViewport() const { return m_vps[0].get(); }
 };
 } // namespace library
